@@ -27,8 +27,8 @@ const Navbar = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   // Get user data from localStorage or use default
@@ -59,6 +59,39 @@ const Navbar = () => {
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
+  };
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('authToken');
+    } catch (err) {
+      console.error('Error clearing user data on logout', err);
+    }
+    setIsProfileOpen(false);
+    console.log('handleLogout invoked - navigating to confirmation');
+    // Try react-router navigate first
+    try {
+      navigate(ROUTES.confirmation, {
+        replace: true,
+        state: {
+          title: 'Επιτυχής Αποσύνδεση!',
+          message: 'Έχετε αποσυνδεθεί με επιτυχία από τον λογαριασμό σας',
+          buttonText: 'Επιστροφή στην Αρχική',
+          buttonTo: ROUTES.home,
+        },
+      });
+    } catch (e) {
+      console.error('navigate threw an error', e);
+    }
+
+    // Fallback: if navigate doesn't work (race with dropdown), force a full navigation
+    setTimeout(() => {
+      if (window.location.pathname !== ROUTES.confirmation) {
+        console.warn('navigate did not change location — falling back to window.location');
+        window.location.href = ROUTES.confirmation;
+      }
+    }, 60);
   };
 
   const navLinks = [
@@ -206,7 +239,11 @@ const Navbar = () => {
                   <span className="navbar__profile-menu-icon"><User size={18} /></span>
                   <span>Το Προφίλ μου</span>
                 </button>
-                <button className="navbar__profile-menu-item navbar__profile-menu-item--logout" onClick={() => { toggleProfileMenu(); }}>
+                <button
+                  className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                  onClick={handleLogout}
+                  onMouseDown={handleLogout}
+                >
                   <span className="navbar__profile-menu-icon"><LogOut size={18} /></span>
                   <span>Αποσύνδεση</span>
                 </button>

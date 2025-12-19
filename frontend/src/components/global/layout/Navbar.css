@@ -264,6 +264,17 @@
   color: var(--color-danger);
 }
 
+/* Keep logout icon red at all times and prevent hover color/scale changes */
+.navbar__profile-menu-item--logout .navbar__profile-menu-icon {
+  color: var(--color-danger);
+  transform: none;
+}
+
+.navbar__profile-menu-item--logout:hover .navbar__profile-menu-icon {
+  color: var(--color-danger);
+  transform: none;
+}
+
 /* Mobile */
 .navbar__mobile-btn {
   display: none;

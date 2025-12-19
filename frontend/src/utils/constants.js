@@ -1,6 +1,7 @@
 // Route constants
 export const ROUTES = {
   home: '/',
+  confirmation: '/confirmation',
   owner: {
     dashboard: '/owner/dashboard',
     pets: '/owner/pets',
