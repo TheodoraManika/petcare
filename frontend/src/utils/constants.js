@@ -1,0 +1,64 @@
+// Route constants
+export const ROUTES = {
+  home: '/',
+  owner: {
+    dashboard: '/owner/dashboard',
+    pets: '/owner/pets',
+    appointments: '/owner/appointments',
+    profile: '/owner/profile',
+    lostPetForm: '/owner/lost-pet',
+    lostHistory: '/owner/lost-history',
+  },
+};
+
+// Greek translations
+export const GR = {
+  nav: {
+    myPage: 'Μενού',
+    myPets: 'Τα Κατοικίδιά μου',
+    appointments: 'Ραντεβού',
+    profile: 'Προφίλ',
+    logout: 'Αποσύνδεση',
+  },
+  dashboard: {
+    title: 'Μενού',
+    welcome: 'Καλώς ήρθατε',
+  },
+  pets: {
+    title: 'Βιβλιάριο Υγείας',
+    description: 'Προβολή στοιχείων κατοικιδίων',
+  },
+  appointments: {
+    title: 'Τα Ραντεβού μου',
+    description: 'Διαχείριση ραντεβού',
+  },
+  vets: {
+    title: 'Αναζήτηση Κτηνιάτρων',
+    description: 'Αναζήτηση επαγγελματιών κτηνιάτρων',
+  },
+  lostPet: {
+    title: 'Δήλωση Απώλειας',
+    description: 'Δήλωση απώλειας ενός κατοικιδίου',
+  },
+  foundPet: {
+    title: 'Δήλωση Εύρεσης',
+    description: 'Δήλωση εύρεσης ενός κατοικιδίου',
+  },
+  history: {
+    title: 'Ιστορικό Δηλώσεων',
+    description: 'Προβολή και επεξεργασία των δηλώσεων σας',
+  },
+  footer: {
+    support: 'Υποστήριξη & Πληροφορίες',
+    contact: 'Επικοινωνία',
+    about: 'Σχετικά με Εμάς',
+    legal: 'Νομικά',
+    privacy: 'Πολιτική Απορρήτου',
+    terms: 'Όροι & Προϋποθέσεις',
+    cookies: 'Πολιτική Cookies',
+    copyright: '© 2025 PetCare. Όλα τα δικαιώματα διατηρούνται.',
+  },
+};
+
+// Alias UK to GR for backwards compatibility
+export const UK = GR;
