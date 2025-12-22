@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, Home, Search, CheckCircle2, Stethoscope, Info, FileText, Calendar, AlertCircle, CheckCircle, History, User, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X, ChevronDown, Home, Search, CheckCircle2, Stethoscope, Info } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
@@ -9,27 +9,8 @@ import './Navbar.css';
  * Navbar component
  */
 const Navbar = () => {
-  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isMenuDropdownOpen, setIsMenuDropdownOpen] = useState(false);
-  const navDropdownRef = useRef(null);
-  const profileDropdownRef = useRef(null);
-
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (navDropdownRef.current && !navDropdownRef.current.contains(event.target)) {
-        setIsMenuDropdownOpen(false);
-      }
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
-        setIsProfileOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
 
   // Get user data from localStorage or use default
   const getUserData = () => {
@@ -61,73 +42,13 @@ const Navbar = () => {
     setIsProfileOpen(!isProfileOpen);
   };
 
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('authToken');
-    } catch (err) {
-      console.error('Error clearing user data on logout', err);
-    }
-    setIsProfileOpen(false);
-    console.log('handleLogout invoked - navigating to confirmation');
-    // Try react-router navigate first
-    try {
-      navigate(ROUTES.confirmation, {
-        replace: true,
-        state: {
-          title: 'Επιτυχής Αποσύνδεση!',
-          message: 'Έχετε αποσυνδεθεί με επιτυχία από τον λογαριασμό σας',
-          buttonText: 'Επιστροφή στην Αρχική',
-          buttonTo: ROUTES.home,
-        },
-      });
-    } catch (e) {
-      console.error('navigate threw an error', e);
-    }
-
-    // Fallback: if navigate doesn't work (race with dropdown), force a full navigation
-    setTimeout(() => {
-      if (window.location.pathname !== ROUTES.confirmation) {
-        console.warn('navigate did not change location — falling back to window.location');
-        window.location.href = ROUTES.confirmation;
-      }
-    }, 60);
-  };
-
-  const navLinks = [
+  const navLinks = [ // Fix routes when we have all the pages
     { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
     { to: ROUTES.vet.lostPetForm, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-    { to: ROUTES.vet.lostPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
-    { to: ROUTES.vet.pets, icon: <Stethoscope size={18} />, label: 'Κτηνίατροι' },
+    { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
+    { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
     { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
-    { id: 'menu', icon: <Menu size={18} />, label: 'Μενού', isDropdown: true },
-  ];
-
-  const MenuItems = [
-    {
-      id: 'health-book',
-      title: 'Βιβλιάριο',
-      icon: <FileText size={18} />,
-      onClick: () => { navigate(ROUTES.vet.pets); setIsMobileMenuOpen(false); },
-    },
-    {
-      id: 'appointments',
-      title: 'Ραντεβού',
-      icon: <Calendar size={18} />,
-      onClick: () => { navigate(ROUTES.vet.appointments); setIsMobileMenuOpen(false); },
-    },
-    {
-      id: 'lost-declaration',
-      title: 'Απώλεια',
-      icon: <AlertCircle size={18} />,
-      onClick: () => { navigate(ROUTES.vet.lostPetForm); setIsMobileMenuOpen(false); },
-    },
-    {
-      id: 'history',
-      title: 'Ιστορικό',
-      icon: <History size={18} />,
-      onClick: () => { navigate(ROUTES.vet.lostHistory); setIsMobileMenuOpen(false); },
-    },
+    { to: ROUTES.vet.dashboard, icon: <Menu size={18} />, label: 'Μενού' },
   ];
 
   return (
@@ -179,41 +100,15 @@ const Navbar = () => {
           {/* Navigation Links - Desktop */}
           <div className="navbar__nav-links">
             {navLinks.map((link, index) => (
-              link.isDropdown ? (
-                <div key={index} ref={navDropdownRef} className="navbar__nav-dropdown">
-                  <button
-                    className="navbar__nav-link navbar__nav-link--dropdown"
-                    onClick={() => setIsMenuDropdownOpen(!isMenuDropdownOpen)}
-                  >
-                    {link.icon}
-                    <span>{link.label}</span>
-                  </button>
-                  {isMenuDropdownOpen && (
-                    <div className="navbar__nav-dropdown-menu">
-                      {MenuItems.map((item) => (
-                        <button
-                          key={item.id}
-                          className="navbar__nav-dropdown-item"
-                          onClick={item.onClick}
-                        >
-                          <span className="navbar__nav-dropdown-icon">{item.icon}</span>
-                          <span>{item.title}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link key={index} to={link.to} className="navbar__nav-link">
-                  {link.icon}
-                  <span>{link.label}</span>
-                </Link>
-              )
+              <Link key={index} to={link.to} className="navbar__nav-link">
+                {link.icon}
+                <span>{link.label}</span>
+              </Link>
             ))}
           </div>
 
           {/* Profile Dropdown */}
-          <div ref={profileDropdownRef} className="navbar__profile">
+          <div className="navbar__profile">
             <button
               className="navbar__profile-btn"
               onClick={toggleProfileMenu}
@@ -228,27 +123,6 @@ const Navbar = () => {
               <span className="navbar__profile-name">{user.name}</span>
               <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
             </button>
-            
-            {/* Profile Menu Dropdown */}
-            {isProfileOpen && (
-              <div className="navbar__profile-menu">
-                <div className="navbar__profile-menu-header">
-                  <span className="navbar__profile-menu-name">{user.name}</span>
-                </div>
-                <button className="navbar__profile-menu-item" onClick={() => { toggleProfileMenu(); }}>
-                  <span className="navbar__profile-menu-icon"><User size={18} /></span>
-                  <span>Το Προφίλ μου</span>
-                </button>
-                <button
-                  className="navbar__profile-menu-item navbar__profile-menu-item--logout"
-                  onClick={handleLogout}
-                  onMouseDown={handleLogout}
-                >
-                  <span className="navbar__profile-menu-icon"><LogOut size={18} /></span>
-                  <span>Αποσύνδεση</span>
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -265,15 +139,11 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="navbar__mobile-menu">
-          {MenuItems.map((item) => (
-            <button
-              key={item.id}
-              className="navbar__mobile-menu-item"
-              onClick={item.onClick}
-            >
-              <span className="navbar__mobile-menu-icon">{item.icon}</span>
-              <span>{item.title}</span>
-            </button>
+          {navLinks.map((link, index) => (
+            <Link key={index} to={link.to} className="navbar__mobile-link" onClick={toggleMobileMenu}>
+              {link.icon}
+              <span>{link.label}</span>
+            </Link>
           ))}
         </div>
       )}

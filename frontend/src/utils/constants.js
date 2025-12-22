@@ -17,7 +17,7 @@ export const ROUTES = {
   },
 };
 
-// Greek translations
+// Greek translations ΤΙ ΕΙΝΑΙ ΑΥΤΟ ΚΑΙ ΓΙΑΤΙ ΤΟ ΘΕΛΟΥΜΕ ΚΑΛΕ
 export const GR = {
   nav: {
     myPage: 'Μενού',

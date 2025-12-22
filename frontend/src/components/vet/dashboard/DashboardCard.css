@@ -50,61 +50,6 @@
   transition: color var(--transition-fast);
 }
 
-/* Icon variants - all use orange palette color */
-.dashboard-card__icon--primary {
-  border-color: #FCA47C;
-  background-color: rgba(252, 164, 124, 0.1);
-}
-
-.dashboard-card__icon--primary svg {
-  color: #FCA47C;
-}
-
-.dashboard-card__icon--success {
-  border-color: #FCA47C;
-  background-color: rgba(252, 164, 124, 0.1);
-}
-
-.dashboard-card__icon--success svg {
-  color: #FCA47C;
-}
-
-.dashboard-card__icon--info {
-  border-color: #FCA47C;
-  background-color: rgba(252, 164, 124, 0.1);
-}
-
-.dashboard-card__icon--info svg {
-  color: #FCA47C;
-}
-
-.dashboard-card__icon--warning {
-  border-color: #FCA47C;
-  background-color: rgba(252, 164, 124, 0.1);
-}
-
-.dashboard-card__icon--warning svg {
-  color: #FCA47C;
-}
-
-.dashboard-card__icon--danger {
-  border-color: #FCA47C;
-  background-color: rgba(252, 164, 124, 0.1);
-}
-
-.dashboard-card__icon--danger svg {
-  color: #FCA47C;
-}
-
-.dashboard-card__icon--default {
-  border-color: #FCA47C;
-  background-color: rgba(252, 164, 124, 0.1);
-}
-
-.dashboard-card__icon--default svg {
-  color: #FCA47C;
-}
-
 .dashboard-card__title {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);

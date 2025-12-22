@@ -18,7 +18,6 @@ const Dashboard = () => {
       title: 'Καταγραφή Κατοικιδίου',
       description: 'Καταγραφή νέου κατοικιδίου',
       icon: <Plus />,
-      iconVariant: 'primary',
       onClick: () => navigate(ROUTES.vet.register),
     },
     {
@@ -26,7 +25,6 @@ const Dashboard = () => {
       title: 'Ιατρικές Πράξεις',
       description: 'Καταγραφή ιατρικών πράξεων',
       icon: <FileText />,
-      iconVariant: 'primary',
       onClick: () => navigate(ROUTES.vet.operations),
     },
     {
@@ -34,7 +32,6 @@ const Dashboard = () => {
       title: 'Αξιολογήσεις',
       description: 'Προβολή αξιολογήσεων πελατών',
       icon: <FileText />,
-      iconVariant: 'primary',
       onClick: () => navigate(ROUTES.vet.reviews),
     },
     {
@@ -42,7 +39,6 @@ const Dashboard = () => {
       title: 'Ιστορικό',
       description: 'Προβολή επισκέψεων, ιατρικών πράξεων και δηλώσεων',
       icon: <History />,
-      iconVariant: 'info',
       onClick: () => navigate(ROUTES.vet.history),
     },
     {
@@ -50,7 +46,6 @@ const Dashboard = () => {
       title: 'Διαχείριση Ραντεβού',
       description: 'Προβολή και επεξεργασία ραντεβού',
       icon: <Calendar />,
-      iconVariant: 'success',
       onClick: () => navigate(ROUTES.vet.appointments),
     },
     {
@@ -58,7 +53,6 @@ const Dashboard = () => {
       title: 'Διαθεσιμότητα',
       description: 'Ορισμός ωραρίου για ραντεβού',
       icon: <Clock />,
-      iconVariant: 'success',
       onClick: () => navigate(ROUTES.vet.availability),
     },
     {
@@ -66,7 +60,6 @@ const Dashboard = () => {
       title: 'Δηλώσεις Συμβάντων Ζωής',
       description: 'Μεταβίβαση, υιοθεσία, αναδοχή',
       icon: <PawPrint />,
-      iconVariant: 'success',
       onClick: () => navigate(ROUTES.vet.lifeEvent),
     },
     {
@@ -74,7 +67,6 @@ const Dashboard = () => {
       title: 'Δήλωση Απώλειας',
       description: 'Δήλωση απώλειας ενός κατοικιδίου',
       icon: <AlertCircle />,
-      iconVariant: 'info',
       onClick: () => navigate(ROUTES.vet.lostPetForm),
     },
     {
@@ -82,7 +74,6 @@ const Dashboard = () => {
       title: 'Δήλωση Εύρεσης',
       description: 'Δήλωση εύρεσης ενός κατοικιδίου',
       icon: <CheckCircle />,
-      iconVariant: 'success',
       onClick: () => navigate(ROUTES.vet.foundPetForm),
     },
   ];
