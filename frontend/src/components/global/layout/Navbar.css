@@ -28,6 +28,7 @@
   align-items: center;
   gap: var(--spacing-sm);
   text-decoration: none;
+  margin-right: 64px;
 }
 
 .navbar__logo-icon {
@@ -76,12 +77,6 @@
   height: 18px;
 }
 
-@media (max-width: 1024px) {
-  .navbar__nav-links {
-    display: none;
-  }
-}
-
 /* Right Section */
 .navbar__right {
   display: flex;
@@ -121,96 +116,13 @@
   color: var(--color-text-primary);
 }
 
+.navbar__profile-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-secondary);
+  transition: transform var(--transition-fast);
+}
+
 .navbar__profile-chevron--open {
   transform: rotate(180deg);
-}
-
-/* Mobile */
-.navbar__mobile-btn {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: none;
-  border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.navbar__mobile-btn svg {
-  width: 24px;
-  height: 24px;
-}
-
-.navbar__mobile-menu {
-  display: none;
-  flex-direction: column;
-  padding: var(--spacing-md);
-  background-color: var(--color-bg-white);
-  border-top: 1px solid var(--color-border-light);
-}
-
-.navbar__mobile-link {
-  padding: 12px var(--spacing-md);
-  font-size: var(--font-size-md);
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-}
-
-.navbar__mobile-link:hover {
-  background-color: var(--color-bg-gray);
-  color: var(--color-text-primary);
-}
-
-.navbar__mobile-link {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.navbar__mobile-link svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .navbar__search {
-    display: none;
-  }
-  
-  .navbar__profile-name {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .navbar {
-    height: 56px;
-  }
-  
-  .navbar__container {
-    padding: 0 var(--spacing-md);
-  }
-  
-  .navbar__profile-btn {
-    padding: 4px;
-    border: none;
-  }
-  
-  .navbar__profile-chevron {
-    display: none;
-  }
-  
-  .navbar__mobile-btn {
-    display: flex;
-  }
-  
-  .navbar__mobile-menu {
-    display: flex;
-  }
 }

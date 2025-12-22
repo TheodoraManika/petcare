@@ -49,17 +49,3 @@
   margin: 0 auto;
   width: 100%;
 }
-
-@media (max-width: 640px) {
-  .page-layout__main {
-    padding-top: 56px; /* Mobile navbar height */
-  }
-  
-  .page-layout__content {
-    padding: 0 var(--spacing-md) var(--spacing-md);
-  }
-  
-  .page-layout__breadcrumbs {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-}

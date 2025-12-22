@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown, Home, Search, CheckCircle2, Stethoscope, Info } from 'lucide-react';
+import { ChevronDown, Home, Search, CheckCircle2, Stethoscope, Info, Menu } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
@@ -9,7 +9,6 @@ import './Navbar.css';
  * Navbar component
  */
 const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // Get user data from localStorage or use default
@@ -33,10 +32,6 @@ const Navbar = () => {
   };
 
   const user = getUserData();
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -97,7 +92,7 @@ const Navbar = () => {
 
         {/* Right Section */}
         <div className="navbar__right">
-          {/* Navigation Links - Desktop */}
+          {/* Navigation Links */}
           <div className="navbar__nav-links">
             {navLinks.map((link, index) => (
               <Link key={index} to={link.to} className="navbar__nav-link">
@@ -124,29 +119,8 @@ const Navbar = () => {
               <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
             </button>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="navbar__mobile-btn"
-            onClick={toggleMobileMenu}
-            aria-label={isMobileMenuOpen ? 'Κλείσιμο μενού' : 'Άνοιγμα μενού'}
-          >
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="navbar__mobile-menu">
-          {navLinks.map((link, index) => (
-            <Link key={index} to={link.to} className="navbar__mobile-link" onClick={toggleMobileMenu}>
-              {link.icon}
-              <span>{link.label}</span>
-            </Link>
-          ))}
-        </div>
-      )}
     </nav>
   );
 };
