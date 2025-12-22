@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronDown, Home, Search, CheckCircle2, Stethoscope, Info, Menu } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, Plus, FileText, Calendar, Clock, AlertCircle, History, PawPrint } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
@@ -10,6 +10,10 @@ import './Navbar.css';
  */
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const profileRef = useRef(null);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   // Get user data from localStorage or use default
   const getUserData = () => {
@@ -35,15 +39,46 @@ const Navbar = () => {
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
+    setIsMenuOpen(false); // Close menu dropdown when opening profile
   };
 
-  const navLinks = [ // Fix routes when we have all the pages
+  const toggleMenuDropdown = () => {
+    setIsMenuOpen(!isMenuOpen);
+    setIsProfileOpen(false); // Close profile dropdown when opening menu
+  };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const menuItems = [
+    { icon: <Plus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
+    { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operations },
+    { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
+    { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },
+    { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },
+    { icon: <Clock size={18} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
+    { icon: <PawPrint size={18} />, label: 'Συμβάντα Ζωής', route: ROUTES.vet.lifeEvent },
+    { icon: <AlertCircle size={18} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
+  ];
+
+  const navLinks = [
     { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
     { to: ROUTES.vet.lostPetForm, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
     { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
     { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
     { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
-    { to: ROUTES.vet.dashboard, icon: <Menu size={18} />, label: 'Μενού' },
   ];
 
   return (
@@ -100,10 +135,42 @@ const Navbar = () => {
                 <span>{link.label}</span>
               </Link>
             ))}
+            
+            {/* Menu Dropdown */}
+            <div className="navbar__nav-dropdown" ref={menuRef}>
+              <button
+                className="navbar__nav-link navbar__nav-link--dropdown"
+                onClick={toggleMenuDropdown}
+                aria-expanded={isMenuOpen}
+                aria-haspopup="true"
+              >
+                <Menu size={18} />
+                <span>Μενού</span>
+                <ChevronDown className={`navbar__dropdown-chevron ${isMenuOpen ? 'navbar__dropdown-chevron--open' : ''}`} size={16} />
+              </button>
+              
+              {isMenuOpen && (
+                <div className="navbar__nav-dropdown-menu">
+                  {menuItems.map((item, index) => (
+                    <button
+                      key={index}
+                      className="navbar__nav-dropdown-item"
+                      onClick={() => {
+                        navigate(item.route);
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      <span className="navbar__nav-dropdown-icon">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Profile Dropdown */}
-          <div className="navbar__profile">
+          <div className="navbar__profile" ref={profileRef}>
             <button
               className="navbar__profile-btn"
               onClick={toggleProfileMenu}
@@ -118,6 +185,43 @@ const Navbar = () => {
               <span className="navbar__profile-name">{user.name}</span>
               <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
             </button>
+            
+            {isProfileOpen && (
+              <div className="navbar__profile-menu">
+                <div className="navbar__profile-menu-header">
+                  <p className="navbar__profile-menu-name">{user.name}</p>
+                </div>
+                <Link
+                  to={ROUTES.vet.profile}
+                  className="navbar__profile-menu-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <UserRound size={16} />
+                  </span>
+                  <span>Προφίλ</span>
+                </Link>
+                <Link
+                  to={ROUTES.vet.dashboard}
+                  className="navbar__profile-menu-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <span>Dashboard</span>
+                </Link>
+                <button
+                  className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    navigate(ROUTES.home);
+                  }}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <LogOut size={16} />
+                  </span>
+                  <span>Αποσύνδεση</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
