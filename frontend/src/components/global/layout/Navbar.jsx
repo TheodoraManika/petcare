@@ -39,12 +39,10 @@ const Navbar = () => {
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
-    setIsMenuOpen(false); // Close menu dropdown when opening profile
   };
 
-  const toggleMenuDropdown = () => {
-    setIsMenuOpen(!isMenuOpen);
-    setIsProfileOpen(false); // Close profile dropdown when opening menu
+  const handleMenuClick = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   // Close dropdowns when clicking outside
@@ -52,9 +50,6 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsProfileOpen(false);
-      }
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
       }
     };
 
@@ -140,32 +135,28 @@ const Navbar = () => {
             <div className="navbar__nav-dropdown" ref={menuRef}>
               <button
                 className="navbar__nav-link navbar__nav-link--dropdown"
-                onClick={toggleMenuDropdown}
-                aria-expanded={isMenuOpen}
+                onClick={handleMenuClick}
                 aria-haspopup="true"
               >
                 <Menu size={18} />
                 <span>Μενού</span>
-                <ChevronDown className={`navbar__dropdown-chevron ${isMenuOpen ? 'navbar__dropdown-chevron--open' : ''}`} size={16} />
+                <ChevronDown className="navbar__dropdown-chevron" size={16} />
               </button>
               
-              {isMenuOpen && (
-                <div className="navbar__nav-dropdown-menu">
-                  {menuItems.map((item, index) => (
-                    <button
-                      key={index}
-                      className="navbar__nav-dropdown-item"
-                      onClick={() => {
-                        navigate(item.route);
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      <span className="navbar__nav-dropdown-icon">{item.icon}</span>
-                      <span>{item.label}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="navbar__nav-dropdown-menu">
+                {menuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    className="navbar__nav-dropdown-item"
+                    onClick={() => {
+                      navigate(item.route);
+                    }}
+                  >
+                    <span className="navbar__nav-dropdown-icon">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

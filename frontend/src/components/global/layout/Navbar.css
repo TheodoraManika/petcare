@@ -113,6 +113,22 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: var(--spacing-xs);
   z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+/* Show dropdown on hover */
+.navbar__nav-dropdown:hover .navbar__nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Rotate chevron on hover */
+.navbar__nav-dropdown:hover .navbar__dropdown-chevron {
+  transform: rotate(180deg);
 }
 
 .navbar__nav-dropdown-item {
