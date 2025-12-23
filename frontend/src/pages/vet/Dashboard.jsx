@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Calendar, Clock, AlertCircle, CheckCircle, History, Plus, PawPrint } from 'lucide-react';
+import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, Plus, PawPrint } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
 import { ROUTES, UK } from '../../utils/constants';
 import './Dashboard.css';
 
-/**
- * Dashboard page for vets
- */
+
+// Dashboard page for vets
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const Dashboard = () => {
       id: 'vet-reviews',
       title: 'Αξιολογήσεις',
       description: 'Προβολή αξιολογήσεων πελατών',
-      icon: <FileText />,
+      icon: <Star />,
       onClick: () => navigate(ROUTES.vet.reviews),
     },
     {

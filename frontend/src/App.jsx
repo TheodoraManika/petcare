@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
+import Profile from './pages/vet/Profile';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import { ROUTES } from './utils/constants';
 
@@ -15,6 +16,7 @@ function App() {
 
         {/* Vet Routes */}
         <Route path="/vet/dashboard" element={<Dashboard />} />
+        <Route path={ROUTES.vet.profile} element={<Profile />} />
 
         {/* Confirmation / Notices */}
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />

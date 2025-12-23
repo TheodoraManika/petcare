@@ -1,0 +1,139 @@
+.profile {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.profile__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.profile__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.profile__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.profile__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Icon styling */
+.profile__btn svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.profile__btn--delete {
+  background-color: #FF5252;
+  color: #101828;
+}
+
+.profile__btn--delete:hover {
+  background-color: #ff3e3e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.profile__btn--delete svg {
+  color: #101828;
+}
+
+.profile__btn--edit {
+  background-color: #FCA47C;
+  color: #101828;
+}
+
+.profile__btn--edit:hover {
+  background-color: #fb8a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.profile__btn--edit svg {
+  color: #101828;
+}
+
+.profile__form {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.profile__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile__field--full {
+  grid-column: 1 / -1;
+}
+
+.profile__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.profile__required {
+  color: #FF5252;
+}
+
+.profile__input,
+.profile__textarea {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.profile__input:focus,
+.profile__textarea:focus {
+  outline: none;
+  border-color: #FCA47C;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.profile__input:disabled,
+.profile__textarea:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.profile__textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
