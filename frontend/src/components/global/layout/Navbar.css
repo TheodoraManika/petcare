@@ -14,7 +14,7 @@
 .navbar__container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
   padding: 0 var(--spacing-lg);
   max-width: 1600px;
@@ -28,7 +28,7 @@
   align-items: center;
   gap: var(--spacing-sm);
   text-decoration: none;
-  margin-right: 64px;
+  margin-right: 120px;
 }
 
 .navbar__logo-icon {
@@ -57,7 +57,7 @@
 .navbar__nav-link {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
