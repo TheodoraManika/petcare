@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { SquarePen, X, Save } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { SquarePen, X, Save, UserRoundCheck, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
+import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: 'Γιάννης',
     lastName: 'Πετρίδης',
@@ -38,10 +43,23 @@ const Profile = () => {
   };
 
   const handleDelete = () => {
-    if (window.confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό σας; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.')) {
-      // Handle account deletion logic here
-      console.log('Account deletion requested');
-    }
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Handle account deletion logic here
+    console.log('Account deleted');
+    setShowDeleteModal(false);
+    setShowSuccessModal(true);
+    
+    // Redirect to dashboard after 5 seconds - CHANGE TO HOME PAGE LATER
+    setTimeout(() => {
+      navigate(ROUTES.vet.dashboard);
+    }, 5000);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
   };
 
   const handleSubmit = (e) => {
@@ -289,6 +307,54 @@ const Profile = () => {
             </div>
           </div>
         </form>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;</h2>
+              <p className="modal-description">
+                Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν.
+              </p>
+              <div className="modal-actions">
+                <button 
+                  className="modal-btn modal-btn--cancel"
+                  onClick={handleCancelDelete}
+                >
+                  Ακύρωση
+                </button>
+                <button 
+                  className="modal-btn modal-btn--delete"
+                  onClick={handleConfirmDelete}
+                >
+                  Διαγραφή
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Modal */}
+        {showSuccessModal && (
+          <div className="modal-overlay">
+            <div className="modal-content modal-content--success">
+              <div className="success-icon">
+                <UserRoundCheck size={48} />
+              </div>
+              <h2 className="modal-title">Επιτυχής Διαγραφή!</h2>
+              <p className="modal-description">
+                Ο λογαριασμός σας διαγράφηκε με επιτυχία.
+                <br />
+                Επιστροφή στην αρχική...
+                <br />
+                Παρακαλώ περιμένετε...
+              </p>
+              <div className="loading-spinner">
+                <Loader2 size={32} className="spinner" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );
