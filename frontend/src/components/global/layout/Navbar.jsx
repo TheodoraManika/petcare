@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, Plus, FileText, Calendar, Clock, AlertCircle, History, PawPrint } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
@@ -58,7 +58,7 @@ const Navbar = () => {
   }, []);
 
   const menuItems = [
-    { icon: <Plus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
+    { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
     { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operations },
     { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
     { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },

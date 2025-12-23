@@ -152,10 +152,15 @@
   color: var(--color-text-primary);
 }
 
+.navbar__nav-dropdown-item:hover .navbar__nav-dropdown-icon {
+  color: #FCA47C;
+}
+
 .navbar__nav-dropdown-icon {
   display: flex;
   align-items: center;
   color: inherit;
+  transition: color var(--transition-fast);
 }
 
 /* Right Section */

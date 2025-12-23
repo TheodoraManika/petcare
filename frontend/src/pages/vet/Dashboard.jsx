@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, Plus, PawPrint } from 'lucide-react';
+import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
 import { ROUTES, UK } from '../../utils/constants';
@@ -17,7 +17,7 @@ const Dashboard = () => {
       id: 'pet-registration',
       title: 'Καταγραφή Κατοικιδίου',
       description: 'Καταγραφή νέου κατοικιδίου',
-      icon: <Plus />,
+      icon: <CirclePlus />,
       onClick: () => navigate(ROUTES.vet.register),
     },
     {
