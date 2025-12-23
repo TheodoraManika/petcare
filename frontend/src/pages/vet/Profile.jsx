@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SquarePen, X, Save, UserRoundCheck, Loader2 } from 'lucide-react';
+import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
@@ -8,7 +8,9 @@ import './Profile.css';
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: 'Γιάννης',
@@ -38,8 +40,17 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
     setIsEditing(false);
-    // We need to reset form data here
+    setShowCancelModal(false);
+    // Optionally reset form data here
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
   };
 
   const handleDelete = () => {
@@ -67,7 +78,37 @@ const Profile = () => {
     // Handle form submission logic here
     console.log('Form submitted:', formData);
     setIsEditing(false);
+    setShowSaveSuccessModal(true);
   };
+
+  const handleBackToDashboard = () => {
+    navigate(ROUTES.vet.dashboard);
+  };
+
+  // If showing save success, render only the success page
+  if (showSaveSuccessModal) {
+    return (
+      <PageLayout>
+        <div className="profile-success">
+          <div className="profile-success__content">
+            <div className="profile-success__icon">
+              <UserRound size={64} />
+            </div>
+            <h1 className="profile-success__title">Το προφίλ ανανεώθηκε!</h1>
+            <p className="profile-success__description">
+              Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας.
+            </p>
+            <button 
+              className="profile-success__btn"
+              onClick={handleBackToDashboard}
+            >
+              Επιστροφή στο Μενού
+            </button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -334,6 +375,32 @@ const Profile = () => {
           </div>
         )}
 
+        {/* Cancel Edit Confirmation Modal */}
+        {showCancelModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;</h2>
+              <p className="modal-description">
+                Αυτή η ενέργεια δεν αναιρείται.
+              </p>
+              <div className="modal-actions">
+                <button 
+                  className="modal-btn modal-btn--cancel"
+                  onClick={handleCancelCancel}
+                >
+                  Όχι, επιστροφή
+                </button>
+                <button 
+                  className="modal-btn modal-btn--delete"
+                  onClick={handleConfirmCancel}
+                >
+                  Ναι, ακύρωση
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Success Modal */}
         {showSuccessModal && (
           <div className="modal-overlay">
@@ -345,7 +412,7 @@ const Profile = () => {
               <p className="modal-description">
                 Ο λογαριασμός σας διαγράφηκε με επιτυχία.
                 <br />
-                Επιστροφή στην αρχική...
+                Επιστροφή στην αρχική.
                 <br />
                 Παρακαλώ περιμένετε...
               </p>
