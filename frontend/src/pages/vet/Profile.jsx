@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SquarePen, X } from 'lucide-react';
+import { SquarePen, X, Save } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import './Profile.css';
 
@@ -32,6 +32,11 @@ const Profile = () => {
     setIsEditing(!isEditing);
   };
 
+  const handleCancel = () => {
+    setIsEditing(false);
+    // We need to reset form data here
+  };
+
   const handleDelete = () => {
     if (window.confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό σας; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.')) {
       // Handle account deletion logic here
@@ -52,22 +57,44 @@ const Profile = () => {
         <div className="profile__header">
           <h1 className="profile__title">Το Προφίλ μου</h1>
           <div className="profile__actions">
-            <button 
-              className="profile__btn profile__btn--delete"
-              onClick={handleDelete}
-              type="button"
-            >
-              <X size={18} />
-              Διαγραφή Λογαριασμού
-            </button>
-            <button 
-              className="profile__btn profile__btn--edit"
-              onClick={isEditing ? handleSubmit : handleEditToggle}
-              type="button"
-            >
-              <SquarePen size={18} /> 
-              {isEditing ? 'Επεξεργασία' : 'Επεξεργασία'}
-            </button>
+            {isEditing ? (
+              <>
+                <button 
+                  className="profile__btn profile__btn--cancel"
+                  onClick={handleCancel}
+                  type="button"
+                >
+                  Ακύρωση
+                </button>
+                <button 
+                  className="profile__btn profile__btn--save"
+                  onClick={handleSubmit}
+                  type="button"
+                >
+                  <Save size={18} />
+                  Αποθήκευση
+                </button>
+              </>
+            ) : (
+              <>
+                <button 
+                  className="profile__btn profile__btn--delete"
+                  onClick={handleDelete}
+                  type="button"
+                >
+                  <X size={18} />
+                  Διαγραφή Λογαριασμού
+                </button>
+                <button 
+                  className="profile__btn profile__btn--edit"
+                  onClick={handleEditToggle}
+                  type="button"
+                >
+                  <SquarePen size={18} /> 
+                  Επεξεργασία
+                </button>
+              </>
+            )}
           </div>
         </div>
 
