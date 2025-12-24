@@ -6,6 +6,7 @@ import Dashboard from './pages/vet/Dashboard';
 import Profile from './pages/vet/Profile';
 import Reviews from './pages/vet/Reviews';
 import Register from './pages/vet/Register';
+import Operation from './pages/vet/Operation';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import { ROUTES } from './utils/constants';
 
@@ -21,6 +22,7 @@ function App() {
         <Route path={ROUTES.vet.profile} element={<Profile />} />
         <Route path={ROUTES.vet.reviews} element={<Reviews />} />
         <Route path={ROUTES.vet.register} element={<Register />} />
+        <Route path={ROUTES.vet.operation} element={<Operation />} />
 
         {/* Confirmation / Notices */}
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />

@@ -59,7 +59,7 @@ const Navbar = () => {
 
   const menuItems = [
     { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
-    { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operations },
+    { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
     { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
     { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },
     { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },

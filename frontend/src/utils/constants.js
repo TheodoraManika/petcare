@@ -6,7 +6,7 @@ export const ROUTES = {
     dashboard: '/vet/dashboard',
     profile: '/vet/profile',
     register: '/vet/register',
-    operations: '/vet/operations',
+    operation: '/vet/operation',
     reviews: '/vet/reviews',
     history: '/vet/history',
     appointments: '/vet/appointments',

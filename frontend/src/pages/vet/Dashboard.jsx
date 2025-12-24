@@ -25,7 +25,7 @@ const Dashboard = () => {
       title: 'Ιατρικές Πράξεις',
       description: 'Καταγραφή ιατρικών πράξεων',
       icon: <FileText />,
-      onClick: () => navigate(ROUTES.vet.operations),
+      onClick: () => navigate(ROUTES.vet.operation),
     },
     {
       id: 'vet-reviews',
