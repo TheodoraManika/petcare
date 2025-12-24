@@ -7,6 +7,7 @@ import Profile from './pages/vet/Profile';
 import Reviews from './pages/vet/Reviews';
 import Register from './pages/vet/Register';
 import Operation from './pages/vet/Operation';
+import Availability from './pages/vet/Availability';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import { ROUTES } from './utils/constants';
 
@@ -23,6 +24,7 @@ function App() {
         <Route path={ROUTES.vet.reviews} element={<Reviews />} />
         <Route path={ROUTES.vet.register} element={<Register />} />
         <Route path={ROUTES.vet.operation} element={<Operation />} />
+        <Route path={ROUTES.vet.availability} element={<Availability />} />
 
         {/* Confirmation / Notices */}
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />
