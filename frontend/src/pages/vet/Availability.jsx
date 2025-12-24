@@ -6,12 +6,12 @@ import './Availability.css';
 
 const Availability = () => {
   const [availabilityData, setAvailabilityData] = useState({
-    monday: [{ start: '09:00', end: '13:00', status: 'not-available' }],
+    monday: [{ start: '09:00', end: '13:00', status: 'checkup' }],
     tuesday: [],
-    wednesday: [{ start: '10:00', end: '17:00', status: 'limited' }],
+    wednesday: [{ start: '10:00', end: '17:00', status: 'surgery' }],
     thursday: [
-      { start: '09:00', end: '13:00', status: 'busy' },
-      { start: '17:00', end: '21:00', status: 'not-available' }
+      { start: '09:00', end: '13:00', status: 'vaccination' },
+      { start: '17:00', end: '21:00', status: 'treatment' }
     ],
     friday: [],
     saturday: [],
@@ -22,8 +22,10 @@ const Availability = () => {
     day: '',
     startTime: '09:00',
     endTime: '17:00',
-    status: 'busy'
+    status: 'vaccination'
   });
+
+  const [errorMessage, setErrorMessage] = useState('');
 
   const dayLabels = {
     monday: 'Δευτέρα',
@@ -36,19 +38,38 @@ const Availability = () => {
   };
 
   const statusLabels = {
-    busy: 'Εμβολιασμοί',
-    'not-available': 'Όλες οι υπηρεσίες',
-    limited: 'Χειρουργικά'
+    vaccination: 'Εμβολιασμός',
+    checkup: 'Γενική Εξέταση',
+    surgery: 'Χειρουργείο',
+    treatment: 'Θεραπεία',
+    dental: 'Οδοντιατρική',
+    other: 'Όλες οι υπηρεσίες'
   };
 
   const statusColors = {
-    busy: '#F9D779',
-    'not-available': '#23CED9',
-    limited: '#FCA47C'
+    vaccination: '#FCA47C',
+    checkup: '#FCA47C',
+    surgery: '#FCA47C',
+    treatment: '#FCA47C',
+    dental: '#FCA47C',
+    other: '#FCA47C'
   };
 
   const handleAddSlot = () => {
     if (!newSlot.day) return;
+
+    // Convert times to minutes for comparison
+    const startMinutes = parseInt(newSlot.startTime.split(':')[0]) * 60 + parseInt(newSlot.startTime.split(':')[1]);
+    const endMinutes = parseInt(newSlot.endTime.split(':')[0]) * 60 + parseInt(newSlot.endTime.split(':')[1]);
+
+    // Validate that end time is after start time
+    if (endMinutes <= startMinutes) {
+      setErrorMessage('Η ώρα λήξης πρέπει να είναι μεταγενέστερη της ώρας έναρξης');
+      return;
+    }
+
+    // Clear error message
+    setErrorMessage('');
 
     setAvailabilityData(prev => ({
       ...prev,
@@ -67,7 +88,7 @@ const Availability = () => {
       day: '',
       startTime: '09:00',
       endTime: '17:00',
-      status: 'busy'
+      status: 'vaccination'
     });
   };
 
@@ -83,6 +104,8 @@ const Availability = () => {
       ...prev,
       [name]: value
     }));
+    // Clear error message when user changes any field
+    setErrorMessage('');
   };
 
   const getSlotCount = (day) => {
@@ -106,6 +129,7 @@ const Availability = () => {
           
           <div className="availability__form-row">
             <div className="availability__form-field">
+              <label className="availability__form-label">Ημέρα</label>
               <CustomSelect
                 name="day"
                 value={newSlot.day}
@@ -119,11 +143,12 @@ const Availability = () => {
                   { value: 'saturday', label: 'Σάββατο' },
                   { value: 'sunday', label: 'Κυριακή' }
                 ]}
-                placeholder="Ημέρα"
+                placeholder="Επιλέξτε ημέρα"
               />
             </div>
 
             <div className="availability__form-field">
+              <label className="availability__form-label">Ώρα Έναρξης</label>
               <CustomSelect
                 name="startTime"
                 value={newSlot.startTime}
@@ -139,18 +164,25 @@ const Availability = () => {
                   { value: '15:00', label: '15:00' },
                   { value: '16:00', label: '16:00' },
                   { value: '17:00', label: '17:00' },
-                  { value: '18:00', label: '18:00' }
+                  { value: '18:00', label: '18:00' },
+                  { value: '19:00', label: '19:00' },
+                  { value: '20:00', label: '20:00' },
+                  { value: '21:00', label: '21:00' }
                 ]}
                 placeholder="09:00"
               />
             </div>
 
             <div className="availability__form-field">
+              <label className="availability__form-label">Ώρα Λήξης</label>
               <CustomSelect
                 name="endTime"
                 value={newSlot.endTime}
                 onChange={(value) => handleSelectChange('endTime', value)}
                 options={[
+                  { value: '09:00', label: '09:00' },
+                  { value: '10:00', label: '10:00' },
+                  { value: '11:00', label: '11:00' },
                   { value: '12:00', label: '12:00' },
                   { value: '13:00', label: '13:00' },
                   { value: '14:00', label: '14:00' },
@@ -168,19 +200,29 @@ const Availability = () => {
             </div>
 
             <div className="availability__form-field">
+              <label className="availability__form-label">Υπηρεσία</label>
               <CustomSelect
                 name="status"
                 value={newSlot.status}
                 onChange={(value) => handleSelectChange('status', value)}
                 options={[
-                  { value: 'busy', label: 'Εμβολιασμοί' },
-                  { value: 'not-available', label: 'Όλες οι υπηρεσίες' },
-                  { value: 'limited', label: 'Χειρουργικά' }
+                  { value: 'vaccination', label: 'Εμβολιασμός' },
+                  { value: 'checkup', label: 'Γενική Εξέταση' },
+                  { value: 'surgery', label: 'Χειρουργείο' },
+                  { value: 'treatment', label: 'Θεραπεία' },
+                  { value: 'dental', label: 'Οδοντιατρική' },
+                  { value: 'other', label: 'Όλες οι υπηρεσίες' }
                 ]}
-                placeholder="Υπηρεσία"
+                placeholder="Επιλέξτε υπηρεσία"
               />
             </div>
           </div>
+
+          {errorMessage && (
+            <div className="availability__error">
+              {errorMessage}
+            </div>
+          )}
 
           <button 
             className="availability__add-btn"
@@ -208,8 +250,9 @@ const Availability = () => {
                       <Calendar size={18} />
                       <span>{dayLabels[day]}</span>
                     </div>
+                    {/* CHANGE TO BETTER NAME OR DELETE */}
                     <span className="availability__day-count">
-                      {count} παραθύρο{count !== 1 ? '' : ''}
+                      {count} παραθύρο{count !== 1 ? '' : ''} 
                     </span>
                   </div>
 

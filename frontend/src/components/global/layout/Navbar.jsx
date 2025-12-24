@@ -192,13 +192,6 @@ const Navbar = () => {
                   </span>
                   <span>Προφίλ</span>
                 </Link>
-                <Link
-                  to={ROUTES.vet.dashboard}
-                  className="navbar__profile-menu-item"
-                  onClick={() => setIsProfileOpen(false)}
-                >
-                  <span>Dashboard</span>
-                </Link>
                 <button
                   className="navbar__profile-menu-item navbar__profile-menu-item--logout"
                   onClick={() => {
