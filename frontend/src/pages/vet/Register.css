@@ -59,12 +59,6 @@
 /* Form Sections */
 .register__section {
   margin-bottom: 32px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.register__section:last-of-type {
-  border-bottom: none;
 }
 
 .register__section-title {
@@ -146,8 +140,6 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
 }
 
 .register__btn {

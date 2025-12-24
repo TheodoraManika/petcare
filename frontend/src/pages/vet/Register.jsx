@@ -195,7 +195,7 @@ const Register = () => {
                     value={formData.birthDate}
                     onChange={handleInputChange}
                   />
-                  <span className="register__field-note">Συμπληρώστε τη μέγιστη δυνατή ακρίβεια αν δε γνωρίζετε την ακριβή ημερομηνία γέννησης</span>
+                  <span className="register__field-note">Συμπληρώστε κατά προσέγγιση αν δεν γνωρίζετε την ακριβή ημερομηνία γέννησης</span>
                 </div>
 
                 <div className="register__field">
