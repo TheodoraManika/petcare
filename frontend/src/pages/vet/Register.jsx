@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Send } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
+import CustomSelect from '../../components/common/CustomSelect';
 import { ROUTES } from '../../utils/constants';
 import './Register.css';
 
@@ -27,6 +28,13 @@ const Register = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSelectChange = (name, value) => {
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -112,20 +120,20 @@ const Register = () => {
                   <label className="register__label">
                     Είδος Ζώου <span className="register__required">*</span>
                   </label>
-                  <select
+                  <CustomSelect
                     name="species"
-                    className="register__select"
                     value={formData.species}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleSelectChange('species', value)}
+                    options={[
+                      { value: 'dog', label: 'Σκύλος' },
+                      { value: 'cat', label: 'Γάτα' },
+                      { value: 'bird', label: 'Πτηνό' },
+                      { value: 'reptile', label: 'Ερπετό' },
+                      { value: 'other', label: 'Άλλο' }
+                    ]}
+                    placeholder="Επιλέξτε είδος"
                     required
-                  >
-                    <option value=""></option>
-                    <option value="dog">Σκύλος</option>
-                    <option value="cat">Γάτα</option>
-                    <option value="bird">Πτηνό</option>
-                    <option value="reptile">Ερπετό</option>
-                    <option value="other">Άλλο</option>
-                  </select>
+                  />
                 </div>
 
                 <div className="register__field">
@@ -163,17 +171,17 @@ const Register = () => {
                   <label className="register__label">
                     Φύλο <span className="register__required">*</span>
                   </label>
-                  <select
+                  <CustomSelect
                     name="gender"
-                    className="register__select"
                     value={formData.gender}
-                    onChange={handleInputChange}
+                    onChange={(value) => handleSelectChange('gender', value)}
+                    options={[
+                      { value: 'male', label: 'Αρσενικό' },
+                      { value: 'female', label: 'Θηλυκό' }
+                    ]}
+                    placeholder="Επιλέξτε φύλο"
                     required
-                  >
-                    <option value=""></option>
-                    <option value="male">Αρσενικό</option>
-                    <option value="female">Θηλυκό</option>
-                  </select>
+                  />
                 </div>
               </div>
 
