@@ -10,6 +10,8 @@ import Operation from './pages/vet/Operation';
 import Availability from './pages/vet/Availability';
 import Transfer from './pages/vet/Transfer';
 import LifeEvents from './pages/vet/LifeEvents';
+import Adoption from './pages/vet/Adoption';
+import Foster from './pages/vet/Foster';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import { ROUTES } from './utils/constants';
 
@@ -28,6 +30,8 @@ function App() {
         <Route path={ROUTES.vet.operation} element={<Operation />} />
         <Route path={ROUTES.vet.availability} element={<Availability />} />
         <Route path={ROUTES.vet.transfer} element={<Transfer />} />
+        <Route path={ROUTES.vet.adoption} element={<Adoption />} />
+        <Route path={ROUTES.vet.foster} element={<Foster />} />
         <Route path={ROUTES.vet.lifeEvents} element={<LifeEvents />} />
 
         {/* Confirmation / Notices */}

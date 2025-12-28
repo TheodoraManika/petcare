@@ -21,14 +21,14 @@ const LifeEvents = () => {
       icon: <Heart size={40} />,
       title: 'Δήλωση Υιοθεσίας',
       description: 'Δήλωση Υιοθεσίας ενός κατοικιδίου',
-      route: ROUTES.vet.foster
+      route: ROUTES.vet.adoption
     },
     {
       id: 'adoption',
       icon: <Handshake size={40} />,
       title: 'Δήλωση Αναδοχής',
       description: 'Δήλωση Αναδοχής ενός κατοικιδίου',
-      route: ROUTES.vet.adoption
+      route: ROUTES.vet.foster
     }
   ];
 
