@@ -1,0 +1,161 @@
+.transfer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.transfer__header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.transfer__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Form Wrapper */
+.transfer__form-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top: 32px;
+}
+
+.transfer__step-content {
+  min-height: 400px;
+}
+
+.transfer__step-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 32px 0;
+}
+
+/* Form Fields */
+.transfer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.transfer__row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.transfer__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.transfer__required {
+  color: #ef4444;
+}
+
+.transfer__input,
+.transfer__textarea {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: white;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.transfer__input:focus,
+.transfer__textarea:focus {
+  outline: none;
+  border-color: #FCA47C;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.transfer__input::placeholder,
+.transfer__textarea::placeholder {
+  color: #9ca3af;
+}
+
+.transfer__textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+}
+
+.transfer__field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: -4px;
+}
+
+/* Form Actions */
+.transfer__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.transfer__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.transfer__btn--primary {
+  background-color: #FCA47C;
+  color: #101828;
+  margin-left: auto;
+}
+
+.transfer__btn--primary:hover:not(:disabled) {
+  background-color: #fb8a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.transfer__btn--primary:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.transfer__btn--secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.transfer__btn--secondary:hover {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.transfer__btn--cancel {
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.transfer__btn--cancel:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}

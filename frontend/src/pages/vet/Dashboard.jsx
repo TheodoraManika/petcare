@@ -60,7 +60,7 @@ const Dashboard = () => {
       title: 'Δηλώσεις Συμβάντων Ζωής',
       description: 'Μεταβίβαση, υιοθεσία, αναδοχή',
       icon: <PawPrint />,
-      onClick: () => navigate(ROUTES.vet.lifeEvent),
+      onClick: () => navigate(ROUTES.vet.lifeEvents),
     },
     {
       id: 'lost-declaration',

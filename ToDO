@@ -6,6 +6,39 @@ Konstantinos
 - [ ] citizen
 - [ ] backend
 
+Citizen pages:
+- Contact
+- About Us
+- Privacy
+- Rules and Conditions
+- Cookies
+- Info (x3)
+- Vet details
+- Vet search
+- Lost pets
+- Lost pets detail
+- Lost pets form
+- Sign up owner
+- Sign up vet
+- Login
+- Home page
+
 Despoina
-- [ ] vet
-- [ ] background and logo
+Vet pages:
+- Dashboard ✓
+- Navbar ✓
+- Profile ✓
+- Pet Registration ✓
+- Pet Operation ✓
+- Life Events ✓
+- Transfer ✓
+- Adoption
+- Foster
+- History
+- Appointments
+- Availability (Available hours) ✓
+- Reviews ✓
+
+- Να γίνουν όλα τα Confirmation ως ξεχωριστεί σελίδα που αλλάζει ανάλογα κάθε φορά που χρειάζεται.
+- Breadcrumb everywhere
+- Έλεγχοι σε ΟΛΑ τα πεδία που χρειάζεται (π.χ. αν ειναι υποχρεωτικοί 15 χαρακτήρες και έχεις >< να βγάζει μήνυμα λάθους)

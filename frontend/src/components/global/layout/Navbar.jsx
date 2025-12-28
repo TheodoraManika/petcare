@@ -64,7 +64,7 @@ const Navbar = () => {
     { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },
     { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },
     { icon: <Clock size={18} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
-    { icon: <PawPrint size={18} />, label: 'Συμβάντα Ζωής', route: ROUTES.vet.lifeEvent },
+    { icon: <PawPrint size={18} />, label: 'Συμβάντα Ζωής', route: ROUTES.vet.lifeEvents },
     { icon: <AlertCircle size={18} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
   ];
 
