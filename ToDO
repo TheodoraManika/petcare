@@ -7,38 +7,40 @@ Konstantinos
 - [ ] backend
 
 Citizen pages:
-- Contact
-- About Us
-- Privacy
-- Rules and Conditions
-- Cookies
-- Info (x3)
-- Vet details
-- Vet search
-- Lost pets
-- Lost pets detail
-- Lost pets form
-- Sign up owner
-- Sign up vet
-- Login
-- Home page
+- [ ] Contact
+- [ ] About Us
+- [ ] Privacy
+- [ ] Rules and Conditions
+- [ ] Cookies
+- [ ] Info (x3)
+- [ ] Vet details
+- [ ] Vet search
+- [ ] Lost pets
+- [ ] Lost pets detail
+- [ ] Lost pets form
+- [ ] Sign up owner
+- [ ] Sign up vet
+- [ ] Login
+- [ ] Home page
 
 Despoina
 Vet pages:
-- Dashboard ✓
-- Navbar ✓
-- Profile ✓
-- Pet Registration ✓
-- Pet Operation ✓
-- Life Events ✓
-- Transfer ✓
-- Adoption ✓
-- Foster ✓
-- History
+- [x] Dashboard
+- [x] Navbar
+- [x] Profile
+- [x] Pet Registration
+- [x] Pet Operation
+- [x] Life Events
+- [x] Transfer
+- [x] Adoption
+- [x] Foster
+- [x] History
+    - [ ] Κενή σελίδα όταν δεν υπάρχει ιστορικό
 - Appointments
-- Availability (Available hours) ✓
-- Reviews ✓
+- [x] Availability (Available hours)
+- [x] Reviews
 
-- Να γίνουν όλα τα Confirmation ως ξεχωριστεί σελίδα που αλλάζει ανάλογα κάθε φορά που χρειάζεται.
-- Breadcrumb everywhere
-- Έλεγχοι σε ΟΛΑ τα πεδία που χρειάζεται (π.χ. αν ειναι υποχρεωτικοί 15 χαρακτήρες και έχεις >< να βγάζει μήνυμα λάθους)
+- [ ] Page για εννιαίο layout του breadcrumb
+- [ ] Να γίνουν όλα τα Confirmation ως **ξεχωριστή** σελίδα που αλλάζει ανάλογα κάθε φορά που χρειάζεται.
+- [ ] Breadcrumb everywhere 
+- [ ] Έλεγχοι σε **ΟΛΑ** τα πεδία που χρειάζεται (π.χ. αν ειναι υποχρεωτικοί 15 χαρακτήρες και έχεις >15 ή <15 να βγάζει μήνυμα λάθους)
