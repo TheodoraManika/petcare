@@ -15,6 +15,7 @@ import Foster from './pages/vet/Foster';
 import History from './pages/vet/History';
 import HistoryDetail from './pages/vet/HistoryDetail';
 import LostPet from './pages/vet/LostPet';
+import Appointments from './pages/vet/Appointments';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import { ROUTES } from './utils/constants';
 
@@ -32,6 +33,7 @@ function App() {
         <Route path={ROUTES.vet.register} element={<Register />} />
         <Route path={ROUTES.vet.operation} element={<Operation />} />
         <Route path={ROUTES.vet.availability} element={<Availability />} />
+        <Route path={ROUTES.vet.appointments} element={<Appointments />} />
         <Route path={ROUTES.vet.transfer} element={<Transfer />} />
         <Route path={ROUTES.vet.adoption} element={<Adoption />} />
         <Route path={ROUTES.vet.foster} element={<Foster />} />
