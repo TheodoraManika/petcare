@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, List, ChevronLeft, ChevronRight, X, Check } from 'lucide-react';
+import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
@@ -12,9 +12,7 @@ const Appointments = () => {
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 10, 25)); // Nov 25, 2025
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-
-  // Mock data
-  const appointments = [
+  const [appointments, setAppointments] = useState([
     {
       id: 1,
       petName: 'Μπάμπης',
@@ -158,7 +156,7 @@ const Appointments = () => {
       status: 'confirmed',
       notes: ''
     }
-  ];
+  ]);
 
   const getStatusLabel = (status) => {
     const statusMap = {
@@ -210,13 +208,19 @@ const Appointments = () => {
   };
 
   const handleConfirm = (appointmentId) => {
-    console.log('Confirm appointment:', appointmentId);
-    // Update appointment status to confirmed
+    setAppointments(prevAppointments =>
+      prevAppointments.map(apt =>
+        apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
+      )
+    );
   };
 
   const handleReject = (appointmentId) => {
-    console.log('Reject appointment:', appointmentId);
-    // Update appointment status to cancelled
+    setAppointments(prevAppointments =>
+      prevAppointments.map(apt =>
+        apt.id === appointmentId ? { ...apt, status: 'cancelled' } : apt
+      )
+    );
   };
 
   const formatDateRange = () => {
@@ -273,13 +277,13 @@ const Appointments = () => {
                   className={`appointments__view-btn ${viewMode === 'day' ? 'appointments__view-btn--active' : ''}`}
                   onClick={() => setViewMode('day')}
                 >
-                  📅 Ημέρα
+                  Ημέρα
                 </button>
                 <button
                   className={`appointments__view-btn ${viewMode === 'week' ? 'appointments__view-btn--active' : ''}`}
                   onClick={() => setViewMode('week')}
                 >
-                  📅 Εβδομάδα
+                  Εβδομάδα
                 </button>
               </div>
 
@@ -304,7 +308,7 @@ const Appointments = () => {
                   return (
                     <div key={index} className="appointments__day-column">
                       <div className={`appointments__day-header ${isToday ? 'appointments__day-header--today' : ''}`}>
-                        <div className="appointments__day-name">{getDayName(day).substring(0, 3)}</div>
+                        <div className="appointments__day-name">{getDayName(day)}</div>
                         <div className="appointments__day-number">{day.getDate()}</div>
                       </div>
 
@@ -321,7 +325,7 @@ const Appointments = () => {
                               onClick={() => setSelectedAppointment(apt)}
                             >
                               <div className="appointments__card-time">
-                                🕐 {apt.time}
+                                <Clock size={12} /> {apt.time}
                               </div>
                               <div className="appointments__card-pet">{apt.petName}</div>
                               <div className="appointments__card-service">{apt.serviceType}</div>
@@ -348,39 +352,71 @@ const Appointments = () => {
                   {getAppointmentsForDate(selectedDate).map(apt => (
                     <div
                       key={apt.id}
-                      className="appointments__list-card"
-                      onClick={() => setSelectedAppointment(apt)}
+                      className="appointments__day-card"
                     >
-                      <div className="appointments__list-card-header">
-                        <div>
-                          <h4 className="appointments__list-pet-name">{apt.petName}</h4>
-                          <p className="appointments__list-phone">Τηλέφωνο: {apt.phone}</p>
+                      <div className="appointments__day-card-header">
+                        <div className="appointments__day-card-owner">
+                          <h4 className="appointments__day-card-name">{apt.petName}</h4>
+                          <p className="appointments__day-card-phone">Τηλέφωνο: {apt.phone}</p>
                         </div>
-                        <div className={getStatusClass(apt.status)}>
-                          {getStatusLabel(apt.status)}
+                        <div className="appointments__day-card-badge">
+                          <div className={getStatusClass(apt.status)}>
+                            {getStatusLabel(apt.status)}
+                          </div>
+                        </div>
+                        <div className="appointments__day-card-actions">
+                          {apt.status === 'pending' && (
+                            <>
+                              <button
+                                className="appointments__action-btn appointments__action-btn--reject"
+                                onClick={() => handleReject(apt.id)}
+                                title="Απόρριψη"
+                              >
+                                <X size={18} />
+                              </button>
+                              <button
+                                className="appointments__action-btn appointments__action-btn--confirm"
+                                onClick={() => handleConfirm(apt.id)}
+                                title="Επιβεβαίωση"
+                              >
+                                <Check size={18} />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
 
-                      <div className="appointments__list-card-body">
-                        <div className="appointments__list-info">
-                          <span className="appointments__list-label">Κατοικίδio:</span>
-                          <span>{apt.species}</span>
-                        </div>
-                        <div className="appointments__list-info">
-                          <span className="appointments__list-label">Είδος:</span>
-                          <span>{apt.breed}</span>
-                        </div>
-                        <div className="appointments__list-info">
-                          <span className="appointments__list-label">Ράτσα:</span>
-                          <span>{apt.breed}</span>
+                      <div className="appointments__day-card-body">
+                        <div className="appointments__day-card-row">
+                          <div className="appointments__day-card-field">
+                            <span className="appointments__day-card-label">Κατοικίδιο:</span>
+                            <span>{apt.species}</span>
+                          </div>
+                          <div className="appointments__day-card-field">
+                            <span className="appointments__day-card-label">Είδος:</span>
+                            <span>{apt.breed}</span>
+                          </div>
+                          <div className="appointments__day-card-field">
+                            <span className="appointments__day-card-label">Ράτσα:</span>
+                            <span>{apt.breed}</span>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="appointments__list-card-footer">
-                        <div className="appointments__list-meta">
-                          <span>Ώρα: {apt.time}</span>
-                          <span>Υπηρεσία: {apt.serviceType}</span>
-                          <span>Σημειώσεις: {apt.notes || '-'}</span>
+                      <div className="appointments__day-card-footer">
+                        <div className="appointments__day-card-meta">
+                          <div className="appointments__day-card-meta-item">
+                            <span className="appointments__day-card-meta-label">Ώρα</span>
+                            <span>{apt.time}</span>
+                          </div>
+                          <div className="appointments__day-card-meta-item">
+                            <span className="appointments__day-card-meta-label">Υπηρεσία</span>
+                            <span>{apt.serviceType}</span>
+                          </div>
+                          <div className="appointments__day-card-meta-item">
+                            <span className="appointments__day-card-meta-label">Σημειώσεις</span>
+                            <span>{apt.notes || '-'}</span>
+                          </div>
                         </div>
                       </div>
                     </div>

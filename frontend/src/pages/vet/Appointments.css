@@ -70,28 +70,39 @@
 .appointments__view-buttons {
   display: flex;
   gap: 8px;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  width: fit-content;
+  position: relative;
 }
 
 .appointments__view-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 16px;
-  border: 1px solid #d1d5db;
+  background: transparent;
+  border: none;
   border-radius: 6px;
-  background: white;
   font-size: 14px;
+  font-weight: 500;
   color: #6b7280;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .appointments__view-btn:hover {
-  border-color: #FCA47C;
-  color: #FCA47C;
+  color: #1f2937;
 }
 
 .appointments__view-btn--active {
-  background: #FCA47C;
-  color: white;
-  border-color: #FCA47C;
+  color: #1f2937;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .appointments__date-navigation {
@@ -145,19 +156,18 @@
 .appointments__day-header {
   padding: 12px;
   text-align: center;
-  background: #f9fafb;
-  border-bottom: 2px solid #e5e7eb;
+  background: linear-gradient(135deg, #23cdd950 0%, #fca47c57 50%, #f9d77956 100%);
 }
 
 .appointments__day-header--today {
-  background: #23CED9;
-  color: white;
+  padding: 12px;
+  text-align: center;
+  background: #fca47c7c;
 }
 
 .appointments__day-name {
   font-size: 12px;
   font-weight: 600;
-  text-transform: uppercase;
   margin-bottom: 4px;
 }
 
@@ -182,9 +192,9 @@
 .appointments__calendar-card {
   padding: 10px;
   margin-bottom: 8px;
-  background: #f9fafb;
-  border-radius: 6px;
-  border-left: 3px solid #FCA47C;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid #d3d3d3c3;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -196,6 +206,9 @@
 }
 
 .appointments__card-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   color: #6b7280;
   margin-bottom: 4px;
@@ -246,10 +259,6 @@
 
 /* Day View */
 .appointments__day-view {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
 }
 
@@ -264,6 +273,95 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.appointments__day-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.appointments__day-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #23cdd950 0%, #fca47c57 50%, #f9d77956 100%);
+  gap: 16px;
+}
+
+.appointments__day-card-owner {
+  flex: 1;
+}
+
+.appointments__day-card-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.appointments__day-card-phone {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.appointments__day-card-badge {
+  flex-shrink: 0;
+}
+
+.appointments__day-card-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.appointments__day-card-body {
+  padding: 16px 20px;
+  background: #f9fafb;
+}
+
+.appointments__day-card-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.appointments__day-card-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appointments__day-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.appointments__day-card-footer {
+  padding: 16px 20px;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+.appointments__day-card-meta {
+  display: flex;
+  gap: 32px;
+}
+
+.appointments__day-card-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appointments__day-card-meta-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 /* List View */
@@ -416,11 +514,11 @@
 /* Alert Banner */
 .appointments__alert {
   padding: 16px 20px;
-  background: #FEF3C7;
-  border-left: 4px solid #F59E0B;
+  background: #fca47c5e;
+  border-left: 4px solid #FCA47C;
   border-radius: 8px;
   font-size: 14px;
-  color: #92400E;
+  color: #101828;
   line-height: 1.5;
 }
 
