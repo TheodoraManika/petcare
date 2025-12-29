@@ -70,7 +70,7 @@ const Navbar = () => {
 
   const navLinks = [
     { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
-    { to: ROUTES.vet.lostPetForm, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+    { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
     { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
     { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
     { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
