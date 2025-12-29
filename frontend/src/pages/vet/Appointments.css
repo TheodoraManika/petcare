@@ -165,6 +165,13 @@
   background: #fca47c7c;
 }
 
+.appointments__day-header--past {
+  padding: 12px;
+  text-align: center;
+  background: #e5e7eb;
+  color: #9ca3af;
+}
+
 .appointments__day-name {
   font-size: 12px;
   font-weight: 600;

@@ -303,11 +303,17 @@ const Appointments = () => {
               <div className="appointments__week-calendar">
                 {getWeekDays().map((day, index) => {
                   const dayAppointments = getAppointmentsForDate(day);
-                  const isToday = day.toDateString() === new Date().toDateString();
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  const currentDay = new Date(day);
+                  currentDay.setHours(0, 0, 0, 0);
+                  
+                  const isToday = currentDay.getTime() === today.getTime();
+                  const isPast = currentDay < today;
                   
                   return (
                     <div key={index} className="appointments__day-column">
-                      <div className={`appointments__day-header ${isToday ? 'appointments__day-header--today' : ''}`}>
+                      <div className={`appointments__day-header ${isToday ? 'appointments__day-header--today' : ''} ${isPast ? 'appointments__day-header--past' : ''}`}>
                         <div className="appointments__day-name">{getDayName(day)}</div>
                         <div className="appointments__day-number">{day.getDate()}</div>
                       </div>
