@@ -8,10 +8,10 @@ import './PageLayout.css';
 /**
  * PageLayout component - wraps pages with navbar, footer and breadcrumbs
  */
-const PageLayout = ({ children, title }) => {
+const PageLayout = ({ children, title, variant = 'vet' }) => {
   return (
     <div className="page-layout">
-      <Navbar />
+      <Navbar variant={variant} />
       <main className="page-layout__main">
         <nav className="page-layout__breadcrumbs">
           <Link to="/" className="page-layout__breadcrumb-link">

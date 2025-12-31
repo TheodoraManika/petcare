@@ -2,6 +2,14 @@
 export const ROUTES = {
   home: '/',
   confirmation: '/confirmation',
+  owner: {
+    dashboard: '/owner/dashboard',
+    pets: '/owner/pets',
+    appointments: '/owner/appointments',
+    lostPetForm: '/owner/lost-pet',
+    foundPetForm: '/owner/found-pet',
+    lostHistory: '/owner/history',
+  },
   vet: {
     dashboard: '/vet/dashboard',
     profile: '/vet/profile',

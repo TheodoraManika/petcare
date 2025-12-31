@@ -102,9 +102,9 @@
 
 .navbar__nav-dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 18px);
   right: 0;
-  min-width: 280px;
+  min-width: 180px;
   max-height: 400px;
   overflow-y: auto;
   background-color: var(--color-bg-white);
@@ -154,6 +154,7 @@
 
 .navbar__nav-dropdown-item:hover .navbar__nav-dropdown-icon {
   color: #FCA47C;
+  transform: scale(1.1);
 }
 
 .navbar__nav-dropdown-icon {
@@ -216,7 +217,7 @@
 /* Profile Dropdown Menu */
 .navbar__profile-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   right: 0;
   min-width: 200px;
   background-color: var(--color-bg-white);
@@ -274,4 +275,37 @@
   display: flex;
   align-items: center;
   color: inherit;
+}
+
+.navbar__profile-menu-item--logout .navbar__profile-menu-icon,
+.navbar__profile-menu-item--logout:hover .navbar__profile-menu-icon {
+  color: var(--color-danger);
+}
+
+
+.navbar--owner .navbar__nav-dropdown-icon {
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+.navbar--owner .navbar__nav-dropdown-item:hover .navbar__nav-dropdown-icon {
+  color: #23CED9;
+  transform: scale(1.1);
+}
+
+
+.navbar--owner .navbar__profile-menu-icon {
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+.navbar--owner .navbar__profile-menu-item:hover .navbar__profile-menu-icon {
+  color: #23CED9;
+  transform: scale(1.1);
+}
+
+.navbar--owner .navbar__profile-menu-item--logout .navbar__profile-menu-icon,
+.navbar--owner .navbar__profile-menu-item--logout:hover .navbar__profile-menu-icon {
+  color: var(--color-danger);
+  transform: none;
 }

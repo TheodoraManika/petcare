@@ -8,7 +8,8 @@ import './Navbar.css';
 /**
  * Navbar component
  */
-const Navbar = () => {
+const Navbar = ({ variant = 'vet' }) => {
+  const isOwner = variant === 'owner';
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const profileRef = useRef(null);
@@ -22,7 +23,7 @@ const Navbar = () => {
       if (storedUser) {
         const userData = JSON.parse(storedUser);
         return {
-          name: userData.name || userData.username || 'Κτηνίατρος',
+          name: userData.name || userData.username || (isOwner ? 'Ιδιοκτήτης' : 'Κτηνίατρος'),
           avatar: userData.avatar || null,
         };
       }
@@ -30,7 +31,7 @@ const Navbar = () => {
       console.error('Error retrieving user data:', error);
     }
     return {
-      name: 'Κτηνίατρος',
+      name: isOwner ? 'Ιδιοκτήτης' : 'Κτηνίατρος',
       avatar: null,
     };
   };
@@ -42,7 +43,7 @@ const Navbar = () => {
   };
 
   const handleMenuClick = () => {
-    navigate(ROUTES.vet.dashboard);
+    navigate(isOwner ? ROUTES.owner.dashboard : ROUTES.vet.dashboard);
   };
 
   // Close dropdowns when clicking outside
@@ -57,27 +58,42 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const menuItems = [
-    { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
-    { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
-    { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
-    { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },
-    { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },
-    { icon: <Clock size={18} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
-    { icon: <PawPrint size={18} />, label: 'Συμβάντα Ζωής', route: ROUTES.vet.lifeEvents },
-    { icon: <AlertCircle size={18} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
-  ];
+  const menuItems = isOwner
+    ? [
+        { icon: <FileText size={18} />, label: 'Βιβλιάριο', route: ROUTES.owner.pets },
+        { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.owner.appointments },
+        { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.owner.lostPetForm },
+        { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
+      ]
+    : [
+        { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
+        { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
+        { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
+        { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },
+        { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },
+        { icon: <Clock size={18} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
+        { icon: <PawPrint size={18} />, label: 'Συμβάντα Ζωής', route: ROUTES.vet.lifeEvents },
+        { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.vet.lostPetForm },
+      ];
 
-  const navLinks = [
-    { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
-    { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-    { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
-    { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-    { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
-  ];
+  const navLinks = isOwner
+    ? [
+        { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
+        { to: ROUTES.owner.pets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.owner.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
+        { to: ROUTES.owner.vets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.owner.info, icon: <Info size={18} />, label: 'Πληροφορίες' },
+      ]
+    : [
+        { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
+        { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
+        { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
+      ];
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isOwner ? 'navbar--owner' : ''}`}>
       <div className="navbar__container">
         {/* Logo */}
         <Link to={ROUTES.home} className="navbar__logo">
@@ -183,7 +199,7 @@ const Navbar = () => {
                   <p className="navbar__profile-menu-name">{user.name}</p>
                 </div>
                 <Link
-                  to={ROUTES.vet.profile}
+                  to={isOwner ? ROUTES.owner.dashboard : ROUTES.vet.profile}
                   className="navbar__profile-menu-item"
                   onClick={() => setIsProfileOpen(false)}
                 >

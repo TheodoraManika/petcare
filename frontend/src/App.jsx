@@ -1,6 +1,9 @@
 // /src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+// Owner Pages
+import OwnerDashboard from './pages/owner/Dashboard';
+
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
 import Profile from './pages/vet/Profile';
@@ -23,8 +26,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirect root to vet dashboard */}
-        <Route path="/" element={<Navigate to="/vet/dashboard" replace />} />
+        {/* Redirect root to owner dashboard */}
+        <Route path="/" element={<Navigate to="/owner/dashboard" replace />} />
+
+        {/* Owner Routes */}
+        <Route path={ROUTES.owner.dashboard} element={<OwnerDashboard />} />
 
         {/* Vet Routes */}
         <Route path="/vet/dashboard" element={<Dashboard />} />
@@ -46,7 +52,7 @@ function App() {
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />
         
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/vet/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/owner/dashboard" replace />} />
       </Routes>
     </Router>
   );
