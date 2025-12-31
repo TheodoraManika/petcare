@@ -2,12 +2,6 @@
 export const ROUTES = {
   home: '/',
   confirmation: '/confirmation',
-  citizen: {
-    lostPets: '/citizen/lost-pets',
-    lostPetDetails: '/citizen/lost-pets/:petId',
-    foundPetForm: '/citizen/found-pet',
-    searchMap: '/vet/search-map',
-  },
   owner: {
     dashboard: '/owner/dashboard',
     profile: '/owner/profile',
@@ -16,11 +10,9 @@ export const ROUTES = {
     lostPetForm: '/owner/lost-pet',
     foundPetForm: '/owner/found-pet',
     lostHistory: '/owner/history',
-    register: '/owner/register',
   },
   vet: {
     dashboard: '/vet/dashboard',
-    searchMap: '/vet/search-map',
     profile: '/vet/profile',
     register: '/vet/register',
     operation: '/vet/operation',
