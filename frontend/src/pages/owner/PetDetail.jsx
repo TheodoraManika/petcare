@@ -105,6 +105,11 @@ const PetDetail = () => {
 
   const pet = petsData[petId];
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.owner.dashboard },
+    { label: 'Βιβλιάριο Υγείας', path: ROUTES.owner.pets }
+  ];
+
   const getPetIcon = (iconType) => {
     switch (iconType) {
       case 'dog':
@@ -118,7 +123,7 @@ const PetDetail = () => {
 
   if (!pet) {
     return (
-      <PageLayout variant="owner">
+      <PageLayout variant="owner" title="Κατοικίδιο" breadcrumbs={breadcrumbItems}>
         <div className="owner-pet-detail">
           <p>Το κατοικίδιο δεν βρέθηκε.</p>
         </div>
@@ -127,7 +132,7 @@ const PetDetail = () => {
   }
 
   return (
-    <PageLayout variant="owner">
+    <PageLayout variant="owner" title={pet.name} breadcrumbs={breadcrumbItems}>
       <div className="owner-pet-detail">
         <div className="owner-pet-detail__header">
         </div>

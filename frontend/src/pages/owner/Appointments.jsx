@@ -57,6 +57,10 @@ const Appointments = () => {
 
   const appointments = activeTab === 'active' ? activeAppointments : historyAppointments;
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.owner.dashboard }
+  ];
+
   const getStatusBadge = (status) => {
     const statusConfig = {
       confirmed: { label: 'Επιβεβαιωμένο', class: 'confirmed' },
@@ -83,7 +87,7 @@ const Appointments = () => {
   };
 
   return (
-    <PageLayout variant="owner">
+    <PageLayout variant="owner" title="Ραντεβού" breadcrumbs={breadcrumbItems}>
       <div className="owner-appointments">
         <div className="owner-appointments__header">
           <h1 className="owner-appointments__title">Τα Ραντεβού μου</h1>

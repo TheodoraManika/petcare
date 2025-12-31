@@ -44,22 +44,15 @@ const Review = () => {
     navigate(ROUTES.owner.appointments);
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.owner.dashboard },
+    { label: 'Ραντεβού', path: ROUTES.owner.appointments },
+    { label: `Δρ. ${appointment.vet}`, path: ROUTES.owner.appointments }
+  ];
+
   return (
-    <PageLayout variant="owner">
+    <PageLayout variant="owner" title="Αξιολόγηση" breadcrumbs={breadcrumbItems}>
       <div className="owner-review">
-        <div className="owner-review__breadcrumb">
-          <span className="owner-review__breadcrumb-link" onClick={() => navigate(ROUTES.owner.dashboard)}>
-            Μενού
-          </span>
-          <span className="owner-review__breadcrumb-separator">›</span>
-          <span className="owner-review__breadcrumb-link" onClick={() => navigate(ROUTES.owner.appointments)}>
-            Ραντεβού
-          </span>
-          <span className="owner-review__breadcrumb-separator">›</span>
-          <span className="owner-review__breadcrumb-current">Δρ. Ελένη Γεωργίου</span>
-          <span className="owner-review__breadcrumb-separator">›</span>
-          <span className="owner-review__breadcrumb-current">Αξιολόγηση</span>
-        </div>
 
         <div className="owner-review__content">
           <h1 className="owner-review__title">Αξιολόγηση Κτηνιάτρου</h1>

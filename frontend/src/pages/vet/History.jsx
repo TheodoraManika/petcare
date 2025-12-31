@@ -114,8 +114,12 @@ const History = () => {
     setCurrentPage(1);
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Ιστορικό" breadcrumbs={breadcrumbItems}>
       <div className="history">
         <div className="history__header">
           <div className="history__breadcrumb">

@@ -64,7 +64,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <PageLayout title="Μενού" variant="owner">
+    <PageLayout variant="owner" title="Μενού">
       <div className="owner-dashboard">
         <div className="owner-dashboard__cards">
           {dashboardCards.map((card) => (

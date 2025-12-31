@@ -1,8 +1,7 @@
-  import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import Navbar from './Navbar';
-import NavbarPublic from './NavbarPublic';
 import Footer from './Footer';
 import './PageLayout.css';
 
@@ -16,21 +15,9 @@ import './PageLayout.css';
  *                                     If provided, breadcrumb hierarchy is: Home > breadcrumbs[0] > breadcrumbs[1] > ... > title
  */
 const PageLayout = ({ children, title, variant = 'vet', breadcrumbs }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem('currentUser');
-      setIsLoggedIn(!!storedUser);
-    } catch (error) {
-      console.error('Error checking login status:', error);
-      setIsLoggedIn(false);
-    }
-  }, []);
-
   return (
     <div className="page-layout">
-      {isLoggedIn ? <Navbar variant={variant} /> : <NavbarPublic />}
+      <Navbar variant={variant} />
       <main className="page-layout__main">
         <nav className="page-layout__breadcrumbs">
           <Link to="/" className="page-layout__breadcrumb-link">

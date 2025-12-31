@@ -133,8 +133,13 @@ const HistoryDetail = () => {
     console.log('Download PDF');
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard },
+    { label: 'Ιστορικό', path: ROUTES.vet.history }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Λεπτομέρειες Ιστορικού" breadcrumbs={breadcrumbItems}>
       <div className="history-detail">
         <div className="history-detail__header">
           <div className="history-detail__breadcrumb">

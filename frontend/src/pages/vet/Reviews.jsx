@@ -70,8 +70,12 @@ const Reviews = () => {
     ));
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Αξιολογήσεις" breadcrumbs={breadcrumbItems}>
       <div className="reviews">
         <div className="reviews__header">
           <h1 className="reviews__title">Αξιολογήσεις Πελατών</h1>

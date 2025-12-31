@@ -30,8 +30,12 @@ const HealthBook = () => {
     navigate(`${ROUTES.owner.pets}/${petId}`);
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.owner.dashboard }
+  ];
+
   return (
-    <PageLayout variant="owner">
+    <PageLayout variant="owner" title="Βιβλιάριο Υγείας" breadcrumbs={breadcrumbItems}>
       <div className="owner-health-book">
         <div className="owner-health-book__header">
         </div>

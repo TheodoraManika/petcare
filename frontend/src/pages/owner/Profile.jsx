@@ -96,8 +96,12 @@ const Profile = () => {
     );
   }
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.owner.dashboard }
+  ];
+
   return (
-    <PageLayout variant="owner">
+    <PageLayout variant="owner" title="Προφίλ" breadcrumbs={breadcrumbItems}>
       <div className="owner-profile">
         <div className="owner-profile__header">
           <h1 className="owner-profile__title">Το Προφίλ μου</h1>

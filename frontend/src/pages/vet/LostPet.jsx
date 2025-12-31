@@ -86,8 +86,12 @@ const LostPet = () => {
     navigate(ROUTES.vet.dashboard);
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Δήλωση Απώλειας" breadcrumbs={breadcrumbItems}>
       <div className="lost-pet">
         <div className="lost-pet__header">
           <div className="lost-pet__breadcrumb">
