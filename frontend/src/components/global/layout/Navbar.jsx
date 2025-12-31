@@ -79,16 +79,16 @@ const Navbar = ({ variant = 'vet' }) => {
   const navLinks = isOwner
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
-        { to: ROUTES.owner.pets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
         { to: ROUTES.owner.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
-        { to: ROUTES.owner.vets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
         { to: ROUTES.owner.info, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
-        { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
         { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
-        { to: ROUTES.vet.pets, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
         { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ];
 

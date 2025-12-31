@@ -4,8 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
 import './LostPets.css';
 
-const LostPets = () => {
+const LostPets = ({ variant }) => {
   const navigate = useNavigate();
+  
+  // Auto-detect variant if not provided
+  const detectedVariant = variant || (() => {
+    const path = window.location.pathname;
+    if (path.startsWith('/owner')) return 'owner';
+    if (path.startsWith('/vet')) return 'vet';
+    return 'citizen';
+  })();
+  
   const [filters, setFilters] = useState({
     search: '',
     animal: '',
@@ -72,7 +81,7 @@ const LostPets = () => {
   };
 
   return (
-    <PageLayout title="Χαμένα Κατοικίδια">
+    <PageLayout title="Χαμένα Κατοικίδια" variant={detectedVariant}>
       <div className="lost-pets-page">
         <div className="lost-pets-main">
 

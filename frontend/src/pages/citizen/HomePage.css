@@ -10,7 +10,7 @@
 
 /* Main Content */
 .home-main {
-  background-color: #f9faff;
+  background-color: #F8F9FA;
   height: 1344px;
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@
   padding: 12px 16px 12px 36px;
   border: 1px solid #e5e7eb;
   border-radius: 20px;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 14px;
   color: rgba(45, 54, 71, 0.6);
   background-color: #ffffff;
@@ -228,7 +228,7 @@
   border: none;
   border-radius: 20px;
   color: #101727;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -266,7 +266,7 @@
   border: none;
   border-radius: 10px;
   color: #101727;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -383,7 +383,7 @@
   width: 338px;
   height: 24px;
   color: #1d2838;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 400;
   margin: 0;
@@ -410,7 +410,7 @@
   gap: 8px;
   height: 24px;
   color: #495565;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 400;
 }
@@ -443,7 +443,7 @@
   border: none;
   border-radius: 4px;
   color: #101727;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 400;
   cursor: pointer;
@@ -484,7 +484,7 @@
 .features-title {
   text-align: center;
   color: #1d2838;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 400;
   margin: 0 0 40px 0;
@@ -523,7 +523,7 @@
 
 .feature-title {
   color: #1d2838;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 400;
   margin: 0 0 8px 0;
@@ -532,7 +532,7 @@
 
 .feature-description {
   color: #495565;
-  font-family: Arimo;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;

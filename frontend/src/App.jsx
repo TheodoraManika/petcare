@@ -13,6 +13,13 @@ import OwnerLostPetHistory from './pages/owner/LostPetHistory';
 import OwnerLostPetHistoryDetail from './pages/owner/LostPetHistoryDetail';
 import OwnerLostPetHistoryEdit from './pages/owner/LostPetHistoryEdit';
 
+// Citizen Pages
+import HomePage from './pages/citizen/HomePage';
+import LostPets from './pages/citizen/LostPets';
+import LostPetDetails from './pages/citizen/LostPetDetails';
+import CitizenFoundPetForm from './pages/citizen/FoundPetForm';
+import VetSearchMap from './pages/citizen/VetSearchMap';
+
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
 import Profile from './pages/vet/Profile';
@@ -35,8 +42,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirect root to owner dashboard */}
-        <Route path="/" element={<Navigate to="/owner/dashboard" replace />} />
+        {/* Redirect root to home page */}
+        <Route path="/" element={<HomePage />} />
 
         {/* Owner Routes */}
         <Route path={ROUTES.owner.dashboard} element={<OwnerDashboard />} />
@@ -49,6 +56,13 @@ function App() {
         <Route path={ROUTES.owner.lostHistory} element={<OwnerLostPetHistory />} />
         <Route path={`${ROUTES.owner.lostHistory}/:declarationId`} element={<OwnerLostPetHistoryDetail />} />
         <Route path={`${ROUTES.owner.lostHistory}/:declarationId/edit`} element={<OwnerLostPetHistoryEdit />} />
+
+        {/* Citizen Routes */}
+        <Route path={ROUTES.home} element={<HomePage />} />
+        <Route path={ROUTES.citizen.lostPets} element={<LostPets />} />
+        <Route path={ROUTES.citizen.lostPetDetails} element={<LostPetDetails />} />
+        <Route path={ROUTES.citizen.foundPetForm} element={<CitizenFoundPetForm />} />
+        <Route path={ROUTES.citizen.searchMap} element={<VetSearchMap />} />
 
         {/* Vet Routes */}
         <Route path="/vet/dashboard" element={<Dashboard />} />

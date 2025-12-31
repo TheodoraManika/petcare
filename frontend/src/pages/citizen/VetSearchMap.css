@@ -3,7 +3,7 @@
   display: flex;
   gap: 24px;
   padding: 24px;
-  background-color: #f9faff;
+  background-color: #F8F9FA;
   min-height: calc(100vh - 200px);
 }
 
@@ -156,7 +156,7 @@
   gap: 6px;
   padding: 8px 16px;
   border: 1px solid #e5e7eb;
-  background-color: #f9faff;
+  background-color: #F8F9FA;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
@@ -286,7 +286,7 @@
 }
 
 .vet-list-item:hover {
-  background-color: #f9faff;
+  background-color: #F8F9FA;
   box-shadow: 0 2px 8px rgba(35, 206, 217, 0.1);
 }
 
