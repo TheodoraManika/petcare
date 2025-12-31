@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import OwnerDashboard from './pages/owner/Dashboard';
 import OwnerProfile from './pages/owner/Profile';
 import OwnerLostPet from './pages/owner/LostPet';
+import OwnerHealthBook from './pages/owner/HealthBook';
+import OwnerPetDetail from './pages/owner/PetDetail';
 
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
@@ -35,6 +37,8 @@ function App() {
         <Route path={ROUTES.owner.dashboard} element={<OwnerDashboard />} />
         <Route path={ROUTES.owner.profile} element={<OwnerProfile />} />
         <Route path={ROUTES.owner.lostPetForm} element={<OwnerLostPet />} />
+        <Route path={ROUTES.owner.pets} element={<OwnerHealthBook />} />
+        <Route path={`${ROUTES.owner.pets}/:petId`} element={<OwnerPetDetail />} />
 
         {/* Vet Routes */}
         <Route path="/vet/dashboard" element={<Dashboard />} />

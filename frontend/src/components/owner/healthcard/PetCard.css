@@ -1,0 +1,51 @@
+.owner-pet-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.owner-pet-card:hover {
+  border-color: #23CED9;
+  background: #f0fdfe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.15);
+}
+
+.owner-pet-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #23CED9;
+  background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
+  flex-shrink: 0;
+}
+
+.owner-pet-card__icon {
+  font-size: 32px;
+}
+
+.owner-pet-card__info {
+  flex: 1;
+}
+
+.owner-pet-card__name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.owner-pet-card__details {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}

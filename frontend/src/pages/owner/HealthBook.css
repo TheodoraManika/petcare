@@ -1,0 +1,57 @@
+.owner-health-book {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* Header & Breadcrumb */
+.owner-health-book__header {
+  margin-bottom: 24px;
+}
+
+.owner-health-book__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.owner-health-book__breadcrumb-link {
+  color: #23CED9;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.owner-health-book__breadcrumb-link:hover {
+  color: #1ab5bf;
+  text-decoration: underline;
+}
+
+/* Content */
+.owner-health-book__content {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.owner-health-book__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.owner-health-book__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 32px 0;
+}
+
+/* Pets Grid */
+.owner-health-book__pets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
