@@ -1,0 +1,179 @@
+.operation {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.operation__header {
+  margin-bottom: 32px;
+}
+
+.operation__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Form Wrapper */
+.operation__form-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Fields */
+.operation__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.operation__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.operation__required {
+  color: #ef4444;
+}
+
+.operation__input,
+.operation__textarea {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: white;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.operation__input:focus,
+.operation__textarea:focus {
+  outline: none;
+  border-color: #FCA47C;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.operation__input::placeholder,
+.operation__textarea::placeholder {
+  color: #9ca3af;
+}
+
+.operation__textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+/* Form Actions */
+.operation__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.operation__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.operation__btn--cancel {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.operation__btn--cancel:hover {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.operation__btn--submit {
+  background-color: #FCA47C;
+  color: #101828;
+}
+
+.operation__btn--submit:hover {
+  background-color: #fb8a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+/* Success Page */
+.operation-success {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.operation-success__content {
+  background: white;
+  border-radius: 12px;
+  padding: 48px 40px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.operation-success__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+  background-color: #ffd8c6;
+  border-radius: 50%;
+  border: 4px solid #FCA47C;
+  color: #FCA47C;
+}
+
+.operation-success__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.operation-success__description {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+}
+
+.operation-success__btn {
+  width: 100%;
+  padding: 12px 24px;
+  background-color: #FCA47C;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.operation-success__btn:hover {
+  background-color: #fb8a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}

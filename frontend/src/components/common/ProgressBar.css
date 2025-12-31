@@ -1,0 +1,86 @@
+.progress-bar {
+  width: 100%;
+  padding: 32px 0;
+}
+
+.progress-bar__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.progress-bar__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar__circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.progress-bar__circle--active {
+  background-color: #b6b5b5;
+  border-color: #b6b5b5;
+  color: white;
+  box-shadow: 0 4px 12px rgba(169, 169, 169, 0.375);
+}
+
+.progress-bar__circle--completed {
+  background-color: #A1CCA6;
+  border-color: #A1CCA6;
+  color: white;
+}
+
+.progress-bar__label-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.progress-bar__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: color 0.3s ease;
+}
+
+.progress-bar__label--active {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.progress-bar__sublabel {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.progress-bar__line {
+  flex: 1;
+  height: 2px;
+  background-color: #e5e7eb;
+  margin: 0 8px;
+  align-self: flex-start;
+  margin-top: 27px;
+  transition: background-color 0.3s ease;
+}
+
+.progress-bar__line--completed {
+  background-color: #A1CCA6;
+}

@@ -1,0 +1,310 @@
+.lost-pet {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* Header & Breadcrumb */
+.lost-pet__header {
+  margin-bottom: 24px;
+}
+
+.lost-pet__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.lost-pet__breadcrumb-link {
+  color: #23CED9;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.lost-pet__breadcrumb-link:hover {
+  color: #1ab5bf;
+  text-decoration: underline;
+}
+
+.lost-pet__breadcrumb-separator {
+  color: #9ca3af;
+}
+
+.lost-pet__breadcrumb-current {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* Content */
+.lost-pet__content {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.lost-pet__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+/* Form */
+.lost-pet__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.lost-pet__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lost-pet__row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.lost-pet__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.lost-pet__required {
+  color: #ef4444;
+}
+
+.lost-pet__input,
+.lost-pet__textarea {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: white;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.lost-pet__input:focus,
+.lost-pet__textarea:focus {
+  outline: none;
+  border-color: #FCA47C;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.lost-pet__input::placeholder,
+.lost-pet__textarea::placeholder {
+  color: #9ca3af;
+}
+
+.lost-pet__textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.lost-pet__field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: -4px;
+}
+
+/* File Upload Styles */
+.lost-pet__file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lost-pet__file-input {
+  display: none;
+}
+
+.lost-pet__file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.lost-pet__file-label:hover {
+  border-color: #FCA47C;
+  background-color: #fff7f3;
+  color: #FCA47C;
+}
+
+.lost-pet__file-icon {
+  font-size: 24px;
+}
+
+.lost-pet__file-text {
+  font-size: 15px;
+}
+
+/* Photo Preview Styles */
+.lost-pet__photo-preview {
+  position: relative;
+  display: inline-block;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  max-width: 300px;
+}
+
+.lost-pet__preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.lost-pet__remove-photo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(239, 68, 68, 0.95);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  padding: 0;
+  padding-bottom: 2px;
+}
+
+.lost-pet__remove-photo:hover {
+  background-color: #dc2626;
+  transform: scale(1.1);
+}
+
+.lost-pet__remove-photo:active {
+  transform: scale(0.95);
+}
+
+.lost-pet__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Actions */
+.lost-pet__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.lost-pet__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lost-pet__btn--primary {
+  background-color: #FCA47C;
+  color: #101828;
+  margin-left: auto;
+  position: relative;
+}
+
+.lost-pet__btn--primary:hover:not(:disabled) {
+  background-color: #fb8a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.lost-pet__btn--primary:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.lost-pet__btn--primary:disabled:hover::before {
+  content: 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία';
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background-color: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.lost-pet__btn--primary:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lost-pet__btn--cancel {
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.lost-pet__btn--cancel:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}

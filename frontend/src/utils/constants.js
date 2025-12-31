@@ -2,17 +2,25 @@
 export const ROUTES = {
   home: '/',
   confirmation: '/confirmation',
-  owner: {
-    dashboard: '/owner/dashboard',
-    pets: '/owner/pets',
-    appointments: '/owner/appointments',
-    profile: '/owner/profile',
-    lostPetForm: '/owner/lost-pet',
-    lostHistory: '/owner/lost-history',
+  vet: {
+    dashboard: '/vet/dashboard',
+    profile: '/vet/profile',
+    register: '/vet/register',
+    operation: '/vet/operation',
+    reviews: '/vet/reviews',
+    history: '/vet/history',
+    appointments: '/vet/appointments',
+    availability: '/vet/availability',
+    transfer: '/vet/transfer',
+    foster: '/vet/foster',
+    adoption: '/vet/adoption',
+    lifeEvents: '/vet/life-events',
+    lostPetForm: '/vet/lost-pet',
+    foundPetForm: '/vet/found-pet',
   },
 };
 
-// Greek translations
+// Greek translations ΤΙ ΕΙΝΑΙ ΑΥΤΟ ΚΑΙ ΓΙΑΤΙ ΤΟ ΘΕΛΟΥΜΕ ΚΑΛΕ
 export const GR = {
   nav: {
     myPage: 'Μενού',
