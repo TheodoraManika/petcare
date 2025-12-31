@@ -162,7 +162,7 @@ const Appointments = () => {
                   className="owner-appointments__review-btn"
                   onClick={() => handleReview(appointment.id)}
                 >
-                  ⭐ Αξιολόγηση
+                  Αξιολόγηση
                 </button>
               )}
             </div>

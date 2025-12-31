@@ -1,0 +1,390 @@
+.lost-pet-history {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.lost-pet-history__header {
+  margin-bottom: 24px;
+}
+
+.lost-pet-history__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.lost-pet-history__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.lost-pet-history__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.lost-pet-history__card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: white;
+  border: 2px solid #d1d5db;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.lost-pet-history__card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #9ca3af;
+  transform: translateY(-2px);
+}
+
+.lost-pet-history__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  margin-top: 4px;
+  border: 2px solid #23CED9;
+  background-color: rgba(35, 206, 217, 0.08);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.lost-pet-history__icon svg {
+  color: #23CED9;
+  transition: color 0.2s ease;
+}
+
+.lost-pet-history__card:hover .lost-pet-history__icon {
+  border-color: #1ab8c2;
+  background-color: rgba(35, 206, 217, 0.16);
+}
+
+.lost-pet-history__card:hover .lost-pet-history__icon svg {
+  color: #1ab8c2;
+}
+
+.lost-pet-history__card-info {
+  flex: 1;
+}
+
+.lost-pet-history__card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.lost-pet-history__card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.lost-pet-history__card-subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.lost-pet-history__card-name {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.lost-pet-history__card-details {
+  display: flex;
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.lost-pet-history__label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.lost-pet-history__value {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+  margin: 0;
+}
+
+.lost-pet-history__card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.lost-pet-history__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.lost-pet-history__status-section {
+  display: flex;
+  justify-content: center;
+}
+
+.lost-pet-history__status {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.lost-pet-history__status--submitted {
+  background: #d4f4dd;
+  color: #016630;
+}
+
+.lost-pet-history__status--draft {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.lost-pet-history__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #23CED9;
+  color: #1f2937;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.lost-pet-history__btn--view {
+  background: #23CED9;
+  color: #1f2937;
+}
+
+.lost-pet-history__btn--edit {
+  background: transparent;
+  color: #23CED9;
+  border: 1px solid #23CED9;
+}
+
+.lost-pet-history__btn--edit:hover {
+  background: rgba(35, 206, 217, 0.05);
+  border-color: #1ab8c2;
+}
+
+.lost-pet-history__btn--delete {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  padding: 8px 12px;
+}
+
+.lost-pet-history__btn--delete:hover {
+  background: #fef2f2;
+  border-color: #b91c1c;
+}
+
+.lost-pet-history__btn--view:hover {
+  background: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
+}
+
+.lost-pet-history__pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.lost-pet-history__pagination-text {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.lost-pet-history__pagination-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lost-pet-history__pagination-btn:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.lost-pet-history__pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.lost-pet-history__pagination-btn--next {
+  color: #23CED9;
+  border-color: #23CED9;
+}
+
+.lost-pet-history__pagination-btn--next:hover:not(:disabled) {
+  background-color: #23CED9;
+  border-color: #23CED9;
+  color: #101828;
+}
+
+/* Delete Modal */
+.lost-pet-history__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.lost-pet-history__modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.lost-pet-history__modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.lost-pet-history__modal-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 20px 0;
+}
+
+.lost-pet-history__modal-info {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.lost-pet-history__modal-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.lost-pet-history__modal-row:last-child {
+  margin-bottom: 0;
+}
+
+.lost-pet-history__modal-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.lost-pet-history__modal-value {
+  color: #1f2937;
+  font-weight: 400;
+}
+
+.lost-pet-history__modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.lost-pet-history__modal-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lost-pet-history__modal-btn--cancel {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.lost-pet-history__modal-btn--cancel:hover {
+  background: #f9fafb;
+}
+
+.lost-pet-history__modal-btn--delete {
+  background: #dc2626;
+  color: white;
+}
+
+.lost-pet-history__modal-btn--delete:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+@media (max-width: 768px) {
+  .lost-pet-history {
+    padding: 16px;
+  }
+
+  .lost-pet-history__card {
+    flex-direction: column;
+  }
+
+  .lost-pet-history__card-details {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .lost-pet-history__card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .lost-pet-history__pagination {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

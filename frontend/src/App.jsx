@@ -9,6 +9,9 @@ import OwnerHealthBook from './pages/owner/HealthBook';
 import OwnerPetDetail from './pages/owner/PetDetail';
 import OwnerAppointments from './pages/owner/Appointments';
 import OwnerReview from './pages/owner/Review';
+import OwnerLostPetHistory from './pages/owner/LostPetHistory';
+import OwnerLostPetHistoryDetail from './pages/owner/LostPetHistoryDetail';
+import OwnerLostPetHistoryEdit from './pages/owner/LostPetHistoryEdit';
 
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
@@ -43,6 +46,9 @@ function App() {
         <Route path={`${ROUTES.owner.pets}/:petId`} element={<OwnerPetDetail />} />
         <Route path={ROUTES.owner.appointments} element={<OwnerAppointments />} />
         <Route path={`${ROUTES.owner.appointments}/:appointmentId/review`} element={<OwnerReview />} />
+        <Route path={ROUTES.owner.lostHistory} element={<OwnerLostPetHistory />} />
+        <Route path={`${ROUTES.owner.lostHistory}/:declarationId`} element={<OwnerLostPetHistoryDetail />} />
+        <Route path={`${ROUTES.owner.lostHistory}/:declarationId/edit`} element={<OwnerLostPetHistoryEdit />} />
 
         {/* Vet Routes */}
         <Route path="/vet/dashboard" element={<Dashboard />} />

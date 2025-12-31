@@ -1,0 +1,220 @@
+.lost-pet-edit {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.lost-pet-edit__header {
+  margin-bottom: 24px;
+}
+
+.lost-pet-edit__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.lost-pet-edit__card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Pet Info Card */
+.lost-pet-edit__pet-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
+  border: 2px solid #23CED9;
+  border-radius: 12px;
+}
+
+.lost-pet-edit__pet-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: white;
+  border: 2px solid #23CED9;
+  border-radius: 12px;
+  font-size: 60px;
+  flex-shrink: 0;
+}
+
+.lost-pet-edit__pet-details {
+  flex: 1;
+}
+
+.lost-pet-edit__pet-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.lost-pet-edit__pet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lost-pet-edit__pet-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.lost-pet-edit__pet-label {
+  color: #6b7280;
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.lost-pet-edit__pet-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* Form */
+.lost-pet-edit__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lost-pet-edit__row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.lost-pet-edit__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lost-pet-edit__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.lost-pet-edit__required {
+  color: #ef4444;
+}
+
+.lost-pet-edit__input,
+.lost-pet-edit__textarea {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: white;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.lost-pet-edit__input:focus,
+.lost-pet-edit__textarea:focus {
+  outline: none;
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
+.lost-pet-edit__textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+/* Actions */
+.lost-pet-edit__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.lost-pet-edit__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lost-pet-edit__btn--cancel {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.lost-pet-edit__btn--cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.lost-pet-edit__btn--draft {
+  background: transparent;
+  color: #23CED9;
+  border: 1px solid #23CED9;
+}
+
+.lost-pet-edit__btn--draft:hover {
+  background: rgba(35, 206, 217, 0.05);
+  border-color: #1ab8c2;
+}
+
+.lost-pet-edit__btn--submit {
+  background: #23CED9;
+  color: #101828;
+  margin-left: auto;
+}
+
+.lost-pet-edit__btn--submit:hover {
+  background: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
+}
+
+@media (max-width: 768px) {
+  .lost-pet-edit {
+    padding: 16px;
+  }
+
+  .lost-pet-edit__card {
+    padding: 16px;
+  }
+
+  .lost-pet-edit__row {
+    grid-template-columns: 1fr;
+  }
+
+  .lost-pet-edit__pet-info {
+    grid-template-columns: 1fr;
+  }
+
+  .lost-pet-edit__actions {
+    flex-direction: column;
+  }
+
+  .lost-pet-edit__btn {
+    width: 100%;
+  }
+}
