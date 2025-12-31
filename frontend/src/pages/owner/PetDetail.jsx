@@ -110,6 +110,12 @@ const PetDetail = () => {
     { label: 'Βιβλιάριο Υγείας', path: ROUTES.owner.pets }
   ];
 
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+
   const getPetIcon = (iconType) => {
     switch (iconType) {
       case 'dog':
@@ -131,74 +137,74 @@ const PetDetail = () => {
     );
   }
 
-  return (
+return (
     <PageLayout variant="owner" title={pet.name} breadcrumbs={breadcrumbItems}>
-      <div className="owner-pet-detail">
-        <div className="owner-pet-detail__header">
+        <div className="owner-pet-detail">
+            <div className="owner-pet-detail__header">
+            </div>
+
+            <div className="owner-pet-detail__content">
+                <div className="owner-pet-detail__sidebar">
+                    <div className="owner-pet-detail__pet-card">
+                        <div className="owner-pet-detail__pet-avatar">
+                            <span className="owner-pet-detail__pet-icon">{getPetIcon(pet.icon)}</span>
+                        </div>
+                        <h2 className="owner-pet-detail__pet-name">{pet.name}</h2>
+                        
+                        <div className="owner-pet-detail__pet-info">
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Είδος</span>
+                                <span className="owner-pet-detail__info-value">{pet.type}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Ράτσα</span>
+                                <span className="owner-pet-detail__info-value">{pet.breed}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Φύλο</span>
+                                <span className="owner-pet-detail__info-value">{pet.gender}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Ημερομηνία Γέννησης</span>
+                                <span className="owner-pet-detail__info-value">{pet.birthDate}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Αριθμός Μικροτσίπ</span>
+                                <span className="owner-pet-detail__info-value">{pet.microchip}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">ΑΦΜ Ιδιοκτήτη</span>
+                                <span className="owner-pet-detail__info-value">{pet.afm}</span>
+                            </div>
+                        </div>
+
+                        <button className="owner-pet-detail__download-btn" onClick={handlePrint}>
+                            <Download size={18} />
+                            Εκτύπωση Βιβλιαρίου
+                        </button>
+                    </div>
+                </div>
+
+                <div className="owner-pet-detail__main">
+                    <h2 className="owner-pet-detail__section-title">Ιατρικό Ιστορικό</h2>
+
+                    <div className="owner-pet-detail__events">
+                        {pet.medicalHistory.map((event) => (
+                            <MedicalEventCard key={event.id} event={event} />
+                        ))}
+                    </div>
+
+                    <h2 className="owner-pet-detail__section-title">Στατιστικά</h2>
+                    <div className="owner-pet-detail__stats">
+                        <StatCard type="vaccination" label="Εμβολιασμοί" value={pet.stats.vaccinations} />
+                        <StatCard type="surgery" label="Χειρουργεία" value={pet.stats.surgeries} />
+                        <StatCard type="examination" label="Εξετάσεις" value={pet.stats.examinations} />
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div className="owner-pet-detail__content">
-          <div className="owner-pet-detail__sidebar">
-            <div className="owner-pet-detail__pet-card">
-              <div className="owner-pet-detail__pet-avatar">
-                <span className="owner-pet-detail__pet-icon">{getPetIcon(pet.icon)}</span>
-              </div>
-              <h2 className="owner-pet-detail__pet-name">{pet.name}</h2>
-              
-              <div className="owner-pet-detail__pet-info">
-                <div className="owner-pet-detail__info-row">
-                  <span className="owner-pet-detail__info-label">Είδος</span>
-                  <span className="owner-pet-detail__info-value">{pet.type}</span>
-                </div>
-                <div className="owner-pet-detail__info-row">
-                  <span className="owner-pet-detail__info-label">Ράτσα</span>
-                  <span className="owner-pet-detail__info-value">{pet.breed}</span>
-                </div>
-                <div className="owner-pet-detail__info-row">
-                  <span className="owner-pet-detail__info-label">Φύλο</span>
-                  <span className="owner-pet-detail__info-value">{pet.gender}</span>
-                </div>
-                <div className="owner-pet-detail__info-row">
-                  <span className="owner-pet-detail__info-label">Ημερομηνία Γέννησης</span>
-                  <span className="owner-pet-detail__info-value">{pet.birthDate}</span>
-                </div>
-                <div className="owner-pet-detail__info-row">
-                  <span className="owner-pet-detail__info-label">Αριθμός Μικροτσίπ</span>
-                  <span className="owner-pet-detail__info-value">{pet.microchip}</span>
-                </div>
-                <div className="owner-pet-detail__info-row">
-                  <span className="owner-pet-detail__info-label">ΑΦΜ Ιδιοκτήτη</span>
-                  <span className="owner-pet-detail__info-value">{pet.afm}</span>
-                </div>
-              </div>
-
-              <button className="owner-pet-detail__download-btn">
-                <Download size={18} />
-                Εκτύπωση Βιβλιαρίου
-              </button>
-            </div>
-          </div>
-
-          <div className="owner-pet-detail__main">
-            <h2 className="owner-pet-detail__section-title">Ιατρικό Ιστορικό</h2>
-
-            <div className="owner-pet-detail__events">
-              {pet.medicalHistory.map((event) => (
-                <MedicalEventCard key={event.id} event={event} />
-              ))}
-            </div>
-
-            <h2 className="owner-pet-detail__section-title">Στατιστικά</h2>
-            <div className="owner-pet-detail__stats">
-              <StatCard type="vaccination" label="Εμβολιασμοί" value={pet.stats.vaccinations} />
-              <StatCard type="surgery" label="Χειρουργεία" value={pet.stats.surgeries} />
-              <StatCard type="examination" label="Εξετάσεις" value={pet.stats.examinations} />
-            </div>
-          </div>
-        </div>
-      </div>
     </PageLayout>
-  );
+);
 };
 
 export default PetDetail;

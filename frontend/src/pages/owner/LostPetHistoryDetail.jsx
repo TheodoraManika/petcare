@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Eye, Edit2, Trash2, AlertCircle } from 'lucide-react';
+import { Eye, Edit2, Trash2, AlertCircle, Printer, Download } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryDetail.css';
@@ -43,6 +43,15 @@ const LostPetHistoryDetail = () => {
     navigate(`${ROUTES.owner.lostHistory}/${declarationId}/edit`);
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownload = () => {
+    // Replace with real export when available
+    console.log('Download lost pet declaration');
+  };
+
   const handleDelete = () => {
     if (window.confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε τη δήλωση;')) {
       navigate(ROUTES.owner.lostHistory);
@@ -54,6 +63,20 @@ const LostPetHistoryDetail = () => {
       <div className="lost-pet-detail">
         <div className="lost-pet-detail__header">
           <div className="lost-pet-detail__header-actions">
+            <button
+              className="lost-pet-detail__btn-icon"
+              onClick={handlePrint}
+              title="Εκτύπωση"
+            >
+              <Printer size={18} />
+            </button>
+            <button
+              className="lost-pet-detail__btn-icon"
+              onClick={handleDownload}
+              title="Λήψη"
+            >
+              <Download size={18} />
+            </button>
             <button
               className="lost-pet-detail__btn-icon"
               onClick={handleEdit}

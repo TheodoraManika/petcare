@@ -122,13 +122,7 @@ const History = () => {
     <PageLayout title="Ιστορικό" breadcrumbs={breadcrumbItems}>
       <div className="history">
         <div className="history__header">
-          <div className="history__breadcrumb">
-            <span className="history__breadcrumb-link" onClick={() => navigate(ROUTES.vet.dashboard)}>
-              Μενού
-            </span>
-            <span className="history__breadcrumb-separator">›</span>
-            <span className="history__breadcrumb-current">Ιστορικό</span>
-          </div>
+
         </div>
 
         <div className="history__tabs">

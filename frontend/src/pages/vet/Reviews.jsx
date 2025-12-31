@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import { ROUTES } from '../../utils/constants';
 import './Reviews.css';
 
 const Reviews = () => {
