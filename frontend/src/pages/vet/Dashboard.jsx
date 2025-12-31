@@ -1,13 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint } from 'lucide-react';
+import {
+  AlertCircle,
+  Calendar,
+  CheckCircle,
+  CirclePlus,
+  Clock,
+  FileText,
+  History,
+  PawPrint,
+  Star,
+} from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
-import { ROUTES, UK } from '../../utils/constants';
+import { ROUTES } from '../../utils/constants';
 import './Dashboard.css';
-
-
-// Dashboard page for vets
 
 const Dashboard = () => {
   const navigate = useNavigate();

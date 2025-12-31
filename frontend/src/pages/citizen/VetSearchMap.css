@@ -1,0 +1,456 @@
+/* Vet Search Map Page */
+.vet-search-map-page {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  background-color: #f9faff;
+  min-height: calc(100vh - 200px);
+}
+
+/* Sidebar */
+.search-sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 6px; 
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.filter-header {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-input {
+  padding: 4px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
+.search-button-sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background-color: #23CED9;
+  color: #1f2937;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  
+  width: 100%;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.search-button-sidebar:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.clear-button-sidebar {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.clear-button-sidebar:hover {
+  background-color: #e5e7eb;
+}
+
+.sidebar-info {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.info-text {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Map Container */
+.map-container {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.map-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.view-toggles {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9faff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+  background-color: #23CED9;
+  color: #1f2937;
+  border-color: #23CED9;
+}
+
+.toggle-btn:hover {
+  border-color: #23CED9;
+  color: #23CED9;
+}
+
+/* Map Wrapper */
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.map-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.vet-markers-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 550px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vet-marker-info {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+  min-width: 220px;
+}
+
+.vet-marker-info:hover {
+  box-shadow: 0 2px 8px rgba(35, 206, 217, 0.2);
+  border-color: #23CED9;
+}
+
+.marker-pin {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.marker-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.marker-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.marker-specialty {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+}
+
+.marker-rating {
+  font-size: 12px;
+  color: #23CED9;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* List View */
+.list-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  flex: 1;
+}
+
+.list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: auto;
+  max-height: none;
+  overflow-y: visible;
+  flex: 1;
+}
+
+.vet-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.vet-list-item:hover {
+  background-color: #f9faff;
+  box-shadow: 0 2px 8px rgba(35, 206, 217, 0.1);
+}
+
+.vet-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fed7aa 0%, #fca5a5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vet-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vet-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.vet-specialty {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.vet-rating-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-stars {
+  font-size: 13px;
+  color: #23CED9;
+  font-weight: 600;
+}
+
+.vet-address {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.vet-profile-btn {
+  padding: 10px 20px;
+  background-color: #fed7aa;
+  color: #1f2937;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vet-profile-btn:hover {
+  background-color: #fca5a5;
+  transform: translateY(-2px);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.page-nav-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #23CED9;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-nav-btn:hover:not(:disabled) {
+  color: #1abcd4;
+  transform: translateX(-2px);
+}
+
+.page-nav-btn:hover:last-child:not(:disabled) {
+  transform: translateX(2px);
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .vet-search-map-page {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .search-sidebar {
+    width: 100%;
+    position: static;
+  }
+
+  .map-wrapper {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .vet-search-map-page {
+    padding: 16px;
+  }
+
+  .search-sidebar {
+    padding: 16px;
+  }
+
+  .map-container {
+    padding: 16px;
+  }
+
+  .map-wrapper {
+    height: 300px;
+  }
+
+  .vet-list-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .vet-profile-btn {
+    flex: 1 1 auto;
+  }
+}
