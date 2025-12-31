@@ -6,12 +6,12 @@ import './OwnerDashboardCard.css';
  */
 export const DashboardCard = ({ title, description, icon, iconVariant = 'primary', onClick }) => {
   return (
-    <button className="dashboard-card" onClick={onClick}>
-      <div className={`dashboard-card__icon dashboard-card__icon--${iconVariant}`}>
+    <button className="owner-dashboard-card" onClick={onClick}>
+      <div className={`owner-dashboard-card__icon owner-dashboard-card__icon--${iconVariant}`}>
         {icon}
       </div>
-      <h3 className="dashboard-card__title">{title}</h3>
-      <p className="dashboard-card__description">{description}</p>
+      <h3 className="owner-dashboard-card__title">{title}</h3>
+      <p className="owner-dashboard-card__description">{description}</p>
     </button>
   );
 };

@@ -4,6 +4,7 @@ export const ROUTES = {
   confirmation: '/confirmation',
   owner: {
     dashboard: '/owner/dashboard',
+    profile: '/owner/profile',
     pets: '/owner/pets',
     appointments: '/owner/appointments',
     lostPetForm: '/owner/lost-pet',

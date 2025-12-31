@@ -91,16 +91,10 @@ const LostPet = () => {
       <div className="lost-pet">
         <div className="lost-pet__header">
           <div className="lost-pet__breadcrumb">
-            <span className="lost-pet__breadcrumb-link" onClick={() => navigate(ROUTES.vet.dashboard)}>
-              Μενού
-            </span>
-            <span className="lost-pet__breadcrumb-separator">›</span>
-            <span className="lost-pet__breadcrumb-current">Δήλωση Απώλειας</span>
-          </div>
-        </div>
-
-        <div className="lost-pet__content">
           <h1 className="lost-pet__title">Δήλωση Απώλειας Κατοικιδίου</h1>
+        </div>
+      </div>
+        <div className="lost-pet__content">
 
           <form className="lost-pet__form">
             {/* Κωδικός Μικροτσίπ */}

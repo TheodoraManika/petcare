@@ -9,7 +9,8 @@ const CustomSelect = ({
   options, 
   placeholder = "Επιλέξτε...",
   required = false,
-  name
+  name,
+  variant = 'vet'
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -35,7 +36,7 @@ const CustomSelect = ({
   const displayText = selectedOption ? selectedOption.label : placeholder;
 
   return (
-    <div className="custom-select" ref={dropdownRef}>
+    <div className={`custom-select custom-select--${variant}`} ref={dropdownRef}>
       <button
         type="button"
         className={`custom-select__trigger ${isOpen ? 'custom-select__trigger--open' : ''}`}

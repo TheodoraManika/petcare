@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './DatePicker.css';
 
-const DatePicker = ({ value, onChange, name }) => {
+const DatePicker = ({ value, onChange, name, variant = 'vet' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -98,7 +98,7 @@ const DatePicker = ({ value, onChange, name }) => {
   };
 
   return (
-    <div className="datepicker" ref={pickerRef}>
+    <div className={`datepicker datepicker--${variant}`} ref={pickerRef}>
       <input
         type="text"
         name={name}

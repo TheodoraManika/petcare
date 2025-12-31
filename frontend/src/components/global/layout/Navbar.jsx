@@ -199,7 +199,7 @@ const Navbar = ({ variant = 'vet' }) => {
                   <p className="navbar__profile-menu-name">{user.name}</p>
                 </div>
                 <Link
-                  to={isOwner ? ROUTES.owner.dashboard : ROUTES.vet.profile}
+                  to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
                   className="navbar__profile-menu-item"
                   onClick={() => setIsProfileOpen(false)}
                 >

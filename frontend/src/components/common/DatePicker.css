@@ -21,6 +21,11 @@
   box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
 }
 
+.datepicker--owner .datepicker__input:focus {
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
 .datepicker__calendar {
   position: absolute;
   top: calc(100% + 8px);
@@ -128,4 +133,12 @@
 
 .datepicker__day--selected:hover {
   background-color: #fb8a5c;
+}
+
+.datepicker--owner .datepicker__day--selected {
+  background-color: #23CED9;
+}
+
+.datepicker--owner .datepicker__day--selected:hover {
+  background-color: #1ab8c2;
 }

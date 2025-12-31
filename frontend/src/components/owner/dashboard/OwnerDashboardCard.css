@@ -1,5 +1,5 @@
 /* DashboardCard Styles */
-.dashboard-card {
+.owner-dashboard-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -7,6 +7,7 @@
   padding: var(--spacing-lg);
   border: 2px solid #D1D5DB;
   border-radius: var(--radius-lg);
+  background-color: var(--color-bg-white);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-align: left;
@@ -14,13 +15,13 @@
   min-height: 180px;
 }
 
-.dashboard-card:hover {
+.owner-dashboard-card:hover {
   border-color: #9CA3AF;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
 
-.dashboard-card__icon {
+.owner-dashboard-card__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,16 +34,16 @@
   transition: all var(--transition-fast);
 }
 
-.dashboard-card:hover .dashboard-card__icon {
+.owner-dashboard-card:hover .owner-dashboard-card__icon {
   border-color: #7DD3DC;
   background-color: rgba(35, 206, 217, 0.25);
 }
 
-.dashboard-card:hover .dashboard-card__icon svg {
+.owner-dashboard-card:hover .owner-dashboard-card__icon svg {
   color: #7DD3DC;
 }
 
-.dashboard-card__icon svg {
+.owner-dashboard-card__icon svg {
   width: 28px;
   height: 28px;
   color: #23CED9;
@@ -50,68 +51,68 @@
 }
 
 /* Icon variants - all use blue palette color */
-.dashboard-card__icon--primary {
+.owner-dashboard-card__icon--primary {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
 }
 
-.dashboard-card__icon--primary svg {
+.owner-dashboard-card__icon--primary svg {
   color: #23CED9;
 }
 
-.dashboard-card__icon--success {
+.owner-dashboard-card__icon--success {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
 }
 
-.dashboard-card__icon--success svg {
+.owner-dashboard-card__icon--success svg {
   color: #23CED9;
 }
 
-.dashboard-card__icon--info {
+.owner-dashboard-card__icon--info {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
 }
 
-.dashboard-card__icon--info svg {
+.owner-dashboard-card__icon--info svg {
   color: #23CED9;
 }
 
-.dashboard-card__icon--warning {
+.owner-dashboard-card__icon--warning {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
 }
 
-.dashboard-card__icon--warning svg {
+.owner-dashboard-card__icon--warning svg {
   color: #23CED9;
 }
 
-.dashboard-card__icon--danger {
+.owner-dashboard-card__icon--danger {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
 }
 
-.dashboard-card__icon--danger svg {
+.owner-dashboard-card__icon--danger svg {
   color: #23CED9;
 }
 
-.dashboard-card__icon--default {
+.owner-dashboard-card__icon--default {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
 }
 
-.dashboard-card__icon--default svg {
+.owner-dashboard-card__icon--default svg {
   color: #23CED9;
 }
 
-.dashboard-card__title {
+.owner-dashboard-card__title {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-xs);
 }
 
-.dashboard-card__description {
+.owner-dashboard-card__description {
   font-size: var(--font-size-sm);
   color: #6B7280;
   line-height: 1.4;
