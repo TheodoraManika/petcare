@@ -77,26 +77,30 @@ const LostPetHistoryDetail = () => {
             >
               <Download size={18} />
             </button>
-            <button
-              className="lost-pet-detail__btn-icon"
-              onClick={handleEdit}
-              title="Επεξεργασία"
-            >
-              <Edit2 size={18} />
-            </button>
-            <button
-              className="lost-pet-detail__btn-icon lost-pet-detail__btn-icon--active"
-              title="Προβολή"
-            >
-              <Eye size={18} />
-            </button>
-            <button
-              className="lost-pet-detail__btn-icon"
-              onClick={handleDelete}
-              title="Λήψη"
-            >
-              <Trash2 size={18} />
-            </button>
+            {declaration.status !== 'submitted' && (
+              <>
+                <button
+                  className="lost-pet-detail__btn-icon"
+                  onClick={handleEdit}
+                  title="Επεξεργασία"
+                >
+                  <Edit2 size={18} />
+                </button>
+                <button
+                  className="lost-pet-detail__btn-icon lost-pet-detail__btn-icon--active"
+                  title="Προβολή"
+                >
+                  <Eye size={18} />
+                </button>
+                <button
+                  className="lost-pet-detail__btn-icon"
+                  onClick={handleDelete}
+                  title="Διαγραφή"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </>
+            )}
           </div>
         </div>
 

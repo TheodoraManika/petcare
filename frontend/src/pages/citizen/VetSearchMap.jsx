@@ -3,14 +3,7 @@ import { Search, MapPin, X } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import './VetSearchMap.css';
 
-const VetSearchMap = ({ variant }) => {
-  // Auto-detect variant if not provided
-  const detectedVariant = variant || (() => {
-    const path = window.location.pathname;
-    if (path.startsWith('/owner')) return 'owner';
-    if (path.startsWith('/vet')) return 'vet';
-    return 'citizen';
-  })();
+const VetSearchMap = () => {
   
   const [filters, setFilters] = useState({
     area: '',
@@ -64,7 +57,7 @@ const VetSearchMap = ({ variant }) => {
   const currentVets = vets.slice(startIndex, endIndex);
 
   return (
-    <PageLayout title="Αναζήτηση Κτηνιάτρων" variant={detectedVariant}>
+    <PageLayout title="Αναζήτηση Κτηνιάτρων">
       <div className="vet-search-map-page">
         {/* Sidebar Filters */}
         <aside className="search-sidebar">

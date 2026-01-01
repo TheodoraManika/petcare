@@ -26,7 +26,7 @@
 
 .life-events__card {
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #D1D5DB;
   border-radius: 12px;
   padding: 32px 24px;
   display: flex;
@@ -34,34 +34,33 @@
   align-items: center;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .life-events__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  border-color: #FCA47C;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #9CA3AF;
 }
 
 .life-events__card-icon {
   width: 80px;
   height: 80px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #FFF4ED 0%, #FFEAD5 100%);
+  background: rgba(252, 164, 124, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
   border: 2px solid #FCA47C;
   color: #FCA47C;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .life-events__card:hover .life-events__card-icon {
-  transform: scale(1.1);
-  background: linear-gradient(135deg, #FCA47C 0%, #fb8a5c 100%);
-  color: white;
+  border-color: #FCA47C;
+  background-color: rgba(252, 164, 124, 0.25);
 }
 
 .life-events__card-title {

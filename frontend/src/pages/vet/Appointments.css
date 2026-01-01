@@ -201,15 +201,15 @@
   margin-bottom: 8px;
   background: white;
   border-radius: 10px;
-  border: 2px solid #d3d3d3c3;
+  border: 2px solid #D1D5DB;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .appointments__calendar-card:hover {
-  background: #fff7f3;
-  transform: translateX(2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #9CA3AF;
 }
 
 .appointments__card-time {
@@ -416,15 +416,16 @@
 
 .appointments__list-card {
   padding: 20px;
-  background: #f9fafb;
-  border-radius: 8px;
-  border-left: 4px solid #FCA47C;
+  background: white;
+  border: 2px solid #D1D5DB;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .appointments__list-card:hover {
-  background: #fff7f3;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .appointments__list-card-header {
@@ -454,37 +455,39 @@
 }
 
 .appointments__action-btn {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: 50%;
+  border: 2px solid;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .appointments__action-btn--reject {
-  background: #fee2e2;
+  background: rgba(220, 38, 38, 0.1);
   color: #dc2626;
+  border-color: #dc2626;
 }
 
 .appointments__action-btn--reject:hover {
-  background: #dc2626;
-  color: white;
-  transform: scale(1.1);
+  background: rgba(220, 38, 38, 0.2);
+  border-color: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .appointments__action-btn--confirm {
-  background: #d1fae5;
-  color: #059669;
+  background: rgba(1, 102, 48, 0.1);
+  color: #016630;
+  border-color: #016630;
 }
 
 .appointments__action-btn--confirm:hover {
-  background: #059669;
-  color: white;
-  transform: scale(1.1);
+  background: rgba(1, 102, 48, 0.2);
+  border-color: #015028;
+  transform: translateY(-1px);
 }
 
 .appointments__list-card-body {

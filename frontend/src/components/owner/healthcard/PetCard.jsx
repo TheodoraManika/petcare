@@ -6,25 +6,23 @@ const PetCard = ({ pet, onClick }) => {
   const getPetIcon = (iconType) => {
     switch (iconType) {
       case 'dog':
-        return <Dog size={32} />;
+        return <Dog size={28} />;
       case 'cat':
-        return <Cat size={32} />;
+        return <Cat size={28} />;
       default:
-        return <Dog size={32} />;
+        return <Dog size={28} />;
     }
   };
 
   return (
     <div className="owner-pet-card" onClick={onClick}>
-      <div className="owner-pet-card__avatar">
-        <span className="owner-pet-card__icon">{getPetIcon(pet.icon)}</span>
+      <div className="owner-pet-card__icon">
+        {getPetIcon(pet.icon)}
       </div>
-      <div className="owner-pet-card__info">
-        <h3 className="owner-pet-card__name">{pet.name}</h3>
-        <p className="owner-pet-card__details">
-          {pet.type} - {pet.breed}
-        </p>
-      </div>
+      <h3 className="owner-pet-card__title">{pet.name}</h3>
+      <p className="owner-pet-card__description">
+        {pet.type} - {pet.breed}
+      </p>
     </div>
   );
 };

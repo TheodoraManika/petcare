@@ -59,22 +59,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 2px solid #D1D5DB;
+  transition: all 0.2s ease;
 }
 
-.owner-pet-detail__pet-avatar {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  border: 3px solid #23CED9;
-  background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
+.owner-pet-detail__pet-card:hover {
+  border-color: #9CA3AF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .owner-pet-detail__pet-icon {
-  font-size: 64px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px solid #23CED9;
+  background: rgba(35, 206, 217, 0.1);
+  color: #23CED9;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
 }
 
 .owner-pet-detail__pet-name {

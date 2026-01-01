@@ -146,9 +146,7 @@ return (
             <div className="owner-pet-detail__content">
                 <div className="owner-pet-detail__sidebar">
                     <div className="owner-pet-detail__pet-card">
-                        <div className="owner-pet-detail__pet-avatar">
-                            <span className="owner-pet-detail__pet-icon">{getPetIcon(pet.icon)}</span>
-                        </div>
+                        <div className="owner-pet-detail__pet-icon">{getPetIcon(pet.icon)}</div>
                         <h2 className="owner-pet-detail__pet-name">{pet.name}</h2>
                         
                         <div className="owner-pet-detail__pet-info">

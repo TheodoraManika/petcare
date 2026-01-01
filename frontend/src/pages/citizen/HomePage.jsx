@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Search, Calendar, PawPrint, Stethoscope, Users } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
-import NavbarPublic from '../../components/global/layout/NavbarPublic';
+import Navbar from '../../components/global/layout/Navbar';
 import Footer from '../../components/global/layout/Footer';
 import './HomePage.css';
 
@@ -75,8 +75,8 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* Navigation - Using public navbar for non-authenticated users */}
-      <NavbarPublic />
+      {/* Navigation - Using citizen variant for non-authenticated users */}
+      <Navbar variant="citizen" />
 
       {/* Main Content */}
       <main className="home-main">

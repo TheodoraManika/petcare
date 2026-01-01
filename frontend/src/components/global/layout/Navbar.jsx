@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
 
 /**
- * Navbar component
+ * Navbar component - Handles all variants: 'vet', 'owner', and 'citizen'
+ * @param {string} variant - 'vet' (default), 'owner', or 'citizen'
  */
 const Navbar = ({ variant = 'vet' }) => {
   const isOwner = variant === 'owner';
+  const isCitizen = variant === 'citizen';
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
   const profileRef = useRef(null);
   const menuRef = useRef(null);
   const navigate = useNavigate();
@@ -76,7 +78,15 @@ const Navbar = ({ variant = 'vet' }) => {
         { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.vet.lostPetForm },
       ];
 
-  const navLinks = isOwner
+  const navLinks = isCitizen
+    ? [
+        { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
+        { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.citizen.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
+        { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.home, icon: <Info size={18} />, label: 'Πληροφορίες' },
+      ]
+    : isOwner
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
@@ -147,82 +157,136 @@ const Navbar = ({ variant = 'vet' }) => {
               </Link>
             ))}
             
-            {/* Menu Dropdown */}
-            <div className="navbar__nav-dropdown" ref={menuRef}>
-              <button
-                className="navbar__nav-link navbar__nav-link--dropdown"
-                onClick={handleMenuClick}
-                aria-haspopup="true"
-              >
-                <Menu size={18} />
-                <span>Μενού</span>
-                <ChevronDown className="navbar__dropdown-chevron" size={16} />
-              </button>
-              
-              <div className="navbar__nav-dropdown-menu">
-                {menuItems.map((item, index) => (
-                  <button
-                    key={index}
-                    className="navbar__nav-dropdown-item"
-                    onClick={() => {
-                      navigate(item.route);
-                    }}
-                  >
-                    <span className="navbar__nav-dropdown-icon">{item.icon}</span>
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Profile Dropdown */}
-          <div className="navbar__profile" ref={profileRef}>
-            <button
-              className="navbar__profile-btn"
-              onClick={toggleProfileMenu}
-              aria-expanded={isProfileOpen}
-              aria-haspopup="true"
-            >
-              <Avatar
-                src={user.avatar}
-                name={user.name}
-                size="sm"
-              />
-              <span className="navbar__profile-name">{user.name}</span>
-              <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
-            </button>
-            
-            {isProfileOpen && (
-              <div className="navbar__profile-menu">
-                <div className="navbar__profile-menu-header">
-                  <p className="navbar__profile-menu-name">{user.name}</p>
-                </div>
-                <Link
-                  to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
-                  className="navbar__profile-menu-item"
-                  onClick={() => setIsProfileOpen(false)}
-                >
-                  <span className="navbar__profile-menu-icon">
-                    <UserRound size={16} />
-                  </span>
-                  <span>Προφίλ</span>
-                </Link>
+            {!isCitizen && (
+              /* Menu Dropdown */
+              <div className="navbar__nav-dropdown" ref={menuRef}>
                 <button
-                  className="navbar__profile-menu-item navbar__profile-menu-item--logout"
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    navigate(ROUTES.home);
-                  }}
+                  className="navbar__nav-link navbar__nav-link--dropdown"
+                  onClick={handleMenuClick}
+                  aria-haspopup="true"
                 >
-                  <span className="navbar__profile-menu-icon">
-                    <LogOut size={16} />
-                  </span>
-                  <span>Αποσύνδεση</span>
+                  <Menu size={18} />
+                  <span>Μενού</span>
+                  <ChevronDown className="navbar__dropdown-chevron" size={16} />
                 </button>
+                
+                <div className="navbar__nav-dropdown-menu">
+                  {menuItems.map((item, index) => (
+                    <button
+                      key={index}
+                      className="navbar__nav-dropdown-item"
+                      onClick={() => {
+                        navigate(item.route);
+                      }}
+                    >
+                      <span className="navbar__nav-dropdown-icon">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
+
+          {/* Citizen: Simple Login/Register Buttons or Authenticated: Profile Dropdown */}
+          {isCitizen ? (
+            <div className="navbar__auth-buttons">
+              <button
+                className="navbar__auth-btn navbar__auth-btn--signin"
+                onClick={() => navigate(ROUTES.owner.dashboard)}
+              >
+                <UserRound size={16} />
+                <span>Σύνδεση</span>
+              </button>
+              
+              {/* Register Dropdown */}
+              <div className="navbar__register-dropdown">
+                <button
+                  className="navbar__auth-btn navbar__auth-btn--signup"
+                  onClick={() => setIsRegisterDropdownOpen(!isRegisterDropdownOpen)}
+                >
+                  <span>Εγγραφή</span>
+                  <ChevronDown
+                    size={16}
+                    className={`navbar__register-chevron ${isRegisterDropdownOpen ? 'navbar__register-chevron--open' : ''}`}
+                  />
+                </button>
+                
+                {isRegisterDropdownOpen && (
+                  <div className="navbar__register-menu">
+                    <button
+                      className="navbar__register-option"
+                      onClick={() => {
+                        navigate(ROUTES.owner.register);
+                        setIsRegisterDropdownOpen(false);
+                      }}
+                    >
+                      <Users size={20} color="#23CED9" />
+                      <span>Ως Ιδιοκτήτης</span>
+                    </button>
+                    
+                    <button
+                      className="navbar__register-option"
+                      onClick={() => {
+                        navigate(ROUTES.vet.register);
+                        setIsRegisterDropdownOpen(false);
+                      }}
+                    >
+                      <Stethoscope size={20} color="#FCA47C" />
+                      <span>Ως Κτηνίατρος</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="navbar__profile" ref={profileRef}>
+              <button
+                className="navbar__profile-btn"
+                onClick={toggleProfileMenu}
+                aria-expanded={isProfileOpen}
+                aria-haspopup="true"
+              >
+                <Avatar
+                  src={user.avatar}
+                  name={user.name}
+                  size="sm"
+                />
+                <span className="navbar__profile-name">{user.name}</span>
+                <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
+              </button>
+              
+              {isProfileOpen && (
+                <div className="navbar__profile-menu">
+                  <div className="navbar__profile-menu-header">
+                    <p className="navbar__profile-menu-name">{user.name}</p>
+                  </div>
+                  <Link
+                    to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
+                    className="navbar__profile-menu-item"
+                    onClick={() => setIsProfileOpen(false)}
+                  >
+                    <span className="navbar__profile-menu-icon">
+                      <UserRound size={16} />
+                    </span>
+                    <span>Προφίλ</span>
+                  </Link>
+                  <button
+                    className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      navigate(ROUTES.home);
+                    }}
+                  >
+                    <span className="navbar__profile-menu-icon">
+                      <LogOut size={16} />
+                    </span>
+                    <span>Αποσύνδεση</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </nav>
