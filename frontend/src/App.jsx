@@ -4,6 +4,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // Common Pages
 import HomePage from './pages/citizen/HomePage';
 import ConfirmationPage from './pages/common/ConfirmationPage';
+import ContactPage from './pages/common/ContactPage';
+import AboutPage from './pages/common/AboutPage';
+import PrivacyPage from './pages/common/PrivacyPage';
+import TermsPage from './pages/common/TermsPage';
+import CookiesPage from './pages/common/CookiesPage';
 import LostPets from './pages/citizen/LostPets';
 import LostPetDetails from './pages/citizen/LostPetDetails';
 
@@ -21,6 +26,13 @@ function App() {
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<HomePage />} />
+
+        {/* Common Routes */}
+        <Route path={ROUTES.contact} element={<ContactPage />} />
+        <Route path={ROUTES.about} element={<AboutPage />} />
+        <Route path={ROUTES.privacy} element={<PrivacyPage />} />
+        <Route path={ROUTES.terms} element={<TermsPage />} />
+        <Route path={ROUTES.cookies} element={<CookiesPage />} />
 
         {/* Citizen Routes */}
         <Route path={ROUTES.citizen.lostPets} element={<LostPets />} />
