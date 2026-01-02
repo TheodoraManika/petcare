@@ -16,7 +16,7 @@ const NavbarPublic = () => {
     { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
     { to: ROUTES.citizen.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
     { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-    { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
+    { to: ROUTES.information, icon: <Info size={18} />, label: 'Πληροφορίες' },
   ];
 
   return (

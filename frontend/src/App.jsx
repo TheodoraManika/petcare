@@ -9,6 +9,7 @@ import AboutPage from './pages/common/AboutPage';
 import PrivacyPage from './pages/common/PrivacyPage';
 import TermsPage from './pages/common/TermsPage';
 import CookiesPage from './pages/common/CookiesPage';
+import InformationPage from './pages/common/InformationPage';
 import LostPets from './pages/citizen/LostPets';
 import LostPetDetails from './pages/citizen/LostPetDetails';
 
@@ -33,6 +34,7 @@ function App() {
         <Route path={ROUTES.privacy} element={<PrivacyPage />} />
         <Route path={ROUTES.terms} element={<TermsPage />} />
         <Route path={ROUTES.cookies} element={<CookiesPage />} />
+        <Route path={ROUTES.information} element={<InformationPage />} />
 
         {/* Citizen Routes */}
         <Route path={ROUTES.citizen.lostPets} element={<LostPets />} />

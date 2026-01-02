@@ -6,6 +6,7 @@ export const ROUTES = {
   privacy: '/privacy',
   terms: '/terms',
   cookies: '/cookies',
+  information: '/information',
   confirmation: '/confirmation',
   citizen: {
     lostPets: '/citizen/lost-pets',
