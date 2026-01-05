@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
+import MultiSelect from '../../components/common/MultiSelect';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -18,7 +19,7 @@ const Profile = () => {
     email: 'john@example.com',
     phone: '6912345678',
     vetLicense: 'VET12345',
-    specialty: 'Γενική Κτηνιατρική',
+    specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'], // Changed to array
     yearsOfExperience: '5',
     clinicName: 'Κτηνιατρικό Κέντρο Γέρακα',
     address: 'Ερμού 8, 15344',
@@ -27,11 +28,27 @@ const Profile = () => {
     bio: '',
   });
 
+  const specialtyOptions = [
+    { value: 'Γενική Κτηνιατρική', label: 'Γενική Κτηνιατρική' },
+    { value: 'Χειρουργική', label: 'Χειρουργική' },
+    { value: 'Δερματολογία', label: 'Δερματολογία' },
+    { value: 'Καρδιολογία', label: 'Καρδιολογία' },
+    { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },
+    { value: 'Οφθαλμολογία', label: 'Οφθαλμολογία' },
+  ];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleSpecialtiesChange = (selectedSpecialties) => {
+    setFormData(prev => ({
+      ...prev,
+      specialties: selectedSpecialties
     }));
   };
 
@@ -244,12 +261,12 @@ const Profile = () => {
               <label className="profile__label">
                 Ειδικότητα/ες <span className="profile__required">*</span>
               </label>
-              <input
-                type="text"
-                name="specialty"
-                className="profile__input"
-                value={formData.specialty}
-                onChange={handleInputChange}
+              <MultiSelect
+                name="specialties"
+                value={formData.specialties}
+                onChange={handleSpecialtiesChange}
+                options={specialtyOptions}
+                placeholder="Επιλέξτε ειδικότητες..."
                 disabled={!isEditing}
                 required
               />
