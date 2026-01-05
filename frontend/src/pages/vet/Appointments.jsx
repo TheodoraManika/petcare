@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, UserRound, PawPrint, Stethoscope } from 'lucide-react';
+import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, UserRound, PawPrint, Stethoscope } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
@@ -750,7 +750,8 @@ const Appointments = () => {
                   className="appointments__modal-btn appointments__modal-btn--secondary"
                   onClick={() => setSelectedAppointment(null)}
                 >
-                  Ακύρωση
+                  <ArrowLeft size={18} />
+                  Επιστροφή
                 </button>
                 {selectedAppointment.status === 'pending' && (
                   <>
