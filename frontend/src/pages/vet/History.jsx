@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye } from 'lucide-react';
+import { Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './History.css';
@@ -121,6 +121,11 @@ const History = () => {
   return (
     <PageLayout title="Ιστορικό" breadcrumbs={breadcrumbItems}>
       <div className="history">
+        <div className="history__header">
+          <h1 className="history__title">Ιστορικό</h1>
+          <p className="history__subtitle-main">Προβολή ιατρικών πράξεων και δηλώσεων</p>
+        </div>
+
         <div className="history__tabs">
           <button
             className={`history__tab ${activeTab === 'visits' ? 'history__tab--active' : ''}`}
@@ -189,6 +194,7 @@ const History = () => {
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
+                <ChevronLeft size={16} />
                 Προηγούμενη
               </button>
               
@@ -202,6 +208,7 @@ const History = () => {
                 disabled={currentPage === totalPages}
               >
                 Επόμενη
+                <ChevronRight size={16} />
               </button>
             </div>
           )}

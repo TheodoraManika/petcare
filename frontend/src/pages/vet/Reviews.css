@@ -127,14 +127,14 @@
   background: transparent;
   border: none;
   font-size: 13px;
-  color: #23CED9;
+  color: #FCA47C;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 400;
 }
 
 .reviews__pagination-btn:hover:not(:disabled) {
-  color: #1ab8c2;
+  color: #ff9362;
   text-decoration: underline;
 }
 
