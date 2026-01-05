@@ -230,8 +230,28 @@ const Appointments = () => {
   };
 
   const filterAppointments = () => {
-    if (filterStatus === 'all') return appointments;
-    return appointments.filter(apt => apt.status === filterStatus);
+    let filtered = filterStatus === 'all' ? appointments : appointments.filter(apt => apt.status === filterStatus);
+    
+    // Sort by date and time (earliest first)
+    return filtered.sort((a, b) => {
+      // Parse dates (format: DD/MM/YYYY)
+      const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+      const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+      
+      const dateA = new Date(yearA, monthA - 1, dayA);
+      const dateB = new Date(yearB, monthB - 1, dayB);
+      
+      // Compare dates
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA - dateB;
+      }
+      
+      // If dates are the same, compare by start time
+      const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
+      const timeB = b.time.split(' - ')[0];
+      
+      return timeA.localeCompare(timeB);
+    });
   };
 
   const getWeekDays = () => {
@@ -553,7 +573,7 @@ const Appointments = () => {
                 <div key={apt.id} className="appointments__list-card appointments__list-card--with-actions">
                   <div className="appointments__list-card-header">
                     <div>
-                      <h4 className="appointments__list-pet-name">{apt.petName}</h4>
+                      <h4 className="appointments__list-pet-name">{apt.ownerName}</h4>
                       <p className="appointments__list-phone">Τηλέφωνο: {apt.phone}</p>
                     </div>
                     <div className="appointments__list-card-actions">
@@ -591,12 +611,12 @@ const Appointments = () => {
 
                   <div className="appointments__list-card-body">
                     <div className="appointments__list-info">
-                      <span className="appointments__list-label">Κατοικίδio:</span>
-                      <span>{apt.species}</span>
+                      <span className="appointments__list-label">Όνομα Κατοικιδίου:</span>
+                      <span>{apt.petName}</span>
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Είδος:</span>
-                      <span>{apt.breed}</span>
+                      <span>{apt.species}</span>
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Ράτσα:</span>
@@ -605,10 +625,21 @@ const Appointments = () => {
                   </div>
 
                   <div className="appointments__list-card-footer">
-                    <div className="appointments__list-meta">
-                      <span>Ώρα: {apt.time}</span>
-                      <span>Υπηρεσία: {apt.serviceType}</span>
-                      <span>Σημειώσεις: {apt.notes || '-'}</span>
+                    <div className="appointments__list-info">
+                      <span className="appointments__list-label">Ημερομηνία:</span>
+                      <span>{apt.date}</span>
+                    </div>
+                    <div className="appointments__list-info">
+                      <span className="appointments__list-label">Ώρα:</span>
+                      <span>{apt.time}</span>
+                    </div>
+                    <div className="appointments__list-info">
+                      <span className="appointments__list-label">Υπηρεσία:</span>
+                      <span>{apt.serviceType}</span>
+                    </div>
+                    <div className="appointments__list-info">
+                      <span className="appointments__list-label">Σημειώσεις:</span>
+                      <span>{apt.notes || '-'}</span>
                     </div>
                   </div>
                 </div>

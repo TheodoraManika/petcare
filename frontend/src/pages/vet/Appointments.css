@@ -412,7 +412,7 @@
 
 .appointments__filter--active {
   background: #FCA47C;
-  color: white;
+  color: #101828;
   border-color: #FCA47C;
 }
 
@@ -497,7 +497,7 @@
 
 .appointments__list-card-body {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 240px);
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -515,8 +515,10 @@
 }
 
 .appointments__list-card-footer {
-  padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .appointments__list-meta {

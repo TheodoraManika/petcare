@@ -36,7 +36,7 @@ Vet pages:
 - [x] Foster
 - [x] History
     - [ ] Κενή σελίδα όταν δεν υπάρχει ιστορικό (γενικά να μπει κάτι τέτοιο σε όλες τις σελίδες που μπορεί να μην έχουν περιεχόμενο)
-- [ ] Appointments
+- [x] Appointments
 - [x] Δήλωση Απώλειας
 - [x] Availability (Available hours)
 - [x] Reviews
