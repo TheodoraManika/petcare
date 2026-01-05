@@ -274,6 +274,11 @@
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 20px 0;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #23cdd950 0%, #fca47c57 50%, #f9d77956 100%);
+  border-radius: 50px;
+  display: block;
+  text-align: left;
 }
 
 .appointments__day-cards {
@@ -287,6 +292,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
 }
 
 .appointments__day-card-header {
@@ -294,8 +300,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #23cdd950 0%, #fca47c57 50%, #f9d77956 100%);
+  background: white;
   gap: 16px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .appointments__day-card-owner {
@@ -327,7 +334,7 @@
 
 .appointments__day-card-body {
   padding: 16px 20px;
-  background: #f9fafb;
+  background: white;
 }
 
 .appointments__day-card-row {
@@ -355,8 +362,9 @@
 }
 
 .appointments__day-card-meta {
-  display: flex;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
 .appointments__day-card-meta-item {
@@ -466,24 +474,24 @@
 }
 
 .appointments__action-btn--reject {
-  background: #fee2e2;
-  color: #dc2626;
+  background: #ff525252;
+  color: #991B1B;
 }
 
 .appointments__action-btn--reject:hover {
-  background: #dc2626;
-  color: white;
+  background: #FF5252;
+  color: #801616;
   transform: scale(1.1);
 }
 
 .appointments__action-btn--confirm {
-  background: #d1fae5;
-  color: #059669;
+  background: #a1cca670;
+  color: #065F46;
 }
 
 .appointments__action-btn--confirm:hover {
-  background: #059669;
-  color: white;
+  background: #A1CCA6;
+  color: #054734;
   transform: scale(1.1);
 }
 

@@ -261,13 +261,15 @@ const Appointments = () => {
 
   const handlePreviousWeek = () => {
     const newDate = new Date(selectedDate);
-    newDate.setDate(selectedDate.getDate() - 7);
+    const daysToSubtract = viewMode === 'day' ? 1 : 7;
+    newDate.setDate(selectedDate.getDate() - daysToSubtract);
     setSelectedDate(newDate);
   };
 
   const handleNextWeek = () => {
     const newDate = new Date(selectedDate);
-    newDate.setDate(selectedDate.getDate() + 7);
+    const daysToAdd = viewMode === 'day' ? 1 : 7;
+    newDate.setDate(selectedDate.getDate() + daysToAdd);
     setSelectedDate(newDate);
   };
 
@@ -288,6 +290,12 @@ const Appointments = () => {
   };
 
   const formatDateRange = () => {
+    if (viewMode === 'day') {
+      // Show only the selected date in day view
+      return `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
+    }
+    
+    // Show week range in week view
     const weekDays = getWeekDays();
     const firstDay = weekDays[0];
     const lastDay = weekDays[6];
@@ -426,7 +434,7 @@ const Appointments = () => {
                     >
                       <div className="appointments__day-card-header">
                         <div className="appointments__day-card-owner">
-                          <h4 className="appointments__day-card-name">{apt.petName}</h4>
+                          <h4 className="appointments__day-card-name">{apt.ownerName}</h4>
                           <p className="appointments__day-card-phone">Τηλέφωνο: {apt.phone}</p>
                         </div>
                         <div className="appointments__day-card-badge">
@@ -459,12 +467,12 @@ const Appointments = () => {
                       <div className="appointments__day-card-body">
                         <div className="appointments__day-card-row">
                           <div className="appointments__day-card-field">
-                            <span className="appointments__day-card-label">Κατοικίδιο:</span>
-                            <span>{apt.species}</span>
+                            <span className="appointments__day-card-label">Όνομα Κατοικιδίου:</span>
+                            <span>{apt.petName}</span>
                           </div>
                           <div className="appointments__day-card-field">
                             <span className="appointments__day-card-label">Είδος:</span>
-                            <span>{apt.breed}</span>
+                            <span>{apt.species}</span>
                           </div>
                           <div className="appointments__day-card-field">
                             <span className="appointments__day-card-label">Ράτσα:</span>
