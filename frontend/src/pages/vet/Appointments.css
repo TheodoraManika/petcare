@@ -471,6 +471,12 @@
   border-color: #FCA47C;
 }
 
+.appointments__filter--active:hover {
+  background: #ff9260;
+  color: #101828;
+  border-color: #ff9260;
+}
+
 .appointments__list-cards {
   display: flex;
   flex-direction: column;
