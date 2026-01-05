@@ -12,6 +12,7 @@ const Appointments = () => {
   const [selectedDate, setSelectedDate] = useState(new Date()); // Current date
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [notification, setNotification] = useState(null); // { type: 'confirmed' | 'cancelled' }
   const [appointments, setAppointments] = useState([
     {
       id: 1,
@@ -299,6 +300,12 @@ const Appointments = () => {
         apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
       )
     );
+    
+    // Show confirmation notification
+    setNotification('confirmed');
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000); // Hide after 5 seconds
   };
 
   const handleReject = (appointmentId) => {
@@ -307,6 +314,12 @@ const Appointments = () => {
         apt.id === appointmentId ? { ...apt, status: 'cancelled' } : apt
       )
     );
+    
+    // Show cancellation notification
+    setNotification('cancelled');
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000); // Hide after 5 seconds
   };
 
   const formatDateRange = () => {
@@ -336,6 +349,16 @@ const Appointments = () => {
   return (
     <PageLayout>
       <div className="appointments">
+        {/* Notification Banner */}
+        {notification && (
+          <div className={`appointments__notification ${notification === 'confirmed' ? 'appointments__notification--confirmed' : 'appointments__notification--cancelled'}`}>
+            {notification === 'confirmed' 
+              ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
+              : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
+            }
+          </div>
+        )}
+
         <div className="appointments__header">
           <h1 className="appointments__title">Τα Ραντεβού μου</h1>
           <p className="appointments__subtitle">Διαχείριση και παρακολούθηση ραντεβού</p>
