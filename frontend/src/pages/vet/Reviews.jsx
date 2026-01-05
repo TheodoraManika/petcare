@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Star, ArrowLeft } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './Reviews.css';
 
@@ -40,6 +41,13 @@ const Reviews = () => {
       rating: 5,
       comment: 'Πολύ καλή συνεργασία, η γάτα μου έγινε καλά χάρη στη βοήθεια σας!'
     },
+    {
+      id: 5,
+      name: 'Αλέξανδρος Β.',
+      date: '15/10/2025',
+      rating: 5,
+      comment: 'Απλά απίθανη!'
+    },
   ];
 
   // Calculate average rating
@@ -47,18 +55,27 @@ const Reviews = () => {
     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
     : 0;
 
+  // Sort reviews by date (most recent first)
+  const sortedReviews = [...reviews].sort((a, b) => {
+    // Parse dates (format: DD/MM/YYYY)
+    const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+    const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+    
+    const dateA = new Date(yearA, monthA - 1, dayA);
+    const dateB = new Date(yearB, monthB - 1, dayB);
+    
+    // Sort descending (most recent first)
+    return dateB - dateA;
+  });
+
   // Pagination logic
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  const totalPages = Math.ceil(sortedReviews.length / reviewsPerPage);
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+  const currentReviews = sortedReviews.slice(indexOfFirstReview, indexOfLastReview);
 
-  const handlePrevPage = () => {
-    setCurrentPage(prev => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const renderStars = (rating) => {
@@ -109,27 +126,11 @@ const Reviews = () => {
         </div>
 
         {/* Pagination */}
-        <div className="reviews__pagination">
-          <button
-            className="reviews__pagination-btn reviews__pagination-btn--prev"
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft size={16} />
-            <span>Προηγούμενη</span>
-          </button>
-          <span className="reviews__pagination-info">
-            Σελίδα {currentPage} από {totalPages}
-          </span>
-          <button
-            className="reviews__pagination-btn reviews__pagination-btn--next"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            <span>Επόμενη</span>
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </PageLayout>
   );
