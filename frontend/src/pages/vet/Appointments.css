@@ -245,22 +245,22 @@
 }
 
 .appointments__status--pending {
-  background: #FEF3C7;
+  background: #f9d7796b;
   color: #92400E;
 }
 
 .appointments__status--confirmed {
-  background: #D1FAE5;
+  background: #a1cca670;
   color: #065F46;
 }
 
 .appointments__status--completed {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #23cdd93f;
+  color: #2b4aae;
 }
 
 .appointments__status--cancelled {
-  background: #FEE2E2;
+  background: #ff525252;
   color: #991B1B;
 }
 
@@ -538,10 +538,11 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 75px 20px 20px 20px;
   z-index: 1000;
-  padding: 20px;
+  overflow-y: auto;
 }
 
 .appointments__modal {
@@ -549,7 +550,7 @@
   border-radius: 12px;
   max-width: 600px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 87vh;
   overflow-y: auto;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
@@ -578,16 +579,25 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   padding: 16px;
-  background: linear-gradient(135deg, #FFF7ED 0%, #FED7AA 100%);
+  background: linear-gradient(135deg, #23cdd950 0%, #fca47c57 50%, #f9d77956 100%);
   border-radius: 8px;
   margin-bottom: 24px;
 }
 
 .appointments__modal-date,
 .appointments__modal-time {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
   font-size: 13px;
-  color: #92400E;
+  color: #101828;
   line-height: 1.8;
+}
+
+.appointments__modal-date svg,
+.appointments__modal-time svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .appointments__modal-section {
@@ -595,10 +605,17 @@
 }
 
 .appointments__modal-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 15px;
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 12px 0;
+}
+
+.appointments__modal-section-title svg {
+  flex-shrink: 0;
 }
 
 .appointments__modal-info {
@@ -653,25 +670,25 @@
 }
 
 .appointments__modal-btn--reject {
-  background: #fee2e2;
-  color: #dc2626;
+  background: #FF5252;
+  color: #101828;
 }
 
 .appointments__modal-btn--reject:hover {
-  background: #dc2626;
-  color: white;
+  background: #ef3c3c;
+  color: #101828;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
 }
 
 .appointments__modal-btn--confirm {
-  background: #d1fae5;
-  color: #059669;
+  background: #A1CCA6;
+  color: #101828;
 }
 
 .appointments__modal-btn--confirm:hover {
-  background: #059669;
-  color: white;
+  background: #71b479;
+  color: #101828;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
 }

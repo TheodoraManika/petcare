@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock } from 'lucide-react';
+import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, UserRound, PawPrint, Stethoscope } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
@@ -9,7 +9,7 @@ const Appointments = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' or 'list'
   const [viewMode, setViewMode] = useState('week'); // 'day' or 'week'
-  const [selectedDate, setSelectedDate] = useState(new Date(2025, 10, 25)); // Nov 25, 2025
+  const [selectedDate, setSelectedDate] = useState(new Date()); // Current date
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [appointments, setAppointments] = useState([
@@ -20,7 +20,7 @@ const Appointments = () => {
       phone: '6912345678',
       species: 'Σκύλος',
       breed: 'Golden Retriever',
-      date: '25/11/2025',
+      date: '05/01/2026',
       time: '10:00 - 11:00',
       serviceType: 'Εμβολιασμός',
       status: 'pending',
@@ -28,12 +28,12 @@ const Appointments = () => {
     },
     {
       id: 2,
-      petName: 'Μιχ',
+      petName: 'Λούνα',
       ownerName: 'Μαρία Παπαδοπούλου',
       phone: '6983696023',
       species: 'Γάτα',
       breed: 'Bombay',
-      date: '25/11/2025',
+      date: '06/01/2026',
       time: '16:00 - 17:00',
       serviceType: 'Εξέταση',
       status: 'confirmed',
@@ -41,13 +41,13 @@ const Appointments = () => {
     },
     {
       id: 3,
-      petName: 'Μπάμπης',
-      ownerName: 'Έλενα Γεωργίου',
-      phone: '6912345678',
+      petName: 'Ρόκκι',
+      ownerName: 'Μαρία Αντωνίου',
+      phone: '6910559295',
       species: 'Σκύλος',
       breed: 'Golden Retriever',
-      date: '25/11/2025',
-      time: '14:00',
+      date: '06/01/2026',
+      time: '14:00 - 15:00',
       serviceType: 'Εμβολιασμός',
       status: 'pending',
       notes: ''
@@ -59,7 +59,7 @@ const Appointments = () => {
       phone: '6927406934',
       species: 'Σκύλος',
       breed: 'Τσοπανόσκυλο',
-      date: '08/11/2025',
+      date: '07/01/2026',
       time: '16:00 - 17:00',
       serviceType: 'Στείρωση',
       status: 'cancelled',
@@ -71,92 +71,149 @@ const Appointments = () => {
       ownerName: 'Νικόλας Ανδρέου',
       phone: '6928503684',
       species: 'Γάτα',
-      breed: 'Ασιάς',
-      date: '01/11/2025',
+      breed: 'Ασίας',
+      date: '07/01/2026',
       time: '16:00 - 17:00',
       serviceType: 'Στείρωση',
-      status: 'completed',
+      status: 'pending',
       notes: '-'
     },
     {
       id: 6,
-      petName: 'Μιν',
+      petName: 'Μάντοξ',
       ownerName: 'Παντελής Ιωάννου',
       phone: '6947505623',
       species: 'Σκύλος',
       breed: 'Μπουλντόγκ',
-      date: '26/11/2025',
-      time: '11:00',
-      serviceType: 'Εκκριμές',
+      date: '08/01/2026',
+      time: '11:00 - 12:00',
+      serviceType: 'Χειρουργείο',
       status: 'pending',
       notes: ''
     },
     {
       id: 7,
       petName: 'Λούις',
-      ownerName: 'Λούις',
-      phone: '',
+      ownerName: 'Άγγελος Κωνσταντίνου',
+      phone: '6910396110',
       species: 'Σκύλος',
-      breed: '',
-      date: '27/11/2025',
-      time: '09:30',
-      serviceType: 'Επιβεβαιωμένο',
+      breed: 'Μεγάλος Δανός',
+      date: '09/01/2026',
+      time: '09:30 - 10:30',
+      serviceType: 'Γενική Εξέταση',
       status: 'confirmed',
       notes: ''
     },
     {
       id: 8,
-      petName: 'Μαξ',
-      ownerName: 'Μαξ Κανελλάς',
-      phone: '',
-      species: '',
-      breed: '',
-      date: '28/11/2025',
-      time: '10:30',
-      serviceType: 'Επιβεβαιωμένο',
+      petName: 'Μαξίν',
+      ownerName: 'Νικόλας Ανδρέου',
+      phone: '6928503684',
+      species: 'Γάτα',
+      breed: 'Σιαμέζα',
+      date: '10/01/2026',
+      time: '10:30 - 11:30',
+      serviceType: 'Θεραπεία',
       status: 'confirmed',
-      notes: ''
+      notes: '3ο μέρος της θεραπείας'
     },
     {
       id: 9,
-      petName: 'Μιτλλά Εκάνη',
-      ownerName: '',
-      phone: '',
-      species: '',
-      breed: '',
-      date: '29/11/2025',
-      time: '13:00',
-      serviceType: 'Εκκριμές',
+      petName: 'Μίνι',
+      ownerName: 'Βασιλική Παναγιωτοπούλου',
+      phone: '6950774027',
+      species: 'Σκύλος',
+      breed: 'Τσιουάουα',
+      date: '11/01/2026',
+      time: '13:00 - 14:00',
+      serviceType: 'Οδοντιατρική',
       status: 'pending',
       notes: ''
     },
     {
       id: 10,
       petName: 'Φίφη',
-      ownerName: 'Φίφη Εμμανουήλ',
-      phone: '',
-      species: '',
-      breed: '',
-      date: '27/11/2025',
-      time: '15:00',
-      serviceType: 'Εκκριμές',
+      ownerName: 'Κατερίνα Εμμανουήλ',
+      phone: '6947505623',
+      species: 'Σκύλος',
+      breed: 'Λαμπραντόρ',
+      date: '10/01/2026',
+      time: '15:00 - 16:00',
+      serviceType: 'Γενική Εξέταση',
       status: 'pending',
       notes: ''
     },
     {
       id: 11,
       petName: 'Τσάρλυ',
-      ownerName: '',
-      phone: '',
-      species: '',
-      breed: '',
-      date: '29/11/2025',
-      time: '16:00',
-      serviceType: 'Επιβεβαιωμένο',
+      ownerName: 'Παναγίωτης Κωνσταντίνου',
+      phone: '6947503957',
+      species: 'Σκύλος',
+      breed: 'Ροτβάιλερ',
+      date: '05/01/2026',
+      time: '16:00 - 17:00',
+      serviceType: 'Εμβολιασμός',
       status: 'confirmed',
-      notes: ''
+      notes: 'Εμβόλιο κατά της λύσσας'
+    },
+    {
+      id: 12,
+      petName: 'Μάγια',
+      ownerName: 'Κάτια Σωτηρίου',
+      phone: '6947229947',
+      species: 'Σκύλος',
+      breed: 'Poodle',
+      date: '05/01/2026',
+      time: '12:00 - 13:00',
+      serviceType: 'Εμβολιασμός',
+      status: 'confirmed',
+      notes: 'Εμβόλιο κατά της λύσσας'
     }
   ]);
+
+  // Auto-update confirmed appointments to completed if their time has passed
+  useEffect(() => {
+    const updatePastAppointments = () => {
+      const now = new Date();
+      const currentDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      setAppointments(prevAppointments =>
+        prevAppointments.map(apt => {
+          // Only update confirmed appointments
+          if (apt.status !== 'confirmed') return apt;
+
+          const aptDate = apt.date;
+          const aptEndTime = apt.time.split(' - ')[1]; // Get end time (e.g., "11:00")
+
+          // Parse date components
+          const [aptDay, aptMonth, aptYear] = aptDate.split('/').map(Number);
+          const aptDateObj = new Date(aptYear, aptMonth - 1, aptDay);
+          const nowDateObj = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+          // If appointment date is in the past, mark as completed
+          if (aptDateObj < nowDateObj) {
+            return { ...apt, status: 'completed' };
+          }
+
+          // If appointment date is today, check if end time has passed
+          if (aptDate === currentDate && aptEndTime < currentTime) {
+            return { ...apt, status: 'completed' };
+          }
+
+          return apt;
+        })
+      );
+    };
+
+    // Run on component mount
+    updatePastAppointments();
+
+    // Run every minute to keep checking
+    const interval = setInterval(updatePastAppointments, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const getStatusLabel = (status) => {
     const statusMap = {
@@ -192,7 +249,14 @@ const Appointments = () => {
 
   const getAppointmentsForDate = (date) => {
     const dateStr = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-    return appointments.filter(apt => apt.date === dateStr);
+    const filteredAppointments = appointments.filter(apt => apt.date === dateStr);
+    
+    // Sort by time (earliest first)
+    return filteredAppointments.sort((a, b) => {
+      const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
+      const timeB = b.time.split(' - ')[0];
+      return timeA.localeCompare(timeB);
+    });
   };
 
   const handlePreviousWeek = () => {
@@ -560,33 +624,44 @@ const Appointments = () => {
                 {/* Date and Time */}
                 <div className="appointments__modal-datetime">
                   <div className="appointments__modal-date">
-                    📅 Ημερομηνία<br />
-                    {selectedAppointment.date}
+                    <Calendar size={16} color="#101828" />
+                    <div>
+                      <div>Ημερομηνία</div>
+                      <div>{selectedAppointment.date}</div>
+                    </div>
                   </div>
                   <div className="appointments__modal-time">
-                    🕐 Ώρα<br />
-                    {selectedAppointment.time}
+                    <Clock size={16} color="#101828" />
+                    <div>
+                      <div>Ώρα</div>
+                      <div>{selectedAppointment.time}</div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Pet Info */}
+                {/* Owner Info */}
                 <div className="appointments__modal-section">
-                  <h4 className="appointments__modal-section-title">🐾 Κατοικίδιο</h4>
+                  <h4 className="appointments__modal-section-title"><UserRound size={16} color="#23CED9" /> Ιδιοκτήτης</h4>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Όνομα:</span>
-                    <span>{selectedAppointment.petName}</span>
+                    <span>{selectedAppointment.ownerName}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Τηλέφωνο:</span>
                     <span>{selectedAppointment.phone}</span>
                   </div>
+                </div>
+
+                {/* Pet Info */}
+                <div className="appointments__modal-section">
+                  <h4 className="appointments__modal-section-title"><PawPrint size={16} color="#FCA47C" /> Κατοικίδιο</h4>
                   <div className="appointments__modal-info">
-                    <span className="appointments__modal-label">Κατοικίδιο:</span>
-                    <span>{selectedAppointment.species}</span>
+                    <span className="appointments__modal-label">Όνομα:</span>
+                    <span>{selectedAppointment.petName}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Είδος:</span>
-                    <span>{selectedAppointment.breed}</span>
+                    <span>{selectedAppointment.species}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Ράτσα:</span>
@@ -596,14 +671,14 @@ const Appointments = () => {
 
                 {/* Service Info */}
                 <div className="appointments__modal-section">
-                  <h4 className="appointments__modal-section-title">📋 Υπηρεσία</h4>
+                  <h4 className="appointments__modal-section-title"><Stethoscope size={16} color="#F9D779" /> Υπηρεσία</h4>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Τύπος:</span>
                     <span>{selectedAppointment.serviceType}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Σημειώσεις:</span>
-                    <span>{selectedAppointment.notes || 'Πρώτος εμβολιασμός'}</span>
+                    <span>{selectedAppointment.notes || '-'}</span>
                   </div>
                 </div>
               </div>
