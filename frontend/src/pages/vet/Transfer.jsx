@@ -419,8 +419,13 @@ const Transfer = () => {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard },
+    { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Δήλωση Μεταβίβασης" breadcrumbs={breadcrumbItems}>
       <div className="transfer">
         <div className="transfer__header">
           <h1 className="transfer__title">Δήλωση Μεταβίβασης</h1>

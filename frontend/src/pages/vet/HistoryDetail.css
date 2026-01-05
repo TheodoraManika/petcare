@@ -9,6 +9,25 @@
   margin-bottom: 24px;
 }
 
+.history-detail__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #23CED9;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.history-detail__back-btn:hover {
+  color: #1ab5bf;
+  text-decoration: underline;
+}
+
 .history-detail__breadcrumb {
   display: flex;
   align-items: center;

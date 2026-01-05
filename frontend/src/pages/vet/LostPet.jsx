@@ -88,19 +88,13 @@ const LostPet = () => {
     navigate(ROUTES.vet.dashboard);
   };
 
-  return (
-    <PageLayout>
-      <div className="lost-pet">
-        <div className="lost-pet__header">
-          <div className="lost-pet__breadcrumb">
-            <span className="lost-pet__breadcrumb-link" onClick={() => navigate(ROUTES.vet.dashboard)}>
-              Μενού
-            </span>
-            <span className="lost-pet__breadcrumb-separator">›</span>
-            <span className="lost-pet__breadcrumb-current">Δήλωση Απώλειας</span>
-          </div>
-        </div>
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
 
+  return (
+    <PageLayout title="Δήλωση Απώλειας" breadcrumbs={breadcrumbItems}>
+      <div className="lost-pet">
         <div className="lost-pet__content">
           <h1 className="lost-pet__title">Δήλωση Απώλειας Κατοικιδίου</h1>
 

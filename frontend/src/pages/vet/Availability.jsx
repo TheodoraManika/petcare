@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, Clock, Trash2, Plus } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/common/CustomSelect';
+import { ROUTES } from '../../utils/constants';
 import './Availability.css';
 
 const Availability = () => {
@@ -122,8 +123,12 @@ const Availability = () => {
     return slots.length;
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Διαθεσιμότητα" breadcrumbs={breadcrumbItems}>
       <div className="availability">
         <div className="availability__header">
           <h1 className="availability__title">Διαχείριση Διαθεσιμότητας</h1>

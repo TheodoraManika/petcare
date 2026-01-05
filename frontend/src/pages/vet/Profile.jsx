@@ -127,8 +127,10 @@ const Profile = () => {
     );
   }
 
+  const breadcrumbItems = [];
+
   return (
-    <PageLayout>
+    <PageLayout title="Προφίλ" breadcrumbs={breadcrumbItems}>
       <div className="profile">
         <div className="profile__header">
           <h1 className="profile__title">Το Προφίλ μου</h1>

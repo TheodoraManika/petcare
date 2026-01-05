@@ -66,8 +66,12 @@ const Operation = () => {
     );
   }
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Ιατρικές Πράξεις" breadcrumbs={breadcrumbItems}>
       <div className="operation">
         <div className="operation__header">
           <h1 className="operation__title">Καταγραφή Ιατρικής Πράξης</h1>

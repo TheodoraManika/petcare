@@ -76,8 +76,12 @@ const Register = () => {
     );
   }
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Καταγραφή Κατοικιδίου" breadcrumbs={breadcrumbItems}>
       <div className="register">
         {/* Info Banner */}
         <div className="register__banner">

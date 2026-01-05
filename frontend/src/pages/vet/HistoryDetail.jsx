@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Printer, Download, User, PawPrint, Handshake, ArrowRightLeft, Heart } from 'lucide-react';
+import { Printer, Download, User, PawPrint, Handshake, ArrowRightLeft, ArrowLeft, Heart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './HistoryDetail.css';
@@ -133,23 +133,21 @@ const HistoryDetail = () => {
     console.log('Download PDF');
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard },
+    { label: 'Ιστορικό', path: ROUTES.vet.history }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Προβολή Δήλωσης" breadcrumbs={breadcrumbItems}>
       <div className="history-detail">
         <div className="history-detail__header">
-          <div className="history-detail__breadcrumb">
-            <span className="history-detail__breadcrumb-link" onClick={() => navigate(ROUTES.vet.dashboard)}>
-              Μενού
-            </span>
-            <span className="history-detail__breadcrumb-separator">›</span>
-            <span className="history-detail__breadcrumb-link" onClick={() => navigate(ROUTES.vet.history)}>
-              Ιστορικό
-            </span>
-            <span className="history-detail__breadcrumb-separator">›</span>
-            <span className="history-detail__breadcrumb-current">
-              Δήλωση {detailData.declarationType} {detailData.pet.name}
-            </span>
-          </div>
+          <button 
+            className="history-detail__back-btn" 
+            onClick={() => navigate(ROUTES.vet.history, { state: { activeTab: 'declarations' } })}
+          >
+            <ArrowLeft size={14} /> Πίσω
+          </button>
         </div>
 
         <div className="history-detail__content">

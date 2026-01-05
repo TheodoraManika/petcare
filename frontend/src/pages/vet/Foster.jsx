@@ -486,8 +486,13 @@ const Foster = () => {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard },
+    { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Δήλωση Αναδοχής" breadcrumbs={breadcrumbItems}>
       <div className="foster">
         <div className="foster__header">
           <h1 className="foster__title">Δήλωση Αναδοχής</h1>

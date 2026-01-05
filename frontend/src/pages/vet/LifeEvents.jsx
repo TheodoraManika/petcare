@@ -36,8 +36,12 @@ const LifeEvents = () => {
     navigate(route);
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Δηλώσεις Συμβάντων Ζωής" breadcrumbs={breadcrumbItems}>
       <div className="life-events">
         <div className="life-events__header">
           <h1 className="life-events__title">Δηλώσεις Συμβάντων Ζωής</h1>

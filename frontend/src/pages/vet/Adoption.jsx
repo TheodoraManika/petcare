@@ -486,8 +486,13 @@ const Adoption = () => {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard },
+    { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Δήλωση Υιοθεσίας" breadcrumbs={breadcrumbItems}>
       <div className="adoption">
         <div className="adoption__header">
           <h1 className="adoption__title">Δήλωση Υιοθεσίας</h1>

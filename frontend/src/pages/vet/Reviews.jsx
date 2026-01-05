@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Star, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import { ROUTES } from '../../utils/constants';
 import './Reviews.css';
 
 const Reviews = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 4;
 
@@ -70,8 +73,12 @@ const Reviews = () => {
     ));
   };
 
+  const breadcrumbItems = [
+    { label: 'Μενού', path: ROUTES.vet.dashboard }
+  ];
+
   return (
-    <PageLayout>
+    <PageLayout title="Αξιολογήσεις" breadcrumbs={breadcrumbItems}>
       <div className="reviews">
         <div className="reviews__header">
           <h1 className="reviews__title">Αξιολογήσεις Πελατών</h1>
