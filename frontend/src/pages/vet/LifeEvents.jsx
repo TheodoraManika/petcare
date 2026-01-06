@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRightLeft, Heart, Handshake } from 'lucide-react';
+import { ArrowRightLeft, Heart, HandHeart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './LifeEvents.css';
@@ -25,7 +25,7 @@ const LifeEvents = () => {
     },
     {
       id: 'adoption',
-      icon: <Handshake size={40} />,
+      icon: <HandHeart size={40} />,
       title: 'Δήλωση Αναδοχής',
       description: 'Δήλωση Αναδοχής ενός κατοικιδίου',
       route: ROUTES.vet.foster

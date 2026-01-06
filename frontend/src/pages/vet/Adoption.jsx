@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, FileHeart } from 'lucide-react';
+import { PawPrint, UserRound, FileHeart, Heart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
 import LocationPicker from '../../components/common/LocationPicker';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
 
 const Adoption = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -98,10 +104,23 @@ const Adoption = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Submit form
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.vet.dashboard);
+      // Show confirmation modal instead of submitting directly
+      setShowConfirmModal(true);
     }
+  };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -111,8 +130,87 @@ const Adoption = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.lifeEvents);
+    setShowCancelModal(true);
   };
+
+  const handleConfirmCancel = () => {
+    // Reset form data to initial empty state
+    setFormData({
+      microchipNumber: '',
+      petName: '',
+      species: '',
+      age: '',
+      gender: '',
+      ownerAfm: '',
+      ownerName: '',
+      ownerSurname: '',
+      ownerPhone: '',
+      ownerEmail: '',
+      ownerAddress: '',
+      ownerCity: '',
+      ownerPostalCode: '',
+      adoptionDate: '',
+      adoptionReason: '',
+      shelterOwner: '',
+      liveWithOtherPets: '',
+      existingPets: '',
+      notes: ''
+    });
+    // Reset to step 1
+    setCurrentStep(1);
+    setShowCancelModal(false);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Helper functions for labels
+  const getSpeciesLabel = (value) => {
+    const options = {
+      'dog': 'Σκύλος',
+      'cat': 'Γάτα',
+      'bird': 'Πτηνό',
+      'reptile': 'Ερπετό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  const getGenderLabel = (value) => {
+    const options = {
+      'male': 'Αρσενικό',
+      'female': 'Θηλυκό'
+    };
+    return options[value] || value;
+  };
+
+  const getYesNoLabel = (value) => {
+    return value === 'yes' ? 'Ναι' : 'Όχι';
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
+    { label: 'Είδος Ζώου', value: getSpeciesLabel(formData.species) },
+    { label: 'Ηλικία (έτη)', value: formData.age },
+    { label: 'Φύλο', value: getGenderLabel(formData.gender) },
+    { label: 'Ιδιοκτήτης - Α.Φ.Μ.', value: formData.ownerAfm },
+    { label: 'Ιδιοκτήτης - Όνομα', value: formData.ownerName },
+    { label: 'Ιδιοκτήτης - Επώνυμο', value: formData.ownerSurname },
+    { label: 'Ιδιοκτήτης - Τηλέφωνο', value: formData.ownerPhone },
+    { label: 'Ιδιοκτήτης - Email', value: formData.ownerEmail },
+    { label: 'Ιδιοκτήτης - Διεύθυνση', value: formData.ownerAddress },
+    { label: 'Ιδιοκτήτης - Πόλη', value: formData.ownerCity },
+    { label: 'Ιδιοκτήτης - Τ.Κ.', value: formData.ownerPostalCode },
+    { label: 'Ημερομηνία Υιοθεσίας', value: formData.adoptionDate },
+    { label: 'Καταφύγιο/Φιλοζωική', value: formData.adoptionReason },
+    { label: 'Διαθέσιμος Κήπος/Αυλή', value: getYesNoLabel(formData.shelterOwner) },
+    { label: 'Υπάρχουν άλλα κατοικίδια', value: getYesNoLabel(formData.liveWithOtherPets) },
+    { label: 'Υπάρχει εμπειρία', value: getYesNoLabel(formData.existingPets) },
+    { label: 'Σημειώσεις', value: formData.notes || '-' },
+  ];
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -492,6 +590,23 @@ const Adoption = () => {
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
 
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={Heart}
+        title="Η Δήλωση Υιοθεσίας ολοκληρώθηκε!"
+        description="Η υιοθεσία καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ιδιοκτήτη."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Υιοθεσίας"
+      />
+    );
+  }
+
   return (
     <PageLayout title="Δήλωση Υιοθεσίας" breadcrumbs={breadcrumbItems}>
       <div className="adoption">
@@ -535,6 +650,30 @@ const Adoption = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση υιοθεσίας;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Υιοθεσίας"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της υιοθεσίας:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );

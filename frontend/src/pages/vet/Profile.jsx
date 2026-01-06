@@ -116,7 +116,7 @@ const Profile = () => {
         buttonText="Επιστροφή στο Προφίλ μου"
         onButtonClick={handleBackToProfile}
         iconColor="#FCA47C"
-        iconBgColor="#ffd8c6"
+        iconBgColor="#FFF4ED"
         breadcrumbs={breadcrumbItems}
         pageTitle="Προφίλ"
       />
