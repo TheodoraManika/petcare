@@ -10,6 +10,7 @@ export const ROUTES = {
   cookies: '/cookies',
   information: '/information',
   confirmation: '/confirmation',
+  success: '/success',
   citizen: {
     lostPets: '/citizen/lost-pets',
     lostPetDetails: '/citizen/lost-pets/:petId',

@@ -3,6 +3,7 @@ import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2 } from 'lucide-r
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
 import MultiSelect from '../../components/common/MultiSelect';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -80,9 +81,9 @@ const Profile = () => {
     setShowDeleteModal(false);
     setShowSuccessModal(true);
     
-    // Redirect to dashboard after 5 seconds - CHANGE TO HOME PAGE LATER
+    // Redirect to home after 5 seconds
     setTimeout(() => {
-      navigate(ROUTES.vet.dashboard);
+      navigate(ROUTES.home);
     }, 5000);
   };
 
@@ -98,32 +99,22 @@ const Profile = () => {
     setShowSaveSuccessModal(true);
   };
 
-  const handleBackToDashboard = () => {
-    navigate(ROUTES.vet.dashboard);
+  const handleBackToProfile = () => {
+    setShowSaveSuccessModal(false);
   };
 
   // If showing save success, render only the success page
   if (showSaveSuccessModal) {
     return (
-      <PageLayout>
-        <div className="profile-success">
-          <div className="profile-success__content">
-            <div className="profile-success__icon">
-              <UserRound size={64} />
-            </div>
-            <h1 className="profile-success__title">Το προφίλ ανανεώθηκε!</h1>
-            <p className="profile-success__description">
-              Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας.
-            </p>
-            <button 
-              className="profile-success__btn"
-              onClick={handleBackToDashboard}
-            >
-              Επιστροφή στο Μενού
-            </button>
-          </div>
-        </div>
-      </PageLayout>
+      <SuccessPage
+        icon={UserRound}
+        title="Το προφίλ ανανεώθηκε!"
+        description="Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας."
+        buttonText="Επιστροφή στο Προφίλ μου"
+        onButtonClick={handleBackToProfile}
+        iconColor="#FCA47C"
+        iconBgColor="#ffd8c6"
+      />
     );
   }
 
