@@ -4,6 +4,7 @@ import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, 
 import PageLayout from '../../components/global/layout/PageLayout';
 import Pagination from '../../components/common/Pagination';
 import ConfirmModal from '../../components/common/ConfirmModal';
+import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
@@ -387,14 +388,14 @@ const Appointments = () => {
     <PageLayout title="Διαχείριση Ραντεβού" breadcrumbs={breadcrumbItems}>
       <div className="appointments">
         {/* Notification Banner */}
-        {notification && (
-          <div className={`appointments__notification ${notification === 'confirmed' ? 'appointments__notification--confirmed' : 'appointments__notification--cancelled'}`}>
-            {notification === 'confirmed' 
-              ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
-              : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
-            }
-          </div>
-        )}
+        <Notification
+          isVisible={notification !== null}
+          message={notification === 'confirmed' 
+            ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
+            : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
+          }
+          type={notification === 'confirmed' ? 'success' : 'error'}
+        />
 
         <div className="appointments__header">
           <h1 className="appointments__title">Τα Ραντεβού μου</h1>
