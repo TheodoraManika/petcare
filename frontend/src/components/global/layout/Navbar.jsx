@@ -212,7 +212,9 @@ const Navbar = () => {
                   className="navbar__profile-menu-item navbar__profile-menu-item--logout"
                   onClick={() => {
                     setIsProfileOpen(false);
+                    localStorage.removeItem('currentUser');
                     navigate(ROUTES.home);
+                    window.location.reload();
                   }}
                 >
                   <span className="navbar__profile-menu-icon">

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 // Common Pages
 import HomePage from './pages/citizen/HomePage';
+import LoginPage from './pages/common/LoginPage';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import ContactPage from './pages/common/ContactPage';
 import AboutPage from './pages/common/AboutPage';
@@ -13,8 +14,12 @@ import InformationPage from './pages/common/InformationPage';
 import LostPets from './pages/citizen/LostPets';
 import LostPetDetails from './pages/citizen/LostPetDetails';
 
+// Owner Pages
+import OwnerRegisterPage from './pages/owner/OwnerRegisterPage';
+
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
+import VetRegisterPage from './pages/vet/VetRegisterPage';
 
 // Citizen Pages  
 import FoundPetForm from './pages/citizen/FoundPetForm';
@@ -27,6 +32,9 @@ function App() {
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<HomePage />} />
+
+        {/* Login */}
+        <Route path={ROUTES.login} element={<LoginPage />} />
 
         {/* Common Routes */}
         <Route path={ROUTES.contact} element={<ContactPage />} />
@@ -41,7 +49,11 @@ function App() {
         <Route path={ROUTES.citizen.lostPetDetails} element={<LostPetDetails />} />
         <Route path={ROUTES.citizen.foundPetForm} element={<FoundPetForm />} />
 
+        {/* Owner Routes */}
+        <Route path={ROUTES.owner.register} element={<OwnerRegisterPage />} />
+
         {/* Vet Routes */}
+        <Route path={ROUTES.vet.register} element={<VetRegisterPage />} />
         <Route path="/vet/dashboard" element={<Dashboard />} />
         <Route path={ROUTES.vet.searchMap} element={<VetSearchMap />} />
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, MapPin, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
+import CustomSelect from '../../components/global/ui/CustomSelect';
 import './LostPets.css';
 
 const LostPets = () => {
@@ -106,22 +107,30 @@ const LostPets = () => {
               <div className="filters-row-1">
                 <div className="filter-item">
                   <label>Ζωο</label>
-                  <select name="animal" value={filters.animal} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="dog">Σκύλος</option>
-                    <option value="cat">Γάτα</option>
-                    <option value="other">Άλλο</option>
-                  </select>
+                  <CustomSelect
+                    value={filters.animal}
+                    onChange={(value) => setFilters({...filters, animal: value})}
+                    placeholder="Επιλέξτε..."
+                    options={[
+                      { value: 'dog', label: 'Σκύλος' },
+                      { value: 'cat', label: 'Γάτα' },
+                      { value: 'other', label: 'Άλλο' },
+                    ]}
+                  />
                 </div>
 
                 <div className="filter-item">
                   <label>Περιοχή</label>
-                  <select name="area" value={filters.area} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="athens">Αθήνα</option>
-                    <option value="thessaloniki">Θεσσαλονίκη</option>
-                    <option value="patras">Πάτρα</option>
-                  </select>
+                  <CustomSelect
+                    value={filters.area}
+                    onChange={(value) => setFilters({...filters, area: value})}
+                    placeholder="Επιλέξτε..."
+                    options={[
+                      { value: 'athens', label: 'Αθήνα' },
+                      { value: 'thessaloniki', label: 'Θεσσαλονίκη' },
+                      { value: 'patras', label: 'Πάτρα' },
+                    ]}
+                  />
                 </div>
 
                 <div className="filter-item">
@@ -133,23 +142,31 @@ const LostPets = () => {
               <div className="filters-row-2">
                 <div className="filter-item">
                   <label>Χρώμα</label>
-                  <select name="color" value={filters.color} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="white">Λευκό</option>
-                    <option value="black">Μαύρο</option>
-                    <option value="brown">Καφέ</option>
-                    <option value="golden">Χρυσαφί</option>
-                  </select>
+                  <CustomSelect
+                    value={filters.color}
+                    onChange={(value) => setFilters({...filters, color: value})}
+                    placeholder="Επιλέξτε..."
+                    options={[
+                      { value: 'white', label: 'Λευκό' },
+                      { value: 'black', label: 'Μαύρο' },
+                      { value: 'brown', label: 'Καφέ' },
+                      { value: 'golden', label: 'Χρυσαφί' },
+                    ]}
+                  />
                 </div>
 
                 <div className="filter-item">
                   <label>Μήνες</label>
-                  <select name="months" value={filters.months} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="1">1 μήνα</option>
-                    <option value="3">3 μήνες</option>
-                    <option value="6">6 μήνες</option>
-                  </select>
+                  <CustomSelect
+                    value={filters.months}
+                    onChange={(value) => setFilters({...filters, months: value})}
+                    placeholder="Επιλέξτε..."
+                    options={[
+                      { value: '1', label: '1 μήνα' },
+                      { value: '3', label: '3 μήνες' },
+                      { value: '6', label: '6 μήνες' },
+                    ]}
+                  />
                 </div>
 
                 <button className="clear-button" onClick={() => {

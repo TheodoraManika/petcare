@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, MapPin, X } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import CustomSelect from '../../components/global/ui/CustomSelect';
 import './VetSearchMap.css';
 
 const VetSearchMap = () => {
@@ -68,82 +69,82 @@ const VetSearchMap = () => {
             {/* Area Filter */}
             <div className="filter-group">
               <label className="filter-label">Περιοχή</label>
-              <select 
-                name="area" 
-                value={filters.area} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">π.χ. Αθήνα, Καλαμαριά...</option>
-                <option value="athens">Αθήνα</option>
-                <option value="thessaloniki">Θεσσαλονίκη</option>
-                <option value="patras">Πάτρα</option>
-              </select>
+              <CustomSelect
+                variant="vet"
+                value={filters.area}
+                onChange={(value) => setFilters({...filters, area: value})}
+                placeholder="π.χ. Αθήνα, Καλαμαριά..."
+                options={[
+                  { value: 'athens', label: 'Αθήνα' },
+                  { value: 'thessaloniki', label: 'Θεσσαλονίκη' },
+                  { value: 'patras', label: 'Πάτρα' },
+                ]}
+              />
             </div>
 
             {/* Specialty Filter */}
             <div className="filter-group">
               <label className="filter-label">Ειδικότητα</label>
-              <select 
-                name="specialty" 
-                value={filters.specialty} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε ειδικότητα...</option>
-                <option value="general">Γενικός Κτηνίατρος</option>
-                <option value="surgery">Χειρουργική</option>
-                <option value="dentistry">Οδοντιατρική</option>
-                <option value="orthopedics">Ορθοπεδική</option>
-              </select>
+              <CustomSelect
+                variant="vet"
+                value={filters.specialty}
+                onChange={(value) => setFilters({...filters, specialty: value})}
+                placeholder="Επιλέξτε ειδικότητα..."
+                options={[
+                  { value: 'general', label: 'Γενικός Κτηνίατρος' },
+                  { value: 'surgery', label: 'Χειρουργική' },
+                  { value: 'dentistry', label: 'Οδοντιατρική' },
+                  { value: 'orthopedics', label: 'Ορθοπεδική' },
+                ]}
+              />
             </div>
 
             {/* Availability Filter */}
             <div className="filter-group">
               <label className="filter-label">Ημερα Διαθεσιμοτητας</label>
-              <select 
-                name="availability" 
-                value={filters.availability} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε ημέρα...</option>
-                <option value="today">Σήμερα</option>
-                <option value="tomorrow">Αύριο</option>
-                <option value="week">Αυτή την εβδομάδα</option>
-              </select>
+              <CustomSelect
+                variant="vet"
+                value={filters.availability}
+                onChange={(value) => setFilters({...filters, availability: value})}
+                placeholder="Επιλέξτε ημέρα..."
+                options={[
+                  { value: 'today', label: 'Σήμερα' },
+                  { value: 'tomorrow', label: 'Αύριο' },
+                  { value: 'week', label: 'Αυτή την εβδομάδα' },
+                ]}
+              />
             </div>
 
             {/* Time Filter */}
             <div className="filter-group">
               <label className="filter-label">Ύρα</label>
-              <select 
-                name="time" 
-                value={filters.time} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε ώρα...</option>
-                <option value="morning">Πρωί (08:00-12:00)</option>
-                <option value="afternoon">Απόγευμα (12:00-18:00)</option>
-                <option value="evening">Βράδυ (18:00-21:00)</option>
-              </select>
+              <CustomSelect
+                variant="vet"
+                value={filters.time}
+                onChange={(value) => setFilters({...filters, time: value})}
+                placeholder="Επιλέξτε ώρα..."
+                options={[
+                  { value: 'morning', label: 'Πρωί (08:00-12:00)' },
+                  { value: 'afternoon', label: 'Απόγευμα (12:00-18:00)' },
+                  { value: 'evening', label: 'Βράδυ (18:00-21:00)' },
+                ]}
+              />
             </div>
 
             {/* Rating Filter */}
             <div className="filter-group">
               <label className="filter-label">Ελαχιστη Αβολυμιμη</label>
-              <select 
-                name="rating" 
-                value={filters.rating} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε αξιολόγηση...</option>
-                <option value="4">4+ ⭐</option>
-                <option value="4.5">4.5+ ⭐</option>
-                <option value="4.8">4.8+ ⭐</option>
-              </select>
+              <CustomSelect
+                variant="vet"
+                value={filters.rating}
+                onChange={(value) => setFilters({...filters, rating: value})}
+                placeholder="Επιλέξτε αξιολόγηση..."
+                options={[
+                  { value: '4', label: '4+ ⭐' },
+                  { value: '4.5', label: '4.5+ ⭐' },
+                  { value: '4.8', label: '4.8+ ⭐' },
+                ]}
+              />
             </div>
 
             {/* Search Button */}

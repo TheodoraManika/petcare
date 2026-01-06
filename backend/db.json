@@ -1,0 +1,120 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "owner@example.com",
+      "password": "password123",
+      "name": "Γιάννης",
+      "lastName": "Παπαδόπουλος",
+      "userType": "owner",
+      "phone": "6912345678",
+      "afm": "123456789",
+      "avatar": null,
+      "createdAt": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "email": "vet@example.com",
+      "password": "password123",
+      "name": "Μαρία",
+      "lastName": "Κατσαρίνη",
+      "userType": "vet",
+      "phone": "6987654321",
+      "afm": "987654321",
+      "specialization": "Γενική Κτηνιατρική",
+      "clinicName": "Αθήνα Vet Care",
+      "licenseNumber": "UET-12345",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πατριάρχου Γρηγορίου 26",
+      "clinicCity": "Αθήνα",
+      "clinicPostalCode": "15125",
+      "avatar": null,
+      "createdAt": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "email": "vet2@example.com",
+      "password": "password123",
+      "name": "Κώστας",
+      "lastName": "Δημόπουλος",
+      "userType": "vet",
+      "phone": "6945123456",
+      "afm": "555555555",
+      "specialization": "Χειρουργική",
+      "clinicName": "Θεσσαλονίκη Pet Hospital",
+      "licenseNumber": "UET-54321",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Αγία Σοφία 100",
+      "clinicCity": "Θεσσαλονίκη",
+      "clinicPostalCode": "54622",
+      "avatar": null,
+      "createdAt": "2025-01-05T00:00:00Z"
+    }
+  ],
+  "pets": [
+    {
+      "id": 1,
+      "ownerId": 1,
+      "name": "Μάξ",
+      "species": "Σκύλος",
+      "breed": "Golden Retriever",
+      "age": 3,
+      "color": "Χρυσό",
+      "microchipId": "123456789012345",
+      "createdAt": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "ownerId": 1,
+      "name": "Μίσα",
+      "species": "Γάτα",
+      "breed": "Persian",
+      "age": 2,
+      "color": "Λευκό",
+      "microchipId": "987654321098765",
+      "createdAt": "2025-01-05T00:00:00Z"
+    }
+  ],
+  "lostPets": [
+    {
+      "id": 1,
+      "reportedById": 1,
+      "name": "Λούκας",
+      "species": "Σκύλος",
+      "breed": "Labrador",
+      "description": "Μαύρο χρώμα, χαμένος στο Μαρούσι",
+      "lostDate": "2025-01-01",
+      "lostLocation": "Μαρούσι, Αθήνα",
+      "status": "pending",
+      "imageUrl": null,
+      "createdAt": "2025-01-05T00:00:00Z"
+    }
+  ],
+  "foundPets": [
+    {
+      "id": 1,
+      "reportedById": 2,
+      "name": "Unknown",
+      "species": "Γάτα",
+      "breed": "Mixed",
+      "description": "Τρίχρωμη γάτα, βρέθηκε κοντά στο κέντρο της Αθήνας",
+      "foundDate": "2025-01-04",
+      "foundLocation": "Κέντρο, Αθήνα",
+      "status": "active",
+      "imageUrl": null,
+      "createdAt": "2025-01-05T00:00:00Z"
+    }
+  ],
+  "appointments": [
+    {
+      "id": 1,
+      "petId": 1,
+      "vetId": 2,
+      "date": "2025-01-20",
+      "time": "10:00",
+      "reason": "Τακτικός έλεγχος",
+      "status": "scheduled",
+      "createdAt": "2025-01-05T00:00:00Z"
+    }
+  ]
+}

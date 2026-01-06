@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, AlertCircle, Check } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import CustomSelect from '../../components/global/ui/CustomSelect';
 import './FoundPetForm.css';
 
 const FoundPetForm = () => {
@@ -118,17 +119,12 @@ const FoundPetForm = () => {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Είδος</label>
-                <select
-                  name="species"
+                <CustomSelect
                   value={formData.species}
-                  onChange={handleInputChange}
-                  className="form-input"
-                >
-                  <option value="">Επιλέξτε ένα είδος...</option>
-                  {speciesOptions.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
+                  onChange={(value) => setFormData({...formData, species: value})}
+                  placeholder="Επιλέξτε ένα είδος..."
+                  options={speciesOptions.map(option => ({ value: option, label: option }))}
+                />
               </div>
 
               <div className="form-group">

@@ -77,7 +77,7 @@ const NavbarPublic = () => {
         <div className="navbar__auth-buttons">
           <button 
             className="navbar__auth-btn navbar__auth-btn--signin"
-            onClick={() => navigate(ROUTES.vet.dashboard)}
+            onClick={() => navigate(ROUTES.login)}
           >
             <UserRound size={16} />
             <span>Σύνδεση</span>

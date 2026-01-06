@@ -13,47 +13,75 @@ import './PageLayout.css';
  * @param {string} props.title - Current page title (displayed in breadcrumb)
  * @param {array} props.breadcrumbs - Optional array of breadcrumb items: [{label, path}, ...]
  *                                     If provided, breadcrumb hierarchy is: Home > breadcrumbs[0] > breadcrumbs[1] > ... > title
+ * @param {boolean} props.showBreadcrumbs - Whether to show breadcrumbs (default: true)
  */
-const PageLayout = ({ children, title, breadcrumbs }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
+const PageLayout = ({ children, title, breadcrumbs, showBreadcrumbs = true }) => {
+  // Initialize state by checking localStorage immediately
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
     try {
       const storedUser = localStorage.getItem('currentUser');
-      setIsLoggedIn(!!storedUser);
+      return !!storedUser;
     } catch (error) {
       console.error('Error checking login status:', error);
-      setIsLoggedIn(false);
+      return false;
     }
+  });
+
+  useEffect(() => {
+    // Check login status on mount (in case it changed)
+    const checkLoginStatus = () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        setIsLoggedIn(!!storedUser);
+      } catch (error) {
+        console.error('Error checking login status:', error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    // Listen for custom auth change events
+    const handleAuthChange = () => {
+      checkLoginStatus();
+    };
+
+    window.addEventListener('loginStatusChanged', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('loginStatusChanged', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
+    };
   }, []);
 
   return (
     <div className="page-layout">
       {isLoggedIn ? <Navbar /> : <NavbarPublic />}
       <main className="page-layout__main">
-        <nav className="page-layout__breadcrumbs">
-          <Link to="/" className="page-layout__breadcrumb-link">
-            <Home size={16} />
-          </Link>
-          
-          {/* Render custom breadcrumbs if provided */}
-          {breadcrumbs && breadcrumbs.length > 0 && (
-            <>
-              {breadcrumbs.map((crumb, index) => (
-                <React.Fragment key={index}>
-                  <span className="page-layout__breadcrumb-separator">&gt;</span>
-                  <Link to={crumb.path} className="page-layout__breadcrumb-link">
-                    {crumb.label}
-                  </Link>
-                </React.Fragment>
-              ))}
-            </>
-          )}
-          
-          {/* Current page title */}
-          <span className="page-layout__breadcrumb-separator">&gt;</span>
-          <span className="page-layout__breadcrumb-current">{title || 'Μενού'}</span>
-        </nav>
+        {showBreadcrumbs && (
+          <nav className="page-layout__breadcrumbs">
+            <Link to="/" className="page-layout__breadcrumb-link">
+              <Home size={16} />
+            </Link>
+            
+            {/* Render custom breadcrumbs if provided */}
+            {breadcrumbs && breadcrumbs.length > 0 && (
+              <>
+                {breadcrumbs.map((crumb, index) => (
+                  <React.Fragment key={index}>
+                    <span className="page-layout__breadcrumb-separator">&gt;</span>
+                    <Link to={crumb.path} className="page-layout__breadcrumb-link">
+                      {crumb.label}
+                    </Link>
+                  </React.Fragment>
+                ))}
+              </>
+            )}
+            
+            {/* Current page title */}
+            <span className="page-layout__breadcrumb-separator">&gt;</span>
+            <span className="page-layout__breadcrumb-current">{title || 'Μενού'}</span>
+          </nav>
+        )}
         <div className="page-layout__content">
           {children}
         </div>
