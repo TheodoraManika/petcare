@@ -4,6 +4,7 @@ import { AlertCircle, Send } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
 import { ROUTES } from '../../utils/constants';
 import './Register.css';
 
@@ -23,6 +24,8 @@ const Register = () => {
     ownerPhone: '',
     ownerEmail: '',
     ownerAddress: '',
+    ownerAddressLat: '',
+    ownerAddressLon: '',
     afm: '',
   });
 

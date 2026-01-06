@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
 import { ROUTES } from '../../utils/constants';
 import './OwnerLostPet.css';
 
@@ -16,7 +17,7 @@ const OwnerLostPet = () => {
     { value: 'pet3', label: 'Τσάρλι - GR456789123456789', microchip: 'GR456789123456789', name: 'Τσάρλι', type: 'Σκύλος', breed: 'Labrador Retriever', image: '🐶' },
   ];
 
-  // Location options
+  // Location options (now will be used by LocationPicker)
   const locationOptions = [
     { value: 'syntagma', label: 'Κέντρο Αθήνας, Πλατεία Συντάγματος' },
     { value: 'monastiraki', label: 'Μοναστηράκι' },
@@ -33,6 +34,8 @@ const OwnerLostPet = () => {
     lostDate: '',
     contactPhone: '',
     location: '',
+    locationLat: '',
+    locationLon: '',
     description: '',
     photo: ''
   });
@@ -60,10 +63,12 @@ const OwnerLostPet = () => {
     }
   };
 
-  const handleLocationSelect = (value) => {
+  const handleLocationSelect = (place) => {
     setFormData(prev => ({
       ...prev,
-      location: value
+      location: place?.label || prev.location,
+      locationLat: place?.lat || '',
+      locationLon: place?.lon || ''
     }));
   };
 
@@ -204,12 +209,11 @@ const OwnerLostPet = () => {
               <label className="owner-lost-pet__label">
                 Τοποθεσία Εξαφάνισης <span className="owner-lost-pet__required">*</span>
               </label>
-              <CustomSelect
-                name="location"
+              <LocationPicker
                 value={formData.location}
-                onChange={handleLocationSelect}
-                options={locationOptions}
-                placeholder="π.χ. Κέντρο Αθήνας, Πλατεία Συντάγματος"
+                onChange={(val) => setFormData(prev => ({ ...prev, location: val }))}
+                onSelect={handleLocationSelect}
+                required
                 variant="owner"
               />
             </div>

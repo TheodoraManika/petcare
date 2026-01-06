@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, AlertCircle, Check } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import LocationPicker from '../../components/common/LocationPicker';
 import './FoundPetForm.css';
 
 const FoundPetForm = () => {
@@ -227,14 +228,13 @@ const FoundPetForm = () => {
               Πού βρήκατε το κατοικίδιο;
             </p>
             <div className="form-group">
-              <label className="form-label">Διευθυνση</label>
-              <input
-                type="text"
-                name="address"
-                placeholder="Π.χ. Οδός Αριστοτέλους 45, Αθήνα"
+              <label className="form-label">Τοποθεσία Ευρέσεως</label>
+              <LocationPicker
                 value={formData.address}
-                onChange={handleInputChange}
-                className="form-input"
+                onChange={(val) => handleInputChange({ target: { name: 'address', value: val } })}
+                onSelect={(place) => handleInputChange({ target: { name: 'address', value: place?.label || formData.address } })}
+                placeholder="Π.χ. Οδός Αριστοτέλους 45, Αθήνα"
+                variant="citizen"
               />
             </div>
           </div>

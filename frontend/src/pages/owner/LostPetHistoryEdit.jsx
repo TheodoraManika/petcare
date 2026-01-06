@@ -4,6 +4,7 @@ import { Save, FileCheck } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryEdit.css';
 
@@ -135,11 +136,10 @@ const LostPetHistoryEdit = () => {
               <label className="lost-pet-edit__label">
                 Τοποθεσία Εξαφάνισης <span className="lost-pet-edit__required">*</span>
               </label>
-              <CustomSelect
-                name="location"
+              <LocationPicker
                 value={formData.location}
-                onChange={(value) => handleSelectChange('location', value)}
-                options={locationOptions}
+                onChange={(val) => handleSelectChange('location', val)}
+                onSelect={(place) => handleSelectChange('location', place?.label || formData.location)}
                 placeholder="Επιλέξτε τοποθεσία"
                 variant="owner"
               />
