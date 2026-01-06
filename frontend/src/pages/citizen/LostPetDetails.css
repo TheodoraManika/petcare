@@ -1,10 +1,9 @@
 /* Lost Pet Details Page */
 .lost-pet-details-page {
-  background-color: #ffffff;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 /* Breadcrumb - REMOVED (now using PageLayout) */

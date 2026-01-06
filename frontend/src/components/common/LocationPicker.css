@@ -135,12 +135,12 @@
 
 /* Variant focus colors */
 .location-picker--citizen .location-picker__input:focus {
-  border-color: #059669;
+  border-color: #23CED9;
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
 .location-picker--owner .location-picker__input:focus {
-  border-color: #23ced9;
+  border-color: #23CED9;
   box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
 

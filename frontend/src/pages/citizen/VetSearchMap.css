@@ -3,7 +3,6 @@
   display: flex;
   gap: 24px;
   padding: 24px;
-  background-color: #f9faff;
   min-height: calc(100vh - 200px);
 }
 

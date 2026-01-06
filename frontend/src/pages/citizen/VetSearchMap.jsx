@@ -13,6 +13,19 @@ import './VetSearchMap.css';
 const VetSearchMap = () => {
   const navigate = useNavigate();
   
+  // Get current user from localStorage
+  const getCurrentUser = () => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error('Error getting current user:', error);
+      return null;
+    }
+  };
+
+  const currentUser = getCurrentUser();
+  
   const [filters, setFilters] = useState({
     area: '',
     specialty: '',
@@ -276,7 +289,7 @@ const VetSearchMap = () => {
               selectedId={selectedVet?.id}
               onMarkerClick={handleMarkerClick}
               height="600px"
-              currentUser={{ type: 'owner' }}
+              currentUser={currentUser}
               onViewProfile={handleViewProfile}
               onCloseAppointment={handleCloseAppointment}
             />

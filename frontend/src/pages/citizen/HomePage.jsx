@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Search, Calendar, PawPrint, Stethoscope, Users, ChevronDown } from 'lucide-react';
+import { FileText, Search, Calendar, PawPrint, Stethoscope, Users, ChevronDown, MapPin } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/global/ui/CustomSelect';
@@ -118,6 +118,7 @@ const HomePage = () => {
               />
             </div>
             <div className="search-field">
+              <Calendar className="field-icon" size={20} />
               <CustomSelect
                 value={selectedAvailability}
                 onChange={setSelectedAvailability}
@@ -131,6 +132,7 @@ const HomePage = () => {
               />
             </div>
             <div className="search-field">
+              <Stethoscope className="field-icon" size={20} />
               <CustomSelect
                 value={selectedSpecialty}
                 onChange={setSelectedSpecialty}
@@ -143,7 +145,12 @@ const HomePage = () => {
                 ]}
               />
             </div>
-            <button className="search-button">Αναζήτηση</button>
+            <button 
+              className="search-button"
+              onClick={() => navigate(ROUTES.citizen.searchMap)}
+            >
+              Αναζήτηση
+            </button>
           </div>
 
           <div className="hero-actions">

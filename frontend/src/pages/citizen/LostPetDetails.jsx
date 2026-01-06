@@ -21,11 +21,24 @@ const LostPetDetails = () => {
     dateReported: '05/11/2025',
     description: 'Golden Retriever, μεγάλου μεγέθους, με κόκκινο περιλώμιον',
     phone: '69XXXXXXXX',
+    microchip: '123456789012345',
     image: null,
   };
 
   const handleFoundReport = () => {
-    navigate(ROUTES.citizen.foundPetForm);
+    navigate(ROUTES.citizen.foundPetForm, {
+      state: {
+        petDetails: {
+          petName: petDetails.name,
+          species: petDetails.type,
+          breed: petDetails.breed,
+          foundLocation: petDetails.area,
+          description: petDetails.description,
+          dateReported: petDetails.dateReported,
+          microchip: petDetails.microchip
+        }
+      }
+    });
   };
 
   return (

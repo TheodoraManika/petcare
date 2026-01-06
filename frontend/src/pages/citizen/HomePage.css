@@ -114,6 +114,19 @@
   background-color: transparent;
 }
 
+.search-field .field-icon {
+  position: absolute;
+  left: 16px;
+  color: #99A1AF;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.search-field:has(.field-icon) .location-picker__input,
+.search-field:has(.field-icon) .custom-select__trigger {
+  padding-left: 44px;
+}
+
 .search-field:nth-child(2),
 .search-field:nth-child(3),
 .search-field:nth-child(4) {
