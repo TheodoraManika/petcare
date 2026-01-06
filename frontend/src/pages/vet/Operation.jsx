@@ -7,6 +7,7 @@ import CustomSelect from '../../components/common/CustomSelect';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
+import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Operation.css';
 
@@ -15,6 +16,7 @@ const Operation = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     petSearch: '',
     operationType: '',
@@ -50,6 +52,14 @@ const Operation = () => {
       description: ''
     });
     setShowCancelModal(false);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -226,6 +236,13 @@ const Operation = () => {
           confirmText="Επιβεβαίωση"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message="Η καταγραφή της ιατρικής πράξης ακυρώθηκε με επιτυχία!"
+          type="error"
         />
       </div>
     </PageLayout>

@@ -7,6 +7,7 @@ import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
+import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './LostPet.css';
 
@@ -31,6 +32,7 @@ const LostPet = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -129,6 +131,14 @@ const LostPet = () => {
     });
     setPhotoPreview(null);
     setShowCancelModal(false);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -404,6 +414,13 @@ const LostPet = () => {
         confirmText="Επιβεβαίωση"
         onCancel={handleCancelSubmit}
         onConfirm={handleConfirmSubmit}
+      />
+
+      {/* Notification */}
+      <Notification
+        isVisible={notification !== null}
+        message="Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
+        type="error"
       />
     </PageLayout>
   );
