@@ -258,6 +258,10 @@ const Availability = () => {
           <div className="availability__grid">
             {Object.keys(dayLabels).map(day => {
               const slots = availabilityData[day];
+              // Sort slots by start time
+              const sortedSlots = [...slots].sort((a, b) => {
+                return a.start.localeCompare(b.start);
+              });
               const count = getSlotCount(day);
               
               return (
@@ -270,7 +274,7 @@ const Availability = () => {
                   </div>
 
                   <div className="availability__day-slots">
-                    {slots.length === 0 ? (
+                    {sortedSlots.length === 0 ? (
                       <div className="availability__empty">
                         <div className="availability__empty-icon">
                           <Calendar size={32} />
@@ -280,7 +284,7 @@ const Availability = () => {
                         </p>
                       </div>
                     ) : (
-                      slots.map((slot, index) => (
+                      sortedSlots.map((slot, index) => (
                         <div key={index} className="availability__slot">
                           <div className="availability__slot-time">
                             <Clock size={16} />
