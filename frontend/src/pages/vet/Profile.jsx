@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
 import MultiSelect from '../../components/common/MultiSelect';
 import SuccessPage from '../../components/common/SuccessPage';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -360,56 +361,28 @@ const Profile = () => {
         </form>
 
         {/* Delete Confirmation Modal */}
-        {showDeleteModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;</h2>
-              <p className="modal-description">
-                Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν.
-              </p>
-              <div className="modal-actions">
-                <button 
-                  className="modal-btn modal-btn--cancel"
-                  onClick={handleCancelDelete}
-                >
-                  Ακύρωση
-                </button>
-                <button 
-                  className="modal-btn modal-btn--delete"
-                  onClick={handleConfirmDelete}
-                >
-                  Διαγραφή
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmModal
+          isOpen={showDeleteModal}
+          title="Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;"
+          description="Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν."
+          cancelText="Ακύρωση"
+          confirmText="Διαγραφή"
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          isDanger={true}
+        />
 
         {/* Cancel Edit Confirmation Modal */}
-        {showCancelModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;</h2>
-              <p className="modal-description">
-                Αυτή η ενέργεια δεν αναιρείται.
-              </p>
-              <div className="modal-actions">
-                <button 
-                  className="modal-btn modal-btn--cancel"
-                  onClick={handleCancelCancel}
-                >
-                  Όχι, επιστροφή
-                </button>
-                <button 
-                  className="modal-btn modal-btn--delete"
-                  onClick={handleConfirmCancel}
-                >
-                  Ναι, ακύρωση
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
 
         {/* Success Modal */}
         {showSuccessModal && (

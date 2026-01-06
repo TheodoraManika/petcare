@@ -168,7 +168,7 @@
   font-family: inherit;
 }
 
-/* Delete Modal Styles */
+/* Success Modal Styles - for delete account success */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -191,6 +191,10 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+.modal-content--success {
+  text-align: center;
+}
+
 .modal-title {
   font-size: 20px;
   font-weight: 600;
@@ -205,62 +209,6 @@
   margin: 0 0 24px 0;
   text-align: center;
   line-height: 1.5;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.modal-btn {
-  padding: 10px 24px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
-}
-
-.modal-btn--cancel {
-  background-color: #e5e7eb;
-  color: #374151;
-}
-
-.modal-btn--cancel:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-.modal-btn--delete {
-  background-color: #FF5252;
-  color: #101828;
-}
-
-.modal-btn--delete:hover {
-  background-color: #ff3e3e;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 82, 82, 0.3);
-}
-
-.modal-btn--primary {
-  background-color: #FCA47C;
-  color: white;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.modal-btn--primary:hover {
-  background-color: #fb8a5c;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
-}
-
-/* Success Modal Styles */
-.modal-content--success {
-  text-align: center;
 }
 
 .success-icon {
