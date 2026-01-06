@@ -9,6 +9,7 @@ import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
+import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Foster.css';
 
@@ -18,6 +19,7 @@ const Foster = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -163,6 +165,14 @@ const Foster = () => {
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -679,6 +689,13 @@ const Foster = () => {
           onConfirm={handleConfirmSubmit}
         />
       </div>
+
+      {/* Notification */}
+      <Notification
+        isVisible={notification !== null}
+        message="Η δήλωση αναδοχής ακυρώθηκε με επιτυχία!"
+        type="error"
+      />
     </PageLayout>
   );
 };
