@@ -4,12 +4,18 @@ import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight } from 'lucide-react
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './Transfer.css';
 
 const Transfer = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -90,10 +96,23 @@ const Transfer = () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Submit form
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.vet.dashboard);
+      // Show confirmation modal instead of submitting directly
+      setShowConfirmModal(true);
     }
+  };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -103,8 +122,61 @@ const Transfer = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.dashboard);
+    setShowCancelModal(true);
   };
+
+  const handleConfirmCancel = () => {
+    // Reset form data to initial empty state
+    setFormData({
+      microchipNumber: '',
+      petName: '',
+      currentOwnerAfm: '',
+      currentOwnerName: '',
+      currentOwnerSurname: '',
+      currentOwnerPhone: '',
+      currentOwnerEmail: '',
+      newOwnerAfm: '',
+      newOwnerName: '',
+      newOwnerSurname: '',
+      newOwnerPhone: '',
+      newOwnerEmail: '',
+      newOwnerAddress: '',
+      newOwnerCity: '',
+      newOwnerPostalCode: '',
+      transferDate: '',
+      transferReason: '',
+      notes: ''
+    });
+    // Reset to step 1
+    setCurrentStep(1);
+    setShowCancelModal(false);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
+    { label: 'Τρέχων Ιδιοκτήτης - Α.Φ.Μ.', value: formData.currentOwnerAfm },
+    { label: 'Τρέχων Ιδιοκτήτης - Όνομα', value: formData.currentOwnerName },
+    { label: 'Τρέχων Ιδιοκτήτης - Επώνυμο', value: formData.currentOwnerSurname },
+    { label: 'Τρέχων Ιδιοκτήτης - Τηλέφωνο', value: formData.currentOwnerPhone },
+    { label: 'Τρέχων Ιδιοκτήτης - Email', value: formData.currentOwnerEmail },
+    { label: 'Νέος Ιδιοκτήτης - Α.Φ.Μ.', value: formData.newOwnerAfm },
+    { label: 'Νέος Ιδιοκτήτης - Όνομα', value: formData.newOwnerName },
+    { label: 'Νέος Ιδιοκτήτης - Επώνυμο', value: formData.newOwnerSurname },
+    { label: 'Νέος Ιδιοκτήτης - Τηλέφωνο', value: formData.newOwnerPhone },
+    { label: 'Νέος Ιδιοκτήτης - Email', value: formData.newOwnerEmail },
+    { label: 'Νέος Ιδιοκτήτης - Διεύθυνση', value: formData.newOwnerAddress },
+    { label: 'Νέος Ιδιοκτήτης - Πόλη', value: formData.newOwnerCity },
+    { label: 'Νέος Ιδιοκτήτης - Τ.Κ.', value: formData.newOwnerPostalCode },
+    { label: 'Ημερομηνία Μεταβίβασης', value: formData.transferDate },
+    { label: 'Λόγος Μεταβίβασης', value: formData.transferReason },
+    { label: 'Σημειώσεις', value: formData.notes || '-' },
+  ];
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -424,6 +496,23 @@ const Transfer = () => {
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
 
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={ArrowLeftRight}
+        title="Η Δήλωση Μεταβίβασης ολοκληρώθηκε!"
+        description="Η αλλαγή ιδιοκτήτη καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο έχει μεταφερθεί στο προφίλ του νέου ιδιοκτήτη."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Μεταβίβασης"
+      />
+    );
+  }
+
   return (
     <PageLayout title="Δήλωση Μεταβίβασης" breadcrumbs={breadcrumbItems}>
       <div className="transfer">
@@ -467,6 +556,30 @@ const Transfer = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση μεταβίβασης;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Μεταβίβασης"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της μεταβίβασης:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );

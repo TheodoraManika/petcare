@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, Handshake } from 'lucide-react';
+import { PawPrint, UserRound, HandHeart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
 import LocationPicker from '../../components/common/LocationPicker';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './Foster.css';
 
 const Foster = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -44,7 +50,7 @@ const Foster = () => {
   const steps = [
     { icon: <PawPrint size={24} />, label: 'Κατοικίδιο' },
     { icon: <UserRound size={24} />, label: 'Ανάδοχος' },
-    { icon: <Handshake size={24} />, label: 'Αναδοχή' }
+    { icon: <HandHeart size={24} />, label: 'Αναδοχή' }
   ];
 
   const handleInputChange = (e) => {
@@ -100,10 +106,23 @@ const Foster = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Submit form
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.vet.dashboard);
+      // Show confirmation modal instead of submitting directly
+      setShowConfirmModal(true);
     }
+  };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -113,8 +132,89 @@ const Foster = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.lifeEvents);
+    setShowCancelModal(true);
   };
+
+  const handleConfirmCancel = () => {
+    // Reset form data to initial empty state
+    setFormData({
+      microchipNumber: '',
+      petName: '',
+      species: '',
+      age: '',
+      gender: '',
+      fosterParentAfm: '',
+      fosterParentName: '',
+      fosterParentSurname: '',
+      fosterParentPhone: '',
+      fosterParentEmail: '',
+      fosterParentAddress: '',
+      fosterParentCity: '',
+      fosterParentPostalCode: '',
+      fosterParentLat: '',
+      fosterParentLon: '',
+      fosterDate: '',
+      fosterReason: '',
+      shelterOwner: '',
+      liveWithOtherPets: '',
+      existingPets: '',
+      notes: ''
+    });
+    // Reset to step 1
+    setCurrentStep(1);
+    setShowCancelModal(false);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Helper functions for labels
+  const getSpeciesLabel = (value) => {
+    const options = {
+      'dog': 'Σκύλος',
+      'cat': 'Γάτα',
+      'bird': 'Πτηνό',
+      'reptile': 'Ερπετό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  const getGenderLabel = (value) => {
+    const options = {
+      'male': 'Αρσενικό',
+      'female': 'Θηλυκό'
+    };
+    return options[value] || value;
+  };
+
+  const getYesNoLabel = (value) => {
+    return value === 'yes' ? 'Ναι' : 'Όχι';
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
+    { label: 'Είδος Ζώου', value: getSpeciesLabel(formData.species) },
+    { label: 'Ηλικία (έτη)', value: formData.age },
+    { label: 'Φύλο', value: getGenderLabel(formData.gender) },
+    { label: 'Ανάδοχος - Α.Φ.Μ.', value: formData.fosterParentAfm },
+    { label: 'Ανάδοχος - Όνομα', value: formData.fosterParentName },
+    { label: 'Ανάδοχος - Επώνυμο', value: formData.fosterParentSurname },
+    { label: 'Ανάδοχος - Τηλέφωνο', value: formData.fosterParentPhone },
+    { label: 'Ανάδοχος - Email', value: formData.fosterParentEmail },
+    { label: 'Ανάδοχος - Διεύθυνση', value: formData.fosterParentAddress },
+    { label: 'Ανάδοχος - Πόλη', value: formData.fosterParentCity },
+    { label: 'Ανάδοχος - Τ.Κ.', value: formData.fosterParentPostalCode },
+    { label: 'Ημερομηνία Αναδοχής', value: formData.fosterDate },
+    { label: 'Καταφύγιο/Φιλοζωική', value: formData.fosterReason },
+    { label: 'Διαθέσιμος Κήπος/Αυλή', value: getYesNoLabel(formData.shelterOwner) },
+    { label: 'Υπάρχουν άλλα κατοικίδια', value: getYesNoLabel(formData.liveWithOtherPets) },
+    { label: 'Υπάρχει εμπειρία', value: getYesNoLabel(formData.existingPets) },
+    { label: 'Σημειώσεις', value: formData.notes || '-' },
+  ];
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -494,6 +594,23 @@ const Foster = () => {
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
 
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={HandHeart}
+        title="Η Δήλωση Αναδοχής ολοκληρώθηκε!"
+        description="Η δήλωση αναδοχής καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ανάδοχου ιδιοκτήτη"
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Αναδοχής"
+      />
+    );
+  }
+
   return (
     <PageLayout title="Δήλωση Αναδοχής" breadcrumbs={breadcrumbItems}>
       <div className="foster">
@@ -537,6 +654,30 @@ const Foster = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση αναδοχής;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Αναδοχής"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της αναδοχής:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );

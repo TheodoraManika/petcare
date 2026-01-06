@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, FileText } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './Operation.css';
 
 const Operation = () => {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formData, setFormData] = useState({
     petSearch: '',
     operationType: '',
@@ -33,42 +38,81 @@ const Operation = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.dashboard);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Reset form data to initial empty state
+    setFormData({
+      petSearch: '',
+      operationType: '',
+      operationDate: '',
+      description: ''
+    });
+    setShowCancelModal(false);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Show confirmation modal instead of submitting directly
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSubmit = () => {
     console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
     setShowSuccess(true);
   };
 
-  if (showSuccess) {
-    return (
-      <PageLayout>
-        <div className="operation-success">
-          <div className="operation-success__content">
-            <div className="operation-success__icon">
-              <Plus size={64} />
-            </div>
-            <h1 className="operation-success__title">Επιτυχής Καταγραφή!</h1>
-            <p className="operation-success__description">
-              Η ιατρική πράξη καταγράφηκε με επιτυχία στο σύστημα.
-            </p>
-            <button 
-              className="operation-success__btn"
-              onClick={() => navigate(ROUTES.vet.dashboard)}
-            >
-              Επιστροφή στο Μενού
-            </button>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  // Helper function to get label for operation type
+  const getOperationTypeLabel = (value) => {
+    const options = {
+      'vaccination': 'Εμβολιασμός',
+      'checkup': 'Γενική Εξέταση',
+      'surgery': 'Χειρουργείο',
+      'treatment': 'Θεραπεία',
+      'dental': 'Οδοντιατρική',
+      'emergency': 'Επείγον Περιστατικό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.petSearch },
+    { label: 'Τύπος Πράξης', value: getOperationTypeLabel(formData.operationType) },
+    { label: 'Ημερομηνία', value: formData.operationDate },
+    { label: 'Περιγραφή', value: formData.description },
+  ];
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.vet.dashboard }
   ];
+
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={FileText}
+        title="Η Ιατρική Πράξη Καταχωρήθηκε!"
+        description="Η ιατρική πράξη αποθηκεύτηκε επιτυχώς στο βιβλίο του κατοικιδίου."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={() => navigate(ROUTES.vet.dashboard)}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Ιατρικές Πράξεις"
+      />
+    );
+  }
 
   return (
     <PageLayout title="Ιατρικές Πράξεις" breadcrumbs={breadcrumbItems}>
@@ -159,6 +203,30 @@ const Operation = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την καταγραφή ιατρικής πράξης του κατοικιδίου;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Ιατρικής Πράξης"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της ιατρικής πράξης:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );
