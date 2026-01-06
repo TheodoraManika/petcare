@@ -3,7 +3,6 @@ import { Calendar, Clock, Trash2, Plus } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/common/CustomSelect';
 import ConfirmModal from '../../components/common/ConfirmModal';
-import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Availability.css';
 
@@ -31,7 +30,6 @@ const Availability = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [slotToDelete, setSlotToDelete] = useState({ day: '', index: -1 });
-  const [notification, setNotification] = useState(null);
 
   const dayLabels = {
     monday: 'Δευτέρα',
@@ -114,29 +112,14 @@ const Availability = () => {
   };
 
   const handleConfirmDelete = () => {
-    // Show confirmation modal instead of deleting immediately
-    setSlotToDelete({ day, index });
-    setShowDeleteModal(true);
-  };
-
-  const handleConfirmDelete = () => {
     setAvailabilityData(prev => ({
       ...prev,
-      [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
       [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
     }));
     
     // Close modal and reset
     setShowDeleteModal(false);
     setSlotToDelete({ day: '', index: -1 });
-    
-    // Show notification
-    setNotification('deleted');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   const handleCancelDelete = () => {
@@ -360,13 +343,6 @@ const Availability = () => {
         onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
         isDanger={true}
-      />
-
-      {/* Notification */}
-      <Notification
-        isVisible={notification !== null}
-        message="Η διαθέσιμη ώρα ραντεβού διαγράφτηκε με επιτυχία!"
-        type="error"
       />
     </PageLayout>
   );

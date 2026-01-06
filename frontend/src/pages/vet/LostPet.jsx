@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send } from 'lucide-react';
-import { Send } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
-import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './LostPet.css';
 
@@ -33,7 +31,6 @@ const LostPet = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [notification, setNotification] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -100,21 +97,8 @@ const LostPet = () => {
     console.log('Form submitted:', formData);
     setShowConfirmModal(false);
     setShowSuccess(true);
-      setShowConfirmModal(true);
-    }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
-  };
-
-  const handleCancelSubmit = () => {
-    setShowConfirmModal(false);
-  };
-
-  const handleSuccessReturn = () => {
   const handleCancelSubmit = () => {
     setShowConfirmModal(false);
   };
@@ -145,14 +129,6 @@ const LostPet = () => {
     });
     setPhotoPreview(null);
     setShowCancelModal(false);
-    
-    // Show notification
-    setNotification('cancelled');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -193,31 +169,9 @@ const LostPet = () => {
     );
   }
 
-  // Show success page after successful submission
-  if (showSuccess) {
-    return (
-      <SuccessPage
-        icon={Send}
-        title="Η Δήλωση Απώλειας Υποβλήθηκε!"
-        description="Η δήλωση απώλειας καταχωρήθηκε επιτυχώς στο σύστημα. Μπορείτε να δείτε τη δήλωση στο ιστορικό δηλώσεών σας ενώ ο ιδιοκτήτης μπορεί να τη δει στις δικές του δηλώσεις."
-        buttonText="Επιστροφή στο Μενού"
-        onButtonClick={handleSuccessReturn}
-        iconColor="#FCA47C"
-        iconBgColor="#FFF4ED"
-        breadcrumbs={breadcrumbItems}
-        pageTitle="Δήλωση Απώλειας"
-      />
-    );
-  }
-
   return (
     <PageLayout title="Δήλωση Απώλειας" breadcrumbs={breadcrumbItems}>
       <div className="lost-pet">
-        <div className="lost-pet__header">
-          <h1 className="lost-pet__title">Δήλωση Απώλειας Κατοικιδίου</h1>
-          <p className="lost-pet__subtitle-main">Συμπληρώστε τα στοιχεία του χαμένου κατοικιδίου</p>
-        </div>
-
         <div className="lost-pet__header">
           <h1 className="lost-pet__title">Δήλωση Απώλειας Κατοικιδίου</h1>
           <p className="lost-pet__subtitle-main">Συμπληρώστε τα στοιχεία του χαμένου κατοικιδίου</p>
@@ -450,13 +404,6 @@ const LostPet = () => {
         confirmText="Επιβεβαίωση"
         onCancel={handleCancelSubmit}
         onConfirm={handleConfirmSubmit}
-      />
-
-      {/* Notification */}
-      <Notification
-        isVisible={notification !== null}
-        message="Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
-        type="error"
       />
     </PageLayout>
   );
