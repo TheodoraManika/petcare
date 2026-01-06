@@ -11,6 +11,7 @@ export const ROUTES = {
   information: '/information',
   confirmation: '/confirmation',
   success: '/success',
+  confirm: '/confirm',
   citizen: {
     lostPets: '/citizen/lost-pets',
     lostPetDetails: '/citizen/lost-pets/:petId',
