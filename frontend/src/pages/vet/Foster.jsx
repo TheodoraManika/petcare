@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PawPrint, UserRound, HandHeart } from 'lucide-react';
-import { PawPrint, UserRound, HandHeart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
@@ -10,7 +9,6 @@ import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
-import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Foster.css';
 
@@ -20,7 +18,6 @@ const Foster = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -53,7 +50,6 @@ const Foster = () => {
   const steps = [
     { icon: <PawPrint size={24} />, label: 'Κατοικίδιο' },
     { icon: <UserRound size={24} />, label: 'Ανάδοχος' },
-    { icon: <HandHeart size={24} />, label: 'Αναδοχή' }
     { icon: <HandHeart size={24} />, label: 'Αναδοχή' }
   ];
 
@@ -127,23 +123,6 @@ const Foster = () => {
 
   const handleSuccessReturn = () => {
     navigate(ROUTES.vet.dashboard);
-      // Show confirmation modal instead of submitting directly
-      setShowConfirmModal(true);
-    }
-  };
-
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
-  };
-
-  const handleCancelSubmit = () => {
-    setShowConfirmModal(false);
-  };
-
-  const handleSuccessReturn = () => {
-    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -184,14 +163,6 @@ const Foster = () => {
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
-    
-    // Show notification
-    setNotification('cancelled');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -640,23 +611,6 @@ const Foster = () => {
     );
   }
 
-  // Show success page after successful submission
-  if (showSuccess) {
-    return (
-      <SuccessPage
-        icon={HandHeart}
-        title="Η Δήλωση Αναδοχής ολοκληρώθηκε!"
-        description="Η δήλωση αναδοχής καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ανάδοχου ιδιοκτήτη"
-        buttonText="Επιστροφή στο Μενού"
-        onButtonClick={handleSuccessReturn}
-        iconColor="#FCA47C"
-        iconBgColor="#FFF4ED"
-        breadcrumbs={breadcrumbItems}
-        pageTitle="Δήλωση Αναδοχής"
-      />
-    );
-  }
-
   return (
     <PageLayout title="Δήλωση Αναδοχής" breadcrumbs={breadcrumbItems}>
       <div className="foster">
@@ -700,30 +654,6 @@ const Foster = () => {
             </div>
           </form>
         </div>
-
-        {/* Cancel Confirmation Modal */}
-        <ConfirmModal
-          isOpen={showCancelModal}
-          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση αναδοχής;"
-          description="Αυτή η ενέργεια δεν αναιρείται."
-          cancelText="Όχι, επιστροφή"
-          confirmText="Ναι, ακύρωση"
-          onCancel={handleCancelCancel}
-          onConfirm={handleConfirmCancel}
-          isDanger={true}
-        />
-
-        {/* Submit Confirmation Modal */}
-        <ConfirmDetailModal
-          isOpen={showConfirmModal}
-          title="Επιβεβαίωση Αναδοχής"
-          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της αναδοχής:"
-          fields={confirmFields}
-          cancelText="Επιστροφή"
-          confirmText="Επιβεβαίωση"
-          onCancel={handleCancelSubmit}
-          onConfirm={handleConfirmSubmit}
-        />
 
         {/* Cancel Confirmation Modal */}
         <ConfirmModal

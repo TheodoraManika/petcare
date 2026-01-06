@@ -10,7 +10,7 @@ const SuccessPage = ({
   buttonText = 'Επιστροφή',
   onButtonClick,
   iconColor = '#FCA47C',
-  iconBgColor = '#ffd8c6',
+  iconBgColor = '#FFF4ED',
   breadcrumbs = [],
   pageTitle = ''
 }) => {
