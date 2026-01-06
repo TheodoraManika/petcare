@@ -10,10 +10,12 @@ const SuccessPage = ({
   buttonText = 'Επιστροφή',
   onButtonClick,
   iconColor = '#FCA47C',
-  iconBgColor = '#ffd8c6'
+  iconBgColor = '#ffd8c6',
+  breadcrumbs = [],
+  pageTitle = ''
 }) => {
   return (
-    <PageLayout>
+    <PageLayout title={pageTitle} breadcrumbs={breadcrumbs}>
       <div className="success-page">
         <div className="success-page__content">
           <div 
@@ -24,7 +26,7 @@ const SuccessPage = ({
               color: iconColor
             }}
           >
-            <Icon size={64} />
+            <Icon size={54} />
           </div>
           <h1 className="success-page__title">{title}</h1>
           <p className="success-page__description">{description}</p>

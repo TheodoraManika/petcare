@@ -8,7 +8,6 @@ import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
-import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Register.css';
 
@@ -17,7 +16,6 @@ const Register = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     microchipNumber: '',
     species: '',
@@ -75,14 +73,6 @@ const Register = () => {
       afm: '',
     });
     setShowCancelModal(false);
-    
-    // Show notification
-    setNotification('cancelled');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -96,59 +86,12 @@ const Register = () => {
   };
 
   const handleConfirmSubmit = () => {
-    // Show confirmation modal instead of submitting directly
-    setShowConfirmModal(true);
-  };
-
-  const handleConfirmSubmit = () => {
     // Handle form submission logic here
     console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
     setShowConfirmModal(false);
     setShowSuccess(true);
   };
 
-  const handleCancelSubmit = () => {
-    setShowConfirmModal(false);
-  };
-
-  // Helper function to get label for species
-  const getSpeciesLabel = (value) => {
-    const options = {
-      'dog': 'Σκύλος',
-      'cat': 'Γάτα',
-      'bird': 'Πτηνό',
-      'reptile': 'Ερπετό',
-      'other': 'Άλλο'
-    };
-    return options[value] || value;
-  };
-
-  // Helper function to get label for gender
-  const getGenderLabel = (value) => {
-    const options = {
-      'male': 'Αρσενικό',
-      'female': 'Θηλυκό'
-    };
-    return options[value] || value;
-  };
-
-  // Prepare fields for confirmation modal
-  const confirmFields = [
-    { label: 'Μικροτσίπ', value: formData.microchipNumber },
-    { label: 'Είδος', value: getSpeciesLabel(formData.species) },
-    { label: 'Ράτσα', value: formData.breed },
-    { label: 'Όνομα', value: formData.ownerName },
-    { label: 'Φύλο', value: getGenderLabel(formData.gender) },
-    { label: 'Ημερομηνία Γέννησης', value: formData.birthDate },
-    { label: 'Χρώμα', value: formData.color },
-    { label: 'Βάρος (kg)', value: formData.weight },
-    { label: 'Ιδιοκτήτης', value: formData.ownerLastName },
-    { label: 'Τηλέφωνο', value: formData.ownerPhone },
-    { label: 'Email', value: formData.ownerEmail },
-    { label: 'Διεύθυνση', value: formData.ownerAddress },
-    { label: 'ΑΦΜ', value: formData.afm },
-  ];
   const handleCancelSubmit = () => {
     setShowConfirmModal(false);
   };
@@ -204,7 +147,7 @@ const Register = () => {
         buttonText="Επιστροφή στο Μενού"
         onButtonClick={() => navigate(ROUTES.vet.dashboard)}
         iconColor="#FCA47C"
-        iconBgColor="#FFF4ED"
+        iconBgColor="#ffd8c6"
         breadcrumbs={breadcrumbItems}
         pageTitle="Καταγραφή Κατοικιδίου"
       />
@@ -489,13 +432,6 @@ const Register = () => {
           confirmText="Επιβεβαίωση"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
-        />
-
-        {/* Notification */}
-        <Notification
-          isVisible={notification !== null}
-          message="Η καταγραφή του κατοικιδίου ακυρώθηκε με επιτυχία!"
-          type="error"
         />
       </div>
     </PageLayout>

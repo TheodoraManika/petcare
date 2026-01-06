@@ -117,6 +117,8 @@ const Profile = () => {
         onButtonClick={handleBackToProfile}
         iconColor="#FCA47C"
         iconBgColor="#ffd8c6"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Προφίλ"
       />
     );
   }
