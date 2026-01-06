@@ -104,6 +104,8 @@ const Profile = () => {
     setShowSaveSuccessModal(false);
   };
 
+  const breadcrumbItems = [];
+
   // If showing save success, render only the success page
   if (showSaveSuccessModal) {
     return (
@@ -115,11 +117,11 @@ const Profile = () => {
         onButtonClick={handleBackToProfile}
         iconColor="#FCA47C"
         iconBgColor="#ffd8c6"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Προφίλ"
       />
     );
   }
-
-  const breadcrumbItems = [];
 
   return (
     <PageLayout title="Προφίλ" breadcrumbs={breadcrumbItems}>
