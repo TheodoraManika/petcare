@@ -5,12 +5,17 @@ import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
 import LocationPicker from '../../components/common/LocationPicker';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formData, setFormData] = useState({
     microchipNumber: '',
     species: '',
@@ -45,43 +50,109 @@ const Register = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.dashboard);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Reset form data to initial empty state
+    setFormData({
+      microchipNumber: '',
+      species: '',
+      breed: '',
+      ownerName: '',
+      gender: '',
+      birthDate: '',
+      color: '',
+      weight: '',
+      ownerLastName: '',
+      ownerPhone: '',
+      ownerEmail: '',
+      ownerAddress: '',
+      ownerAddressLat: '',
+      ownerAddressLon: '',
+      afm: '',
+    });
+    setShowCancelModal(false);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Show confirmation modal instead of submitting directly
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSubmit = () => {
     // Handle form submission logic here
     console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
     setShowSuccess(true);
   };
 
-  if (showSuccess) {
-    return (
-      <PageLayout>
-        <div className="register-success">
-          <div className="register-success__content">
-            <div className="register-success__icon">
-              <Send size={64} />
-            </div>
-            <h1 className="register-success__title">Επιτυχής Καταγραφή!</h1>
-            <p className="register-success__description">
-              Το κατοικίδιο καταγράφηκε με επιτυχία στο σύστημα.
-            </p>
-            <button 
-              className="register-success__btn"
-              onClick={() => navigate(ROUTES.vet.dashboard)}
-            >
-              Επιστροφή στο Μενού
-            </button>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  // Helper function to get label for species
+  const getSpeciesLabel = (value) => {
+    const options = {
+      'dog': 'Σκύλος',
+      'cat': 'Γάτα',
+      'bird': 'Πτηνό',
+      'reptile': 'Ερπετό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  // Helper function to get label for gender
+  const getGenderLabel = (value) => {
+    const options = {
+      'male': 'Αρσενικό',
+      'female': 'Θηλυκό'
+    };
+    return options[value] || value;
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+    { label: 'Είδος', value: getSpeciesLabel(formData.species) },
+    { label: 'Ράτσα', value: formData.breed },
+    { label: 'Όνομα', value: formData.ownerName },
+    { label: 'Φύλο', value: getGenderLabel(formData.gender) },
+    { label: 'Ημερομηνία Γέννησης', value: formData.birthDate },
+    { label: 'Χρώμα', value: formData.color },
+    { label: 'Βάρος (kg)', value: formData.weight },
+    { label: 'Ιδιοκτήτης', value: formData.ownerLastName },
+    { label: 'Τηλέφωνο', value: formData.ownerPhone },
+    { label: 'Email', value: formData.ownerEmail },
+    { label: 'Διεύθυνση', value: formData.ownerAddress },
+    { label: 'ΑΦΜ', value: formData.afm },
+  ];
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.vet.dashboard }
   ];
+
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={Send}
+        title="Η καταγραφή ολοκληρώθηκε!"
+        description="Το κατοικίδιο καταχωρήθηκε με επιτυχία στο σύστημα."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={() => navigate(ROUTES.vet.dashboard)}
+        iconColor="#FCA47C"
+        iconBgColor="#ffd8c6"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Καταγραφή Κατοικιδίου"
+      />
+    );
+  }
 
   return (
     <PageLayout title="Καταγραφή Κατοικιδίου" breadcrumbs={breadcrumbItems}>
@@ -338,6 +409,30 @@ const Register = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την καταγραφή του κατοικιδίου;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Καταγραφής"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της καταγραφής:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );
