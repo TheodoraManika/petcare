@@ -4,6 +4,7 @@ import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, 
 import PageLayout from '../../components/global/layout/PageLayout';
 import Pagination from '../../components/common/Pagination';
 import ConfirmModal from '../../components/common/ConfirmModal';
+import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
