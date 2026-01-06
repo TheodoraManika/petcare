@@ -81,7 +81,7 @@ const Register = () => {
   ];
 
   return (
-    <PageLayout title="Καταγραφή" breadcrumbs={breadcrumbItems}>
+    <PageLayout title="Καταγραφή Κατοικιδίου" breadcrumbs={breadcrumbItems}>
       <div className="register">
         {/* Info Banner */}
         <div className="register__banner">

@@ -307,3 +307,88 @@
   background-color: #f9fafb;
   border-color: #9ca3af;
 }
+
+/* Map Section */
+.lost-pet__map-section {
+  margin-top: 12px;
+}
+
+.lost-pet__map-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #FCA47C;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lost-pet__map-toggle:hover {
+  background-color: #FCA47C;
+  color: #1f2937;
+  border-color: #FCA47C;
+}
+
+.lost-pet__map-wrapper {
+  margin-top: 16px;
+  position: relative;
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  border: 1px solid #e5e7eb;
+  animation: mapSlideDown 0.3s ease;
+}
+
+@keyframes mapSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 400px;
+  }
+}
+
+.lost-pet__map-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.lost-pet__map-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  text-align: center;
+  max-width: 90%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lost-pet__map-wrapper {
+    height: 300px;
+  }
+  
+  .lost-pet__map-hint {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

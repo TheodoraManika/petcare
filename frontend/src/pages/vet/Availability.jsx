@@ -21,9 +21,9 @@ const Availability = () => {
 
   const [newSlot, setNewSlot] = useState({
     day: '',
-    startTime: '09:00',
-    endTime: '17:00',
-    status: 'vaccination'
+    startTime: '',
+    endTime: '',
+    status: ''
   });
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -44,6 +44,9 @@ const Availability = () => {
     surgery: 'Χειρουργείο',
     treatment: 'Θεραπεία',
     dental: 'Οδοντιατρική',
+    ophthalmology: 'Οφθαλμολογική',
+    cardiology: 'Καρδιολογική',
+    dermatology: 'Δερματολογική',
     other: 'Όλες οι υπηρεσίες'
   };
 
@@ -53,11 +56,17 @@ const Availability = () => {
     surgery: '#FCA47C',
     treatment: '#FCA47C',
     dental: '#FCA47C',
+    ophthalmology: '#FCA47C',
+    cardiology: '#FCA47C',
+    dermatology: '#FCA47C',
     other: '#FCA47C'
   };
 
   const handleAddSlot = () => {
-    if (!newSlot.day) return;
+    if (!newSlot.day || !newSlot.startTime || !newSlot.endTime || !newSlot.status) {
+      setErrorMessage('Παρακαλώ συμπληρώστε όλα τα πεδία');
+      return;
+    }
 
     // Convert times to minutes for comparison
     const startMinutes = parseInt(newSlot.startTime.split(':')[0]) * 60 + parseInt(newSlot.startTime.split(':')[1]);
@@ -87,9 +96,9 @@ const Availability = () => {
     // Reset form
     setNewSlot({
       day: '',
-      startTime: '09:00',
-      endTime: '17:00',
-      status: 'vaccination'
+      startTime: '',
+      endTime: '',
+      status: ''
     });
   };
 
@@ -174,7 +183,7 @@ const Availability = () => {
                   { value: '20:00', label: '20:00' },
                   { value: '21:00', label: '21:00' }
                 ]}
-                placeholder="09:00"
+                placeholder="Επιλέξτε ώρα"
               />
             </div>
 
@@ -200,7 +209,7 @@ const Availability = () => {
                   { value: '21:00', label: '21:00' },
                   { value: '22:00', label: '22:00' }
                 ]}
-                placeholder="17:00"
+                placeholder="Επιλέξτε ώρα"
               />
             </div>
 
@@ -216,6 +225,9 @@ const Availability = () => {
                   { value: 'surgery', label: 'Χειρουργείο' },
                   { value: 'treatment', label: 'Θεραπεία' },
                   { value: 'dental', label: 'Οδοντιατρική' },
+                  { value: 'ophthalmology', label: 'Οφθαλμολογική' },
+                  { value: 'cardiology', label: 'Καρδιολογική' },
+                  { value: 'dermatology', label: 'Δερματολογική' },
                   { value: 'other', label: 'Όλες οι υπηρεσίες' }
                 ]}
                 placeholder="Επιλέξτε υπηρεσία"
@@ -232,7 +244,7 @@ const Availability = () => {
           <button 
             className="availability__add-btn"
             onClick={handleAddSlot}
-            disabled={!newSlot.day}
+            disabled={!newSlot.day || !newSlot.startTime || !newSlot.endTime || !newSlot.status}
           >
             <Plus size={18} />
             Προσθήκη
@@ -255,10 +267,6 @@ const Availability = () => {
                       <Calendar size={18} />
                       <span>{dayLabels[day]}</span>
                     </div>
-                    {/* CHANGE TO BETTER NAME OR DELETE */}
-                    <span className="availability__day-count">
-                      {count} παραθύρο{count !== 1 ? '' : ''} 
-                    </span>
                   </div>
 
                   <div className="availability__day-slots">

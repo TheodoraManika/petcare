@@ -6,7 +6,20 @@
 
 /* Header & Breadcrumb */
 .history__header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+.history__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.history__subtitle-main {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
 }
 
 .history__breadcrumb {
@@ -166,53 +179,4 @@
   font-size: 14px;
   color: #1f2937;
   font-weight: 500;
-}
-
-/* Pagination */
-.history__pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.history__pagination-btn {
-  padding: 8px 16px;
-  background-color: transparent;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.history__pagination-btn:hover:not(:disabled) {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
-  color: #374151;
-}
-
-.history__pagination-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.history__pagination-btn--next {
-  color: #FCA47C;
-  border-color: #FCA47C;
-}
-
-.history__pagination-btn--next:hover:not(:disabled) {
-  background-color: #FCA47C;
-  border-color: #FCA47C;
-  color: white;
-}
-
-.history__pagination-info {
-  font-size: 14px;
-  color: #6b7280;
 }

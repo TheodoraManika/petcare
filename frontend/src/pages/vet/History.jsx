@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './History.css';
 
@@ -122,7 +123,8 @@ const History = () => {
     <PageLayout title="Ιστορικό" breadcrumbs={breadcrumbItems}>
       <div className="history">
         <div className="history__header">
-
+          <h1 className="history__title">Ιστορικό</h1>
+          <p className="history__subtitle-main">Προβολή ιατρικών πράξεων και δηλώσεων</p>
         </div>
 
         <div className="history__tabs">
@@ -186,29 +188,11 @@ const History = () => {
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <div className="history__pagination">
-              <button
-                className="history__pagination-btn"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Προηγούμενη
-              </button>
-              
-              <span className="history__pagination-info">
-                Σελίδα {currentPage} από {totalPages}
-              </span>
-              
-              <button
-                className="history__pagination-btn history__pagination-btn--next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Επόμενη
-              </button>
-            </div>
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </PageLayout>
