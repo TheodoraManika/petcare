@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, Clock, Trash2, Plus } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/common/CustomSelect';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Availability.css';
 
@@ -27,6 +28,8 @@ const Availability = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [slotToDelete, setSlotToDelete] = useState({ day: '', index: -1 });
 
   const dayLabels = {
     monday: 'Δευτέρα',
@@ -103,10 +106,25 @@ const Availability = () => {
   };
 
   const handleDeleteSlot = (day, index) => {
+    // Show confirmation modal instead of deleting immediately
+    setSlotToDelete({ day, index });
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
     setAvailabilityData(prev => ({
       ...prev,
-      [day]: prev[day].filter((_, i) => i !== index)
+      [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
     }));
+    
+    // Close modal and reset
+    setShowDeleteModal(false);
+    setSlotToDelete({ day: '', index: -1 });
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setSlotToDelete({ day: '', index: -1 });
   };
 
   const handleSelectChange = (name, value) => {
@@ -314,6 +332,18 @@ const Availability = () => {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="Είστε σίγουροι ότι θέλετε να διαγράψετε τη διαθέσιμη ώρα ραντεβού;"
+        description="Αυτή η ενέργεια δεν αναιρείται."
+        cancelText="Όχι, επιστροφή"
+        confirmText="Ναι, απόρριψη"
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        isDanger={true}
+      />
     </PageLayout>
   );
 };
