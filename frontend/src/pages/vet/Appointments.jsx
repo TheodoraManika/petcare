@@ -343,14 +343,16 @@ const Appointments = () => {
       setNotification(null);
     }, 5000); // Hide after 5 seconds
 
-    // Close modal and reset
+    // Close modals and reset
     setShowRejectModal(false);
     setAppointmentToReject(null);
+    setSelectedAppointment(null); // Also close the detail modal
   };
 
   const handleCancelReject = () => {
     setShowRejectModal(false);
     setAppointmentToReject(null);
+    // Keep selectedAppointment modal open
   };
 
   const formatDateRange = () => {
@@ -804,7 +806,7 @@ const Appointments = () => {
                       className="appointments__modal-btn appointments__modal-btn--reject"
                       onClick={() => {
                         handleReject(selectedAppointment.id);
-                        setSelectedAppointment(null);
+                        // Don't close the modal - let the confirm modal appear on top
                       }}
                     >
                       <X size={18} />

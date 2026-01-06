@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Send } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import LocationPicker from '../../components/common/LocationPicker';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
+import SuccessPage from '../../components/common/SuccessPage';
 import { ROUTES } from '../../utils/constants';
 import './LostPet.css';
 
@@ -24,6 +28,9 @@ const LostPet = () => {
   });
 
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -82,22 +89,94 @@ const LostPet = () => {
 
   const handleSubmit = () => {
     if (isFormValid()) {
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.vet.dashboard);
+      setShowConfirmModal(true);
     }
   };
 
-  const handleCancel = () => {
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
     navigate(ROUTES.vet.dashboard);
   };
+
+  const handleCancel = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Reset all form fields
+    setFormData({
+      microchipNumber: '',
+      petName: '',
+      lostDate: '',
+      contactPhone: '',
+      location: '',
+      locationLat: '',
+      locationLon: '',
+      description: '',
+      photo: '',
+      ownerName: '',
+      ownerSurname: '',
+      ownerAfm: ''
+    });
+    setPhotoPreview(null);
+    setShowCancelModal(false);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
+    { label: 'Τηλέφωνο Επικοινωνίας', value: formData.contactPhone },
+    { label: 'Ημερομηνία Εξαφάνισης', value: formData.lostDate },
+    { label: 'Τοποθεσία', value: formData.location },
+    { label: 'Περιγραφή', value: formData.description || '-' },
+    { label: 'Όνομα Ιδιοκτήτη', value: formData.ownerName },
+    { label: 'Επώνυμο Ιδιοκτήτη', value: formData.ownerSurname },
+    { label: 'ΑΦΜ Ιδιοκτήτη', value: formData.ownerAfm },
+  ];
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.vet.dashboard }
   ];
 
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={Send}
+        title="Η Δήλωση Απώλειας Υποβλήθηκε!"
+        description="Η δήλωση απώλειας καταχωρήθηκε επιτυχώς στο σύστημα. Μπορείτε να δείτε τη δήλωση στο ιστορικό δηλώσεών σας ενώ ο ιδιοκτήτης μπορεί να τη δει στις δικές του δηλώσεις."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Απώλειας"
+      />
+    );
+  }
+
   return (
     <PageLayout title="Δήλωση Απώλειας" breadcrumbs={breadcrumbItems}>
       <div className="lost-pet">
+        <div className="lost-pet__header">
+          <h1 className="lost-pet__title">Δήλωση Απώλειας Κατοικιδίου</h1>
+          <p className="lost-pet__subtitle-main">Συμπληρώστε τα στοιχεία του χαμένου κατοικιδίου</p>
+        </div>
+
         <div className="lost-pet__content">
 
           <form className="lost-pet__form">
@@ -302,6 +381,30 @@ const LostPet = () => {
           </form>
         </div>
       </div>
+
+      {/* Cancel Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showCancelModal}
+        title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση απώλειας κατοικιδίου;"
+        description="Αυτή η ενέργεια δεν αναιρείται."
+        cancelText="Όχι, επιστροφή"
+        confirmText="Ναι, ακύρωση"
+        onCancel={handleCancelCancel}
+        onConfirm={handleConfirmCancel}
+        isDanger={true}
+      />
+
+      {/* Submit Confirmation Modal */}
+      <ConfirmDetailModal
+        isOpen={showConfirmModal}
+        title="Επιβεβαίωση Δήλωσης Απώλειας"
+        subtitle="Παρακαλώ ελέγξτε τα στοιχεία της δήλωσης απώλειας κατοικιδίου:"
+        fields={confirmFields}
+        cancelText="Επιστροφή"
+        confirmText="Επιβεβαίωση"
+        onCancel={handleCancelSubmit}
+        onConfirm={handleConfirmSubmit}
+      />
     </PageLayout>
   );
 };
