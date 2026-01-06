@@ -82,7 +82,7 @@ const MapWithMarkers = ({
         <button className="popup-profile-btn" onClick={() => onViewProfile(marker)}>
           Προβολή Προφίλ
         </button>
-        {currentUser?.type === 'owner' && (
+        {currentUser?.userType === 'owner' && (
           <button className="popup-close-appointment-btn" onClick={() => onCloseAppointment(marker)}>
             Κλείστε Ραντεβού
           </button>

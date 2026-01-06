@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, X } from 'lucide-react';
 import Pagination from '../common/Pagination';
 import './SearchResultsList.css';
 
@@ -18,6 +18,9 @@ import './SearchResultsList.css';
  * - onItemClick: (item) => void - Item click callback
  * - actionButtonText: string - Text for action button
  * - onActionClick: (item) => void - Action button callback
+ * - showCloseAppointment: boolean - Show close appointment button for owners
+ * - onCloseAppointment: (item) => void - Close appointment callback
+ * - currentUser: object - Current user {userType: 'owner'|'vet'|'citizen'}
  */
 const SearchResultsList = ({
   items = [],
@@ -30,6 +33,9 @@ const SearchResultsList = ({
   onItemClick = () => {},
   actionButtonText = 'Προβολή Προφίλ',
   onActionClick = () => {},
+  showCloseAppointment = false,
+  onCloseAppointment = () => {},
+  currentUser = null,
   showPagination = true
 }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -53,14 +59,25 @@ const SearchResultsList = ({
         )}
         {item.address && <p className="result-address">{item.address}</p>}
       </div>
-      {actionButtonText && (
-        <button 
-          className="result-action-btn"
-          onClick={() => onActionClick(item)}
-        >
-          {actionButtonText}
-        </button>
-      )}
+      <div className="result-actions">
+        {actionButtonText && (
+          <button 
+            className="result-action-btn"
+            onClick={() => onActionClick(item)}
+          >
+            {actionButtonText}
+          </button>
+        )}
+        {showCloseAppointment && currentUser?.userType === 'owner' && (
+          <button 
+            className="result-close-appointment-btn"
+            onClick={() => onCloseAppointment(item)}
+            title="Κλείστε Ραντεβού"
+          >
+            Κλείστε Ραντεβού
+          </button>
+        )}
+      </div>
     </div>
   );
 

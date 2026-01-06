@@ -18,7 +18,7 @@ const Dashboard = () => {
       title: 'Καταγραφή Κατοικιδίου',
       description: 'Καταγραφή νέου κατοικιδίου',
       icon: <CirclePlus />,
-      onClick: () => navigate(ROUTES.vet.register),
+      onClick: () => navigate(ROUTES.vet.registerpet),
     },
     {
       id: 'pet-operation',

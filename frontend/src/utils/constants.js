@@ -31,6 +31,7 @@ export const ROUTES = {
     searchMap: '/vet/search-map',
     profile: '/vet/profile',
     register: '/vet/register',
+    registerpet: '/vet/register-pet',
     operation: '/vet/operation',
     reviews: '/vet/reviews',
     history: '/vet/history',

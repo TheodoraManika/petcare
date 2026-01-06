@@ -35,7 +35,7 @@ const Dashboard = () => {
       description: 'Αναζήτηση επαγγελματιών κτηνιάτρων',
       icon: <Search />,
       iconVariant: 'primary',
-      onClick: () => navigate(ROUTES.owner.pets),
+      onClick: () => navigate(ROUTES.citizen.searchMap),
     },
     {
       id: 'lost-declaration',
@@ -51,7 +51,7 @@ const Dashboard = () => {
       description: 'Δήλωση εύρεσης ενός κατοικιδίου',
       icon: <CheckCircle />,
       iconVariant: 'success',
-      onClick: () => navigate(ROUTES.owner.lostPetForm),
+      onClick: () => navigate(ROUTES.owner.foundPetForm),
     },
     {
       id: 'history',

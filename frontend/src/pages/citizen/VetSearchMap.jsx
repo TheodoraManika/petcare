@@ -302,6 +302,9 @@ const VetSearchMap = () => {
               variant="citizen"
               actionButtonText="Προβολή Προφίλ"
               onActionClick={handleViewProfile}
+              showCloseAppointment={true}
+              onCloseAppointment={handleCloseAppointment}
+              currentUser={currentUser}
             />
           )}
         </main>

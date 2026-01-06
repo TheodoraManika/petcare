@@ -28,6 +28,20 @@
   line-height: 1.5;
 }
 
+/* Owner Pet Selection */
+.owner-pet-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.owner-pet-selection .form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
 /* Lost Pet Info Card */
 .lost-pet-info-card {
   display: flex;

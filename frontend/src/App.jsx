@@ -27,6 +27,7 @@ import Dashboard from './pages/vet/Dashboard';
 import Profile from './pages/vet/Profile';
 import Reviews from './pages/vet/Reviews';
 import VetRegisterPage from './pages/vet/VetRegisterPage';
+import Register from './pages/vet/Register';
 import Operation from './pages/vet/Operation';
 import Availability from './pages/vet/Availability';
 import Transfer from './pages/vet/Transfer';
@@ -85,6 +86,7 @@ function App() {
         <Route path={ROUTES.vet.profile} element={<Profile />} />
         <Route path={ROUTES.vet.reviews} element={<Reviews />} />
         <Route path={ROUTES.vet.register} element={<VetRegisterPage />} />
+        <Route path={ROUTES.vet.registerpet} element={<Register />} />
         <Route path={ROUTES.vet.operation} element={<Operation />} />
         <Route path={ROUTES.vet.availability} element={<Availability />} />
         <Route path={ROUTES.vet.appointments} element={<Appointments />} />

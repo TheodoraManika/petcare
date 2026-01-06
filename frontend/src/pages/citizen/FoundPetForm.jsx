@@ -20,8 +20,31 @@ const FoundPetForm = () => {
   
   const variant = getVariant();
   
+  // Get current user from localStorage
+  const getCurrentUser = () => {
+    try {
+      const user = localStorage.getItem('currentUser');
+      return user ? JSON.parse(user) : null;
+    } catch {
+      return null;
+    }
+  };
+  
+  const currentUser = getCurrentUser();
+  const isOwner = currentUser?.userType === 'owner';
+  
+  // Mock pet data for owner
+  const userPets = [
+    { value: 'pet1', label: 'Μαξ - GR123456789012345', name: 'Μαξ', type: 'Σκύλος', breed: 'Golden Retriever', microchip: 'GR123456789012345' },
+    { value: 'pet2', label: 'Λούνα - GR987654321098765', name: 'Λούνα', type: 'Γάτα', breed: 'Persian', microchip: 'GR987654321098765' },
+    { value: 'pet3', label: 'Ρεξ - GR555666777888999', name: 'Ρεξ', type: 'Σκύλος', breed: 'German Shepherd', microchip: 'GR555666777888999' },
+  ];
+  
   // Get pet details from navigation state if coming from LostPetDetails
-  const prefilledPetData = location.state?.petDetails || {};
+  const navigationPetData = location.state?.petDetails || {};
+  
+  const [selectedOwnPet, setSelectedOwnPet] = useState('');
+  const [prefilledPetData, setPrefilledPetData] = useState(navigationPetData);
   
   const [formData, setFormData] = useState({
     petName: '',
@@ -92,6 +115,25 @@ const FoundPetForm = () => {
     { value: 'other', label: 'Άλλο' }
   ];
 
+  const handleOwnPetSelect = (petValue) => {
+    setSelectedOwnPet(petValue);
+    if (petValue) {
+      const selectedPet = userPets.find(p => p.value === petValue);
+      if (selectedPet) {
+        setPrefilledPetData({
+          petName: selectedPet.name,
+          species: selectedPet.type,
+          breed: selectedPet.breed,
+          microchip: selectedPet.microchip,
+          dateReported: new Date().toLocaleDateString('el-GR'),
+          foundLocation: ''
+        });
+      }
+    } else {
+      setPrefilledPetData({});
+    }
+  };
+
   const hasPrefilledData = Object.keys(prefilledPetData).length > 0;
 
   return (
@@ -103,6 +145,22 @@ const FoundPetForm = () => {
             Βρήκατε ένα χαμένο κατοικίδιο; Συμπληρώστε τη φόρμα για να βοηθήσετε την επιστροφή του στους ιδιοκτήτες
           </p>
         </div>
+
+        {/* Owner Pet Selection */}
+        {isOwner && (
+          <div className="owner-pet-selection">
+            <label className="form-label">
+              Επιλέξτε κατοικίδιο
+            </label>
+            <CustomSelect
+              value={selectedOwnPet}
+              onChange={handleOwnPetSelect}
+              placeholder="Επιλέξτε ένα από τα κατοικίδιά σας"
+              options={userPets}
+              variant={variant}
+            />
+          </div>
+        )}
 
         {/* Prefilled Pet Info Card */}
         {hasPrefilledData && (
