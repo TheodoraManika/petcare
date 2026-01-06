@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
 import { ROUTES } from '../../utils/constants';
 import './LostPet.css';
 
@@ -15,6 +14,8 @@ const LostPet = () => {
     lostDate: '',
     contactPhone: '',
     location: '',
+    locationLat: '',
+    locationLon: '',
     description: '',
     photo: '',
     ownerName: '',
@@ -23,7 +24,6 @@ const LostPet = () => {
   });
 
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [showLocationMap, setShowLocationMap] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,10 +33,12 @@ const LostPet = () => {
     }));
   };
 
-  const handleSelectChange = (name, value) => {
+  const handleLocationSelect = (place) => {
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      location: place?.label || prev.location,
+      locationLat: place?.lat || '',
+      locationLon: place?.lon || ''
     }));
   };
 
@@ -71,6 +73,7 @@ const LostPet = () => {
       formData.petName.trim() !== '' &&
       formData.lostDate.trim() !== '' &&
       formData.contactPhone.trim() !== '' &&
+      formData.location.trim() !== '' &&
       formData.ownerName.trim() !== '' &&
       formData.ownerSurname.trim() !== '' &&
       formData.ownerAfm.trim() !== ''
@@ -164,42 +167,13 @@ const LostPet = () => {
               <label className="lost-pet__label">
                 Τοποθεσία Εξαφάνισης <span className="lost-pet__required">*</span>
               </label>
-              <input
-                type="text"
-                name="location"
-                className="lost-pet__input"
-                placeholder="π.χ. Πλατεία Συντάγματος"
+              <LocationPicker
                 value={formData.location}
-                onChange={handleInputChange}
+                onChange={(val) => setFormData(prev => ({ ...prev, location: val }))}
+                onSelect={handleLocationSelect}
                 required
+                variant="vet"
               />
-              
-              {/* Map Section */}
-              <div className="lost-pet__map-section">
-                <button
-                  type="button"
-                  className="lost-pet__map-toggle"
-                  onClick={() => setShowLocationMap(!showLocationMap)}
-                >
-                  <MapPin size={16} />
-                  {showLocationMap ? 'Απόκρυψη Χάρτη' : 'Εμφάνιση Χάρτη'}
-                </button>
-
-                {showLocationMap && (
-                  <div className="lost-pet__map-wrapper">
-                    <iframe
-                      className="lost-pet__map-iframe"
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1841071150157!2d23.727551!3d37.9838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x135964427e9b3b55%3A0x9c1e98e1e0b5e5e0!2sAthens%2C%20Greece!5e0!3m2!1sen!2s!4v1234567890"
-                      allowFullScreen=""
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                    <p className="lost-pet__map-hint">
-                      Κάντε κλικ στο χάρτη για να επιλέξετε την ακριβή τοποθεσία εξαφάνισης
-                    </p>
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Περιγραφή */}
