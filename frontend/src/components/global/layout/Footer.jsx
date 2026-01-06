@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
+import { ROUTES } from '../../../utils/constants';
 
 /**
  * Footer component
@@ -52,15 +54,15 @@ const Footer = () => {
           <div className="footer__links">
             <div className="footer__link-group">
               <h4 className="footer__link-title">Υποστήριξη & Πληροφορίες</h4>
-              <a href="#" className="footer__link">Επικοινωνία</a>
-              <a href="#" className="footer__link">Σχετικά με Εμάς</a>
+              <Link to={ROUTES.contact} className="footer__link">Επικοινωνία</Link>
+              <Link to={ROUTES.about} className="footer__link">Σχετικά με Εμάς</Link>
             </div>
 
             <div className="footer__link-group">
               <h4 className="footer__link-title">Νομικά</h4>
-              <a href="#" className="footer__link">Πολιτική Απορρήτου</a>
-              <a href="#" className="footer__link">Όροι & Προϋποθέσεις</a>
-              <a href="#" className="footer__link">Πολιτική Cookies</a>
+              <Link to={ROUTES.privacy} className="footer__link">Πολιτική Απορρήτου</Link>
+              <Link to={ROUTES.terms} className="footer__link">Όροι & Προϋποθέσεις</Link>
+              <Link to={ROUTES.cookies} className="footer__link">Πολιτική Cookies</Link>
             </div>
           </div>
         </div>
