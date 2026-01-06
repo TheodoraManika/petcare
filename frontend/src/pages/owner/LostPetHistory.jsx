@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, Edit2, X, PawPrint } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistory.css';
 
@@ -9,6 +10,8 @@ const LostPetHistory = () => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedDeclaration, setSelectedDeclaration] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 5;
   const [declarations, setDeclarations] = useState([
     {
       id: 1,
@@ -133,7 +136,6 @@ const LostPetHistory = () => {
                       onClick={() => handleEdit(declaration.id)}
                     >
                       <Edit2 size={16} />
-                      Επεξεργασία
                     </button>
                   )}
                   {declaration.status === 'draft' && (
@@ -154,15 +156,12 @@ const LostPetHistory = () => {
           ))}
         </div>
 
-        <div className="lost-pet-history__pagination">
-          <button className="lost-pet-history__pagination-btn" disabled>
-            ← Προηγούμενη
-          </button>
-          <span className="lost-pet-history__pagination-text">Σελίδα 1 από 5</span>
-          <button className="lost-pet-history__pagination-btn lost-pet-history__pagination-btn--next">
-            Επόμενη →
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          variant="owner"
+        />
       </div>
 
       {/* Delete Confirmation Modal */}

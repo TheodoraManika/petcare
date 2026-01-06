@@ -2,11 +2,11 @@ import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './Pagination.css';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, variant = 'vet' }) => {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="pagination">
+    <div className={`pagination pagination--${variant}`}>
       <button
         className="pagination__btn"
         onClick={() => onPageChange(currentPage - 1)}

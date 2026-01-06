@@ -192,6 +192,7 @@ const History = () => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            variant="vet"
           />
         </div>
       </div>

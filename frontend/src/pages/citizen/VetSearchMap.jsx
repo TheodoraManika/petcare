@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, MapPin, X } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import Pagination from '../../components/common/Pagination';
 import './VetSearchMap.css';
 
 const VetSearchMap = () => {
@@ -55,6 +56,10 @@ const VetSearchMap = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentVets = vets.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
@@ -227,27 +232,12 @@ const VetSearchMap = () => {
               
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="pagination">
-                  <button 
-                    className="page-nav-btn"
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    &lt; Προηγούμενη
-                  </button>
-                  
-                  <div className="page-info">
-                    {currentPage} σελίδα {currentPage} σε {totalPages}
-                  </div>
-                  
-                  <button 
-                    className="page-nav-btn"
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    Επόμενη &gt;
-                  </button>
-                </div>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  variant="citizen"
+                />
               )}
             </div>
           )}

@@ -35,7 +35,16 @@ import History from './pages/vet/History';
 import HistoryDetail from './pages/vet/HistoryDetail';
 import LostPet from './pages/vet/LostPet';
 import Appointments from './pages/vet/Appointments';
+
+// Common Pages
 import ConfirmationPage from './pages/common/ConfirmationPage';
+import AboutPage from './pages/common/AboutPage';
+import ContactPage from './pages/common/ContactPage';
+import PrivacyPage from './pages/common/PrivacyPage';
+import TermsPage from './pages/common/TermsPage';
+import CookiesPage from './pages/common/CookiesPage';
+import InformationPage from './pages/common/InformationPage';
+
 import { ROUTES } from './utils/constants';
 
 function App() {
@@ -80,8 +89,14 @@ function App() {
         <Route path={`${ROUTES.vet.history}/:id`} element={<HistoryDetail />} />
         <Route path={ROUTES.vet.lostPetForm} element={<LostPet />} />
 
-        {/* Confirmation / Notices */}
+        {/* Common Pages */}
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />
+        <Route path={ROUTES.about} element={<AboutPage />} />
+        <Route path={ROUTES.contact} element={<ContactPage />} />
+        <Route path={ROUTES.privacy} element={<PrivacyPage />} />
+        <Route path={ROUTES.terms} element={<TermsPage />} />
+        <Route path={ROUTES.cookies} element={<CookiesPage />} />
+        <Route path={ROUTES.information} element={<InformationPage />} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/owner/dashboard" replace />} />

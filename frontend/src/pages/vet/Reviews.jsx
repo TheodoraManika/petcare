@@ -130,6 +130,7 @@ const Reviews = () => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
+          variant="vet"
         />
       </div>
     </PageLayout>

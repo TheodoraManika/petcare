@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, UserRound, PawPrint, Stethoscope } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
@@ -13,6 +14,8 @@ const Appointments = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [notification, setNotification] = useState(null); // { type: 'confirmed' | 'cancelled' }
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const [appointments, setAppointments] = useState([
     {
       id: 1,
@@ -253,6 +256,16 @@ const Appointments = () => {
       
       return timeA.localeCompare(timeB);
     });
+  };
+
+  // Pagination logic for list view
+  const filteredListAppointments = filterAppointments();
+  const totalPages = Math.ceil(filteredListAppointments.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayedAppointments = filteredListAppointments.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const getWeekDays = () => {
@@ -564,31 +577,31 @@ const Appointments = () => {
             <div className="appointments__filters">
               <button
                 className={`appointments__filter ${filterStatus === 'all' ? 'appointments__filter--active' : ''}`}
-                onClick={() => setFilterStatus('all')}
+                onClick={() => { setFilterStatus('all'); setCurrentPage(1); }}
               >
                 Όλα
               </button>
               <button
                 className={`appointments__filter ${filterStatus === 'confirmed' ? 'appointments__filter--active' : ''}`}
-                onClick={() => setFilterStatus('confirmed')}
+                onClick={() => { setFilterStatus('confirmed'); setCurrentPage(1); }}
               >
                 Επιβεβαιωμένα
               </button>
               <button
                 className={`appointments__filter ${filterStatus === 'pending' ? 'appointments__filter--active' : ''}`}
-                onClick={() => setFilterStatus('pending')}
+                onClick={() => { setFilterStatus('pending'); setCurrentPage(1); }}
               >
                 Εκκρεμή
               </button>
               <button
                 className={`appointments__filter ${filterStatus === 'completed' ? 'appointments__filter--active' : ''}`}
-                onClick={() => setFilterStatus('completed')}
+                onClick={() => { setFilterStatus('completed'); setCurrentPage(1); }}
               >
                 Ολοκληρωμένα
               </button>
               <button
                 className={`appointments__filter ${filterStatus === 'cancelled' ? 'appointments__filter--active' : ''}`}
-                onClick={() => setFilterStatus('cancelled')}
+                onClick={() => { setFilterStatus('cancelled'); setCurrentPage(1); }}
               >
                 Ακυρωμένα
               </button>
@@ -596,7 +609,7 @@ const Appointments = () => {
 
             {/* Appointment Cards */}
             <div className="appointments__list-cards">
-              {filterAppointments().map(apt => (
+              {displayedAppointments.map(apt => (
                 <div key={apt.id} className="appointments__list-card appointments__list-card--with-actions">
                   <div className="appointments__list-card-header">
                     <div>
@@ -672,6 +685,16 @@ const Appointments = () => {
                 </div>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                variant="vet"
+              />
+            )}
           </div>
         )}
 

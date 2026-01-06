@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('active');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Mock data - in real app, this would come from API/database
   const activeAppointments = [
@@ -56,6 +59,15 @@ const Appointments = () => {
   ];
 
   const appointments = activeTab === 'active' ? activeAppointments : historyAppointments;
+  
+  // Pagination logic
+  const totalPages = Math.ceil(appointments.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayedAppointments = appointments.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.owner.dashboard }
@@ -97,20 +109,20 @@ const Appointments = () => {
         <div className="owner-appointments__tabs">
           <button
             className={`owner-appointments__tab ${activeTab === 'active' ? 'owner-appointments__tab--active' : ''}`}
-            onClick={() => setActiveTab('active')}
+            onClick={() => { setActiveTab('active'); setCurrentPage(1); }}
           >
             Ενεργά ({activeAppointments.length})
           </button>
           <button
             className={`owner-appointments__tab ${activeTab === 'history' ? 'owner-appointments__tab--active' : ''}`}
-            onClick={() => setActiveTab('history')}
+            onClick={() => { setActiveTab('history'); setCurrentPage(1); }}
           >
             Ιστορικά ({historyAppointments.length})
           </button>
         </div>
 
         <div className="owner-appointments__content">
-          {appointments.map((appointment) => (
+          {displayedAppointments.map((appointment) => (
             <div key={appointment.id} className="owner-appointments__card">
               <div className="owner-appointments__card-header">
                 <div className="owner-appointments__card-title">
@@ -169,15 +181,12 @@ const Appointments = () => {
           ))}
         </div>
 
-        <div className="owner-appointments__pagination">
-          <button className="owner-appointments__pagination-btn" disabled>
-            ← Προηγούμενη
-          </button>
-          <span className="owner-appointments__pagination-text">Σελίδα 1 από 5</span>
-          <button className="owner-appointments__pagination-btn">
-            Επόμενη →
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          variant="owner"
+        />
       </div>
     </PageLayout>
   );

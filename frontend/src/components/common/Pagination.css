@@ -16,14 +16,13 @@
   background: transparent;
   border: none;
   font-size: 13px;
-  color: #FCA47C;
+  color: #6b7280;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 400;
 }
 
 .pagination__btn:hover:not(:disabled) {
-  color: #ff9362;
   text-decoration: underline;
 }
 
@@ -38,12 +37,58 @@
 }
 
 .pagination__btn--next {
-  color: #FCA47C;
+  color: inherit;
 }
 
-.pagination__btn--next:hover:not(:disabled) {
+/* Variant: Owner (Blue) */
+.pagination--owner .pagination__btn {
+  color: #23ced9;
+}
+
+.pagination--owner .pagination__btn:hover:not(:disabled) {
+  color: #1bb4be;
+}
+
+.pagination--owner .pagination__btn--next {
+  color: #23ced9;
+}
+
+.pagination--owner .pagination__btn--next:hover:not(:disabled) {
+  color: #1bb4be;
+}
+
+/* Variant: Vet (Orange) */
+.pagination--vet .pagination__btn {
+  color: #fca47c;
+}
+
+.pagination--vet .pagination__btn:hover:not(:disabled) {
   color: #ff9362;
-  text-decoration: underline;
+}
+
+.pagination--vet .pagination__btn--next {
+  color: #fca47c;
+}
+
+.pagination--vet .pagination__btn--next:hover:not(:disabled) {
+  color: #ff9362;
+}
+
+/* Variant: Citizen (Green) */
+.pagination--citizen .pagination__btn {
+  color: #059669;
+}
+
+.pagination--citizen .pagination__btn:hover:not(:disabled) {
+  color: #047857;
+}
+
+.pagination--citizen .pagination__btn--next {
+  color: #059669;
+}
+
+.pagination--citizen .pagination__btn--next:hover:not(:disabled) {
+  color: #047857;
 }
 
 .pagination__info {
