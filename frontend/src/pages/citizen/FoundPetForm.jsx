@@ -119,17 +119,12 @@ const FoundPetForm = () => {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Είδος</label>
-                <select
-                  name="species"
+                <CustomSelect
                   value={formData.species}
-                  onChange={handleInputChange}
-                  className="form-input"
-                >
-                  <option value="">Επιλέξτε ένα είδος...</option>
-                  {speciesOptions.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
+                  onChange={(value) => setFormData({...formData, species: value})}
+                  placeholder="Επιλέξτε ένα είδος..."
+                  options={speciesOptions.map(option => ({ value: option, label: option }))}
+                />
               </div>
 
               <div className="form-group">

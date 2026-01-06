@@ -76,6 +76,7 @@ function App() {
         <Route path="/vet-profile/:vetId" element={<VetProfile />} />
 
         {/* Vet Routes */}
+        <Route path={ROUTES.vet.register} element={<VetRegisterPage />} />
         <Route path="/vet/dashboard" element={<Dashboard />} />
         <Route path={ROUTES.vet.profile} element={<Profile />} />
         <Route path={ROUTES.vet.reviews} element={<Reviews />} />

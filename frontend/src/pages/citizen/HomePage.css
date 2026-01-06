@@ -1,7 +1,6 @@
 /* HomePage Styles */
 
 .home-page {
-  background-color: #ffffff;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -34,7 +33,7 @@
   border-radius: 16px;
   position: relative;
   box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
+  overflow: visible;
   margin: 0 auto;
   background-image: url('/Main Page Photo.png');
   background-size: cover;
@@ -99,6 +98,7 @@
   z-index: 3;
   gap: 12px;
   flex-wrap: wrap;
+  overflow: visible;
 }
 
 .search-field {
@@ -162,12 +162,36 @@
   padding-right: 36px !important;
   padding-left: 36px !important;
   cursor: pointer;
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  font-family: Arimo;
+  font-size: 14px;
+}
+
+.search-dropdown:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.search-dropdown:focus {
+  outline: none;
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1), 0 4px 12px rgba(35, 206, 217, 0.2);
+}
+
+.search-field {
+  position: relative;
 }
 
 .search-dropdown option {
-  padding: 12px;
-  color: #000;
+  padding: 12px 16px;
+  color: #2d3647;
   background-color: #fff;
+  border: none;
 }
 
 .search-icon {
@@ -314,7 +338,7 @@
   align-items: flex-start;
   align-self: stretch;
   position: relative;
-  margin: 0 auto;
+  margin: 50px auto 0 auto;
 }
 
 .user-type-card {
@@ -481,7 +505,7 @@
   border: 2px solid #e5e7eb;
   padding: 40px 34px;
   margin: 0 auto;
-  width: 1235px;
+  width: 1350px;
   display: flex;
   flex-direction: column;
 }
@@ -547,9 +571,8 @@
 
 /* Features Section */
 .features-section {
-  width: 100%;
-  max-width: 1250px;
-  padding: 30px 20px;
+  width: 1235px;
+  padding: 20px 15px;
   background-color: #ffffff;
   display: flex;
   justify-content: center;
@@ -562,9 +585,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 10px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0px;
 }
 
 .features-section-title {
@@ -577,7 +600,7 @@
 }
 
 .features-container {
-  width: 100%;
+  width: 1235px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 120px;
@@ -586,7 +609,7 @@
 .feature-item {
   background-color: transparent;
   border-radius: 0;
-  padding: 15px;
+  padding: 40px 30px;
   text-align: center;
   display: flex;
   flex-direction: column;

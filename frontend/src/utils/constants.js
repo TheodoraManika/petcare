@@ -1,6 +1,7 @@
 // Route constants
 export const ROUTES = {
   home: '/',
+  login: '/login',
   contact: '/contact',
   about: '/about',
   privacy: '/privacy',

@@ -17,6 +17,7 @@
   height: fit-content;
   position: sticky;
   top: 100px;
+  overflow: visible;
 }
 
 .filter-header {
