@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/global/layout/PageLayout';
 import MultiSelect from '../../components/common/MultiSelect';
 import SuccessPage from '../../components/common/SuccessPage';
-import ConfirmModal from '../../components/common/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -83,7 +82,9 @@ const Profile = () => {
     setShowSuccessModal(true);
     
     // Redirect to home after 5 seconds
+    // Redirect to home after 5 seconds
     setTimeout(() => {
+      navigate(ROUTES.home);
       navigate(ROUTES.home);
     }, 5000);
   };
@@ -102,6 +103,8 @@ const Profile = () => {
 
   const handleBackToProfile = () => {
     setShowSaveSuccessModal(false);
+  const handleBackToProfile = () => {
+    setShowSaveSuccessModal(false);
   };
 
   const breadcrumbItems = [];
@@ -116,9 +119,7 @@ const Profile = () => {
         buttonText="Επιστροφή στο Προφίλ μου"
         onButtonClick={handleBackToProfile}
         iconColor="#FCA47C"
-        iconBgColor="#FFF4ED"
-        breadcrumbs={breadcrumbItems}
-        pageTitle="Προφίλ"
+        iconBgColor="#ffd8c6"
       />
     );
   }
