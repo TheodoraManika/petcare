@@ -352,14 +352,16 @@ const Appointments = () => {
       setNotification(null);
     }, 5000); // Hide after 5 seconds
 
-    // Close modal and reset
+    // Close modals and reset
     setShowRejectModal(false);
     setAppointmentToReject(null);
+    setSelectedAppointment(null); // Also close the detail modal
   };
 
   const handleCancelReject = () => {
     setShowRejectModal(false);
     setAppointmentToReject(null);
+    // Keep selectedAppointment modal open
   };
 
   const formatDateRange = () => {
