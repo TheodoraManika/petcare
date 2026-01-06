@@ -1,0 +1,321 @@
+.vet-profile {
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Main Container */
+.vet-profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Section */
+.vet-header {
+  background-color: #fef3f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  position: relative;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  border: 2px solid #D1D5DB;
+  transition: all 0.2s ease;
+}
+
+.vet-header:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.vet-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #FCD5C8;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.vet-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vet-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vet-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.vet-specialty {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.vet-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.rating-count {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* Content Sections */
+.vet-profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.info-section {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 24px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+/* Contact Information */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.contact-icon {
+  color: #FCA47C;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 500;
+}
+
+.contact-value {
+  font-size: 14px;
+  color: #1f2937;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+}
+
+/* Specializations */
+.specializations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.specialization-tag {
+  display: inline-block;
+  background-color: #f3f4f6;
+  color: #1f2937;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.specialization-tag:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Biography */
+.biography-text {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Reviews */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-item {
+  background-color: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.review-item:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.review-author {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.review-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.review-text {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.load-more-btn {
+  align-self: center;
+  background: none;
+  border: none;
+  color: #23CED9;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-top: 16px;
+  transition: all 0.2s ease;
+  text-decoration: underline;
+}
+
+.load-more-btn:hover {
+  color: #18b8c9;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vet-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .vet-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .vet-name {
+    font-size: 20px;
+  }
+
+  .appointment-info-box {
+    position: static;
+    max-width: 100%;
+  }
+
+  .vet-header-info {
+    align-items: center;
+  }
+
+  .vet-profile-container {
+    padding: 16px 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .contact-icon {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .vet-header {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .vet-name {
+    font-size: 18px;
+  }
+
+  .vet-specialty {
+    font-size: 14px;
+  }
+
+  .info-section {
+    padding-bottom: 16px;
+    gap: 24px;
+  }
+
+  .section-title {
+    font-size: 14px;
+  }
+
+  .specializations {
+    gap: 6px;
+  }
+
+  .specialization-tag {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}

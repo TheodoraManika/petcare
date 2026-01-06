@@ -1,0 +1,145 @@
+/* List View */
+.search-results-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  flex: 1;
+}
+
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: auto;
+  max-height: none;
+  overflow-y: visible;
+  flex: 1;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #D1D5DB;
+  transition: all 0.2s ease;
+}
+
+.result-item:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.result-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FCA47C 0%, #fb923c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(252, 164, 124, 0.3);
+}
+
+.avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.result-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.result-specialty {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.result-rating-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rating-stars {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.rating-count {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.result-address {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.result-action-btn {
+  padding: 12px 24px;
+  background-color: #FCA47C;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.result-action-btn:hover {
+  background-color: #fb923c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(252, 164, 124, 0.4);
+}
+
+.no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.no-results p {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .result-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .result-action-btn {
+    flex: 1 1 auto;
+  }
+}

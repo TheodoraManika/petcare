@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { Search, MapPin, X } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, MapPin, Star } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import Pagination from '../../components/common/Pagination';
+import CustomSelect from '../../components/common/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
+import MapWithMarkers from '../../components/citizen/MapWithMarkers';
+import SearchSidebar from '../../components/citizen/SearchSidebar';
+import SearchResultsList from '../../components/citizen/SearchResultsList';
 import './VetSearchMap.css';
 
 const VetSearchMap = () => {
+  const navigate = useNavigate();
   
   const [filters, setFilters] = useState({
     area: '',
@@ -14,23 +21,64 @@ const VetSearchMap = () => {
     rating: '',
   });
 
+  const [locationData, setLocationData] = useState(null);
   const [showMap, setShowMap] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedVet, setSelectedVet] = useState(null);
   const itemsPerPage = 5;
 
   // Mock vets data with coordinates
   const vets = [
-    { id: 1, name: 'Dr. Παπαδόπουλος', specialty: 'Γενικός Κτηνίατρος', area: 'Αθήνα', lat: 37.9838, lng: 23.7275, rating: 4.8 },
-    { id: 2, name: 'Dr. Αλεξόπουλος', specialty: 'Χειρουργική Κτηνιατρική', area: 'Αθήνα', lat: 37.9700, lng: 23.7300, rating: 4.5 },
-    { id: 3, name: 'Dr. Νικολάου', specialty: 'Οδοντιατρική Κτηνιατρική', area: 'Αθήνα', lat: 37.9750, lng: 23.7400, rating: 4.9 },
-    { id: 4, name: 'Dr. Μαργαρίτης', specialty: 'Ορθοπεδική Κτηνιατρική', area: 'Αθήνα', lat: 37.9600, lng: 23.7200, rating: 4.6 },
-    { id: 5, name: 'Dr. Κωνσταντίνου', specialty: 'Εσωτερική Παθολογία', area: 'Αθήνα', lat: 37.9900, lng: 23.7350, rating: 4.7 },
-    { id: 6, name: 'Dr. Διαμαντίδης', specialty: 'Γενικός Κτηνίατρος', area: 'Αθήνα', lat: 37.9850, lng: 23.7250, rating: 4.4 },
-    { id: 7, name: 'Dr. Σταματόπουλος', specialty: 'Χειρουργική Κτηνιατρική', area: 'Αθήνα', lat: 37.9720, lng: 23.7350, rating: 4.8 },
-    { id: 8, name: 'Dr. Γιανναράκης', specialty: 'Οδοντιατρική Κτηνιατρική', area: 'Αθήνα', lat: 37.9800, lng: 23.7400, rating: 4.7 },
-    { id: 9, name: 'Dr. Παvταζοπούλου', specialty: 'Ορθοπεδική Κτηνιατρική', area: 'Αθήνα', lat: 37.9650, lng: 23.7200, rating: 4.5 },
-    { id: 10, name: 'Dr. Λυμπεράκης', specialty: 'Εσωτερική Παθολογία', area: 'Αθήνα', lat: 37.9900, lng: 23.7300, rating: 4.9 },
-    { id: 11, name: 'Dr. Βασιλειάδης', specialty: 'Γενικός Κτηνίατρος', area: 'Αθήνα', lat: 37.9780, lng: 23.7280, rating: 4.6 },
+    { 
+      id: 1, 
+      name: 'Γιώργος Αντωνίου', 
+      specialty: 'Γενικός Κτηνίατρος', 
+      area: 'Αθήνα, Καλαμαριά', 
+      rating: 4.8,
+      lat: 37.9838,
+      lon: 23.7275,
+      position: { top: '42%', left: '52%' }
+    },
+    { 
+      id: 2, 
+      name: 'Μαρία Παπαδοπούλου', 
+      specialty: 'Χειρουργική', 
+      area: 'Αθήνα, Νέα Σμύρνη', 
+      rating: 4.9,
+      lat: 37.9400,
+      lon: 23.7280,
+      position: { top: '35%', left: '58%' }
+    },
+    { 
+      id: 3, 
+      name: 'Νίκος Οικονόμου', 
+      specialty: 'Οδοντιατρική', 
+      area: 'Αθήνα, Γλυφάδα', 
+      rating: 4.7,
+      lat: 37.8650,
+      lon: 23.7540,
+      position: { top: '60%', left: '48%' }
+    },
+    { 
+      id: 4, 
+      name: 'Ελένη Κωνσταντίνου', 
+      specialty: 'Ορθοπεδική', 
+      area: 'Αθήνα, Χαλάνδρι', 
+      rating: 4.6,
+      lat: 38.0214,
+      lon: 23.7950,
+      position: { top: '28%', left: '45%' }
+    },
+    { 
+      id: 5, 
+      name: 'Δημήτρης Σπανός', 
+      specialty: 'Γενικός Κτηνίατρος', 
+      area: 'Αθήνα, Περιστέρι', 
+      rating: 4.5,
+      lat: 38.0157,
+      lon: 23.6912,
+      position: { top: '50%', left: '35%' }
+    },
   ];
 
   const handleFilterChange = (e) => {
@@ -41,6 +89,17 @@ const VetSearchMap = () => {
     }));
   };
 
+  const handleSelectChange = (name, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleLocationSelect = (location) => {
+    setLocationData(location);
+  };
+
   const handleClear = () => {
     setFilters({
       area: '',
@@ -49,7 +108,32 @@ const VetSearchMap = () => {
       time: '',
       rating: '',
     });
+    setLocationData(null);
   };
+
+  const handleMarkerClick = (vet) => {
+    setSelectedVet(selectedVet?.id === vet.id ? null : vet);
+  };
+
+  const handleViewProfile = (vet) => {
+    navigate(`/vet-profile/${vet.id}`);
+  };
+
+  const handleCloseAppointment = (vet) => {
+    // Handle close appointment
+    console.log('Close appointment for:', vet.name);
+  };
+
+  // Calculate map center
+  const mapCenter = useMemo(() => {
+    if (locationData) {
+      return [parseFloat(locationData.lat), parseFloat(locationData.lon)];
+    }
+    // Default to Athens center
+    return [37.9838, 23.7275];
+  }, [locationData]);
+
+  const mapZoom = locationData ? 14 : 12;
 
   // Pagination logic
   const totalPages = Math.ceil(vets.length / itemsPerPage);
@@ -61,185 +145,151 @@ const VetSearchMap = () => {
     setCurrentPage(page);
   };
 
+  // Options for CustomSelect components
+  const specialtyOptions = [
+    { value: '', label: 'Επιλέξτε ειδικότητα...' },
+    { value: 'general', label: 'Γενικός Κτηνίατρος' },
+    { value: 'surgery', label: 'Χειρουργική' },
+    { value: 'dentistry', label: 'Οδοντιατρική' },
+    { value: 'orthopedics', label: 'Ορθοπεδική' }
+  ];
+
+  const availabilityOptions = [
+    { value: '', label: 'Επιλέξτε ημέρα...' },
+    { value: 'today', label: 'Σήμερα' },
+    { value: 'tomorrow', label: 'Αύριο' },
+    { value: 'week', label: 'Αυτή την εβδομάδα' }
+  ];
+
+  const timeOptions = [
+    { value: '', label: 'Επιλέξτε ώρα...' },
+    { value: 'morning', label: 'Πρωί (08:00-12:00)' },
+    { value: 'afternoon', label: 'Απόγευμα (12:00-18:00)' },
+    { value: 'evening', label: 'Βράδυ (18:00-21:00)' }
+  ];
+
+  const ratingOptions = [
+    { value: '', label: 'Επιλέξτε αξιολόγηση...' },
+    { value: '4', label: '4+ ⭐' },
+    { value: '4.5', label: '4.5+ ⭐' },
+    { value: '4.8', label: '4.8+ ⭐' }
+  ];
+
   return (
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
       <div className="vet-search-map-page">
         {/* Sidebar Filters */}
-        <aside className="search-sidebar">
-          <div className="filter-header">
-            <h3 className="filter-title">Φίλτρο Αναζήτησης</h3>
+        <SearchSidebar
+          title="Φίλτρα Αναζήτησης"
+          filters={filters}
+          onSearch={() => {}}
+          onClear={handleClear}
+          resultsCount={vets.length}
+        >
+          {/* Area Filter with LocationPicker */}
+          <div className="filter-group">
+            <label className="filter-label">Περιοχή</label>
+            <LocationPicker
+              value={filters.area}
+              onChange={(val) => setFilters(prev => ({ ...prev, area: val }))}
+              onSelect={handleLocationSelect}
+              placeholder="π.χ. Αθήνα, Καλαμαριά..."
+              variant="citizen"
+            />
           </div>
 
-          <div className="filters-container">
-            {/* Area Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Περιοχή</label>
-              <select 
-                name="area" 
-                value={filters.area} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">π.χ. Αθήνα, Καλαμαριά...</option>
-                <option value="athens">Αθήνα</option>
-                <option value="thessaloniki">Θεσσαλονίκη</option>
-                <option value="patras">Πάτρα</option>
-              </select>
-            </div>
-
-            {/* Specialty Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Ειδικότητα</label>
-              <select 
-                name="specialty" 
-                value={filters.specialty} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε ειδικότητα...</option>
-                <option value="general">Γενικός Κτηνίατρος</option>
-                <option value="surgery">Χειρουργική</option>
-                <option value="dentistry">Οδοντιατρική</option>
-                <option value="orthopedics">Ορθοπεδική</option>
-              </select>
-            </div>
-
-            {/* Availability Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Ημερα Διαθεσιμοτητας</label>
-              <select 
-                name="availability" 
-                value={filters.availability} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε ημέρα...</option>
-                <option value="today">Σήμερα</option>
-                <option value="tomorrow">Αύριο</option>
-                <option value="week">Αυτή την εβδομάδα</option>
-              </select>
-            </div>
-
-            {/* Time Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Ύρα</label>
-              <select 
-                name="time" 
-                value={filters.time} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε ώρα...</option>
-                <option value="morning">Πρωί (08:00-12:00)</option>
-                <option value="afternoon">Απόγευμα (12:00-18:00)</option>
-                <option value="evening">Βράδυ (18:00-21:00)</option>
-              </select>
-            </div>
-
-            {/* Rating Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Ελαχιστη Αβολυμιμη</label>
-              <select 
-                name="rating" 
-                value={filters.rating} 
-                onChange={handleFilterChange}
-                className="filter-input"
-              >
-                <option value="">Επιλέξτε αξιολόγηση...</option>
-                <option value="4">4+ ⭐</option>
-                <option value="4.5">4.5+ ⭐</option>
-                <option value="4.8">4.8+ ⭐</option>
-              </select>
-            </div>
-
-            {/* Search Button */}
-            <button className="search-button-sidebar">
-              <Search size={18} />
-              Αναζήτηση
-            </button>
-
-            {/* Clear Button */}
-            <button className="clear-button-sidebar" onClick={handleClear}>
-              Καθαρισμός Δήλιων
-            </button>
-
-            {/* Rating & Info */}
-            <div className="sidebar-info">
-              <p className="info-text">Βρήθηκαν 5 κτηνίατροι</p>
-            </div>
+          {/* Specialty Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Ειδικότητα</label>
+            <CustomSelect
+              name="specialty"
+              value={filters.specialty}
+              onChange={(val) => handleSelectChange('specialty', val)}
+              options={specialtyOptions}
+              variant="citizen"
+            />
           </div>
-        </aside>
+
+          {/* Availability Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Ημέρα Διαθεσιμότητας</label>
+            <CustomSelect
+              name="availability"
+              value={filters.availability}
+              onChange={(val) => handleSelectChange('availability', val)}
+              options={availabilityOptions}
+              variant="citizen"
+            />
+          </div>
+
+          {/* Time Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Ώρα</label>
+            <CustomSelect
+              name="time"
+              value={filters.time}
+              onChange={(val) => handleSelectChange('time', val)}
+              options={timeOptions}
+              variant="citizen"
+            />
+          </div>
+
+          {/* Rating Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Ελάχιστη Αξιολόγηση</label>
+            <CustomSelect
+              name="rating"
+              value={filters.rating}
+              onChange={(val) => handleSelectChange('rating', val)}
+              options={ratingOptions}
+              variant="citizen"
+            />
+          </div>
+        </SearchSidebar>
 
         {/* Main Map Area */}
         <main className="map-container">
           <div className="map-header">
-            <h2 className="map-title">Αποτελέσματα (5)</h2>
+            <h2 className="map-title">Αποτελέσματα ({vets.length})</h2>
             <div className="view-toggles">
-              <button className={`toggle-btn ${showMap ? 'active' : ''}`} onClick={() => setShowMap(true)}>
+              <button 
+                className={`toggle-btn ${showMap ? 'active' : ''}`} 
+                onClick={() => setShowMap(true)}
+              >
                 <MapPin size={18} />
                 Χάρτης
               </button>
-              <button className={`toggle-btn ${!showMap ? 'active' : ''}`} onClick={() => setShowMap(false)}>
+              <button 
+                className={`toggle-btn ${!showMap ? 'active' : ''}`} 
+                onClick={() => setShowMap(false)}
+              >
                 Λίστα
               </button>
             </div>
           </div>
 
           {showMap ? (
-            <div className="map-wrapper">
-              <iframe
-                className="map-iframe"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1841071150157!2d23.727551!3d37.9838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x135964427e9b3b55%3A0x9c1e98e1e0b5e5e0!2sAthens%2C%20Greece!5e0!3m2!1sen!2s!4v1234567890"
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-              
-              {/* Vet Markers Info */}
-              <div className="vet-markers-overlay">
-                {vets.map((vet) => (
-                  <div key={vet.id} className="vet-marker-info">
-                    <div className="marker-pin">📍</div>
-                    <div className="marker-content">
-                      <h4 className="marker-name">{vet.name}</h4>
-                      <p className="marker-specialty">{vet.specialty}</p>
-                      <p className="marker-rating">⭐ {vet.rating}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <MapWithMarkers
+              center={mapCenter}
+              zoom={mapZoom}
+              markers={vets}
+              selectedId={selectedVet?.id}
+              onMarkerClick={handleMarkerClick}
+              height="600px"
+              currentUser={{ type: 'owner' }}
+              onViewProfile={handleViewProfile}
+              onCloseAppointment={handleCloseAppointment}
+            />
           ) : (
-            <div className="list-view-container">
-              <div className="list-view">
-                {currentVets.map((vet) => (
-                  <div key={vet.id} className="vet-list-item">
-                    <div className="vet-avatar">
-                      <span className="avatar-initials">Dr</span>
-                    </div>
-                    <div className="vet-details">
-                      <h3 className="vet-name">Δρ. {vet.name.split(' ')[1]}</h3>
-                      <p className="vet-specialty">{vet.specialty}</p>
-                      <div className="vet-rating-info">
-                        <span className="rating-stars">⭐ {vet.rating} (23 ratings)</span>
-                      </div>
-                      <p className="vet-address">Δουλιανής Ταβέρνες, 2008-1618</p>
-                    </div>
-                    <button className="vet-profile-btn">Προφίλ Ιατρού</button>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                  variant="citizen"
-                />
-              )}
-            </div>
+            <SearchResultsList
+              items={currentVets}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              variant="citizen"
+              actionButtonText="Προβολή Προφίλ"
+              onActionClick={handleViewProfile}
+            />
           )}
         </main>
       </div>

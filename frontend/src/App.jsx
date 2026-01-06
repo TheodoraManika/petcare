@@ -19,6 +19,7 @@ import LostPets from './pages/citizen/LostPets';
 import LostPetDetails from './pages/citizen/LostPetDetails';
 import CitizenFoundPetForm from './pages/citizen/FoundPetForm';
 import VetSearchMap from './pages/citizen/VetSearchMap';
+import VetProfile from './pages/citizen/VetProfile';
 
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
@@ -72,6 +73,7 @@ function App() {
         <Route path={ROUTES.citizen.lostPetDetails} element={<LostPetDetails />} />
         <Route path={ROUTES.citizen.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path={ROUTES.citizen.searchMap} element={<VetSearchMap />} />
+        <Route path="/vet-profile/:vetId" element={<VetProfile />} />
 
         {/* Vet Routes */}
         <Route path="/vet/dashboard" element={<Dashboard />} />

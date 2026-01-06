@@ -32,8 +32,24 @@
   box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
 }
 
+.custom-select--owner .custom-select__trigger:hover {
+  border-color: #23CED9;
+  background-color: #f0fdfe;
+}
+
 .custom-select--owner .custom-select__trigger:focus,
 .custom-select--owner .custom-select__trigger--open {
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
+.custom-select--citizen .custom-select__trigger:hover {
+  border-color: #23CED9;
+  background-color: #f0fdfe;
+}
+
+.custom-select--citizen .custom-select__trigger:focus,
+.custom-select--citizen .custom-select__trigger--open {
   border-color: #23CED9;
   box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
@@ -125,6 +141,20 @@
 }
 
 .custom-select--owner .custom-select__option:hover {
+  background-color: #f0fdfe;
+  color: #1a1a1a;
+}
+
+.custom-select--citizen .custom-select__option--selected {
+  background-color: #E0F7F9;
+  color: #23CED9;
+}
+
+.custom-select--citizen .custom-select__option--selected:hover {
+  background-color: #D4F4F7;
+}
+
+.custom-select--citizen .custom-select__option:hover {
   background-color: #f0fdfe;
   color: #1a1a1a;
 }

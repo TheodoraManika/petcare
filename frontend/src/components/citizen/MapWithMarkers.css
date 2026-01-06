@@ -1,0 +1,159 @@
+.map-with-markers {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+  border-radius: 12px;
+}
+
+/* Leaflet Popup Customization */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 240px;
+}
+
+.map-popup .popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.map-popup .popup-container {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.map-popup .popup-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: #FCD5C8;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.map-popup .popup-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.map-popup .popup-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.map-popup .popup-online-badge {
+  font-size: 12px;
+  color: #10b981;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.map-popup .popup-specialty {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.map-popup .popup-location {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.map-popup .popup-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.map-popup .popup-rating span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.map-popup .popup-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.map-popup .popup-profile-btn,
+.map-popup .popup-close-appointment-btn {
+  flex: 1;
+  padding: 10px 16px;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.map-popup .popup-profile-btn {
+  background-color: #FCA47C;
+}
+
+.map-popup .popup-profile-btn:hover {
+  background-color: #fb923c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(252, 164, 124, 0.4);
+}
+
+.map-popup .popup-close-appointment-btn {
+  background-color: transparent;
+  color: #FCA47C;
+  border: 2px solid #FCA47C;
+}
+
+.map-popup .popup-close-appointment-btn:hover {
+  background-color: rgba(252, 164, 124, 0.1);
+  border-color: #fb923c;
+  color: #fb923c;
+}
+
+@media (max-width: 768px) {
+  .leaflet-popup-content {
+    min-width: 200px;
+  }
+
+  .map-popup .popup-content {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .leaflet-popup-content {
+    min-width: 200px;
+  }
+
+  .map-popup .popup-content {
+    padding: 12px;
+  }
+}
