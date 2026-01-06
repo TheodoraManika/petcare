@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PawPrint, UserRound, FileHeart, Heart } from 'lucide-react';
+import { PawPrint, UserRound, FileHeart, Heart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
@@ -9,7 +10,6 @@ import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
-import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
 
@@ -19,7 +19,6 @@ const Adoption = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -123,6 +122,23 @@ const Adoption = () => {
 
   const handleSuccessReturn = () => {
     navigate(ROUTES.vet.dashboard);
+      // Show confirmation modal instead of submitting directly
+      setShowConfirmModal(true);
+    }
+  };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -161,14 +177,6 @@ const Adoption = () => {
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
-    
-    // Show notification
-    setNotification('cancelled');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -617,6 +625,23 @@ const Adoption = () => {
     );
   }
 
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={Heart}
+        title="Η Δήλωση Υιοθεσίας ολοκληρώθηκε!"
+        description="Η υιοθεσία καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ιδιοκτήτη."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Υιοθεσίας"
+      />
+    );
+  }
+
   return (
     <PageLayout title="Δήλωση Υιοθεσίας" breadcrumbs={breadcrumbItems}>
       <div className="adoption">
@@ -660,6 +685,30 @@ const Adoption = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση υιοθεσίας;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Υιοθεσίας"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της υιοθεσίας:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
 
         {/* Cancel Confirmation Modal */}
         <ConfirmModal

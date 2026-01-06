@@ -194,7 +194,7 @@ const Register = () => {
         buttonText="Επιστροφή στο Μενού"
         onButtonClick={() => navigate(ROUTES.vet.dashboard)}
         iconColor="#FCA47C"
-        iconBgColor="#ffd8c6"
+        iconBgColor="#FFF4ED"
         breadcrumbs={breadcrumbItems}
         pageTitle="Καταγραφή Κατοικιδίου"
       />

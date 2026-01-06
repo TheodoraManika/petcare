@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
-import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Operation.css';
 
@@ -16,7 +16,6 @@ const Operation = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     petSearch: '',
     operationType: '',
@@ -52,14 +51,6 @@ const Operation = () => {
       description: ''
     });
     setShowCancelModal(false);
-    
-    // Show notification
-    setNotification('cancelled');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -73,7 +64,13 @@ const Operation = () => {
   };
 
   const handleConfirmSubmit = () => {
+    // Show confirmation modal instead of submitting directly
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSubmit = () => {
     console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
     setShowConfirmModal(false);
     setShowSuccess(true);
   };
@@ -103,10 +100,51 @@ const Operation = () => {
     { label: 'Ημερομηνία', value: formData.operationDate },
     { label: 'Περιγραφή', value: formData.description },
   ];
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  // Helper function to get label for operation type
+  const getOperationTypeLabel = (value) => {
+    const options = {
+      'vaccination': 'Εμβολιασμός',
+      'checkup': 'Γενική Εξέταση',
+      'surgery': 'Χειρουργείο',
+      'treatment': 'Θεραπεία',
+      'dental': 'Οδοντιατρική',
+      'emergency': 'Επείγον Περιστατικό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.petSearch },
+    { label: 'Τύπος Πράξης', value: getOperationTypeLabel(formData.operationType) },
+    { label: 'Ημερομηνία', value: formData.operationDate },
+    { label: 'Περιγραφή', value: formData.description },
+  ];
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.vet.dashboard }
   ];
+
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={FileText}
+        title="Η Ιατρική Πράξη Καταχωρήθηκε!"
+        description="Η ιατρική πράξη αποθηκεύτηκε επιτυχώς στο βιβλίο του κατοικιδίου."
+        buttonText="Επιστροφή στο Μενού"
+        onButtonClick={() => navigate(ROUTES.vet.dashboard)}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Ιατρικές Πράξεις"
+      />
+    );
+  }
 
   if (showSuccess) {
     return (
@@ -236,13 +274,6 @@ const Operation = () => {
           confirmText="Επιβεβαίωση"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
-        />
-
-        {/* Notification */}
-        <Notification
-          isVisible={notification !== null}
-          message="Η καταγραφή της ιατρικής πράξης ακυρώθηκε με επιτυχία!"
-          type="error"
         />
       </div>
     </PageLayout>
