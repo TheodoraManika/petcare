@@ -8,6 +8,7 @@ import LocationPicker from '../../components/common/LocationPicker';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
 import SuccessPage from '../../components/common/SuccessPage';
+import Notification from '../../components/common/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Register.css';
 
@@ -16,6 +17,7 @@ const Register = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [notification, setNotification] = useState(null);
   const [formData, setFormData] = useState({
     microchipNumber: '',
     species: '',
@@ -73,6 +75,14 @@ const Register = () => {
       afm: '',
     });
     setShowCancelModal(false);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -479,6 +489,13 @@ const Register = () => {
           confirmText="Επιβεβαίωση"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message="Η καταγραφή του κατοικιδίου ακυρώθηκε με επιτυχία!"
+          type="error"
         />
       </div>
     </PageLayout>
