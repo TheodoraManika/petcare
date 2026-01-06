@@ -70,7 +70,7 @@ const LoginPage = () => {
   };
 
   return (
-    <PageLayout title="Σύνδεση">
+    <PageLayout title="Σύνδεση" showBreadcrumbs={true} showNavbar={false} showFooter={false}>
       <div className="login-page">
         <div className="login-container">
         {/* Logo and Title Section */}
@@ -166,7 +166,7 @@ const LoginPage = () => {
 
           {/* Forgot Password Link */}
           <div className="login-forgot-password">
-            <Link to="#" className="login-forgot-link">
+            <Link to={ROUTES.forgotPassword} className="login-forgot-link">
               Ξέχασατε τον κωδικό;
             </Link>
           </div>

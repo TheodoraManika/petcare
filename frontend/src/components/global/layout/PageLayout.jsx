@@ -14,8 +14,10 @@ import './PageLayout.css';
  * @param {array} props.breadcrumbs - Optional array of breadcrumb items: [{label, path}, ...]
  *                                     If provided, breadcrumb hierarchy is: Home > breadcrumbs[0] > breadcrumbs[1] > ... > title
  * @param {boolean} props.showBreadcrumbs - Whether to show breadcrumbs (default: true)
+ * @param {boolean} props.showNavbar - Whether to show navbar (default: true)
+ * @param {boolean} props.showFooter - Whether to show footer (default: true)
  */
-const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = true }) => {
+const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = true, showNavbar = true, showFooter = true }) => {
   // Initialize state by checking localStorage immediately
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     try {
@@ -54,8 +56,8 @@ const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = t
   }, []);
 
   return (
-    <div className="page-layout">
-      <Navbar variant={variant} />
+    <div className={`page-layout ${!showNavbar ? 'page-layout--no-navbar' : ''}`}>
+      {showNavbar && <Navbar variant={variant} />}
       <main className="page-layout__main">
         {showBreadcrumbs && (
           <nav className="page-layout__breadcrumbs">
@@ -86,7 +88,7 @@ const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = t
           {children}
         </div>
       </main>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 };

@@ -4,13 +4,19 @@ import { FileText, Search, Calendar, PawPrint, Stethoscope, Users, ChevronDown }
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/global/ui/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
 import './HomePage.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [selectedArea, setSelectedArea] = useState('');
+  const [locationData, setLocationData] = useState(null);
   const [selectedAvailability, setSelectedAvailability] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
+
+  const handleLocationSelect = (location) => {
+    setLocationData(location);
+  };
 
   const features = [
     {
@@ -70,6 +76,7 @@ const HomePage = () => {
       features: [
         'Αναζήτηση χαμένων κατοικιδίων',
         'Δήλωση εύρεσης κατοικιδίου',
+        'Εύρεση Κτηνιάτρων',
       ],
       buttonText: 'Περισσότερα',
       buttonAction: () => navigate('/citizen/dashboard'),
@@ -102,16 +109,12 @@ const HomePage = () => {
               </svg>
             </div>
             <div className="search-field">
-              <CustomSelect
+              <LocationPicker
                 value={selectedArea}
                 onChange={setSelectedArea}
+                onSelect={handleLocationSelect}
                 placeholder="Περιοχή..."
-                options={[
-                  { value: 'athens', label: 'Αθήνα' },
-                  { value: 'thessaloniki', label: 'Θεσσαλονίκη' },
-                  { value: 'patras', label: 'Πάτρα' },
-                  { value: 'larissa', label: 'Λάρισα' },
-                ]}
+                variant="citizen"
               />
             </div>
             <div className="search-field">
@@ -144,11 +147,17 @@ const HomePage = () => {
           </div>
 
           <div className="hero-actions">
-            <button className="action-button owner-btn">
+            <button 
+              className="action-button owner-btn"
+              onClick={() => navigate(ROUTES.owner.register)}
+            >
               <Users size={20} />
               <span>Εγγραφή Ιδιοκτήτη</span>
             </button>
-            <button className="action-button vet-btn">
+            <button 
+              className="action-button vet-btn"
+              onClick={() => navigate(ROUTES.vet.register)}
+            >
               <Stethoscope size={20} />
               <span>Εγγραφή Κτηνιάτρου</span>
             </button>

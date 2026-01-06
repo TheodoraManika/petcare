@@ -40,6 +40,7 @@ import Appointments from './pages/vet/Appointments';
 
 // Common Pages
 import LoginPage from './pages/common/LoginPage';
+import ForgotPasswordPage from './pages/common/ForgotPasswordPage';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import AboutPage from './pages/common/AboutPage';
 import ContactPage from './pages/common/ContactPage';
@@ -98,6 +99,7 @@ function App() {
 
         {/* Common Pages */}
         <Route path={ROUTES.login} element={<LoginPage />} />
+        <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />
         <Route path={ROUTES.about} element={<AboutPage />} />
         <Route path={ROUTES.contact} element={<ContactPage />} />

@@ -5,10 +5,13 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  min-height: calc(100vh - 64px - 60px);
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Override page layout background for login page */
+.page-layout--no-navbar {
+  background: linear-gradient(135deg, rgba(35, 206, 217, 0.30) 0%, rgba(252, 164, 124, 0.30) 50%, rgba(249, 215, 121, 0.30) 100%);
 }
 
 .login-container {
@@ -101,9 +104,9 @@
 
 .login-input:focus {
   outline: none;
-  border-color: #23cdd9;
+  border-color: #23CED9;
   background-color: white;
-  box-shadow: 0 0 0 3px rgba(35, 205, 217, 0.1);
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
 
 .login-input::placeholder {
@@ -125,7 +128,7 @@
 }
 
 .login-password-toggle:hover {
-  color: #23cdd9;
+  color: #23CED9;
 }
 
 /* Forgot Password Link */
@@ -136,14 +139,14 @@
 
 .login-forgot-link {
   font-size: 13px;
-  color: #23cdd9;
+  color: #23CED9;
   text-decoration: none;
   transition: color 0.2s ease;
   font-weight: 500;
 }
 
 .login-forgot-link:hover {
-  color: #1b9ea6;
+  color: #23CED9;
   text-decoration: underline;
 }
 
@@ -151,7 +154,7 @@
 .login-button {
   width: 100%;
   padding: 14px 16px;
-  background: linear-gradient(90deg, #23cdd9 0%, #20b8c3 100%);
+  background: linear-gradient(90deg, #23CED9 0%, #23CED9 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -159,17 +162,17 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(35, 205, 217, 0.3);
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
 }
 
 .login-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(35, 205, 217, 0.4);
+  box-shadow: 0 6px 16px rgba(35, 206, 217, 0.4);
 }
 
 .login-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(35, 205, 217, 0.3);
+  box-shadow: 0 2px 8px rgba(35, 206, 217, 0.3);
 }
 
 /* Divider */
@@ -207,14 +210,14 @@
 }
 
 .login-signup-link {
-  color: #23cdd9;
+  color: #FCA47C;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .login-signup-link:hover {
-  color: #1b9ea6;
+  color: #FCA47C;
   text-decoration: underline;
 }
 

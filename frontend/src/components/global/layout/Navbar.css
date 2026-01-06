@@ -14,7 +14,7 @@
 .navbar__container {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   height: 100%;
   padding: 0 var(--spacing-lg);
   max-width: 1600px;
@@ -28,7 +28,8 @@
   align-items: center;
   gap: var(--spacing-sm);
   text-decoration: none;
-  margin-right: 120px;
+  margin-right: auto;
+  margin-left: 0;
 }
 
 .navbar__logo-icon {

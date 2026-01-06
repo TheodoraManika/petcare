@@ -6,9 +6,17 @@
   background-color: #F8F9FA;
 }
 
+.page-layout--no-navbar {
+  background: transparent;
+}
+
 .page-layout__main {
   flex: 1;
   padding-top: 64px; /* Height of navbar */
+}
+
+.page-layout--no-navbar .page-layout__main {
+  padding-top: 0;
 }
 
 .page-layout__breadcrumbs {
