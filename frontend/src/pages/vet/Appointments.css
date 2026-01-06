@@ -742,25 +742,25 @@
 }
 
 .appointments__modal-btn--reject {
-  background: #dc2626;
-  color: #ffffff;
+  background: #FF5252;
+  color: #101828;
 }
 
 .appointments__modal-btn--reject:hover {
-  background: #b91c1c;
-  color: #ffffff;
+  background: #ef3c3c;
+  color: #101828;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
 }
 
 .appointments__modal-btn--confirm {
-  background: #016630;
-  color: #ffffff;
+  background: #A1CCA6;
+  color: #101828;
 }
 
 .appointments__modal-btn--confirm:hover {
-  background: #015223;
-  color: #ffffff;
+  background: #71b479;
+  color: #101828;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(1, 102, 48, 0.3);
+  box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
 }
