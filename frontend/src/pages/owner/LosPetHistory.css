@@ -65,12 +65,12 @@
 }
 
 .lost-pet-history__card:hover .lost-pet-history__icon {
-  border-color: #1ab8c2;
+  border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.16);
 }
 
 .lost-pet-history__card:hover .lost-pet-history__icon svg {
-  color: #1ab8c2;
+  color: #23CED9;
 }
 
 .lost-pet-history__card-info {
@@ -193,7 +193,7 @@
 
 .lost-pet-history__btn--edit:hover {
   background: rgba(35, 206, 217, 0.05);
-  border-color: #1ab8c2;
+  border-color: #23CED9;
 }
 
 .lost-pet-history__btn--delete {

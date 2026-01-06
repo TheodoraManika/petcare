@@ -63,7 +63,7 @@
 }
 
 .owner-profile__btn--edit:hover {
-  background-color: #1ab8c2;
+  background-color: #23CED9;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
@@ -93,7 +93,7 @@
 }
 
 .owner-profile__btn--save:hover {
-  background-color: #1ab8c2;
+  background-color: #23CED9;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
@@ -304,7 +304,7 @@
 }
 
 .owner-profile-success__btn:hover {
-  background-color: #1ab8c2;
+  background-color: #23CED9;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }

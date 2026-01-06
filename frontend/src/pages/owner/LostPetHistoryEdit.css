@@ -178,7 +178,7 @@
 
 .lost-pet-edit__btn--draft:hover {
   background: rgba(35, 206, 217, 0.05);
-  border-color: #1ab8c2;
+  border-color: #23CED9;
 }
 
 .lost-pet-edit__btn--submit {
@@ -188,7 +188,7 @@
 }
 
 .lost-pet-edit__btn--submit:hover {
-  background: #1ab8c2;
+  background: #23CED9;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }

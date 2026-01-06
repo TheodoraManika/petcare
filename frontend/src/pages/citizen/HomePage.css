@@ -6,17 +6,18 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding-top: 64px;
 }
 
 /* Main Content */
 .home-main {
   background-color: #f9faff;
-  height: 1344px;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 64px;
-  padding: 48px 16px 0 16px;
+  padding: 48px 16px 64px 16px;
   flex-shrink: 0;
   align-self: stretch;
   z-index: 2;
@@ -53,25 +54,24 @@
 
 .hero-content {
   position: absolute;
-  top: 92px;
+  top: 80px;
   left: 64px;
   width: 672px;
   height: 175px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
+  gap: 60px;
   z-index: 3;
 }
 
 .hero-title {
   width: 672px;
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 500;
   color: #101727;
   margin: 0;
-  line-height: 24px;
-  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.15);
+  line-height: 32px;
 }
 
 .hero-description {
@@ -85,7 +85,7 @@
 
 .hero-search-box {
   position: absolute;
-  bottom: 16px;
+  bottom: 50px;
   left: 64px;
   width: 1022px;
   height: 80px;
@@ -94,7 +94,7 @@
   flex-direction: row;
   align-items: center;
   padding: 12px 16px;
-  border-radius: 25px;
+  border-radius: 10px;
   box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
   z-index: 3;
   gap: 12px;
@@ -225,12 +225,12 @@
 }
 
 .search-button {
-  background-color: #ffffff;
+  background-color: #23CED9;
   padding: 12px 32px;
   height: 48px;
-  border: 1px solid #e5e7eb;
+  border: none;
   border-radius: 20px;
-  color: #101727;
+  color: #ffffff;
   font-family: inherit;
   font-size: 16px;
   font-weight: 500;
@@ -250,7 +250,7 @@
 /* Hero Actions */
 .hero-actions {
   position: absolute;
-  top: 282px;
+  bottom: 160px;
   left: 64px;
   width: 742px;
   height: 56px;
@@ -320,7 +320,7 @@
 .user-type-card {
   background-color: rgba(255, 255, 255, 1);
   width: 390px;
-  height: 330px;
+  height: 340px;
   display: flex;
   align-items: flex-start;
   padding: 2px;
@@ -365,18 +365,21 @@
 }
 
 .cyan-icon {
-  background-color: rgba(35, 206, 217, 0.2);
+  background-color: rgba(35, 206, 217, 0.15);
   border-color: rgba(35, 206, 217, 1);
+  color: #23CED9;
 }
 
 .orange-icon {
-  background-color: rgba(252, 164, 124, 0.5);
+  background-color: rgba(252, 164, 124, 0.2);
   border-color: rgba(252, 164, 124, 1);
+  color: #FCA47C;
 }
 
 .yellow-icon {
-  background-color: rgba(249, 215, 121, 0.1);
+  background-color: rgba(249, 215, 121, 0.2);
   border-color: rgba(249, 215, 121, 1);
+  color: #F9D779;
 }
 
 .card-title {
@@ -555,7 +558,7 @@
 
 .features-wrapper {
   width: 100%;
-  max-width: 800px;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -577,7 +580,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 50px;
+  gap: 120px;
 }
 
 .feature-item {
@@ -603,11 +606,12 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: #bbeefc;
+  background: rgba(35, 206, 217, 0.15);
+  border: 2px solid rgba(35, 206, 217, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6dd9f5;
+  color: #23CED9;
   flex-shrink: 0;
 }
 

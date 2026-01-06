@@ -67,6 +67,7 @@ const HomePage = () => {
       features: [
         'Αναζήτηση χαμένων κατοικιδίων',
         'Δήλωση εύρεσης κατοικιδίου',
+        'Αναζήτηση διαθέσιμων κτηνιάτρων',
       ],
       buttonText: 'Περισσότερα',
       buttonAction: () => navigate('/citizen/dashboard'),
