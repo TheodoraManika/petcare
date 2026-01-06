@@ -172,7 +172,7 @@ const HomePage = () => {
             </button>
             <button 
               className="action-button lost-btn"
-              onClick={() => navigate(ROUTES.vet.foundPetForm)}
+              onClick={() => navigate(ROUTES.citizen.foundPetForm)}
             >
               <Search size={20} />
               <span>Δήλωση Εύρεσης</span>

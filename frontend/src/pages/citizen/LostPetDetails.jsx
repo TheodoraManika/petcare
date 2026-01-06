@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, Camera } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import { ROUTES } from '../../utils/constants';
 import './LostPetDetails.css';
 
 const LostPetDetails = () => {
@@ -24,7 +25,7 @@ const LostPetDetails = () => {
   };
 
   const handleFoundReport = () => {
-    navigate('/citizen/found-pet');
+    navigate(ROUTES.citizen.foundPetForm);
   };
 
   return (

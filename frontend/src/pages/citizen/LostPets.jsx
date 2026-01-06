@@ -1,229 +1,281 @@
-import React, { useState } from 'react';
-import { Search, MapPin, Camera } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MapPin, List, Dog } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import CustomSelect from '../../components/common/CustomSelect';
+import LocationPicker from '../../components/common/LocationPicker';
+import MapWithMarkers from '../../components/citizen/MapWithMarkers';
+import SearchSidebar from '../../components/citizen/SearchSidebar';
 import Pagination from '../../components/common/Pagination';
+import { ROUTES } from '../../utils/constants';
 import './LostPets.css';
 
 const LostPets = () => {
   const navigate = useNavigate();
+  
   const [filters, setFilters] = useState({
-    search: '',
     animal: '',
     area: '',
-    dateFrom: '',
     color: '',
-    months: '',
     breed: '',
   });
 
+  const [locationData, setLocationData] = useState(null);
+  const [showMap, setShowMap] = useState(false); // Default to list view
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const itemsPerPage = 9; // 3x3 grid
 
-  // Mock data - replace with actual data from API
+  // Mock lost pets data with coordinates
   const lostPets = [
-    {
-      id: 1,
-      name: 'Μιχαλάκης',
+    { 
+      id: 1, 
+      name: 'Μπάμπης', 
       type: 'Σκύλος',
-      breed: 'Golden Retriever',
-      area: 'Κήπος Αθηνών, Παλαιά Συντακτική',
+      breed: 'Golden Retriever', 
+      area: 'Κέντρο Αθήνας, Πλατεία Συντάγματος', 
+      dateLost: '05/11/2025',
       color: 'Χρυσαφί',
-      dateReported: '05/11/2025',
-      image: null,
+      lat: 37.9838,
+      lon: 23.7275,
     },
-    {
-      id: 2,
-      name: 'Φίλι',
+    { 
+      id: 2, 
+      name: 'Φιφή', 
       type: 'Γάτα',
-      breed: 'Μια - Γάτα Ταρίχι',
-      area: 'Θεσσαλονίκη, Καλαμαριά',
+      breed: 'Περσική', 
+      area: 'Θεσσαλονίκη, Καλαμαριά', 
+      dateLost: '10/11/2025',
       color: 'Λευκό',
-      dateReported: '05/11/2025',
-      image: null,
+      lat: 40.5828,
+      lon: 22.9425,
     },
-    {
-      id: 3,
-      name: 'Πάλι',
+    { 
+      id: 3, 
+      name: 'Ρεξ', 
       type: 'Σκύλος',
-      breed: 'Σκύλος - Λαμπραδόριος',
-      area: 'Πατρα, Κότορι',
+      breed: 'Λαμπραντόρ', 
+      area: 'Πάτρα, Κέντρο', 
+      dateLost: '08/11/2025',
       color: 'Μαύρο',
-      dateReported: '05/11/2025',
-      image: null,
+      lat: 38.2466,
+      lon: 21.7346,
     },
   ];
 
-  const itemsPerPage = 3;
+  const handleSelectChange = (name, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleLocationSelect = (location) => {
+    setLocationData(location);
+  };
+
+  const handleClear = () => {
+    setFilters({
+      animal: '',
+      area: '',
+      color: '',
+      breed: '',
+    });
+    setLocationData(null);
+  };
+
+  const handleMarkerClick = (pet) => {
+    setSelectedPet(selectedPet?.id === pet.id ? null : pet);
+  };
+
+  const handleViewDetails = (pet) => {
+    navigate(`/citizen/lost-pets/${pet.id}`);
+  };
+
+  // Calculate map center
+  const mapCenter = useMemo(() => {
+    if (locationData) {
+      return [parseFloat(locationData.lat), parseFloat(locationData.lon)];
+    }
+    return [37.9838, 23.7275]; // Default to Athens center
+  }, [locationData]);
+
+  const mapZoom = locationData ? 14 : 12;
+
+  // Pagination logic
   const totalPages = Math.ceil(lostPets.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedPets = lostPets.slice(startIndex, startIndex + itemsPerPage);
+  const endIndex = startIndex + itemsPerPage;
+  const currentPets = lostPets.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    setCurrentPage(1);
-  };
+  // Options for CustomSelect components
+  const animalOptions = [
+    { value: '', label: 'Επιλέξτε είδος...' },
+    { value: 'dog', label: 'Σκύλος' },
+    { value: 'cat', label: 'Γάτα' },
+    { value: 'other', label: 'Άλλο' }
+  ];
 
-  const handleSearch = () => {
-    // Implement search logic here
-    console.log('Searching with filters:', filters);
-  };
+  const colorOptions = [
+    { value: '', label: 'Επιλέξτε χρώμα...' },
+    { value: 'golden', label: 'Χρυσαφί' },
+    { value: 'black', label: 'Μαύρο' },
+    { value: 'white', label: 'Λευκό' },
+    { value: 'brown', label: 'Καφέ' }
+  ];
+
+  const breedOptions = [
+    { value: '', label: 'Επιλέξτε ράτσα...' },
+    { value: 'golden-retriever', label: 'Golden Retriever' },
+    { value: 'labrador', label: 'Λαμπραντόρ' },
+    { value: 'persian', label: 'Περσική' }
+  ];
+
+  const breadcrumbItems = [
+  ];
 
   return (
-    <PageLayout title="Χαμένα Κατοικίδια">
+    <PageLayout title="Χαμένα Κατοικίδια" breadcrumbs={breadcrumbItems}>
       <div className="lost-pets-page">
-        <div className="lost-pets-main">
-
-        {/* Page Title */}
-        <div className="page-header">
-          <h1 className="page-title">Χαμένα Κατοικίδια</h1>
-        </div>
-
-        {/* Filters Section */}
-        <div className="filters-section">
+        {/* Sidebar with filters */}
+        <SearchSidebar
+          title="Φίλτρα Αναζήτησης"
+          onSearch={() => {}}
+          onClear={handleClear}
+          resultsCount={lostPets.length}
+        >
+          {/* Location Filter */}
           <div className="filter-group">
-            <label className="filter-label">Φίλτρα Αναζήτησης</label>
-            <div className="filter-content">
-              <div className="search-bar-row">
-                <div className="search-bar">
-                  <input
-                    type="text"
-                    placeholder="Αναζήτηση ονόματος..."
-                    name="search"
-                    value={filters.search}
-                    onChange={handleFilterChange}
-                    className="search-input"
-                  />
-                </div>
-                <button className="search-button" onClick={handleSearch}>
-                  <Search size={16} />
-                  Αναζήτηση
-                </button>
-              </div>
+            <label className="filter-label">Τοποθεσία</label>
+            <LocationPicker
+              onLocationSelect={handleLocationSelect}
+              placeholder="Αναζήτηση περιοχής..."
+            />
+          </div>
 
-              <div className="filters-row-1">
-                <div className="filter-item">
-                  <label>Ζωο</label>
-                  <select name="animal" value={filters.animal} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="dog">Σκύλος</option>
-                    <option value="cat">Γάτα</option>
-                    <option value="other">Άλλο</option>
-                  </select>
-                </div>
+          {/* Animal Type Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Είδος Ζώου</label>
+            <CustomSelect
+              name="animal"
+              value={filters.animal}
+              onChange={(val) => handleSelectChange('animal', val)}
+              options={animalOptions}
+              variant="citizen"
+            />
+          </div>
 
-                <div className="filter-item">
-                  <label>Περιοχή</label>
-                  <select name="area" value={filters.area} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="athens">Αθήνα</option>
-                    <option value="thessaloniki">Θεσσαλονίκη</option>
-                    <option value="patras">Πάτρα</option>
-                  </select>
-                </div>
+          {/* Color Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Χρώμα</label>
+            <CustomSelect
+              name="color"
+              value={filters.color}
+              onChange={(val) => handleSelectChange('color', val)}
+              options={colorOptions}
+              variant="citizen"
+            />
+          </div>
 
-                <div className="filter-item">
-                  <label>Από Ημερομηνία</label>
-                  <input type="date" name="dateFrom" value={filters.dateFrom} onChange={handleFilterChange} />
-                </div>
-              </div>
+          {/* Breed Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Ράτσα</label>
+            <CustomSelect
+              name="breed"
+              value={filters.breed}
+              onChange={(val) => handleSelectChange('breed', val)}
+              options={breedOptions}
+              variant="citizen"
+            />
+          </div>
+        </SearchSidebar>
 
-              <div className="filters-row-2">
-                <div className="filter-item">
-                  <label>Χρώμα</label>
-                  <select name="color" value={filters.color} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="white">Λευκό</option>
-                    <option value="black">Μαύρο</option>
-                    <option value="brown">Καφέ</option>
-                    <option value="golden">Χρυσαφί</option>
-                  </select>
-                </div>
-
-                <div className="filter-item">
-                  <label>Μήνες</label>
-                  <select name="months" value={filters.months} onChange={handleFilterChange}>
-                    <option value="">Επιλέξτε...</option>
-                    <option value="1">1 μήνα</option>
-                    <option value="3">3 μήνες</option>
-                    <option value="6">6 μήνες</option>
-                  </select>
-                </div>
-
-                <button className="clear-button" onClick={() => {
-                  setFilters({
-                    search: '',
-                    animal: '',
-                    area: '',
-                    dateFrom: '',
-                    color: '',
-                    months: '',
-                    breed: '',
-                  });
-                }}>
-                  Καθαρισμός
-                </button>
-              </div>
-            </div>
-
-            <div className="results-info">
-              <span>Αποτελέσματα ({lostPets.length})</span>
+        {/* Main Content Area */}
+        <main className="lost-pets-container">
+          <div className="lost-pets-header">
+            <h2 className="lost-pets-title">Αποτελέσματα ({lostPets.length})</h2>
+            <div className="view-toggles">
+              <button 
+                className={`toggle-btn ${!showMap ? 'active' : ''}`} 
+                onClick={() => setShowMap(false)}
+              >
+                <List size={18} />
+                Λίστα
+              </button>
+              <button 
+                className={`toggle-btn ${showMap ? 'active' : ''}`} 
+                onClick={() => setShowMap(true)}
+              >
+                <MapPin size={18} />
+                Χάρτης
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* Results Grid */}
-        <div className="results-section">
-          <div className="pets-grid">
-            {displayedPets.map((pet) => (
-              <div key={pet.id} className="pet-card">
-                <div className="pet-image">
-                  {pet.image ? (
-                    <img src={pet.image} alt={pet.name} />
-                  ) : (
-                    <div className="pet-image-placeholder">
-                      <Camera size={48} />
+          {showMap ? (
+            <MapWithMarkers
+              center={mapCenter}
+              zoom={mapZoom}
+              markers={lostPets}
+              selectedId={selectedPet?.id}
+              onMarkerClick={handleMarkerClick}
+              height="600px"
+              onViewProfile={handleViewDetails}
+              popupContent={(pet) => (
+                <div className="popup-content">
+                  <h4 className="popup-name">{pet.name}</h4>
+                  <p className="popup-specialty">{pet.type} - {pet.breed}</p>
+                  <p className="popup-location">
+                    <MapPin size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                    {pet.area}
+                  </p>
+                  <p className="popup-date">Χάθηκε: {pet.dateLost}</p>
+                  <button className="popup-profile-btn" onClick={() => handleViewDetails(pet)}>
+                    Προβολή Λεπτομερειών
+                  </button>
+                </div>
+              )}
+            />
+          ) : (
+            <>
+              <div className="pets-grid">
+                {currentPets.map((pet) => (
+                  <div key={pet.id} className="pet-card">
+                    <div className="pet-card-image">
+                      <Dog size={48} color="#FCA47C" />
                     </div>
-                  )}
-                </div>
-                <div className="pet-info">
-                  <h3 className="pet-name">{pet.name}</h3>
-                  <p className="pet-type">{pet.type} - {pet.breed}</p>
-                  <div className="pet-details">
-                    <MapPin size={16} className="detail-icon" />
-                    <span className="detail-text">{pet.area}</span>
+                    <div className="pet-card-content">
+                      <h3 className="pet-card-name">{pet.name}</h3>
+                      <p className="pet-card-breed">{pet.type} - {pet.breed}</p>
+                      <div className="pet-card-info">
+                        <MapPin size={14} />
+                        <span>{pet.area}</span>
+                      </div>
+                      <p className="pet-card-date">Χάθηκε: {pet.dateLost}</p>
+                    </div>
+                    <button 
+                      className="pet-card-button"
+                      onClick={() => handleViewDetails(pet)}
+                    >
+                      Προβολή Λεπτομερειών
+                    </button>
                   </div>
-                  <div className="pet-date">
-                    <span className="date-label">Κάτηγορία:</span>
-                    <span className="date-value">{pet.dateReported}</span>
-                  </div>
-                </div>
-                <button 
-                  className="pet-profile-button"
-                  onClick={() => navigate(`/citizen/lost-pets/${pet.id}`)}
-                >
-                  Προφίλ Αγαπημένου
-                </button>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-          variant="citizen"
-        />
-        </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                variant="citizen"
+              />
+            </>
+          )}
+        </main>
       </div>
     </PageLayout>
   );
