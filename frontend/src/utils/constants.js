@@ -18,6 +18,7 @@ export const ROUTES = {
   owner: {
     dashboard: '/owner/dashboard',
     profile: '/owner/profile',
+    register: '/owner/register',
     pets: '/owner/pets',
     appointments: '/owner/appointments',
     lostPetForm: '/owner/lost-pet',

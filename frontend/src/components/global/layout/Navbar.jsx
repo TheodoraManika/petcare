@@ -10,35 +10,52 @@ import './Navbar.css';
  * @param {string} variant - 'vet' (default), 'owner', or 'citizen'
  */
 const Navbar = ({ variant = 'vet' }) => {
-  const isOwner = variant === 'owner';
-  const isCitizen = variant === 'citizen';
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
   const profileRef = useRef(null);
   const menuRef = useRef(null);
   const navigate = useNavigate();
 
-  // Get user data from localStorage or use default
+  // Initialize state by checking localStorage immediately
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      return !!storedUser;
+    } catch (error) {
+      console.error('Error checking login status:', error);
+      return false;
+    }
+  });
+
+  // Get user data and determine actual variant from localStorage
   const getUserData = () => {
     try {
       const storedUser = localStorage.getItem('currentUser');
       if (storedUser) {
         const userData = JSON.parse(storedUser);
         return {
-          name: userData.name || userData.username || (isOwner ? 'Ιδιοκτήτης' : 'Κτηνίατρος'),
+          name: userData.name || userData.username || 'User',
           avatar: userData.avatar || null,
+          userType: userData.userType || userData.role || variant,
         };
       }
     } catch (error) {
       console.error('Error retrieving user data:', error);
     }
     return {
-      name: isOwner ? 'Ιδιοκτήτης' : 'Κτηνίατρος',
+      name: 'User',
       avatar: null,
+      userType: variant,
     };
   };
 
   const user = getUserData();
+  
+  // Determine variant based on logged-in user type or prop
+  const actualVariant = isLoggedIn ? user.userType : variant;
+  const isOwner = actualVariant === 'owner';
+  const isCitizen = actualVariant === 'citizen';
+  
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -58,6 +75,38 @@ const Navbar = ({ variant = 'vet' }) => {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Listen for login status changes
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        setIsLoggedIn(!!storedUser);
+        // Force re-render to update user data
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          // Trigger re-render by updating state
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    const handleAuthChange = () => {
+      checkLoginStatus();
+      // Force component to re-evaluate user data
+      window.dispatchEvent(new Event('userDataChanged'));
+    };
+
+    window.addEventListener('loginStatusChanged', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('loginStatusChanged', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
+    };
   }, []);
 
   const menuItems = isOwner
@@ -157,7 +206,7 @@ const Navbar = ({ variant = 'vet' }) => {
               </Link>
             ))}
             
-            {!isCitizen && (
+            {isLoggedIn && !isCitizen && (
               /* Menu Dropdown */
               <div className="navbar__nav-dropdown" ref={menuRef}>
                 <button
@@ -189,11 +238,11 @@ const Navbar = ({ variant = 'vet' }) => {
           </div>
 
           {/* Citizen: Simple Login/Register Buttons or Authenticated: Profile Dropdown */}
-          {isCitizen ? (
+          {!isLoggedIn ? (
             <div className="navbar__auth-buttons">
               <button
                 className="navbar__auth-btn navbar__auth-btn--signin"
-                onClick={() => navigate(ROUTES.owner.dashboard)}
+                onClick={() => navigate(ROUTES.login)}
               >
                 <UserRound size={16} />
                 <span>Σύνδεση</span>
@@ -275,6 +324,8 @@ const Navbar = ({ variant = 'vet' }) => {
                     className="navbar__profile-menu-item navbar__profile-menu-item--logout"
                     onClick={() => {
                       setIsProfileOpen(false);
+                      localStorage.removeItem('currentUser');
+                      window.dispatchEvent(new Event('loginStatusChanged'));
                       navigate(ROUTES.home);
                     }}
                   >

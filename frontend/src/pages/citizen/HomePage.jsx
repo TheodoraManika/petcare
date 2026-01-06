@@ -70,7 +70,6 @@ const HomePage = () => {
       features: [
         'Αναζήτηση χαμένων κατοικιδίων',
         'Δήλωση εύρεσης κατοικιδίου',
-        'Αναζήτηση διαθέσιμων κτηνιάτρων',
       ],
       buttonText: 'Περισσότερα',
       buttonAction: () => navigate('/citizen/dashboard'),
@@ -155,7 +154,7 @@ const HomePage = () => {
             </button>
             <button 
               className="action-button lost-btn"
-              onClick={() => navigate(ROUTES.citizen.foundPetForm)}
+              onClick={() => navigate(ROUTES.vet.foundPetForm)}
             >
               <Search size={20} />
               <span>Δήλωση Εύρεσης</span>

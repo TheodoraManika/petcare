@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import Navbar from './Navbar';
@@ -15,7 +15,7 @@ import './PageLayout.css';
  *                                     If provided, breadcrumb hierarchy is: Home > breadcrumbs[0] > breadcrumbs[1] > ... > title
  * @param {boolean} props.showBreadcrumbs - Whether to show breadcrumbs (default: true)
  */
-const PageLayout = ({ children, title, breadcrumbs, showBreadcrumbs = true }) => {
+const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = true }) => {
   // Initialize state by checking localStorage immediately
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     try {

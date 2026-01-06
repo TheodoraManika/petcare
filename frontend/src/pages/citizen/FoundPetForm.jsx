@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Upload, AlertCircle, Check } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import LocationPicker from '../../components/common/LocationPicker';
+import CustomSelect from '../../components/common/CustomSelect';
 import './FoundPetForm.css';
 
 const FoundPetForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Determine variant based on route
+  const getVariant = () => {
+    if (location.pathname.includes('/owner/')) return 'owner';
+    if (location.pathname.includes('/vet/')) return 'vet';
+    return 'citizen';
+  };
+  
+  const variant = getVariant();
   const [formData, setFormData] = useState({
     identificationMark: '',
     species: '',
@@ -85,7 +96,7 @@ const FoundPetForm = () => {
   ];
 
   return (
-    <PageLayout title="Δήλωση Εύρεσης Κατοικιδίου">
+    <PageLayout title="Δήλωση Εύρεσης Κατοικιδίου" variant={variant}>
       <div className="found-pet-form">
         <div className="form-header">
           <h1 className="form-title">Δήλωση Εύρεσης Κατοικιδίου</h1>

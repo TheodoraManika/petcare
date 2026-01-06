@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // Owner Pages
 import OwnerDashboard from './pages/owner/Dashboard';
 import OwnerProfile from './pages/owner/Profile';
+import OwnerRegisterPage from './pages/owner/OwnerRegisterPage';
 import OwnerLostPet from './pages/owner/LostPet';
 import OwnerHealthBook from './pages/owner/HealthBook';
 import OwnerPetDetail from './pages/owner/PetDetail';
@@ -25,7 +26,7 @@ import VetProfile from './pages/citizen/VetProfile';
 import Dashboard from './pages/vet/Dashboard';
 import Profile from './pages/vet/Profile';
 import Reviews from './pages/vet/Reviews';
-import Register from './pages/vet/Register';
+import VetRegisterPage from './pages/vet/VetRegisterPage';
 import Operation from './pages/vet/Operation';
 import Availability from './pages/vet/Availability';
 import Transfer from './pages/vet/Transfer';
@@ -38,6 +39,7 @@ import LostPet from './pages/vet/LostPet';
 import Appointments from './pages/vet/Appointments';
 
 // Common Pages
+import LoginPage from './pages/common/LoginPage';
 import ConfirmationPage from './pages/common/ConfirmationPage';
 import AboutPage from './pages/common/AboutPage';
 import ContactPage from './pages/common/ContactPage';
@@ -58,7 +60,9 @@ function App() {
         {/* Owner Routes */}
         <Route path={ROUTES.owner.dashboard} element={<OwnerDashboard />} />
         <Route path={ROUTES.owner.profile} element={<OwnerProfile />} />
+        <Route path={ROUTES.owner.register} element={<OwnerRegisterPage />} />
         <Route path={ROUTES.owner.lostPetForm} element={<OwnerLostPet />} />
+        <Route path={ROUTES.owner.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path={ROUTES.owner.pets} element={<OwnerHealthBook />} />
         <Route path={`${ROUTES.owner.pets}/:petId`} element={<OwnerPetDetail />} />
         <Route path={ROUTES.owner.appointments} element={<OwnerAppointments />} />
@@ -76,11 +80,10 @@ function App() {
         <Route path="/vet-profile/:vetId" element={<VetProfile />} />
 
         {/* Vet Routes */}
-        <Route path={ROUTES.vet.register} element={<VetRegisterPage />} />
-        <Route path="/vet/dashboard" element={<Dashboard />} />
+        <Route path={ROUTES.vet.dashboard} element={<Dashboard />} />
         <Route path={ROUTES.vet.profile} element={<Profile />} />
         <Route path={ROUTES.vet.reviews} element={<Reviews />} />
-        <Route path={ROUTES.vet.register} element={<Register />} />
+        <Route path={ROUTES.vet.register} element={<VetRegisterPage />} />
         <Route path={ROUTES.vet.operation} element={<Operation />} />
         <Route path={ROUTES.vet.availability} element={<Availability />} />
         <Route path={ROUTES.vet.appointments} element={<Appointments />} />
@@ -91,8 +94,10 @@ function App() {
         <Route path={ROUTES.vet.history} element={<History />} />
         <Route path={`${ROUTES.vet.history}/:id`} element={<HistoryDetail />} />
         <Route path={ROUTES.vet.lostPetForm} element={<LostPet />} />
+        <Route path={ROUTES.vet.foundPetForm} element={<CitizenFoundPetForm />} />
 
         {/* Common Pages */}
+        <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />
         <Route path={ROUTES.about} element={<AboutPage />} />
         <Route path={ROUTES.contact} element={<ContactPage />} />
