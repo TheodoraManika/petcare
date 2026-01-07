@@ -4,12 +4,13 @@
   color: #000;
   padding: var(--spacing-2xl) var(--spacing-lg);
   width: 100%;
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
   margin-left: 0;
 }
 
 .footer--shifted {
   margin-left: 240px;
+  width: calc(100% - 240px);
 }
 
 .footer__container {
