@@ -56,6 +56,8 @@ const Navbar = ({ variant = 'vet' }) => {
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
+  const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
+  const infoRef = useRef(null);
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -122,21 +124,24 @@ const Navbar = ({ variant = 'vet' }) => {
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-        { to: ROUTES.home, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : isOwner
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-        { to: ROUTES.owner.info, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
         { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-        { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ];
+
+  const infoOptions = [
+    { label: 'Ιδιοκτήτης', path: '/owner/information', icon: <Users size={16} /> },
+    { label: 'Κτηνίατρος', path: '/vet/information', icon: <Stethoscope size={16} /> },
+    { label: 'Πολίτης', path: '/citizen/information', icon: <UserRound size={16} /> },
+  ];
 
   return (
     <nav className={`navbar ${isOwner ? 'navbar--owner' : ''}`}>
@@ -193,7 +198,60 @@ const Navbar = ({ variant = 'vet' }) => {
               </Link>
             ))}
             
-            {/* Menu Dropdown removed - now using Sidebar for both vet and owner */}
+            {/* Information Dropdown */}
+            <div className="navbar__nav-dropdown navbar__info-dropdown" ref={infoRef}>
+              <button
+                className="navbar__nav-link navbar__nav-link--dropdown"
+                aria-haspopup="true"
+              >
+                <Info size={18} />
+                <span>Πληροφορίες</span>
+                <ChevronDown className="navbar__dropdown-chevron" size={16} />
+              </button>
+              
+              <div className="navbar__nav-dropdown-menu navbar__info-dropdown-menu">
+                {infoOptions.map((option, index) => (
+                  <Link
+                    key={index}
+                    to={option.path}
+                    className="navbar__nav-dropdown-item navbar__info-option"
+                  >
+                    <span className="navbar__nav-dropdown-icon">{option.icon}</span>
+                    <span>{option.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            {isLoggedIn && !isCitizen && (
+              /* Menu Dropdown */
+              <div className="navbar__nav-dropdown" ref={menuRef}>
+                <button
+                  className="navbar__nav-link navbar__nav-link--dropdown"
+                  onClick={handleMenuClick}
+                  aria-haspopup="true"
+                >
+                  <Menu size={18} />
+                  <span>Μενού</span>
+                  <ChevronDown className="navbar__dropdown-chevron" size={16} />
+                </button>
+                
+                <div className="navbar__nav-dropdown-menu">
+                  {menuItems.map((item, index) => (
+                    <button
+                      key={index}
+                      className="navbar__nav-dropdown-item"
+                      onClick={() => {
+                        navigate(item.route);
+                      }}
+                    >
+                      <span className="navbar__nav-dropdown-icon">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Citizen: Simple Login/Register Buttons or Authenticated: Profile Dropdown */}

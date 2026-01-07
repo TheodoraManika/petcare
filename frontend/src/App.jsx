@@ -21,6 +21,7 @@ import LostPets from './pages/citizen/LostPets';
 import CitizenFoundPetForm from './pages/citizen/FoundPetForm';
 import VetSearchMap from './pages/citizen/VetSearchMap';
 import VetProfile from './pages/citizen/VetProfile';
+import CitizenInformation from './pages/citizen/CitizenInformation';
 
 // Vet Pages
 import Dashboard from './pages/vet/Dashboard';
@@ -49,6 +50,8 @@ import PrivacyPage from './pages/common/PrivacyPage';
 import TermsPage from './pages/common/TermsPage';
 import CookiesPage from './pages/common/CookiesPage';
 import InformationPage from './pages/common/InformationPage';
+import OwnerInformation from './pages/owner/OwnerInformation';
+import VetInformation from './pages/vet/VetInformation';
 
 import { ROUTES } from './utils/constants';
 
@@ -73,6 +76,7 @@ function App() {
         <Route path={ROUTES.owner.lostHistory} element={<OwnerLostPetHistory />} />
         <Route path={`${ROUTES.owner.lostHistory}/:declarationId`} element={<OwnerLostPetHistoryDetail />} />
         <Route path={`${ROUTES.owner.lostHistory}/:declarationId/edit`} element={<OwnerLostPetHistoryEdit />} />
+        <Route path="/owner/information" element={<OwnerInformation />} />
 
         {/* Citizen Routes */}
         <Route path={ROUTES.home} element={<HomePage />} />
@@ -80,6 +84,7 @@ function App() {
         <Route path={ROUTES.citizen.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path={ROUTES.citizen.searchMap} element={<VetSearchMap />} />
         <Route path="/vet-profile/:vetId" element={<VetProfile />} />
+        <Route path="/citizen/information" element={<CitizenInformation />} />
 
         {/* Vet Routes */}
         <Route path={ROUTES.vet.dashboard} element={<Dashboard />} />
@@ -98,6 +103,7 @@ function App() {
         <Route path={`${ROUTES.vet.history}/:id`} element={<HistoryDetail />} />
         <Route path={ROUTES.vet.lostPetForm} element={<LostPet />} />
         <Route path={ROUTES.vet.foundPetForm} element={<CitizenFoundPetForm />} />
+        <Route path="/vet/information" element={<VetInformation />} />
 
         {/* Common Pages */}
         <Route path={ROUTES.login} element={<LoginPage />} />
