@@ -18,7 +18,7 @@ const Sidebar = ({ variant = 'vet' }) => {
     { icon: <FileText size={20} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
     { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
     { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
-    { icon: <Calendar size={20} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },
+    { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },
     { icon: <Clock size={20} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
     { 
       icon: <PawPrint size={20} />, 
@@ -31,7 +31,8 @@ const Sidebar = ({ variant = 'vet' }) => {
         { label: 'Αναδοχή', route: ROUTES.vet.foster },
       ]
     },
-    { icon: <AlertCircle size={20} />, label: 'Απώλεια', route: ROUTES.vet.lostPetForm },
+    { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
+    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.vet.foundPetForm },
   ];
 
   const ownerMenuItems = [
