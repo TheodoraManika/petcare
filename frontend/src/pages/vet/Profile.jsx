@@ -15,13 +15,15 @@ const Profile = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  
+  // Original data that won't change unless saved
+  const [originalData, setOriginalData] = useState({
     firstName: 'Γιάννης',
     lastName: 'Πετρίδης',
     email: 'john@example.com',
     phone: '6912345678',
     vetLicense: 'VET12345',
-    specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'], // Changed to array
+    specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'],
     yearsOfExperience: '5',
     clinicName: 'Κτηνιατρικό Κέντρο Γέρακα',
     address: 'Ερμού 8, 15344',
@@ -29,6 +31,9 @@ const Profile = () => {
     university: 'Γεωπονικό Πανεπιστήμιο Αθηνών',
     bio: '',
   });
+  
+  // Working copy for editing
+  const [formData, setFormData] = useState({...originalData});
 
   const specialtyOptions = [
     { value: 'Γενική Κτηνιατρική', label: 'Γενική Κτηνιατρική' },
@@ -65,7 +70,8 @@ const Profile = () => {
   const handleConfirmCancel = () => {
     setIsEditing(false);
     setShowCancelModal(false);
-    // Optionally reset form data here
+    // Reset form data to original values
+    setFormData({...originalData});
   };
 
   const handleCancelCancel = () => {
@@ -96,6 +102,8 @@ const Profile = () => {
     e.preventDefault();
     // Handle form submission logic here
     console.log('Form submitted:', formData);
+    // Save the changes to originalData
+    setOriginalData({...formData});
     setIsEditing(false);
     setShowSaveSuccessModal(true);
   };
