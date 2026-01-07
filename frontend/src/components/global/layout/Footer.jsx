@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSidebar } from '../../../context/SidebarContext';
 import './Footer.css';
 import { ROUTES } from '../../../utils/constants';
 
@@ -7,8 +8,10 @@ import { ROUTES } from '../../../utils/constants';
  * Footer component
  */
 const Footer = () => {
+  const { isOpen } = useSidebar();
+  
   return (
-    <footer className="footer">
+    <footer className={`footer ${isOpen ? 'footer--shifted' : ''}`}>
       <div className="footer__container">
         <div className="footer__content">
           <div className="footer__brand">
