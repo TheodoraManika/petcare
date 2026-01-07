@@ -109,23 +109,13 @@ const Navbar = ({ variant = 'vet' }) => {
     };
   }, []);
 
-  const menuItems = isOwner
-    ? [
-        { icon: <FileText size={18} />, label: 'Βιβλιάριο', route: ROUTES.owner.pets },
-        { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.owner.appointments },
-        { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.owner.lostPetForm },
-        { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
-      ]
-    : [
-        { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
-        { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
-        { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
-        { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },
-        { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.vet.appointments },
-        { icon: <Clock size={18} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
-        { icon: <PawPrint size={18} />, label: 'Συμβάντα Ζωής', route: ROUTES.vet.lifeEvents },
-        { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.vet.lostPetForm },
-      ];
+  // Menu items only for owner (vet uses sidebar)
+  const menuItems = [
+    { icon: <FileText size={18} />, label: 'Βιβλιάριο', route: ROUTES.owner.pets },
+    { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.owner.appointments },
+    { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.owner.lostPetForm },
+    { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
+  ];
 
   const navLinks = isCitizen
     ? [
@@ -206,8 +196,8 @@ const Navbar = ({ variant = 'vet' }) => {
               </Link>
             ))}
             
-            {isLoggedIn && !isCitizen && (
-              /* Menu Dropdown */
+            {isLoggedIn && isOwner && (
+              /* Menu Dropdown - Only for Owner */
               <div className="navbar__nav-dropdown" ref={menuRef}>
                 <button
                   className="navbar__nav-link navbar__nav-link--dropdown"

@@ -1,5 +1,6 @@
 // /src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SidebarProvider } from './context/SidebarContext';
 
 // Owner Pages
 import OwnerDashboard from './pages/owner/Dashboard';
@@ -54,10 +55,11 @@ import { ROUTES } from './utils/constants';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Redirect root to home page */}
-        <Route path="/" element={<HomePage />} />
+    <SidebarProvider>
+      <Router>
+        <Routes>
+          {/* Redirect root to home page */}
+          <Route path="/" element={<HomePage />} />
 
         {/* Owner Routes */}
         <Route path={ROUTES.owner.dashboard} element={<OwnerDashboard />} />
@@ -114,6 +116,7 @@ function App() {
         <Route path="*" element={<Navigate to="/owner/dashboard" replace />} />
       </Routes>
     </Router>
+    </SidebarProvider>
   );
 }
 
