@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSidebar } from '../../../context/SidebarContext';
 import './Footer.css';
@@ -8,10 +8,76 @@ import { ROUTES } from '../../../utils/constants';
  * Footer component
  */
 const Footer = () => {
-  const { isOpen } = useSidebar();
+  // Try to use sidebar context, but provide fallback if not available
+  let sidebarState = { isOpen: false };
+  try {
+    sidebarState = useSidebar();
+  } catch (error) {
+    // Context not available
+  }
+  
+  const { isOpen } = sidebarState;
+
+  // Check if user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      return !!storedUser;
+    } catch (error) {
+      return false;
+    }
+  });
+
+  // Get user type
+  const getUserType = () => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        return userData.userType || userData.role;
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  };
+
+  const [userType, setUserType] = useState(getUserType());
+  const showSidebar = isLoggedIn && (userType === 'vet' || userType === 'owner');
+
+  // Listen for login status changes
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        setIsLoggedIn(!!storedUser);
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          setUserType(userData.userType || userData.role);
+        } else {
+          setUserType(null);
+        }
+      } catch (error) {
+        setIsLoggedIn(false);
+        setUserType(null);
+      }
+    };
+
+    const handleAuthChange = () => {
+      checkLoginStatus();
+    };
+
+    window.addEventListener('loginStatusChanged', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('loginStatusChanged', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
+    };
+  }, []);
   
   return (
-    <footer className={`footer ${isOpen ? 'footer--shifted' : ''}`}>
+    <footer className={`footer ${showSidebar && isOpen ? 'footer--shifted' : ''}`}>
       <div className="footer__container">
         <div className="footer__content">
           <div className="footer__brand">

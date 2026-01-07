@@ -277,7 +277,6 @@ const FoundPetForm = () => {
   const hasPrefilledData = Object.keys(prefilledPetData).length > 0;
 
   const breadcrumbItems = [
-    { label: 'Αρχική', path: '/' },
     { label: 'Χαμένα Κατοικίδια', path: '/citizen/lost-pets' },
   ];
 

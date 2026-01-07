@@ -222,36 +222,7 @@ const Navbar = ({ variant = 'vet' }) => {
                 ))}
               </div>
             </div>
-            
-            {isLoggedIn && !isCitizen && (
-              /* Menu Dropdown */
-              <div className="navbar__nav-dropdown" ref={menuRef}>
-                <button
-                  className="navbar__nav-link navbar__nav-link--dropdown"
-                  onClick={handleMenuClick}
-                  aria-haspopup="true"
-                >
-                  <Menu size={18} />
-                  <span>Μενού</span>
-                  <ChevronDown className="navbar__dropdown-chevron" size={16} />
-                </button>
-                
-                <div className="navbar__nav-dropdown-menu">
-                  {menuItems.map((item, index) => (
-                    <button
-                      key={index}
-                      className="navbar__nav-dropdown-item"
-                      onClick={() => {
-                        navigate(item.route);
-                      }}
-                    >
-                      <span className="navbar__nav-dropdown-icon">{item.icon}</span>
-                      <span>{item.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+
           </div>
 
           {/* Citizen: Simple Login/Register Buttons or Authenticated: Profile Dropdown */}

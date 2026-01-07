@@ -305,6 +305,52 @@
   max-width: 340px;
 }
 
+
+/* Hero text block (right column of hero) */
+.lost-pets-hero__text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  color: #101727;
+  padding: 8px 12px;
+  max-width: 480px;
+}
+
+.hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  line-height: 1.05;
+}
+
+.hero-description {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+  max-width: 480px;
+}
+
+/* Ensure carousel keeps visible space */
+.lost-pets-hero__carousel {
+  min-width: 420px;
+}
+
+@media (max-width: 900px) {
+  .lost-pets-hero__container {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+  .lost-pets-hero__text {
+    order: 2;
+    margin-top: 12px;
+  }
+  .hero-title {
+    font-size: 22px;
+  }
+}
 .vet-search-header {
   display: flex;
   align-items: center;
@@ -612,7 +658,7 @@
 
 
 /* Search Panel Content */
-.hero-search-content {
+.found-pet-container {
   background: #ffffff;
   border-radius: 16px;
   padding: 32px;
@@ -623,86 +669,21 @@
   text-align: left;
 }
 
-.hero-search-title {
+.found-pet-title {
   font-size: 26px;
   font-weight: 700;
   color: #2c3e50;
   margin: 0 0 8px 0;
 }
 
-.hero-search-subtitle {
+.found-pet-subtitle {
   font-size: 15px;
   color: #6b7280;
   margin: 0 0 24px 0;
 }
 
-.hero-search-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.hero-field {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #F9FAFB;
-  border: 2px solid #E5E7EB;
-  border-radius: 12px;
-  padding: 14px 18px;
-  transition: all 0.2s ease;
-}
-
-.hero-field:focus-within {
-  border-color: #23CED9;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(35, 206, 217, 0.1);
-}
-
-.hero-field-icon {
-  color: #9CA3AF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.hero-field:focus-within .hero-field-icon {
-  color: #23CED9;
-}
-
-.hero-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: 15px;
-  color: #1f2937;
-  outline: none;
-}
-
-.hero-input::placeholder {
-  color: #9CA3AF;
-}
-
-.hero-select {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: 15px;
-  color: #1f2937;
-  outline: none;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.hero-select option {
-  padding: 8px;
-}
-
 /* CTA Button */
-.hero-cta-button {
+.found-pet-cta-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -719,16 +700,16 @@
   transition: all 0.3s ease;
 }
 
-.hero-cta-button:hover {
+.found-pet-cta-button:hover {
   transform: translateY(-3px);
   background: #fca47ce3;
 }
 
-.hero-cta-button:active {
+.found-pet-cta-button:active {
   transform: translateY(0);
 }
 
-.hero-search-note {
+.found-pet-note {
   font-size: 12px;
   color: #9CA3AF;
   text-align: center;
@@ -1113,13 +1094,14 @@ select.search-input option {
 .user-types-container {
   display: flex;
   gap: 24px;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .user-type-card {
   background-color: #ffffff;
-  flex: 1;
-  max-width: 390px;
+  flex: 1 1 48%;
+  max-width: 580px;
   display: flex;
   flex-direction: column;
   padding: 28px;
@@ -1252,6 +1234,7 @@ select.search-input option {
 
 /* Card Auth Buttons */
 .card-auth-buttons {
+  padding-top: 40px;
   display: flex;
   gap: 12px;
   margin-top: auto;
@@ -1293,12 +1276,12 @@ select.search-input option {
 }
 
 .cyan-signup {
-  background: linear-gradient(135deg, #23CED9 0%, #1AB8C3 100%);
+  background: #23CED9;
+  color: #000000;
 }
 
 .cyan-signup:hover {
-  box-shadow: 0 6px 20px rgba(35, 206, 217, 0.35);
-  transform: translateY(-2px);
+  background: #1AB8C3;
 }
 
 /* Orange card buttons */
@@ -1312,12 +1295,12 @@ select.search-input option {
 }
 
 .orange-signup {
-  background: linear-gradient(135deg, #FCA47C 0%, #F97316 100%);
+  background: #FCA47C;
+  color: #000000;
 }
 
 .orange-signup:hover {
-  box-shadow: 0 6px 20px rgba(252, 164, 124, 0.35);
-  transform: translateY(-2px);
+  background: #F97316;
 }
 
 /* Yellow card buttons */
@@ -1331,13 +1314,12 @@ select.search-input option {
 }
 
 .yellow-signup {
-  background: linear-gradient(135deg, #F9D779 0%, #EAB308 100%);
-  color: #1f2937;
+  background: #F9D779;
+  color: #000000;
 }
 
 .yellow-signup:hover {
-  box-shadow: 0 6px 20px rgba(234, 179, 8, 0.35);
-  transform: translateY(-2px);
+  background: #EAB308;
 }
 
 /* Features Section */
@@ -1712,6 +1694,293 @@ select.search-input option {
   .hero-search-content {
     padding: 20px;
   }
+}
+
+/* ==========================================
+   VETS SECTION (NEW CARD LAYOUT)
+   ========================================== */
+.vets-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.vets-section__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101727;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  justify-content: space-between;
+}
+
+.vets-section__icon {
+  color: #FCA47C;
+}
+
+.vets-section__title h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101727;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+  margin-left: 10px;
+}
+
+.vets-section__search-btn {
+  background: #FCA47C;
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.vets-section__search-btn:hover {
+  transform: translateY(-2px);
+  background: #F97316;
+}
+
+.vets-container {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.vet-card {
+  background-color: #ffffff;
+  flex: 1;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border-radius: 16px;
+  border-width: 2px;
+  border-style: solid;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.vet-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.vet-card__avatar-circle {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #FCA47C;
+}
+
+.vet-card__specialty-text {
+  font-size: 14px;
+  color: #FCA47C;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.vet-card__location-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.vet-card__rating-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 20px 0;
+  flex-wrap: wrap;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.rating-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.reviews-count {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.vet-card__view-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  color: #ffffff;
+  margin-top: auto;
+}
+
+/* Found Actions Section */
+.found-actions-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 24px auto 0;
+  padding: 0 16px;
+}
+
+.found-actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: transparent;
+}
+
+.found-actions-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.found-actions-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.found-action-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.found-action-btn.ghost-btn {
+  background: #ffffff;
+  border: 2px solid #E5E7EB;
+  color: #1f2937;
+}
+
+.found-action-btn.primary-btn {
+  background: linear-gradient(135deg, #23CED9 0%, #1AB8C3 100%);
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .found-actions-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .found-actions-buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Reuse LostPets report-card compact styles for buttons */
+.report-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 32px 28px;
+  border: 2px solid #D1D5DB;
+  border-radius: 12px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  min-height: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.report-card--compact {
+  padding: 16px;
+  min-height: unset;
+}
+
+.report-card:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.report-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 2px solid #23CED9;
+  background-color: rgba(35, 206, 217, 0.1);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.report-card:hover .report-card__icon {
+  border-color: #7DD3DC;
+  background-color: rgba(35, 206, 217, 0.25);
+  box-shadow: none;
+}
+
+.report-card__icon svg {
+  color: #23CED9;
+  transition: color 0.2s ease;
+}
+
+.report-card:hover .report-card__icon svg {
+  color: #7DD3DC;
+}
+
+.report-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.report-card__description {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
 }
 
 /* Legacy Hero Responsive */

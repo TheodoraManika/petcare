@@ -4,6 +4,8 @@
   grid-template-columns: 350px 700px 350px;
   column-gap: 16px;
   padding: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
   min-height: calc(100vh - 200px);
   position: relative;
   align-items: start;
