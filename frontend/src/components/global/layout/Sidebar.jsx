@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig } from 'lucide-react';
 import { useSidebar } from '../../../context/SidebarContext';
 import { ROUTES } from '../../../utils/constants';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ variant = 'vet' }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isOpen, toggleSidebar } = useSidebar();
   const [isLifeEventsOpen, setIsLifeEventsOpen] = useState(false);
 
-  const menuItems = [
+  const vetMenuItems = [
     { icon: <UserRound size={20} />, label: 'Προφίλ', route: ROUTES.vet.profile },
-    { icon: <House size={20} />, label: 'Αρχική Ιδιοκτήτη', route: ROUTES.vet.dashboard },
+    { icon: <House size={20} />, label: 'Αρχική Κτηνίατρου', route: ROUTES.vet.dashboard },
     { icon: <CirclePlus size={20} />, label: 'Καταγραφή', route: ROUTES.vet.registerpet },
     { icon: <FileText size={20} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
     { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
@@ -34,6 +34,19 @@ const Sidebar = () => {
     { icon: <AlertCircle size={20} />, label: 'Απώλεια', route: ROUTES.vet.lostPetForm },
   ];
 
+  const ownerMenuItems = [
+    { icon: <UserRound size={20} />, label: 'Προφίλ', route: ROUTES.owner.profile },
+    { icon: <House size={20} />, label: 'Αρχική Ιδιοκτήτη', route: ROUTES.owner.dashboard },
+    { icon: <FileText size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.owner.pets },
+    { icon: <Calendar size={20} />, label: 'Τα Ραντεβού μου', route: ROUTES.owner.appointments },
+    { icon: <Search size={20} />, label: 'Αναζήτηση Κτηνιάτρων', route: ROUTES.citizen.searchMap },
+    { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.owner.lostPetForm },
+    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.owner.foundPetForm },
+    { icon: <History size={20} />, label: 'Ιστορικό Δηλώσεων', route: ROUTES.owner.lostHistory },
+  ];
+
+  const menuItems = variant === 'owner' ? ownerMenuItems : vetMenuItems;
+
   const isActive = (route) => {
     return location.pathname === route;
   };
@@ -49,7 +62,7 @@ const Sidebar = () => {
     <>
       {/* Toggle Button */}
       <button 
-        className="sidebar__toggle" 
+        className={`sidebar__toggle ${variant === 'owner' ? 'sidebar__toggle--owner' : ''}`}
         onClick={toggleSidebar}
         aria-label={isOpen ? 'Κλείσιμο μενού' : 'Άνοιγμα μενού'}
       >
@@ -57,7 +70,7 @@ const Sidebar = () => {
       </button>
 
       {/* Sidebar */}
-      <aside className={`sidebar ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
+      <aside className={`sidebar ${variant === 'owner' ? 'sidebar--owner' : ''} ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
         <div className="sidebar__container">
           <nav className="sidebar__nav">
             {menuItems.map((item, index) => (
