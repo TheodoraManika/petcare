@@ -33,11 +33,23 @@
   border-radius: 16px;
   position: relative;
   box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
+  overflow: visible;
   margin: 0 auto;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-image: url('/Main Page Photo.png');
   background-size: cover;
   background-position: center;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .hero-section::before {
@@ -48,6 +60,7 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(90deg, rgba(139, 228, 254, 0.8) 0%, rgba(139, 228, 254, 0.5) 40%, rgba(139, 228, 254, 0) 100%);
+  border-radius: 16px;
   z-index: 1;
 }
 
@@ -235,7 +248,7 @@ select.search-input option {
   height: 48px;
   border: none;
   border-radius: 20px;
-  color: #ffffff;
+  color: #000000;
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -334,7 +347,7 @@ select.search-input option {
   padding: 12px 32px;
   border: none;
   border-radius: 10px;
-  color: #101727;
+  color: #000000;
   font-family: inherit;
   font-size: 16px;
   font-weight: 500;
@@ -356,14 +369,14 @@ select.search-input option {
   background-color: #FCA47C;
   width: auto;
   padding: 12px 28px;
-  color: #101828;
+  color: #000000;
 }
 
 .lost-btn {
   background-color: #F9D779;
   width: auto;
   padding: 12px 28px;
-  color: #101828;
+  color: #000000;
 }
 
 .action-button:hover {
@@ -514,7 +527,7 @@ select.search-input option {
   height: 40px;
   border: none;
   border-radius: 4px;
-  color: #101727;
+  color: #000000;
   font-family: inherit;
   font-size: 16px;
   font-weight: 400;
@@ -528,12 +541,12 @@ select.search-input option {
 
 .orange-button {
   background-color: rgba(252, 164, 124, 1);
-  color: #101828;
+  color: #000000;
 }
 
 .yellow-button {
   background-color: rgba(249, 215, 121, 1);
-  color: #101828;
+  color: #000000;
 }
 
 .card-button:hover {

@@ -154,6 +154,7 @@ const LostPets = () => {
             <LocationPicker
               onLocationSelect={handleLocationSelect}
               placeholder="Αναζήτηση περιοχής..."
+              variant="citizen"
             />
           </div>
 

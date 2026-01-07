@@ -40,12 +40,12 @@ const HealthBook = () => {
       <div className="owner-health-book">
         <div className="owner-health-book__header">
         </div>
+        <h1 className="owner-health-book__title">Βιβλιάριο Υγείας Κατοικιδίων</h1>
+        <p className="owner-health-book__subtitle">
+          Προβολή και εκτύπωση των στοιχείων των κατοικιδίων σας
+        </p>
 
         <div className="owner-health-book__content">
-          <h1 className="owner-health-book__title">Βιβλιάριο Υγείας Κατοικιδίων</h1>
-          <p className="owner-health-book__subtitle">
-            Προβολή και εκτύπωση των στοιχείων των κατοικιδίων σας
-          </p>
 
           <div className="owner-health-book__pets">
             {userPets.map((pet) => (

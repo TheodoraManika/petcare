@@ -34,13 +34,15 @@
 
 .location-picker__input {
   width: 100%;
-  padding: 0.75rem 2.75rem 0.75rem 2.75rem;
+  padding: 12px 16px;
   border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 14px;
   outline: none;
   transition: all 0.2s ease;
   background: white;
+  padding-left: 2.75rem;
+  padding-right: 2.75rem;
 }
 
 .location-picker__input:focus {

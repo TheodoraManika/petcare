@@ -134,79 +134,105 @@ const FoundPetForm = () => {
     }
   };
 
+  const isFormValid = () => {
+    return (
+      formData.foundLocation.trim() !== '' &&
+      formData.foundDate.trim() !== '' &&
+      formData.firstName.trim() !== '' &&
+      formData.lastName.trim() !== '' &&
+      formData.email.trim() !== '' &&
+      formData.phone.trim() !== '' &&
+      (!hasPrefilledData && formData.description.trim() !== '' || hasPrefilledData)
+    );
+  };
+
+  const handleClearPrefilledData = () => {
+    setSelectedOwnPet('');
+    setPrefilledPetData({});
+  };
+
   const hasPrefilledData = Object.keys(prefilledPetData).length > 0;
 
   return (
     <PageLayout title="Δήλωση Εύρεσης Κατοικιδίου" variant={variant}>
-      <div className="found-pet-form">
+      <div className={`found-pet-form found-pet-form--${variant}`}>
+        <h1 className="form-title">Δήλωση Εύρεσης Κατοικιδίου</h1>
+        <p className="form-subtitle">
+          Βρήκατε ένα χαμένο κατοικίδιο; Συμπληρώστε τη φόρμα για να βοηθήσετε την επιστροφή του στους ιδιοκτήτες
+        </p>
         <div className="form-header">
-          <h1 className="form-title">Δήλωση Εύρεσης Κατοικιδίου</h1>
-          <p className="form-subtitle">
-            Βρήκατε ένα χαμένο κατοικίδιο; Συμπληρώστε τη φόρμα για να βοηθήσετε την επιστροφή του στους ιδιοκτήτες
-          </p>
         </div>
 
-        {/* Owner Pet Selection */}
-        {isOwner && (
-          <div className="owner-pet-selection">
-            <label className="form-label">
-              Επιλέξτε κατοικίδιο
-            </label>
-            <CustomSelect
-              value={selectedOwnPet}
-              onChange={handleOwnPetSelect}
-              placeholder="Επιλέξτε ένα από τα κατοικίδιά σας"
-              options={userPets}
-              variant={variant}
-            />
-          </div>
-        )}
+        <form onSubmit={handleSubmit} className="form-container">
+          {/* Owner Pet Selection */}
+          {isOwner && !hasPrefilledData && (
+            <div className="owner-pet-selection">
+              <label className="form-label">
+                Επιλέξτε κατοικίδιο
+              </label>
+              <CustomSelect
+                value={selectedOwnPet}
+                onChange={handleOwnPetSelect}
+                placeholder="Επιλέξτε ένα από τα κατοικίδιά σας"
+                options={userPets}
+                variant={variant}
+              />
+            </div>
+          )}
 
-        {/* Prefilled Pet Info Card */}
-        {hasPrefilledData && (
-          <div className="lost-pet-info-card">
-            <div className="pet-card-container">
-              <div className="pet-card-image">🐕</div>
-              <div className="pet-card-details">
-                <h3 className="pet-card-title">Στοιχεία Χαμένου Κατοικιδίου</h3>
-                <div className="pet-card-info">
-                  <div className="pet-card-section">
-                    <div className="pet-card-row">
-                      <span className="pet-card-label">Όνομα</span>
-                      <span className="pet-card-value">{prefilledPetData.petName}</span>
-                    </div>
-                    <div className="pet-card-row">
-                      <span className="pet-card-label">Είδος</span>
-                      <span className="pet-card-value">{prefilledPetData.species}</span>
-                    </div>
-                    <div className="pet-card-row">
-                      <span className="pet-card-label">Ράτσα</span>
-                      <span className="pet-card-value">{prefilledPetData.breed}</span>
-                    </div>
-                  </div>
-                  <div className="pet-card-section">
-                    {prefilledPetData.microchip && (
+          {/* Prefilled Pet Info Card */}
+          {hasPrefilledData && (
+            <div className="lost-pet-info-card">
+              <button
+                type="button"
+                className="pet-card-remove"
+                onClick={handleClearPrefilledData}
+                title="Αφαίρεση επιλεγμένου κατοικιδίου"
+              >
+                ×
+              </button>
+              <div className="pet-card-container">
+                <div className="pet-card-image">🐕</div>
+                <div className="pet-card-details">
+                  <h3 className="pet-card-title">Στοιχεία Χαμένου Κατοικιδίου</h3>
+                  <div className="pet-card-info">
+                    <div className="pet-card-section">
                       <div className="pet-card-row">
-                        <span className="pet-card-label">Αριθμός Μικροτσίπ</span>
-                        <span className="pet-card-value">{prefilledPetData.microchip}</span>
+                        <span className="pet-card-label">Όνομα</span>
+                        <span className="pet-card-value">{prefilledPetData.petName}</span>
                       </div>
-                    )}
-                    <div className="pet-card-row">
-                      <span className="pet-card-label">Ημερομηνία Απώλειας</span>
-                      <span className="pet-card-value">{prefilledPetData.dateReported}</span>
+                      <div className="pet-card-row">
+                        <span className="pet-card-label">Είδος</span>
+                        <span className="pet-card-value">{prefilledPetData.species}</span>
+                      </div>
+                      <div className="pet-card-row">
+                        <span className="pet-card-label">Ράτσα</span>
+                        <span className="pet-card-value">{prefilledPetData.breed}</span>
+                      </div>
                     </div>
-                    <div className="pet-card-row">
-                      <span className="pet-card-label">Τοποθεσία Απώλειας</span>
-                      <span className="pet-card-value">{prefilledPetData.foundLocation}</span>
+                    <div className="pet-card-section">
+                      {prefilledPetData.microchip && (
+                        <div className="pet-card-row">
+                          <span className="pet-card-label">Αριθμός Μικροτσίπ</span>
+                          <span className="pet-card-value">{prefilledPetData.microchip}</span>
+                        </div>
+                      )}
+                      <div className="pet-card-row">
+                        <span className="pet-card-label">Ημερομηνία Απώλειας</span>
+                        <span className="pet-card-value">{prefilledPetData.dateReported}</span>
+                      </div>
+                      <div className="pet-card-row">
+                        <span className="pet-card-label">Τοποθεσία Απώλειας</span>
+                        <span className="pet-card-value">{prefilledPetData.foundLocation}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <form onSubmit={handleSubmit} className="form-container">
+        
           {/* Only show pet detail fields if no prefilled data */}
           {!hasPrefilledData && (
             <>
@@ -295,7 +321,7 @@ const FoundPetForm = () => {
             <DatePicker
               name="foundDate"
               value={formData.foundDate}
-              onChange={(value) => setFormData({...formData, foundDate: value})}
+              onChange={handleInputChange}
               variant={variant}
             />
           </div>
@@ -309,7 +335,7 @@ const FoundPetForm = () => {
               {!imagePreview ? (
                 <label className="image-upload-label">
                   <div className="upload-icon">
-                    <Upload size={32} color="#23CED9" />
+                    <Upload size={32} color={variant === 'vet' ? '#FCA47C' : '#23CED9'} />
                   </div>
                   <p className="upload-text">Κάντε κλικ για να ανεβάσετε φωτογραφία</p>
                   <p className="upload-subtext">ή σύρετε και αφήστε εδώ</p>
@@ -413,9 +439,50 @@ const FoundPetForm = () => {
 
           {/* Submit Button */}
           <div className="form-actions">
-            <button type="submit" className="submit-btn">
-              Υποβολή Δήλωσης
-            </button>
+            {isOwner ? (
+              <>
+                <button 
+                  type="button" 
+                  className="submit-btn submit-btn--cancel"
+                  onClick={() => navigate('/')}
+                >
+                  Ακύρωση
+                </button>
+
+                <button 
+                  type="button" 
+                  className="submit-btn submit-btn--draft"
+                >
+                  Πρόχειρο
+                </button>
+
+                <button 
+                  type="submit" 
+                  className="submit-btn submit-btn--primary"
+                  disabled={!isFormValid()}
+                >
+                  Οριστική Υποβολή
+                </button>
+              </>
+            ) : (
+              <>
+                <button 
+                  type="button" 
+                  className="submit-btn submit-btn--cancel"
+                  onClick={() => navigate('/')}
+                >
+                  Ακύρωση
+                </button>
+
+                <button 
+                  type="submit" 
+                  className={`submit-btn submit-btn--wide ${variant === 'vet' ? 'submit-btn--orange' : 'submit-btn--yellow'}`}
+                  disabled={!isFormValid()}
+                >
+                  Υποβολή Δήλωσης Εύρεσης
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>
