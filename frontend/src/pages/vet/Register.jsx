@@ -91,15 +91,64 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Show confirmation modal instead of submitting directly
-    setShowConfirmModal(true);
-  };
+    
+    // Validate required fields
+    if (!formData.microchipNumber.trim() || !formData.species || !formData.ownerName.trim() || 
+        !formData.gender || !formData.birthDate || !formData.ownerLastName.trim() || 
+        !formData.ownerPhone.trim() || !formData.ownerEmail.trim() || !formData.ownerAddress.trim() || !formData.afm.trim()) {
+      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία');
+      return;
+    }
 
-  const handleConfirmSubmit = () => {
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+    // Submit to backend
+    const submitPetData = async () => {
+      try {
+        // First, find the owner by AFM to get their ID
+        const usersResponse = await fetch('http://localhost:5000/users');
+        const users = await usersResponse.json();
+        const owner = users.find(u => u.afm === formData.afm && u.userType === 'owner');
+
+        if (!owner) {
+          alert('Δεν βρέθηκε ιδιοκτήτης με αυτό το ΑΦΜ');
+          return;
+        }
+
+        // Create pet object
+        const newPet = {
+          ownerId: owner.id,
+          name: formData.ownerName,
+          species: formData.species,
+          breed: formData.breed || 'Ημίαιμο',
+          gender: formData.gender,
+          birthDate: formData.birthDate,
+          color: formData.color || '',
+          weight: formData.weight || '',
+          microchipId: formData.microchipNumber,
+          registeredByVetId: 2, // TODO: Get current vet ID from localStorage
+          createdAt: new Date().toISOString(),
+        };
+
+        // POST to pets endpoint
+        const response = await fetch('http://localhost:5000/pets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newPet),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to register pet');
+        }
+
+        setShowSuccess(true);
+      } catch (err) {
+        console.error('Pet registration error:', err);
+        alert('Σφάλμα κατά την καταγραφή του κατοικιδίου. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
+      }
+    };
+
+    submitPetData();
   };
 
   const handleCancelSubmit = () => {

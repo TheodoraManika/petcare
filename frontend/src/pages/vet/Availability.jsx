@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Trash2, Plus } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/common/CustomSelect';
@@ -9,13 +9,10 @@ import './Availability.css';
 
 const Availability = () => {
   const [availabilityData, setAvailabilityData] = useState({
-    monday: [{ start: '09:00', end: '13:00', status: 'checkup' }],
+    monday: [],
     tuesday: [],
-    wednesday: [{ start: '10:00', end: '17:00', status: 'surgery' }],
-    thursday: [
-      { start: '09:00', end: '13:00', status: 'vaccination' },
-      { start: '17:00', end: '21:00', status: 'treatment' }
-    ],
+    wednesday: [],
+    thursday: [],
     friday: [],
     saturday: [],
     sunday: []
@@ -29,9 +26,62 @@ const Availability = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [slotToDelete, setSlotToDelete] = useState({ day: '', index: -1 });
-  const [notification, setNotification] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Get current user
+  const getCurrentUser = () => {
+    try {
+      const user = localStorage.getItem('currentUser');
+      return user ? JSON.parse(user) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const currentUser = getCurrentUser();
+
+  // Load availability from backend on mount
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      if (!currentUser) return;
+      
+      try {
+        const response = await fetch('http://localhost:5000/availability');
+        if (!response.ok) throw new Error('Failed to fetch availability');
+        
+        const availabilityRecords = await response.json();
+        
+        // Filter for current vet and organize by day
+        const vetAvailability = availabilityRecords.filter(a => a.vetId === currentUser.id);
+        
+        const organized = {
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+          saturday: [],
+          sunday: []
+        };
+        
+        vetAvailability.forEach(record => {
+          if (organized[record.day]) {
+            organized[record.day].push({
+              start: record.startTime,
+              end: record.endTime,
+              status: record.serviceType
+            });
+          }
+        });
+        
+        setAvailabilityData(organized);
+      } catch (error) {
+        console.error('Error fetching availability:', error);
+      }
+    };
+
+    fetchAvailability();
+  }, [currentUser]);
 
   const dayLabels = {
     monday: 'Δευτέρα',
@@ -67,7 +117,14 @@ const Availability = () => {
     other: '#FCA47C'
   };
 
-  const handleAddSlot = () => {
+  const handleAddSlot = async () => {
+    const user = getCurrentUser();
+    
+    if (!user) {
+      setErrorMessage('Παρακαλώ συνδεθείτε πρώτα');
+      return;
+    }
+
     if (!newSlot.day || !newSlot.startTime || !newSlot.endTime || !newSlot.status) {
       setErrorMessage('Παρακαλώ συμπληρώστε όλα τα πεδία');
       return;
@@ -86,55 +143,97 @@ const Availability = () => {
     // Clear error message
     setErrorMessage('');
 
-    setAvailabilityData(prev => ({
-      ...prev,
-      [newSlot.day]: [
-        ...(prev[newSlot.day] || []),
-        {
-          start: newSlot.startTime,
-          end: newSlot.endTime,
-          status: newSlot.status
-        }
-      ]
-    }));
+    try {
+      // Save to backend immediately
+      const newRecord = {
+        vetId: user.id,
+        day: newSlot.day,
+        startTime: newSlot.startTime,
+        endTime: newSlot.endTime,
+        serviceType: newSlot.status,
+        createdAt: new Date().toISOString()
+      };
 
-    // Reset form
-    setNewSlot({
-      day: '',
-      startTime: '',
-      endTime: '',
-      status: ''
-    });
+      console.log('Saving availability:', newRecord);
+
+      const response = await fetch('http://localhost:5000/availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRecord)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to save slot: ${response.status} - ${errorText}`);
+      }
+
+      // Update local state
+      setAvailabilityData(prev => ({
+        ...prev,
+        [newSlot.day]: [
+          ...(prev[newSlot.day] || []),
+          {
+            start: newSlot.startTime,
+            end: newSlot.endTime,
+            status: newSlot.status
+          }
+        ]
+      }));
+
+      // Reset form
+      setNewSlot({
+        day: '',
+        startTime: '',
+        endTime: '',
+        status: ''
+      });
+      
+      setSuccessMessage('Η ώρα προστέθηκε επιτυχώς!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error) {
+      console.error('Error adding slot:', error);
+      setErrorMessage(`Σφάλμα: ${error.message}`);
+    }
   };
 
-  const handleDeleteSlot = (day, index) => {
-    // Show confirmation modal instead of deleting immediately
-    setSlotToDelete({ day, index });
-    setShowDeleteModal(true);
-  };
+  const handleDeleteSlot = async (day, index) => {
+    try {
+      const user = getCurrentUser();
+      if (!user) {
+        setErrorMessage('Παρακαλώ συνδεθείτε πρώτα');
+        return;
+      }
 
-  const handleConfirmDelete = () => {
-    setAvailabilityData(prev => ({
-      ...prev,
-      [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
-    }));
-    
-    // Close modal and reset
-    setShowDeleteModal(false);
-    setSlotToDelete({ day: '', index: -1 });
-    
-    // Show notification
-    setNotification('deleted');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  };
+      const allAvailability = await fetch('http://localhost:5000/availability').then(r => r.json());
+      const vetAvailability = allAvailability.filter(a => a.vetId === user.id);
+      
+      // Get the specific slot we want to delete
+      const daySlots = vetAvailability.filter(a => a.day === day);
+      const sortedSlots = daySlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+      
+      if (sortedSlots[index]) {
+        const slotToDelete = sortedSlots[index];
+        
+        // Delete from backend
+        const response = await fetch(`http://localhost:5000/availability/${slotToDelete.id}`, {
+          method: 'DELETE'
+        });
 
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-    setSlotToDelete({ day: '', index: -1 });
+        if (!response.ok) throw new Error('Failed to delete slot');
+
+        // Update local state
+        setAvailabilityData(prev => ({
+          ...prev,
+          [day]: prev[day].filter((_, i) => i !== index)
+        }));
+
+        setSuccessMessage('Η ώρα διαγράφηκε επιτυχώς!');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Error deleting slot:', error);
+      setErrorMessage('Σφάλμα κατά τη διαγραφή της ώρας');
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -266,6 +365,12 @@ const Availability = () => {
           {errorMessage && (
             <div className="availability__error">
               {errorMessage}
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="availability__success">
+              {successMessage}
             </div>
           )}
 

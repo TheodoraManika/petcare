@@ -1,97 +1,102 @@
-import React, { useState } from 'react';
-import './VetProfile.css';
-import { Star, MapPin, GraduationCap, Briefcase, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Star, MapPin, Phone, Clock } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
+import { ROUTES } from '../../utils/constants';
+import './VetProfile.css';
 
 const VetProfile = () => {
-  const [visibleReviews, setVisibleReviews] = useState(3);
+  const { vetId } = useParams();
+  const navigate = useNavigate();
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [vet, setVet] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Get current user from localStorage
-  const getCurrentUser = () => {
-    try {
-      const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        const userData = JSON.parse(storedUser);
-        return userData;
+  // Fetch vet data from backend
+  useEffect(() => {
+    const fetchVet = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch(`http://localhost:5000/users/${vetId}`);
+        if (!response.ok) {
+          throw new Error('Ο κτηνίατρος δεν βρέθηκε');
+        }
+        
+        const vetData = await response.json();
+        
+        // Fetch availability for this vet
+        const availabilityResponse = await fetch('http://localhost:5000/availability');
+        const availabilityRecords = await availabilityResponse.json();
+        const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vetId));
+        
+        // Format the vet data with defaults
+        const formattedVet = {
+          id: vetData.id,
+          name: vetData.name || 'Άγνωστος',
+          lastName: vetData.lastName || '',
+          specialty: vetData.specialization || 'Γενικός Κτηνίατρος',
+          rating: 4.5 + (Math.random() * 0.4), // Random rating for now
+          reviewCount: Math.floor(Math.random() * 200) + 20,
+          avatar: vetData.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150',
+          address: `${vetData.clinicAddress || ''}, ${vetData.clinicCity || ''}`,
+          phone: vetData.phone || 'Δεν διατίθεται',
+          email: vetData.email || 'Δεν διατίθεται',
+          clinicName: vetData.clinicName || 'Κλινική',
+          workingHours: 'Ελέγξτε τη διαθεσιμότητα',
+          availability: vetAvailability,
+          specializations: [vetData.specialization || 'Γενική Κτηνιατρική'],
+          biography: `Άδεια Ασκήσεως: ${vetData.licenseNumber || 'Δεν διατίθεται'}`,
+          reviews: [] // Mock reviews - can be enhanced later
+        };
+        
+        setVet(formattedVet);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching vet:', err);
+        setError(err.message);
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error getting current user:', error);
+    };
+
+    if (vetId) {
+      fetchVet();
     }
-    return null;
-  };
+  }, [vetId]);
 
-  const currentUser = getCurrentUser();
-  const isOwner = currentUser?.userType === 'owner' || currentUser?.role === 'owner';
+  if (loading) {
+    return (
+      <PageLayout title="Φόρτωση...">
+        <div style={{ padding: '40px', textAlign: 'center' }}>
+          <p>Φόρτωση δεδομένων κτηνιάτρου...</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
-  // Sample vet data - this would typically come from props or API
-  const vetData = {
-    name: 'Δρ. Γιώργος Αντωνίου',
-    specialty: 'Γενική Κτηνιατρική',
-    rating: 4.8,
-    reviewCount: 127,
-    address: 'Λεωφόρος Συγγρού 123, Αθήνα',
-    phone: '+30 210 1234567',
-    education: 'Διδάκτορας Κτηνιατρικής, Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης',
-    experience: '15 χρόνια',
-    hours: {
-      weekdays: 'Δευτέρα - Παρασκευή: 09:00 - 18:00',
-      saturday: 'Σάββατο: 10:00 - 14:00',
-      sunday: 'Κυριακή: Κλειστά'
-    },
-    biography: 'Ειδικεύομαι στην προληπτική ιατρική, εμβολιασμούς, αποπαρασίτωση και στειρώσεις. Με πάνω από 15 χρόνια εμπειρίας στην κτηνιατρική φροντίδα, προσφέρω ολοκληρωμένες υπηρεσίες για τα κατοικίδιά σας. Η φιλοσοφία μου βασίζεται στην προσεκτική διάγνωση, τη σύγχρονη θεραπεία και την ενσυναίσθητη φροντίδα των ζώων.',
-    profileImage: '/api/placeholder/120/120',
-    reviews: [
-      {
-        id: 1,
-        author: 'Μαρία Κ.',
-        rating: 5,
-        comment: 'Εξαιρετικός επαγγελματίας! Ο γιατρός είναι πολύ προσεκτικός και ενδιαφέρεται πραγματικά για την υγεία των ζώων. Το σκυλάκι μου ένιωσε άνετα από την πρώτη επίσκεψη.'
-      },
-      {
-        id: 2,
-        author: 'Νίκος Π.',
-        rating: 5,
-        comment: 'Πολύ καλή εξυπηρέτηση και καθαρό ιατρείο. Οι τιμές είναι λογικές και ο γιατρός πολύ εξηγητικός. Σίγουρα θα επιστρέψω για τον επόμενο εμβολιασμό.'
-      },
-      {
-        id: 3,
-        author: 'Ελένη Σ.',
-        rating: 4,
-        comment: 'Πολύ ικανοποιημένη από τη φροντίδα που έλαβε η γάτα μου. Μόνο μικρή καθυστέρηση στο ραντεβού, αλλά συνολικά εξαιρετική εμπειρία.'
-      },
-      {
-        id: 4,
-        author: 'Κώστας Μ.',
-        rating: 5,
-        comment: 'Άριστος κτηνίατρος με πολλή υπομονή και γνώση. Μας βοήθησε να αντιμετωπίσουμε ένα σοβαρό πρόβλημα υγείας του σκύλου μας.'
-      },
-      {
-        id: 5,
-        author: 'Σοφία Τ.',
-        rating: 5,
-        comment: 'Εξαιρετική εμπειρία! Το προσωπικό είναι φιλικό και ο γιατρός πολύ επαγγελματίας. Συνιστώ ανεπιφύλακτα!'
-      }
-    ]
-  };
+  if (error || !vet) {
+    return (
+      <PageLayout title="Σφάλμα">
+        <div style={{ padding: '40px', textAlign: 'center' }}>
+          <p style={{ color: '#d32f2f' }}>Σφάλμα: {error || 'Ο κτηνίατρος δεν βρέθηκε'}</p>
+          <button 
+            onClick={() => navigate(ROUTES.citizen.searchMap)}
+            style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+          >
+            Επιστροφή στην Αναζήτηση
+          </button>
+        </div>
+      </PageLayout>
+    );
+  }
 
-  const renderStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <Star 
-          key={i} 
-          size={16}
-          className={i <= rating ? "star-filled" : "star-empty"}
-          fill={i <= rating ? "currentColor" : "none"}
-        />
-      );
-    }
-    return stars;
-  };
+  const displayedReviews = showAllReviews ? vet.reviews : vet.reviews.slice(0, 2);
 
-  const handleLoadMore = () => {
-    setVisibleReviews(prev => Math.min(prev + 3, vetData.reviews.length));
-  };
+  const breadcrumbItems = [
+    { label: 'Αναζήτηση Κτηνιάτρων', path: ROUTES.citizen.searchMap },
+  ];
 
   return (
     <PageLayout 

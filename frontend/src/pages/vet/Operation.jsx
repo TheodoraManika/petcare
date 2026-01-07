@@ -68,14 +68,66 @@ const Operation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Show confirmation modal instead of submitting directly
-    setShowConfirmModal(true);
-  };
+    
+    // Validate required fields
+    if (!formData.petSearch.trim() || !formData.operationType || !formData.operationDate) {
+      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία');
+      return;
+    }
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+    // Submit to backend
+    const submitMedicalProcedure = async () => {
+      try {
+        // First, find the pet by microchip number
+        const petsResponse = await fetch('http://localhost:5000/pets');
+        const pets = petsResponse.json();
+        
+        const foundPets = await pets;
+        const pet = foundPets.find(p => p.microchipId === formData.petSearch);
+
+        if (!pet) {
+          alert('Δεν βρέθηκε κατοικίδιο με αυτό το μικροτσίπ');
+          return;
+        }
+
+        // Get current vet from localStorage
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || currentUser.userType !== 'vet') {
+          alert('Παρακαλώ συνδεθείτε ως κτηνίατρος');
+          return;
+        }
+
+        // Create medical procedure object
+        const newProcedure = {
+          petId: pet.id,
+          vetId: currentUser.id,
+          type: formData.operationType,
+          date: formData.operationDate,
+          description: formData.description || '',
+          createdAt: new Date().toISOString(),
+        };
+
+        // POST to medicalProcedures endpoint
+        const response = await fetch('http://localhost:5000/medicalProcedures', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newProcedure),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to record medical procedure');
+        }
+
+        setShowSuccess(true);
+      } catch (err) {
+        console.error('Medical procedure error:', err);
+        alert('Σφάλμα κατά την καταγραφή της ιατρικής πράξης. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
+      }
+    };
+
+    submitMedicalProcedure();
   };
 
   const handleCancelSubmit = () => {

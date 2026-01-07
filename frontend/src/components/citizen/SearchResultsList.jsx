@@ -38,9 +38,8 @@ const SearchResultsList = ({
   currentUser = null,
   showPagination = true
 }) => {
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayItems = items.slice(startIndex, endIndex);
+  // Items are already paginated when passed in, so use them directly
+  const displayItems = items;
 
   const defaultRenderItem = (item) => (
     <div key={item.id} className="result-item">

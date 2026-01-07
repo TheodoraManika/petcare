@@ -91,14 +91,76 @@ const LostPet = () => {
 
   const handleSubmit = () => {
     if (isFormValid()) {
-      setShowConfirmModal(true);
-    }
-  };
+      const submitLostPetDeclaration = async () => {
+        try {
+          // First, find the owner by AFM
+          const usersResponse = await fetch('http://localhost:5000/users');
+          const users = await usersResponse.json();
+          const owner = users.find(u => u.afm === formData.ownerAfm && u.userType === 'owner');
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+          if (!owner) {
+            alert('Δεν βρέθηκε ιδιοκτήτης με αυτό το ΑΦΜ');
+            return;
+          }
+
+          // Find the pet by microchip to get petId
+          const petsResponse = await fetch('http://localhost:5000/pets');
+          const pets = await petsResponse.json();
+          const pet = pets.find(p => p.microchipId === formData.microchipNumber);
+
+          if (!pet) {
+            alert('Δεν βρέθηκε κατοικίδιο με αυτό το μικροτσίπ');
+            return;
+          }
+
+          // Get current vet from localStorage
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          if (!currentUser || currentUser.userType !== 'vet') {
+            alert('Παρακαλώ συνδεθείτε ως κτηνίατρος');
+            return;
+          }
+
+          // Create lost pet declaration object
+          const newDeclaration = {
+            petId: pet.id,
+            ownerId: owner.id,
+            reportedByVetId: currentUser.id,
+            microchipNumber: formData.microchipNumber,
+            petName: formData.petName,
+            lostDate: formData.lostDate,
+            lostLocation: formData.location,
+            locationLat: formData.locationLat,
+            locationLon: formData.locationLon,
+            contactPhone: formData.contactPhone,
+            description: formData.description || '',
+            imageUrl: null, // TODO: Handle file upload to a storage service
+            status: 'active',
+            createdAt: new Date().toISOString(),
+          };
+
+          // POST to lostPets endpoint
+          const response = await fetch('http://localhost:5000/lostPets', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newDeclaration),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to submit lost pet declaration');
+          }
+
+          alert('Η δήλωση απώλειας καταχωρήθηκε με επιτυχία!');
+          navigate(ROUTES.vet.dashboard);
+        } catch (err) {
+          console.error('Lost pet declaration error:', err);
+          alert('Σφάλμα κατά την υποβολή της δήλωσης. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
+        }
+      };
+
+      submitLostPetDeclaration();
+    }
   };
 
   const handleCancelSubmit = () => {
