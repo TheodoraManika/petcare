@@ -141,17 +141,6 @@ const FoundPetForm = () => {
     }));
   };
 
-  const isFormValid = () => {
-    // Required fields: petName or species, foundLocation, foundDate, firstName, lastName, email, phone
-    if (!formData.foundLocation || !formData.foundDate || !formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
-      return false;
-    }
-    // Need either petName or species
-    if (!formData.petName && !formData.species) {
-      return false;
-    }
-    return true;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

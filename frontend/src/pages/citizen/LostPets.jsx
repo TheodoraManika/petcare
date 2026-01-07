@@ -27,6 +27,9 @@ const LostPets = () => {
   const [selectedPet, setSelectedPet] = useState(null);
   const [lostPets, setLostPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showReportOptions, setShowReportOptions] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [detailPet, setDetailPet] = useState(null);
   const itemsPerPage = 9; // 3x3 grid
 
   // Fetch lost pets from backend
@@ -513,7 +516,7 @@ const LostPets = () => {
                 <div className="modal-traits">
                   <h3 className="modal-section-title">Χαρακτηριστικά</h3>
                   <div className="modal-traits-list">
-                    {detailPet.traits.map((trait, index) => (
+                    {(detailPet.traits || []).map((trait, index) => (
                       <span key={index} className="modal-trait-tag">{trait}</span>
                     ))}
                   </div>
