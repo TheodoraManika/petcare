@@ -4,8 +4,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding-top: 64px;
+  align-items: center;
 }
 
 /* Main Content */
@@ -22,6 +21,724 @@
   z-index: 2;
 }
 
+/* ==========================================
+   LOST PETS HERO SECTION
+   ========================================== */
+.lost-pets-hero {
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.lost-pets-hero__container {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 40px;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+  background-image: url('/Main Page Photo.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 380px;
+  align-items: center;
+}
+
+.lost-pets-hero__container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(139, 228, 254, 0.85) 0%, rgba(139, 228, 254, 0.6) 40%, rgba(139, 228, 254, 0) 100%);
+  z-index: 0;
+  border-radius: 16px;
+}
+
+/* Search Panel - Left Side */
+.lost-pets-hero__search-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  order: 1;
+}
+
+/* Carousel - Right Side */
+.lost-pets-hero__carousel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  order: 2;
+}
+
+.carousel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101727;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.carousel-header-icon {
+  color: #FCA47C;
+}
+
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.carousel-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-card {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #E5E7EB;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.carousel-card:hover {
+  border-color: #23CED9;
+  box-shadow: 0 8px 24px rgba(35, 206, 217, 0.15);
+  transform: translateY(-2px);
+}
+
+.carousel-card__image {
+  width: 110px;
+  height: 110px;
+  background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
+  border: 3px solid #23CED9;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.carousel-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carousel-card__name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.carousel-card__breed {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.carousel-card__location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #23CED9;
+  font-weight: 500;
+}
+
+.carousel-card__date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.carousel-card__cta {
+  font-size: 12px;
+  color: #23CED9;
+  font-weight: 600;
+  margin-top: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.carousel-card:hover .carousel-card__cta {
+  opacity: 1;
+}
+
+/* Carousel Navigation */
+.carousel-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  color: #6b7280;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel-wrapper:hover .carousel-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-nav:hover {
+  background: #23CED9;
+  border-color: #23CED9;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Carousel Indicators */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #D1D5DB;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.carousel-indicator:hover {
+  background: #9CA3AF;
+}
+
+.carousel-indicator.active {
+  background: #FCA47C;
+  transform: scale(1.3);
+}
+
+/* ==========================================
+   VET SEARCH & TOP RATED SECTION
+   ========================================== */
+.vet-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.vet-section__container {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 40px;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFF9F5 0%, #FFF5EE 100%);
+  min-height: 380px;
+  align-items: center;
+}
+
+/* Vet Search Panel */
+.vet-section__search-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.vet-search-content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #F5E6DE;
+  width: 100%;
+  max-width: 340px;
+}
+
+.vet-search-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.vet-search-icon {
+  color: #FCA47C;
+}
+
+.vet-search-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.vet-search-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+}
+
+.vet-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vet-search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F9FAFB;
+  border: 2px solid #F5E6DE;
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: all 0.2s ease;
+}
+
+.vet-search-field:focus-within {
+  border-color: #FCA47C;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(252, 164, 124, 0.1);
+}
+
+.vet-field-icon {
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.vet-search-field:focus-within .vet-field-icon {
+  color: #FCA47C;
+}
+
+.vet-select {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1f2937;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.vet-search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #FCA47C 0%, #F97316 100%);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.vet-search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(252, 164, 124, 0.4);
+}
+
+/* Vet Carousel */
+.vet-section__carousel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.vet-carousel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a6c7d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.vet-carousel-header-icon {
+  color: #FCA47C;
+}
+
+.vet-carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vet-carousel-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 220px;
+  border-radius: 12px;
+}
+
+.vet-carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.vet-carousel-slide.active {
+  opacity: 1;
+}
+
+.vet-carousel-card {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #F5E6DE;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.vet-carousel-card:hover {
+  border-color: #FCA47C;
+  box-shadow: 0 8px 24px rgba(252, 164, 124, 0.15);
+  transform: translateY(-2px);
+}
+
+.vet-card__avatar {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #FFF5EE 0%, #FFE8D9 100%);
+  border: 3px solid #FCA47C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vet-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.vet-card__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.vet-card__specialty {
+  font-size: 14px;
+  color: #FCA47C;
+  font-weight: 600;
+  margin: 0;
+}
+
+.vet-card__location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.vet-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.vet-card__rating-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.vet-card__reviews {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.vet-card__cta {
+  font-size: 12px;
+  color: #FCA47C;
+  font-weight: 600;
+  margin-top: 6px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.vet-carousel-card:hover .vet-card__cta {
+  opacity: 1;
+}
+
+/* Vet Carousel Navigation */
+.vet-carousel-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #F5E6DE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  color: #6b7280;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vet-carousel-wrapper:hover .vet-carousel-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vet-carousel-nav:hover {
+  background: #FCA47C;
+  border-color: #FCA47C;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Vet Carousel Indicators */
+.vet-carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.vet-carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #E5D6CE;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.vet-carousel-indicator:hover {
+  background: #D4C4BA;
+}
+
+.vet-carousel-indicator.active {
+  background: #FCA47C;
+  transform: scale(1.3);
+}
+
+/* Responsive Vet Section */
+@media (max-width: 900px) {
+  .vet-section__container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .vet-search-content {
+    max-width: 100%;
+  }
+}
+
+
+/* Search Panel Content */
+.hero-search-content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E5E7EB;
+  width: 100%;
+  max-width: 340px;
+  text-align: left;
+}
+
+.hero-search-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.hero-search-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+}
+
+.hero-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hero-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F9FAFB;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: all 0.2s ease;
+}
+
+.hero-field:focus-within {
+  border-color: #23CED9;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(35, 206, 217, 0.1);
+}
+
+.hero-field-icon {
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hero-field:focus-within .hero-field-icon {
+  color: #23CED9;
+}
+
+.hero-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1f2937;
+  outline: none;
+}
+
+.hero-input::placeholder {
+  color: #9CA3AF;
+}
+
+.hero-select {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1f2937;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.hero-select option {
+  padding: 8px;
+}
+
+/* CTA Button */
+.hero-cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: #FCA47C;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-cta-button:hover {
+  transform: translateY(-3px);
+  background: #fca47ce3;
+}
+
+.hero-cta-button:active {
+  transform: translateY(0);
+}
+
+.hero-search-note {
+  font-size: 12px;
+  color: #9CA3AF;
+  text-align: center;
+  margin: 16px 0 0 0;
+  line-height: 1.4;
+}
+
+/* ==========================================
+   LEGACY HERO SECTION (HIDDEN)
+   ========================================== */
 /* Hero Section */
 .hero-section {
   background-color: rgba(255, 255, 255, 0);
@@ -387,59 +1104,82 @@ select.search-input option {
 
 /* User Types Section */
 .user-types-section {
-  width: 1235px;
-  height: 352px;
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.user-types-container {
   display: flex;
-  align-items: flex-start;
-  align-self: stretch;
-  position: relative;
-  margin: 50px auto 0 auto;
+  gap: 24px;
+  justify-content: center;
 }
 
 .user-type-card {
-  background-color: rgba(255, 255, 255, 1);
-  width: 390px;
-  height: 340px;
+  background-color: #ffffff;
+  flex: 1;
+  max-width: 390px;
   display: flex;
-  align-items: flex-start;
-  padding: 2px;
-  flex-shrink: 0;
-  border-radius: 10px;
+  flex-direction: column;
+  padding: 28px;
+  border-radius: 16px;
   border-width: 2px;
   border-style: solid;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.user-type-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Info button in top right corner of card */
+.card-info-btn {
   position: absolute;
-  top: 0;
-  flex-direction: column;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #9CA3AF;
+}
+
+.card-info-btn:hover {
+  background: #E5E7EB;
+  color: #6b7280;
 }
 
 .cyan-card {
   border-color: rgba(35, 206, 217, 1);
-  left: 0;
 }
 
 .orange-card {
   border-color: rgba(252, 164, 124, 1);
-  left: 422px;
 }
 
 .yellow-card {
   border-color: rgba(249, 215, 121, 1);
-  left: 845px;
 }
 
 .card-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 12px;
   border-width: 2px;
   border-style: solid;
-  position: absolute;
-  top: 26px;
-  left: 26px;
+  margin-bottom: 20px;
   font-size: 24px;
 }
 
@@ -462,42 +1202,33 @@ select.search-input option {
 }
 
 .card-title {
-  position: absolute;
-  top: 90px;
-  left: 26px;
-  width: 338px;
-  height: 24px;
   color: #1d2838;
   font-family: inherit;
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0;
-  line-height: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
 }
 
 .card-features {
-  position: absolute;
-  top: 126px;
-  left: 26px;
-  width: 338px;
-  height: auto;
   list-style: none;
-  margin: 0;
+  margin: 0 0 24px 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  flex: 1;
 }
 
 .card-features li {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 24px;
+  gap: 10px;
   color: #495565;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
+  line-height: 1.4;
 }
 
 .feature-dot {
@@ -519,38 +1250,94 @@ select.search-input option {
   background-color: rgba(249, 215, 121, 1);
 }
 
-.card-button {
-  position: absolute;
-  bottom: 26px;
-  left: 26px;
-  width: 338px;
-  height: 40px;
-  border: none;
-  border-radius: 4px;
-  color: #000000;
+/* Card Auth Buttons */
+.card-auth-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.card-auth-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border-radius: 10px;
   font-family: inherit;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.cyan-button {
-  background-color: rgba(35, 206, 217, 1);
+.card-auth-btn--signin {
+  background: #ffffff;
+  border: 2px solid;
 }
 
-.orange-button {
-  background-color: rgba(252, 164, 124, 1);
-  color: #000000;
+.card-auth-btn--signup {
+  border: none;
+  color: #ffffff;
 }
 
-.yellow-button {
-  background-color: rgba(249, 215, 121, 1);
-  color: #000000;
+/* Cyan card buttons */
+.cyan-signin {
+  border-color: #23CED9;
+  color: #23CED9;
 }
 
-.card-button:hover {
-  opacity: 0.9;
+.cyan-signin:hover {
+  background: rgba(35, 206, 217, 0.1);
+}
+
+.cyan-signup {
+  background: linear-gradient(135deg, #23CED9 0%, #1AB8C3 100%);
+}
+
+.cyan-signup:hover {
+  box-shadow: 0 6px 20px rgba(35, 206, 217, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Orange card buttons */
+.orange-signin {
+  border-color: #FCA47C;
+  color: #FCA47C;
+}
+
+.orange-signin:hover {
+  background: rgba(252, 164, 124, 0.1);
+}
+
+.orange-signup {
+  background: linear-gradient(135deg, #FCA47C 0%, #F97316 100%);
+}
+
+.orange-signup:hover {
+  box-shadow: 0 6px 20px rgba(252, 164, 124, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Yellow card buttons */
+.yellow-signin {
+  border-color: #EAB308;
+  color: #EAB308;
+}
+
+.yellow-signin:hover {
+  background: rgba(234, 179, 8, 0.1);
+}
+
+.yellow-signup {
+  background: linear-gradient(135deg, #F9D779 0%, #EAB308 100%);
+  color: #1f2937;
+}
+
+.yellow-signup:hover {
+  box-shadow: 0 6px 20px rgba(234, 179, 8, 0.35);
+  transform: translateY(-2px);
 }
 
 /* Features Section */
@@ -715,6 +1502,219 @@ select.search-input option {
 }
 
 /* Responsive */
+
+/* User Types Responsive */
+@media (max-width: 768px) {
+  .user-types-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .user-type-card {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .card-auth-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Lost Pets Hero Responsive */
+@media (max-width: 1280px) {
+  .lost-pets-hero__container {
+    padding: 32px;
+    gap: 24px;
+  }
+  
+  .hero-search-content {
+    padding: 28px;
+  }
+  
+  .hero-search-title {
+    font-size: 26px;
+  }
+  
+  .carousel-card__image {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .carousel-card__name {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .lost-pets-hero__container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .lost-pets-hero__carousel {
+    order: 2;
+  }
+  
+  .lost-pets-hero__search-panel {
+    order: 1;
+  }
+  
+  .hero-search-content {
+    max-width: 100%;
+  }
+  
+  .carousel-track {
+    height: 180px;
+  }
+  
+  .carousel-card__image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .carousel-card__name {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lost-pets-hero {
+    padding: 0 12px;
+  }
+  
+  .lost-pets-hero__container {
+    padding: 24px;
+    border-radius: 12px;
+  }
+  
+  .carousel-header {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .carousel-track {
+    height: 160px;
+  }
+  
+  .carousel-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .carousel-card__image {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .carousel-card__image svg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-card__name {
+    font-size: 16px;
+  }
+  
+  .carousel-card__breed {
+    font-size: 13px;
+  }
+  
+  .carousel-card__location {
+    font-size: 12px;
+  }
+  
+  .carousel-nav {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .carousel-nav svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .carousel-indicators {
+    gap: 8px;
+    margin-top: 14px;
+  }
+  
+  .carousel-indicator {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .hero-search-content {
+    padding: 24px;
+    border-radius: 12px;
+  }
+  
+  .hero-search-title {
+    font-size: 24px;
+  }
+  
+  .hero-search-subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .hero-field {
+    padding: 12px 14px;
+  }
+  
+  .hero-input,
+  .hero-select {
+    font-size: 14px;
+  }
+  
+  .hero-cta-button {
+    padding: 16px 24px;
+    font-size: 16px;
+  }
+  
+  .hero-search-note {
+    font-size: 12px;
+    margin-top: 14px;
+  }
+  
+  .view-all-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lost-pets-hero__container {
+    padding: 20px;
+  }
+  
+  .carousel-wrapper {
+    gap: 8px;
+  }
+  
+  .carousel-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .carousel-card__location {
+    justify-content: center;
+  }
+  
+  .carousel-track {
+    height: 200px;
+  }
+  
+  .hero-search-title {
+    font-size: 20px;
+  }
+  
+  .hero-search-content {
+    padding: 20px;
+  }
+}
+
+/* Legacy Hero Responsive */
 @media (max-width: 1280px) {
   .home-main {
     padding: 32px 16px 0;
