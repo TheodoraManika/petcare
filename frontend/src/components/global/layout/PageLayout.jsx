@@ -57,6 +57,8 @@ const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = t
 
   const [userType, setUserType] = useState(getUserType());
   const isVet = isLoggedIn && userType === 'vet';
+  const isOwner = isLoggedIn && userType === 'owner';
+  const showSidebar = isVet || isOwner;
 
   useEffect(() => {
     // Check login status on mount (in case it changed)
@@ -89,9 +91,9 @@ const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = t
   }, []);
 
   return (
-    <div className={`page-layout ${!showNavbar ? 'page-layout--no-navbar' : ''} ${isVet ? 'page-layout--with-sidebar' : ''} ${!isSidebarOpen ? 'sidebar-closed' : ''}`}>
+    <div className={`page-layout ${!showNavbar ? 'page-layout--no-navbar' : ''} ${showSidebar ? 'page-layout--with-sidebar' : ''} ${!isSidebarOpen ? 'sidebar-closed' : ''}`}>
       {showNavbar && <Navbar variant={variant} />}
-      {isVet && <Sidebar />}
+      {showSidebar && <Sidebar variant={userType} />}
       <main className="page-layout__main">
         {showBreadcrumbs && (
           <nav className="page-layout__breadcrumbs">

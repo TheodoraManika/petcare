@@ -149,6 +149,71 @@
   width: 100%;
 }
 
+/* Owner Variant - Different Colors */
+.sidebar--owner {
+  background: #ffffff;
+  border-right-color: #e5e7eb;
+}
+
+.sidebar__toggle--owner {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+.sidebar__toggle--owner:hover {
+  background: #f9fafb;
+  border-color: #23CED9;
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.15);
+}
+
+.sidebar__toggle--owner svg {
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.sidebar__toggle--owner:hover svg {
+  color: #23CED9;
+}
+
+.sidebar--owner .sidebar__item {
+  color: #6b7280;
+}
+
+.sidebar--owner .sidebar__item:hover {
+  background: #f9fafb;
+  color: #111827;
+}
+
+.sidebar--owner .sidebar__item--active {
+  background: #23cdd962;
+  color: #101828;
+}
+
+.sidebar--owner .sidebar__item--active:hover {
+  background: #23CED9;
+  color: #101828;
+}
+
+.sidebar--owner .sidebar__subitem {
+  color: #6b7280;
+}
+
+.sidebar--owner .sidebar__subitem:hover {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.sidebar--owner .sidebar__subitem--active {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.sidebar--owner .sidebar__subitem--active:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #2563eb;
+}
+
 .sidebar__subitem:hover {
   background: #f3f4f6;
   color: #111827;
