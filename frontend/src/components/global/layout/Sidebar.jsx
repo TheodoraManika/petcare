@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig } from 'lucide-react';
+import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search } from 'lucide-react';
 import { useSidebar } from '../../../context/SidebarContext';
 import { ROUTES } from '../../../utils/constants';
 import './Sidebar.css';
@@ -32,7 +32,7 @@ const Sidebar = ({ variant = 'vet' }) => {
       ]
     },
     { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
-    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.vet.foundPetForm },
+    { icon: <Search size={20} />, label: 'Χαμένα Κατοικίδια', route: ROUTES.citizen.lostPets },
   ];
 
   const ownerMenuItems = [
@@ -42,7 +42,7 @@ const Sidebar = ({ variant = 'vet' }) => {
     { icon: <Calendar size={20} />, label: 'Τα Ραντεβού μου', route: ROUTES.owner.appointments },
     { icon: <Search size={20} />, label: 'Αναζήτηση Κτηνιάτρων', route: ROUTES.citizen.searchMap },
     { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.owner.lostPetForm },
-    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.owner.foundPetForm },
+    { icon: <Search size={20} />, label: 'Χαμένα Κατοικίδια', route: ROUTES.citizen.lostPets },
     { icon: <History size={20} />, label: 'Ιστορικό Δηλώσεων', route: ROUTES.owner.lostHistory },
   ];
 

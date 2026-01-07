@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint } from 'lucide-react';
+import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint, Search } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
 import { ROUTES } from '../../utils/constants';
@@ -70,11 +70,11 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.lostPetForm),
     },
     {
-      id: 'found-declaration',
-      title: 'Δήλωση Εύρεσης',
-      description: 'Δήλωση εύρεσης ενός κατοικιδίου',
-      icon: <CheckCircle />,
-      onClick: () => navigate(ROUTES.vet.foundPetForm),
+      id: 'lost-pets',
+      title: 'Χαμένα Κατοικίδια',
+      description: 'Προβολή δηλωμένων χαμένων κατοικιδίων',
+      icon: <Search />,
+      onClick: () => navigate(ROUTES.citizen.lostPets),
     },
   ];
 

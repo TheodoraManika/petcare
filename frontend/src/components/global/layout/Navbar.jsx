@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
@@ -121,7 +121,6 @@ const Navbar = ({ variant = 'vet' }) => {
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.citizen.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
         { to: ROUTES.home, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
@@ -129,14 +128,12 @@ const Navbar = ({ variant = 'vet' }) => {
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.owner.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
         { to: ROUTES.owner.info, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
         { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ];

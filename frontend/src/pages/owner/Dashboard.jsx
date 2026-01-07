@@ -46,12 +46,12 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.owner.lostPetForm),
     },
     {
-      id: 'found-declaration',
-      title: 'Δήλωση Εύρεσης',
-      description: 'Δήλωση εύρεσης ενός κατοικιδίου',
-      icon: <CheckCircle />,
-      iconVariant: 'success',
-      onClick: () => navigate(ROUTES.owner.foundPetForm),
+      id: 'lost-pets',
+      title: 'Χαμένα Κατοικίδια',
+      description: 'Προβολή δηλωμένων χαμένων κατοικιδίων',
+      icon: <Search />,
+      iconVariant: 'primary',
+      onClick: () => navigate(ROUTES.citizen.lostPets),
     },
     {
       id: 'history',
