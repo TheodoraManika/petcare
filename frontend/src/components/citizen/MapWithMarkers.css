@@ -20,7 +20,8 @@
 
 .leaflet-popup-content {
   margin: 0;
-  min-width: 240px;
+  min-width: 280px;
+  max-width: 340px;
 }
 
 .map-popup .popup-content {
@@ -101,6 +102,57 @@
   flex-direction: row;
   gap: 8px;
   margin-top: 12px;
+}
+
+/* Lost Pets specific popup styles */
+.map-popup .popup-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.map-popup .popup-details-btn,
+.map-popup .popup-found-btn {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.map-popup .popup-details-btn {
+  background-color: transparent;
+  color: #23CED9;
+  border: 2px solid #23CED9;
+}
+
+.map-popup .popup-details-btn:hover {
+  background-color: #E0F7F9;
+}
+
+.map-popup .popup-found-btn {
+  background-color: #23CED9;
+  color: #000000;
+}
+
+.map-popup .popup-found-btn:hover {
+  background-color: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
+}
+
+.map-popup .popup-date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 4px 0 0 0;
 }
 
 .map-popup .popup-profile-btn,

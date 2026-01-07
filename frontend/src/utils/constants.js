@@ -14,7 +14,6 @@ export const ROUTES = {
   confirm: '/confirm',
   citizen: {
     lostPets: '/citizen/lost-pets',
-    lostPetDetails: '/citizen/lost-pets/:petId',
     foundPetForm: '/citizen/found-pet',
     searchMap: '/vet/search-map',
   },

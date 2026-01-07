@@ -17,7 +17,6 @@ import OwnerLostPetHistoryEdit from './pages/owner/LostPetHistoryEdit';
 // Citizen Pages
 import HomePage from './pages/citizen/HomePage';
 import LostPets from './pages/citizen/LostPets';
-import LostPetDetails from './pages/citizen/LostPetDetails';
 import CitizenFoundPetForm from './pages/citizen/FoundPetForm';
 import VetSearchMap from './pages/citizen/VetSearchMap';
 import VetProfile from './pages/citizen/VetProfile';
@@ -76,7 +75,6 @@ function App() {
         {/* Citizen Routes */}
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.citizen.lostPets} element={<LostPets />} />
-        <Route path={ROUTES.citizen.lostPetDetails} element={<LostPetDetails />} />
         <Route path={ROUTES.citizen.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path={ROUTES.citizen.searchMap} element={<VetSearchMap />} />
         <Route path="/vet-profile/:vetId" element={<VetProfile />} />

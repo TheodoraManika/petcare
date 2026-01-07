@@ -289,6 +289,7 @@ const VetSearchMap = () => {
               selectedId={selectedVet?.id}
               onMarkerClick={handleMarkerClick}
               height="600px"
+              width="100%"
               currentUser={currentUser}
               onViewProfile={handleViewProfile}
               onCloseAppointment={handleCloseAppointment}

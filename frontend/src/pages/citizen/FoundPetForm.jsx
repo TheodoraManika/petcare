@@ -1,11 +1,51 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Upload, AlertCircle, MapPin, Calendar, PawPrint } from 'lucide-react';
+import { Upload, AlertCircle, MapPin, Calendar, PawPrint, Search as SearchIcon } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import LocationPicker from '../../components/common/LocationPicker';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
 import './FoundPetForm.css';
+
+// Mock lost pets database
+const lostPetsDatabase = [
+  {
+    id: 1,
+    name: 'Μπάμπης',
+    type: 'Σκύλος',
+    breed: 'Golden Retriever',
+    area: 'Κέντρο Αθήνας, Πλατεία Συντάγματος',
+    dateLost: '05/11/2025',
+    color: 'Χρυσαφί',
+    microchip: 'GR123456789012345',
+    description: 'Φιλικός, φοράει πράσινο περιλαίμιο.',
+    traits: ['Ήρεμος', 'Αγαπά παιδιά', 'Σπιτικός'],
+  },
+  {
+    id: 2,
+    name: 'Φιφή',
+    type: 'Γάτα',
+    breed: 'Περσική',
+    area: 'Θεσσαλονίκη, Καλαμαριά',
+    dateLost: '10/11/2025',
+    color: 'Λευκό',
+    microchip: 'GR987654321000111',
+    description: 'Τρομάζει εύκολα, προτιμά ήρεμα περιβάλλοντα.',
+    traits: ['Πολύ ήρεμη', 'Αγαπά λιχουδιές'],
+  },
+  {
+    id: 3,
+    name: 'Ρεξ',
+    type: 'Σκύλος',
+    breed: 'Λαμπραντόρ',
+    area: 'Πάτρα, Κέντρο',
+    dateLost: '08/11/2025',
+    color: 'Μαύρο',
+    microchip: 'GR000111222333444',
+    description: 'Ενεργητικός, αγαπά να τρέχει.',
+    traits: ['Ενεργητικός', 'Χρειάζεται χώρο'],
+  },
+];
 
 const FoundPetForm = () => {
   const navigate = useNavigate();
@@ -44,8 +84,16 @@ const FoundPetForm = () => {
   // Get pet details from navigation state if coming from LostPetDetails
   const navigationPetData = location.state?.petDetails || {};
   
+  // Get microchip ID if passed directly (for unregistered pets)
+  const navigationMicrochipId = location.state?.microchipId || '';
+  
   const [selectedOwnPet, setSelectedOwnPet] = useState('');
-  const [prefilledPetData, setPrefilledPetData] = useState(navigationPetData);
+  const [prefilledPetData, setPrefilledPetData] = useState(
+    navigationMicrochipId 
+      ? { microchip: navigationMicrochipId }
+      : navigationPetData
+  );
+  const [microchipInput, setMicrochipInput] = useState(navigationMicrochipId || prefilledPetData.microchip || '');
   
   const [formData, setFormData] = useState({
     petName: '',
@@ -150,14 +198,51 @@ const FoundPetForm = () => {
   const handleClearPrefilledData = () => {
     setSelectedOwnPet('');
     setPrefilledPetData({});
+    setMicrochipInput('');
+  };
+
+  const handleMicrochipSearch = () => {
+    if (!microchipInput.trim()) return;
+    
+    // Search in lost pets database
+    const foundPet = lostPetsDatabase.find(
+      pet => pet.microchip.toLowerCase() === microchipInput.toLowerCase()
+    );
+    
+    if (foundPet) {
+      // Pet found - prefill with full data
+      setPrefilledPetData({
+        petName: foundPet.name,
+        species: foundPet.type,
+        breed: foundPet.breed,
+        foundLocation: foundPet.area,
+        description: foundPet.description,
+        dateReported: foundPet.dateLost,
+        microchip: foundPet.microchip,
+      });
+    } else {
+      // Pet not found - just store microchip
+      setPrefilledPetData({
+        microchip: microchipInput
+      });
+    }
+  };
+
+  const handleMicrochipInputChange = (e) => {
+    setMicrochipInput(e.target.value);
   };
 
   const hasPrefilledData = Object.keys(prefilledPetData).length > 0;
 
+  const breadcrumbItems = [
+    { label: 'Αρχική', path: '/' },
+    { label: 'Χαμένα Κατοικίδια', path: '/citizen/lost-pets' },
+  ];
+
   return (
-    <PageLayout title="Δήλωση Εύρεσης Κατοικιδίου" variant={variant}>
+    <PageLayout title="Δήλωση Εύρεσης" variant={variant} breadcrumbs={breadcrumbItems}>
       <div className={`found-pet-form found-pet-form--${variant}`}>
-        <h1 className="form-title">Δήλωση Εύρεσης Κατοικιδίου</h1>
+        <h1 className="form-title">Δήλωση Εύρεσης </h1>
         <p className="form-subtitle">
           Βρήκατε ένα χαμένο κατοικίδιο; Συμπληρώστε τη φόρμα για να βοηθήσετε την επιστροφή του στους ιδιοκτήτες
         </p>
@@ -165,6 +250,43 @@ const FoundPetForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="form-container">
+          {/* Microchip Search - Always visible when no prefilled data */}
+          {!hasPrefilledData && (
+            <div className="microchip-search-section">
+              <label className="form-label">
+                <SearchIcon size={16} className="form-label-icon" />
+                Αναζήτηση με Microchip <span className="form-label-optional">(προαιρετικό)</span>
+              </label>
+              <div className="microchip-search-input-wrapper">
+                <input
+                  type="text"
+                  value={microchipInput}
+                  onChange={handleMicrochipInputChange}
+                  placeholder="π.χ. GR123456789012345"
+                  className="form-input microchip-search-input"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleMicrochipSearch();
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={handleMicrochipSearch}
+                  className="microchip-search-btn"
+                  disabled={!microchipInput.trim()}
+                >
+                  <SearchIcon size={18} />
+                  Αναζήτηση
+                </button>
+              </div>
+              <p className="microchip-search-hint">
+                Εάν το κατοικίδιο έχει microchip, εισάγετε τον αριθμό για αυτόματη συμπλήρωση των στοιχείων
+              </p>
+            </div>
+          )}
+
           {/* Owner Pet Selection */}
           {isOwner && !hasPrefilledData && (
             <div className="owner-pet-selection">
@@ -195,38 +317,54 @@ const FoundPetForm = () => {
               <div className="pet-card-container">
                 <div className="pet-card-image">🐕</div>
                 <div className="pet-card-details">
-                  <h3 className="pet-card-title">Στοιχεία Χαμένου Κατοικιδίου</h3>
+                  <h3 className="pet-card-title">
+                    {prefilledPetData.petName ? 'Στοιχεία Χαμένου Κατοικιδίου' : 'Αριθμός Microchip'}
+                  </h3>
                   <div className="pet-card-info">
-                    <div className="pet-card-section">
-                      <div className="pet-card-row">
-                        <span className="pet-card-label">Όνομα</span>
-                        <span className="pet-card-value">{prefilledPetData.petName}</span>
-                      </div>
-                      <div className="pet-card-row">
-                        <span className="pet-card-label">Είδος</span>
-                        <span className="pet-card-value">{prefilledPetData.species}</span>
-                      </div>
-                      <div className="pet-card-row">
-                        <span className="pet-card-label">Ράτσα</span>
-                        <span className="pet-card-value">{prefilledPetData.breed}</span>
-                      </div>
-                    </div>
-                    <div className="pet-card-section">
-                      {prefilledPetData.microchip && (
+                    {prefilledPetData.petName ? (
+                      <>
+                        <div className="pet-card-section">
+                          <div className="pet-card-row">
+                            <span className="pet-card-label">Όνομα</span>
+                            <span className="pet-card-value">{prefilledPetData.petName}</span>
+                          </div>
+                          <div className="pet-card-row">
+                            <span className="pet-card-label">Είδος</span>
+                            <span className="pet-card-value">{prefilledPetData.species}</span>
+                          </div>
+                          <div className="pet-card-row">
+                            <span className="pet-card-label">Ράτσα</span>
+                            <span className="pet-card-value">{prefilledPetData.breed}</span>
+                          </div>
+                        </div>
+                        <div className="pet-card-section">
+                          {prefilledPetData.microchip && (
+                            <div className="pet-card-row">
+                              <span className="pet-card-label">Αριθμός Μικροτσίπ</span>
+                              <span className="pet-card-value">{prefilledPetData.microchip}</span>
+                            </div>
+                          )}
+                          <div className="pet-card-row">
+                            <span className="pet-card-label">Ημερομηνία Απώλειας</span>
+                            <span className="pet-card-value">{prefilledPetData.dateReported}</span>
+                          </div>
+                          <div className="pet-card-row">
+                            <span className="pet-card-label">Τοποθεσία Απώλειας</span>
+                            <span className="pet-card-value">{prefilledPetData.foundLocation}</span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="pet-card-section">
                         <div className="pet-card-row">
-                          <span className="pet-card-label">Αριθμός Μικροτσίπ</span>
+                          <span className="pet-card-label">Microchip</span>
                           <span className="pet-card-value">{prefilledPetData.microchip}</span>
                         </div>
-                      )}
-                      <div className="pet-card-row">
-                        <span className="pet-card-label">Ημερομηνία Απώλειας</span>
-                        <span className="pet-card-value">{prefilledPetData.dateReported}</span>
+                        <p className="pet-card-note">
+                          Δεν βρέθηκε καταχωρημένο κατοικίδιο με αυτόν τον αριθμό. Παρακαλώ συμπληρώστε τα στοιχεία του κατοικιδίου παρακάτω.
+                        </p>
                       </div>
-                      <div className="pet-card-row">
-                        <span className="pet-card-label">Τοποθεσία Απώλειας</span>
-                        <span className="pet-card-value">{prefilledPetData.foundLocation}</span>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -31,6 +31,77 @@
   margin-bottom: 24px;
 }
 
+/* Microchip Search Section */
+.microchip-search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(35, 206, 217, 0.05) 0%, rgba(35, 206, 217, 0.02) 100%);
+  border: 2px dashed rgba(35, 206, 217, 0.3);
+  border-radius: 12px;
+}
+
+.found-pet-form--vet .microchip-search-section {
+  background: linear-gradient(135deg, rgba(252, 164, 124, 0.05) 0%, rgba(252, 164, 124, 0.02) 100%);
+  border-color: rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search-input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.microchip-search-input {
+  flex: 1;
+}
+
+.microchip-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #23CED9;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.microchip-search-btn:hover:not(:disabled) {
+  background-color: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
+}
+
+.microchip-search-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.found-pet-form--vet .microchip-search-btn {
+  background-color: #FCA47C;
+}
+
+.found-pet-form--vet .microchip-search-btn:hover:not(:disabled) {
+  background-color: #f89a5c;
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
 /* Owner Pet Selection */
 .owner-pet-selection {
   display: flex;
@@ -153,6 +224,14 @@
   color: #1f2937;
   font-weight: 600;
   font-size: 14px;
+}
+
+.pet-card-note {
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0 0 0;
+  font-style: italic;
 }
 
 /* Form Container */
