@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './DatePicker.css';
 
-const DatePicker = ({ value, onChange, name, variant = 'vet' }) => {
+const DatePicker = ({ value, onChange, name, variant = 'vet', maxDate = null }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -55,6 +55,18 @@ const DatePicker = ({ value, onChange, name, variant = 'vet' }) => {
 
   const handleDateSelect = (day) => {
     const selectedDate = new Date(currentYear, currentMonth, day);
+    
+    // Check if date is after maxDate
+    if (maxDate) {
+      const maxDateTime = new Date(maxDate);
+      maxDateTime.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      if (selectedDate > maxDateTime) {
+        return; // Don't allow selection of dates after maxDate
+      }
+    }
+    
     const formattedDate = `${day.toString().padStart(2, '0')}/${(currentMonth + 1).toString().padStart(2, '0')}/${currentYear}`;
     onChange({
       target: {
@@ -72,6 +84,13 @@ const DatePicker = ({ value, onChange, name, variant = 'vet' }) => {
     const today = new Date();
     const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
 
+    // Parse maxDate if provided
+    let maxDateTime = null;
+    if (maxDate) {
+      maxDateTime = new Date(maxDate);
+      maxDateTime.setHours(0, 0, 0, 0);
+    }
+
     // Empty cells for days before the first day of month
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} className="datepicker__day datepicker__day--empty"></div>);
@@ -81,13 +100,22 @@ const DatePicker = ({ value, onChange, name, variant = 'vet' }) => {
     for (let day = 1; day <= daysInMonth; day++) {
       const isToday = isCurrentMonth && day === today.getDate();
       const isSelected = value && value.startsWith(day.toString().padStart(2, '0') + '/' + (currentMonth + 1).toString().padStart(2, '0'));
+      
+      // Check if this day is after maxDate
+      let isDisabled = false;
+      if (maxDateTime) {
+        const dayDate = new Date(currentYear, currentMonth, day);
+        dayDate.setHours(0, 0, 0, 0);
+        isDisabled = dayDate > maxDateTime;
+      }
 
       days.push(
         <button
           key={day}
           type="button"
-          className={`datepicker__day ${isToday ? 'datepicker__day--today' : ''} ${isSelected ? 'datepicker__day--selected' : ''}`}
+          className={`datepicker__day ${isToday ? 'datepicker__day--today' : ''} ${isSelected ? 'datepicker__day--selected' : ''} ${isDisabled ? 'datepicker__day--disabled' : ''}`}
           onClick={() => handleDateSelect(day)}
+          disabled={isDisabled}
         >
           {day}
         </button>

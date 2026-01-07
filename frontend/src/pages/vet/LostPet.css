@@ -105,6 +105,26 @@
   color: #9ca3af;
 }
 
+/* Error State */
+.lost-pet__input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.lost-pet__input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.lost-pet__error-message {
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: -4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .lost-pet__textarea {
   resize: vertical;
   min-height: 80px;

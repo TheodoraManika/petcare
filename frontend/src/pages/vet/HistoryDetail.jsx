@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Printer, Download, User, PawPrint, Handshake, ArrowRightLeft, ArrowLeft, Heart } from 'lucide-react';
+import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './HistoryDetail.css';
@@ -118,9 +118,9 @@ const HistoryDetail = () => {
       case 'Υιοθεσία':
         return <Heart size={24} className="history-detail__icon" />;
       case 'Αναδοχή':
-        return <Handshake size={24} className="history-detail__icon" />;
+        return <HandHeart size={24} className="history-detail__icon" />;
       default:
-        return <Handshake size={24} className="history-detail__icon" />;
+        return <HandHeart size={24} className="history-detail__icon" />;
     }
   };
 
