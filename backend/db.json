@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "email": "owner@example.com",
       "password": "password123",
       "name": "Γιάννης",
@@ -9,11 +9,15 @@
       "userType": "owner",
       "phone": "6912345678",
       "afm": "123456789",
+      "address": "Λεωφόρος Αλεξάνδρας",
+      "addressNumber": "42",
+      "city": "Αθήνα",
+      "postalCode": "11521",
       "avatar": null,
       "createdAt": "2025-01-05T00:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "email": "vet@example.com",
       "password": "password123",
       "name": "Μαρία",
@@ -32,7 +36,7 @@
       "createdAt": "2025-01-05T00:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "email": "vet2@example.com",
       "password": "password123",
       "name": "Κώστας",
@@ -49,65 +53,7490 @@
       "clinicPostalCode": "54622",
       "avatar": null,
       "createdAt": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": "4",
+      "email": "vet4@example.com",
+      "password": "password123",
+      "name": "Γεώργιος",
+      "lastName": "Χαραλάμπους",
+      "userType": "vet",
+      "phone": "6916989178",
+      "afm": "950044064",
+      "specialization": "Νευρολογία",
+      "clinicName": "Veterinary Hospital",
+      "licenseNumber": "UET-74240",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Μαρνών 104",
+      "clinicCity": "Ρόδος",
+      "clinicPostalCode": "30981",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "5",
+      "email": "vet5@example.com",
+      "password": "password123",
+      "name": "Αναστάσιος",
+      "lastName": "Στάμου",
+      "userType": "vet",
+      "phone": "6926253559",
+      "afm": "588210927",
+      "specialization": "Χειρουργική",
+      "clinicName": "Pet Care Clinic",
+      "licenseNumber": "UET-74511",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Θεσσαλονίκης 193",
+      "clinicCity": "Λάρισα",
+      "clinicPostalCode": "89245",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "6",
+      "email": "vet6@example.com",
+      "password": "password123",
+      "name": "Κωνσταντίνος",
+      "lastName": "Χαραλάμπους",
+      "userType": "vet",
+      "phone": "6979477034",
+      "afm": "688132972",
+      "specialization": "Καρδιολογία",
+      "clinicName": "Happy Paws",
+      "licenseNumber": "UET-84782",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Αμαλιάδος 47",
+      "clinicCity": "Κέρκυρα",
+      "clinicPostalCode": "33286",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "7",
+      "email": "vet7@example.com",
+      "password": "password123",
+      "name": "Γεώργιος",
+      "lastName": "Νικολάου",
+      "userType": "vet",
+      "phone": "6985002677",
+      "afm": "970094360",
+      "specialization": "Ορθοπεδική",
+      "clinicName": "Animal Care Center",
+      "licenseNumber": "UET-72401",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Θεσσαλονίκης 46",
+      "clinicCity": "Λάρισα",
+      "clinicPostalCode": "80175",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "8",
+      "email": "vet8@example.com",
+      "password": "password123",
+      "name": "Κωνσταντίνος",
+      "lastName": "Παπαδόπουλος",
+      "userType": "vet",
+      "phone": "6950297616",
+      "afm": "458779083",
+      "specialization": "Γενική Κτηνιατρική",
+      "clinicName": "Μεσογείων Vet",
+      "licenseNumber": "UET-46160",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Θεσσαλονίκης 171",
+      "clinicCity": "Αθήνα",
+      "clinicPostalCode": "38702",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "9",
+      "email": "vet9@example.com",
+      "password": "password123",
+      "name": "Νικόλαος",
+      "lastName": "Παπανδρέου",
+      "userType": "vet",
+      "phone": "6901432860",
+      "afm": "395860535",
+      "specialization": "Καρδιολογία",
+      "clinicName": "Happy Paws",
+      "licenseNumber": "UET-13370",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Θεσσαλονίκης 40",
+      "clinicCity": "Μύκονος",
+      "clinicPostalCode": "23599",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10",
+      "email": "vet10@example.com",
+      "password": "password123",
+      "name": "Ιωάννης",
+      "lastName": "Στάμου",
+      "userType": "vet",
+      "phone": "6989294171",
+      "afm": "905374918",
+      "specialization": "Οδοντιατρική",
+      "clinicName": "Veterinary Hospital",
+      "licenseNumber": "UET-40872",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Κύπρου 153",
+      "clinicCity": "Λήμνος",
+      "clinicPostalCode": "95450",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "11",
+      "email": "vet11@example.com",
+      "password": "password123",
+      "name": "Αναστάσιος",
+      "lastName": "Παπαδόπουλος",
+      "userType": "vet",
+      "phone": "6943904833",
+      "afm": "975185595",
+      "specialization": "Χειρουργική",
+      "clinicName": "Ζωοϊατρική Κλινική Αθήνας",
+      "licenseNumber": "UET-66981",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Μαρνών 132",
+      "clinicCity": "Κέρκυρα",
+      "clinicPostalCode": "77399",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:07:10.754Z"
+    },
+    {
+      "id": "12",
+      "email": "owner12@example.com",
+      "password": "password123",
+      "name": "Βασίλης",
+      "lastName": "Ματθαίου",
+      "userType": "owner",
+      "phone": "6994740522",
+      "afm": "501624647",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "134",
+      "city": "Αθήνα",
+      "postalCode": "29721",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:36:59.151Z"
+    },
+    {
+      "id": "13",
+      "email": "owner13@example.com",
+      "password": "password123",
+      "name": "Βάσω",
+      "lastName": "Σταθόπουλος",
+      "userType": "owner",
+      "phone": "6992145015",
+      "afm": "962374619",
+      "address": "Οδός Σταδίου",
+      "addressNumber": "70",
+      "city": "Μύκονος",
+      "postalCode": "98517",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:36:59.151Z"
+    },
+    {
+      "id": "14",
+      "email": "owner14@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Κωνσταντινίδης",
+      "userType": "owner",
+      "phone": "6991983886",
+      "afm": "923220227",
+      "address": "Λεωφόρος Κύπρου",
+      "addressNumber": "101",
+      "city": "Σαντορίνη",
+      "postalCode": "62914",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "15",
+      "email": "owner15@example.com",
+      "password": "password123",
+      "name": "Λευκή",
+      "lastName": "Σταθόπουλος",
+      "userType": "owner",
+      "phone": "6956764731",
+      "afm": "328328992",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "23",
+      "city": "Λήμνος",
+      "postalCode": "26637",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "16",
+      "email": "owner16@example.com",
+      "password": "password123",
+      "name": "Ισαβέλλα",
+      "lastName": "Πετρίδης",
+      "userType": "owner",
+      "phone": "6950375770",
+      "afm": "449487871",
+      "address": "Οδός Σταδίου",
+      "addressNumber": "29",
+      "city": "Αθήνα",
+      "postalCode": "78529",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "17",
+      "email": "owner17@example.com",
+      "password": "password123",
+      "name": "Λευκή",
+      "lastName": "Λυδάκης",
+      "userType": "owner",
+      "phone": "6909642017",
+      "afm": "356461186",
+      "address": "Οδός Σταδίου",
+      "addressNumber": "133",
+      "city": "Λάρισα",
+      "postalCode": "27274",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "12",
+      "email": "vet12@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Σακελλαρίου",
+      "userType": "vet",
+      "phone": "6903080723",
+      "afm": "681652250",
+      "specialization": "Χειρουργική",
+      "clinicName": "Animal Care Center",
+      "licenseNumber": "UET-33747",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Αμαλιάδος 65",
+      "clinicCity": "Πάτρα",
+      "clinicPostalCode": "84373",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.312Z"
+    },
+    {
+      "id": "13",
+      "email": "vet13@example.com",
+      "password": "password123",
+      "name": "Νικόλαος",
+      "lastName": "Στάμου",
+      "userType": "vet",
+      "phone": "6905488602",
+      "afm": "630984569",
+      "specialization": "Δερματολογία",
+      "clinicName": "Animal Care Center",
+      "licenseNumber": "UET-70696",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Μαρνών 69",
+      "clinicCity": "Μύκονος",
+      "clinicPostalCode": "14641",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "14",
+      "email": "vet14@example.com",
+      "password": "password123",
+      "name": "Γεώργιος",
+      "lastName": "Δημητριάδης",
+      "userType": "vet",
+      "phone": "6927555982",
+      "afm": "894139470",
+      "specialization": "Χειρουργική",
+      "clinicName": "Pet Care Clinic",
+      "licenseNumber": "UET-03263",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Μαρνών 93",
+      "clinicCity": "Πάτρα",
+      "clinicPostalCode": "56140",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15",
+      "email": "vet15@example.com",
+      "password": "password123",
+      "name": "Νικόλαος",
+      "lastName": "Αναστασίου",
+      "userType": "vet",
+      "phone": "6948035428",
+      "afm": "513599625",
+      "specialization": "Γενική Κτηνιατρική",
+      "clinicName": "Vet Plus",
+      "licenseNumber": "UET-93613",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Κύπρου 47",
+      "clinicCity": "Θεσσαλονίκη",
+      "clinicPostalCode": "98371",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "16",
+      "email": "vet16@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Παπανδρέου",
+      "userType": "vet",
+      "phone": "6935635053",
+      "afm": "303713787",
+      "specialization": "Νευρολογία",
+      "clinicName": "Pet Care Clinic",
+      "licenseNumber": "UET-66500",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Θεσσαλονίκης 193",
+      "clinicCity": "Θεσσαλονίκη",
+      "clinicPostalCode": "44329",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "17",
+      "email": "vet17@example.com",
+      "password": "password123",
+      "name": "Διαμαντής",
+      "lastName": "Γεωργιάδης",
+      "userType": "vet",
+      "phone": "6989604546",
+      "afm": "850362618",
+      "specialization": "Δερματολογία",
+      "clinicName": "Veterinary Hospital",
+      "licenseNumber": "UET-05029",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Μαρνών 102",
+      "clinicCity": "Αθήνα",
+      "clinicPostalCode": "61550",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18",
+      "email": "vet18@example.com",
+      "password": "password123",
+      "name": "Κωνσταντίνος",
+      "lastName": "Λυδάκης",
+      "userType": "vet",
+      "phone": "6929024248",
+      "afm": "854613431",
+      "specialization": "Ορθοπεδική",
+      "clinicName": "Vet Plus",
+      "licenseNumber": "UET-78468",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Θεσσαλονίκης 52",
+      "clinicCity": "Αθήνα",
+      "clinicPostalCode": "46138",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19",
+      "email": "vet19@example.com",
+      "password": "password123",
+      "name": "Γεώργιος",
+      "lastName": "Παπανδρέου",
+      "userType": "vet",
+      "phone": "6915203594",
+      "afm": "248706555",
+      "specialization": "Καρδιολογία",
+      "clinicName": "Κέντρο Κτηνιατρικής Φροντίδας",
+      "licenseNumber": "UET-00586",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Θεσσαλονίκης 194",
+      "clinicCity": "Λήμνος",
+      "clinicPostalCode": "24685",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18",
+      "email": "owner18@example.com",
+      "password": "password123",
+      "name": "Αναστασία",
+      "lastName": "Κωνσταντινίδης",
+      "userType": "owner",
+      "phone": "6944007046",
+      "afm": "994380414",
+      "address": "Λεωφόρος Αλεξάνδρας",
+      "addressNumber": "49",
+      "city": "Σαντορίνη",
+      "postalCode": "38067",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19",
+      "email": "owner19@example.com",
+      "password": "password123",
+      "name": "Σοφία",
+      "lastName": "Κωνσταντινίδης",
+      "userType": "owner",
+      "phone": "6991936165",
+      "afm": "084021865",
+      "address": "Λεωφόρος Κύπρου",
+      "addressNumber": "34",
+      "city": "Χανιά",
+      "postalCode": "63712",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "20",
+      "email": "owner20@example.com",
+      "password": "password123",
+      "name": "Αλέξανδρος",
+      "lastName": "Αναστασίου",
+      "userType": "owner",
+      "phone": "6959411071",
+      "afm": "076072974",
+      "address": "Οδός Αμαλιάδος",
+      "addressNumber": "53",
+      "city": "Λάρισα",
+      "postalCode": "40966",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "21",
+      "email": "owner21@example.com",
+      "password": "password123",
+      "name": "Νικόλαος",
+      "lastName": "Χαραλάμπους",
+      "userType": "owner",
+      "phone": "6976591722",
+      "afm": "914606498",
+      "address": "Λεωφόρος Μαραθώνος",
+      "addressNumber": "108",
+      "city": "Χανιά",
+      "postalCode": "71017",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "22",
+      "email": "owner22@example.com",
+      "password": "password123",
+      "name": "Μαρία",
+      "lastName": "Πετρίδης",
+      "userType": "owner",
+      "phone": "6933240847",
+      "afm": "187179273",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "176",
+      "city": "Μύκονος",
+      "postalCode": "78825",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "23",
+      "email": "owner23@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Νικολάου",
+      "userType": "owner",
+      "phone": "6973480725",
+      "afm": "135796614",
+      "address": "Λεωφόρος Αλεξάνδρας",
+      "addressNumber": "73",
+      "city": "Πάτρα",
+      "postalCode": "74416",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "20",
+      "email": "vet20@example.com",
+      "password": "password123",
+      "name": "Παναγιώτης",
+      "lastName": "Αναστασίου",
+      "userType": "vet",
+      "phone": "6915746560",
+      "afm": "576978009",
+      "specialization": "Νευρολογία",
+      "clinicName": "Λάσκαρη Vet Clinic",
+      "licenseNumber": "UET-47568",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Θεσσαλονίκης 168",
+      "clinicCity": "Πάτρα",
+      "clinicPostalCode": "85568",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "21",
+      "email": "vet21@example.com",
+      "password": "password123",
+      "name": "Ιωάννης",
+      "lastName": "Ματθαίου",
+      "userType": "vet",
+      "phone": "6993184673",
+      "afm": "204804840",
+      "specialization": "Οδοντιατρική",
+      "clinicName": "Pet Care Clinic",
+      "licenseNumber": "UET-37760",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Πατησίων 4",
+      "clinicCity": "Πάτρα",
+      "clinicPostalCode": "30797",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "22",
+      "email": "vet22@example.com",
+      "password": "password123",
+      "name": "Παναγιώτης",
+      "lastName": "Παπανδρέου",
+      "userType": "vet",
+      "phone": "6936198182",
+      "afm": "913444708",
+      "specialization": "Γενική Κτηνιατρική",
+      "clinicName": "Animal Care Center",
+      "licenseNumber": "UET-33091",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Μαρνών 143",
+      "clinicCity": "Αθήνα",
+      "clinicPostalCode": "36525",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "23",
+      "email": "vet23@example.com",
+      "password": "password123",
+      "name": "Γεώργιος",
+      "lastName": "Πετρίδης",
+      "userType": "vet",
+      "phone": "6963930963",
+      "afm": "852411380",
+      "specialization": "Δερματολογία",
+      "clinicName": "Animal Care Center",
+      "licenseNumber": "UET-04720",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Πατησίων 136",
+      "clinicCity": "Σαντορίνη",
+      "clinicPostalCode": "96691",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "24",
+      "email": "vet24@example.com",
+      "password": "password123",
+      "name": "Σωτήριος",
+      "lastName": "Δημητριάδης",
+      "userType": "vet",
+      "phone": "6995001788",
+      "afm": "533392418",
+      "specialization": "Δερματολογία",
+      "clinicName": "Λάσκαρη Vet Clinic",
+      "licenseNumber": "UET-48449",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Κύπρου 92",
+      "clinicCity": "Κέρκυρα",
+      "clinicPostalCode": "68099",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25",
+      "email": "vet25@example.com",
+      "password": "password123",
+      "name": "Γεώργιος",
+      "lastName": "Λυδάκης",
+      "userType": "vet",
+      "phone": "6922672940",
+      "afm": "544119138",
+      "specialization": "Δερματολογία",
+      "clinicName": "Vet Plus",
+      "licenseNumber": "UET-17718",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Κύπρου 186",
+      "clinicCity": "Χανιά",
+      "clinicPostalCode": "15240",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26",
+      "email": "vet26@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Πετρίδης",
+      "userType": "vet",
+      "phone": "6928875361",
+      "afm": "640616040",
+      "specialization": "Χειρουργική",
+      "clinicName": "Happy Paws",
+      "licenseNumber": "UET-45573",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Κύπρου 113",
+      "clinicCity": "Λήμνος",
+      "clinicPostalCode": "71002",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27",
+      "email": "vet27@example.com",
+      "password": "password123",
+      "name": "Θωμάς",
+      "lastName": "Δημητριάδης",
+      "userType": "vet",
+      "phone": "6933145188",
+      "afm": "759310034",
+      "specialization": "Δερματολογία",
+      "clinicName": "Κέντρο Κτηνιατρικής Φροντίδας",
+      "licenseNumber": "UET-14831",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Θεσσαλονίκης 39",
+      "clinicCity": "Σαντορίνη",
+      "clinicPostalCode": "63340",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "24",
+      "email": "owner24@example.com",
+      "password": "password123",
+      "name": "Αναστασία",
+      "lastName": "Παπαδόπουλος",
+      "userType": "owner",
+      "phone": "6973045844",
+      "afm": "436654733",
+      "address": "Οδός Αμαλιάδος",
+      "addressNumber": "63",
+      "city": "Λήμνος",
+      "postalCode": "18409",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25",
+      "email": "owner25@example.com",
+      "password": "password123",
+      "name": "Σοφία",
+      "lastName": "Πετρίδης",
+      "userType": "owner",
+      "phone": "6904480516",
+      "afm": "797355438",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "76",
+      "city": "Αθήνα",
+      "postalCode": "83364",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26",
+      "email": "owner26@example.com",
+      "password": "password123",
+      "name": "Παναγιώτης",
+      "lastName": "Πετρίδης",
+      "userType": "owner",
+      "phone": "6974159595",
+      "afm": "154701520",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "168",
+      "city": "Χανιά",
+      "postalCode": "31592",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27",
+      "email": "owner27@example.com",
+      "password": "password123",
+      "name": "Αλέξανδρος",
+      "lastName": "Χαραλάμπους",
+      "userType": "owner",
+      "phone": "6983334660",
+      "afm": "607346901",
+      "address": "Λεωφόρος Μαραθώνος",
+      "addressNumber": "93",
+      "city": "Ρόδος",
+      "postalCode": "10372",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "28",
+      "email": "owner28@example.com",
+      "password": "password123",
+      "name": "Αλέξανδρος",
+      "lastName": "Γεωργιάδης",
+      "userType": "owner",
+      "phone": "6904261205",
+      "afm": "113266823",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "146",
+      "city": "Θεσσαλονίκη",
+      "postalCode": "64823",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "29",
+      "email": "owner29@example.com",
+      "password": "password123",
+      "name": "Κωνσταντίνος",
+      "lastName": "Νικολάου",
+      "userType": "owner",
+      "phone": "6974772804",
+      "afm": "600030615",
+      "address": "Οδός Αμαλιάδος",
+      "addressNumber": "159",
+      "city": "Ρόδος",
+      "postalCode": "20443",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "28",
+      "email": "vet28@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Αναστασίου",
+      "userType": "vet",
+      "phone": "6987210220",
+      "afm": "999061150",
+      "specialization": "Ορθοπεδική",
+      "clinicName": "Ζωοϊατρική Κλινική Αθήνας",
+      "licenseNumber": "UET-56802",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Θεσσαλονίκης 99",
+      "clinicCity": "Θεσσαλονίκη",
+      "clinicPostalCode": "61523",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "29",
+      "email": "vet29@example.com",
+      "password": "password123",
+      "name": "Σωτήριος",
+      "lastName": "Χαραλάμπους",
+      "userType": "vet",
+      "phone": "6972271722",
+      "afm": "318703449",
+      "specialization": "Δερματολογία",
+      "clinicName": "Αγάπη Pets",
+      "licenseNumber": "UET-58303",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Μαρνών 36",
+      "clinicCity": "Σαντορίνη",
+      "clinicPostalCode": "42153",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "30",
+      "email": "vet30@example.com",
+      "password": "password123",
+      "name": "Αναστάσιος",
+      "lastName": "Παπανδρέου",
+      "userType": "vet",
+      "phone": "6979965915",
+      "afm": "012098880",
+      "specialization": "Γενική Κτηνιατρική",
+      "clinicName": "Λάσκαρη Vet Clinic",
+      "licenseNumber": "UET-28057",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Αμαλιάδος 128",
+      "clinicCity": "Θεσσαλονίκη",
+      "clinicPostalCode": "38395",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "31",
+      "email": "vet31@example.com",
+      "password": "password123",
+      "name": "Σωτήριος",
+      "lastName": "Αναστασίου",
+      "userType": "vet",
+      "phone": "6926285474",
+      "afm": "583865632",
+      "specialization": "Χειρουργική",
+      "clinicName": "Ζωοϊατρική Κλινική Αθήνας",
+      "licenseNumber": "UET-33298",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Μαρνών 53",
+      "clinicCity": "Λάρισα",
+      "clinicPostalCode": "39593",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32",
+      "email": "vet32@example.com",
+      "password": "password123",
+      "name": "Δημήτριος",
+      "lastName": "Χαραλάμπους",
+      "userType": "vet",
+      "phone": "6931737892",
+      "afm": "727321586",
+      "specialization": "Χειρουργική",
+      "clinicName": "Pet Care Clinic",
+      "licenseNumber": "UET-43556",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Πατησίων 44",
+      "clinicCity": "Σαντορίνη",
+      "clinicPostalCode": "42348",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "33",
+      "email": "vet33@example.com",
+      "password": "password123",
+      "name": "Ιωάννης",
+      "lastName": "Ματθαίου",
+      "userType": "vet",
+      "phone": "6964744502",
+      "afm": "999681536",
+      "specialization": "Καρδιολογία",
+      "clinicName": "Λάσκαρη Vet Clinic",
+      "licenseNumber": "UET-85631",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Πλατεία Κύπρου 20",
+      "clinicCity": "Λήμνος",
+      "clinicPostalCode": "61551",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "34",
+      "email": "vet34@example.com",
+      "password": "password123",
+      "name": "Σωτήριος",
+      "lastName": "Δημητριάδης",
+      "userType": "vet",
+      "phone": "6986739828",
+      "afm": "901627623",
+      "specialization": "Ορθοπεδική",
+      "clinicName": "Veterinary Hospital",
+      "licenseNumber": "UET-76507",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Οδός Θεσσαλονίκης 18",
+      "clinicCity": "Θεσσαλονίκη",
+      "clinicPostalCode": "22941",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "35",
+      "email": "vet35@example.com",
+      "password": "password123",
+      "name": "Σωτήριος",
+      "lastName": "Νικολάου",
+      "userType": "vet",
+      "phone": "6963433487",
+      "afm": "459334477",
+      "specialization": "Γενική Κτηνιατρική",
+      "clinicName": "Pet Care Clinic",
+      "licenseNumber": "UET-71212",
+      "licenseType": "Άδεια Ασκήσεως",
+      "clinicAddress": "Λεωφόρος Μαρνών 40",
+      "clinicCity": "Ρόδος",
+      "clinicPostalCode": "90782",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "30",
+      "email": "owner30@example.com",
+      "password": "password123",
+      "name": "Νικόλαος",
+      "lastName": "Πετρίδης",
+      "userType": "owner",
+      "phone": "6926465640",
+      "afm": "882169635",
+      "address": "Πλατεία Σύνταγματος",
+      "addressNumber": "174",
+      "city": "Ρόδος",
+      "postalCode": "26233",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "31",
+      "email": "owner31@example.com",
+      "password": "password123",
+      "name": "Ελένη",
+      "lastName": "Γεωργιάδης",
+      "userType": "owner",
+      "phone": "6930189078",
+      "afm": "936345094",
+      "address": "Λεωφόρος Μαραθώνος",
+      "addressNumber": "6",
+      "city": "Ρόδος",
+      "postalCode": "14739",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "32",
+      "email": "owner32@example.com",
+      "password": "password123",
+      "name": "Ελένη",
+      "lastName": "Στάμου",
+      "userType": "owner",
+      "phone": "6985922361",
+      "afm": "849303391",
+      "address": "Οδός Πατησίων",
+      "addressNumber": "154",
+      "city": "Χανιά",
+      "postalCode": "17833",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "33",
+      "email": "owner33@example.com",
+      "password": "password123",
+      "name": "Νικόλαος",
+      "lastName": "Παπαδόπουλος",
+      "userType": "owner",
+      "phone": "6927835580",
+      "afm": "011779381",
+      "address": "Λεωφόρος Θεσσαλονίκης",
+      "addressNumber": "144",
+      "city": "Λάρισα",
+      "postalCode": "54257",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "34",
+      "email": "owner34@example.com",
+      "password": "password123",
+      "name": "Αναστασία",
+      "lastName": "Γεωργιάδης",
+      "userType": "owner",
+      "phone": "6919511944",
+      "afm": "277306322",
+      "address": "Οδός Σταδίου",
+      "addressNumber": "126",
+      "city": "Μύκονος",
+      "postalCode": "81291",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "35",
+      "email": "owner35@example.com",
+      "password": "password123",
+      "name": "Σοφία",
+      "lastName": "Κωνσταντινίδης",
+      "userType": "owner",
+      "phone": "6995786665",
+      "afm": "456205872",
+      "address": "Οδός Αμαλιάδος",
+      "addressNumber": "168",
+      "city": "Κέρκυρα",
+      "postalCode": "86140",
+      "avatar": null,
+      "createdAt": "2026-01-07T14:52:21.378Z"
     }
   ],
   "pets": [
     {
-      "id": 1,
+      "id": "1",
       "ownerId": 1,
       "name": "Μάξ",
-      "species": "Σκύλος",
+      "species": "dog",
       "breed": "Golden Retriever",
-      "age": 3,
+      "gender": "male",
+      "birthDate": "2022-01-15",
       "color": "Χρυσό",
+      "weight": "30",
       "microchipId": "123456789012345",
+      "registeredByVetId": 2,
       "createdAt": "2025-01-05T00:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "ownerId": 1,
       "name": "Μίσα",
-      "species": "Γάτα",
+      "species": "cat",
       "breed": "Persian",
-      "age": 2,
+      "gender": "female",
+      "birthDate": "2023-05-20",
       "color": "Λευκό",
+      "weight": "4.5",
       "microchipId": "987654321098765",
+      "registeredByVetId": 2,
       "createdAt": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": "3",
+      "ownerId": 12,
+      "name": "Μίνι",
+      "species": "cat",
+      "breed": "Bengal",
+      "gender": "female",
+      "birthDate": "2022-04-18",
+      "color": "Λευκό",
+      "weight": "4.6",
+      "microchipId": "7706354934309960",
+      "registeredByVetId": 9,
+      "createdAt": "2026-01-07T14:36:59.151Z"
+    },
+    {
+      "id": "4",
+      "ownerId": 13,
+      "name": "Τζάρλι",
+      "species": "dog",
+      "breed": "Golden Retriever",
+      "gender": "male",
+      "birthDate": "2019-01-22",
+      "color": "Κόκκινο",
+      "weight": "47.4",
+      "microchipId": "1352593025915687",
+      "registeredByVetId": 9,
+      "createdAt": "2026-01-07T14:36:59.151Z"
+    },
+    {
+      "id": "5",
+      "ownerId": 13,
+      "name": "Τόμας",
+      "species": "dog",
+      "breed": "Boxer",
+      "gender": "male",
+      "birthDate": "2023-11-21",
+      "color": "Κόκκινο",
+      "weight": "45.9",
+      "microchipId": "3521024435747393",
+      "registeredByVetId": 7,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "6",
+      "ownerId": 14,
+      "name": "Ρόκο",
+      "species": "dog",
+      "breed": "Husky",
+      "gender": "female",
+      "birthDate": "2023-02-03",
+      "color": "Ασημί",
+      "weight": "49.6",
+      "microchipId": "4463662522508351",
+      "registeredByVetId": 3,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "7",
+      "ownerId": 14,
+      "name": "Τόμας",
+      "species": "dog",
+      "breed": "Dalmatian",
+      "gender": "male",
+      "birthDate": "2020-02-17",
+      "color": "Γκρι",
+      "weight": "23.6",
+      "microchipId": "124044553302438",
+      "registeredByVetId": 6,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "8",
+      "ownerId": 14,
+      "name": "Λούκι",
+      "species": "dog",
+      "breed": "Labrador",
+      "gender": "male",
+      "birthDate": "2021-06-01",
+      "color": "Κόκκινο",
+      "weight": "31.2",
+      "microchipId": "7782716013829125",
+      "registeredByVetId": 8,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "9",
+      "ownerId": 15,
+      "name": "Ντόρα",
+      "species": "cat",
+      "breed": "Scottish Fold",
+      "gender": "female",
+      "birthDate": "2022-01-18",
+      "color": "Ασημί",
+      "weight": "3.4",
+      "microchipId": "1731722867372351",
+      "registeredByVetId": 3,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "10",
+      "ownerId": 15,
+      "name": "Σάσα",
+      "species": "cat",
+      "breed": "Bengal",
+      "gender": "male",
+      "birthDate": "2020-11-09",
+      "color": "Καφέ",
+      "weight": "5.0",
+      "microchipId": "1988289397382598",
+      "registeredByVetId": 4,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "11",
+      "ownerId": 15,
+      "name": "Μίνι",
+      "species": "cat",
+      "breed": "Sphynx",
+      "gender": "female",
+      "birthDate": "2020-12-14",
+      "color": "Γκρι",
+      "weight": "4.2",
+      "microchipId": "7829845216364750",
+      "registeredByVetId": 10,
+      "createdAt": "2026-01-07T14:36:59.152Z"
+    },
+    {
+      "id": "12",
+      "ownerId": 16,
+      "name": "Σκάι",
+      "species": "dog",
+      "breed": "Poodle",
+      "gender": "male",
+      "birthDate": "2020-04-10",
+      "color": "Γκρι",
+      "weight": "46.9",
+      "microchipId": "7530359128584472",
+      "registeredByVetId": 8,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "13",
+      "ownerId": 16,
+      "name": "Ρόκο",
+      "species": "dog",
+      "breed": "Dachshund",
+      "gender": "male",
+      "birthDate": "2022-05-11",
+      "color": "Καφέ",
+      "weight": "29.6",
+      "microchipId": "5445713428101431",
+      "registeredByVetId": 8,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "14",
+      "ownerId": 16,
+      "name": "Ζιγκ",
+      "species": "cat",
+      "breed": "Abyssinian",
+      "gender": "male",
+      "birthDate": "2019-04-18",
+      "color": "Ασημί",
+      "weight": "2.6",
+      "microchipId": "4280331286153900",
+      "registeredByVetId": 2,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "15",
+      "ownerId": 17,
+      "name": "Τίνα",
+      "species": "dog",
+      "breed": "Golden Retriever",
+      "gender": "female",
+      "birthDate": "2022-04-03",
+      "color": "Τρίχρωμο",
+      "weight": "23.5",
+      "microchipId": "6407306745490116",
+      "registeredByVetId": 7,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "16",
+      "ownerId": 17,
+      "name": "Μπέλα",
+      "species": "dog",
+      "breed": "Labrador",
+      "gender": "male",
+      "birthDate": "2019-09-07",
+      "color": "Καφέ",
+      "weight": "17.9",
+      "microchipId": "6735267499879432",
+      "registeredByVetId": 5,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "17",
+      "ownerId": 17,
+      "name": "Τζάρλι",
+      "species": "dog",
+      "breed": "Beagle",
+      "gender": "male",
+      "birthDate": "2020-01-01",
+      "color": "Καφέ",
+      "weight": "38.7",
+      "microchipId": "4624366882754061",
+      "registeredByVetId": 7,
+      "createdAt": "2026-01-07T14:36:59.153Z"
+    },
+    {
+      "id": "18",
+      "ownerId": 18,
+      "name": "Κόπι",
+      "species": "dog",
+      "breed": "Dachshund",
+      "gender": "female",
+      "birthDate": "2020-09-22",
+      "color": "Τρίχρωμο",
+      "weight": "44.3",
+      "microchipId": "1364723619075094",
+      "registeredByVetId": 2,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19",
+      "ownerId": 19,
+      "name": "Τόμας",
+      "species": "dog",
+      "breed": "Dachshund",
+      "gender": "male",
+      "birthDate": "2021-02-20",
+      "color": "Λευκό",
+      "weight": "17.1",
+      "microchipId": "3018915291227040",
+      "registeredByVetId": 18,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "20",
+      "ownerId": 19,
+      "name": "Μάξ",
+      "species": "cat",
+      "breed": "Turkish Angora",
+      "gender": "female",
+      "birthDate": "2022-06-04",
+      "color": "Μαύρο",
+      "weight": "3.3",
+      "microchipId": "9304112189784978",
+      "registeredByVetId": 12,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "21",
+      "ownerId": 19,
+      "name": "Ντόρα",
+      "species": "dog",
+      "breed": "Beagle",
+      "gender": "male",
+      "birthDate": "2022-01-08",
+      "color": "Καφέ",
+      "weight": "20.8",
+      "microchipId": "6878864216346576",
+      "registeredByVetId": 9,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "22",
+      "ownerId": 20,
+      "name": "Τόμας",
+      "species": "cat",
+      "breed": "Persian",
+      "gender": "male",
+      "birthDate": "2022-10-16",
+      "color": "Λευκό",
+      "weight": "4.3",
+      "microchipId": "104089686192558",
+      "registeredByVetId": 14,
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "23",
+      "ownerId": 21,
+      "name": "Τίνα",
+      "species": "dog",
+      "breed": "Dalmatian",
+      "gender": "male",
+      "birthDate": "2020-08-11",
+      "color": "Καφέ",
+      "weight": "27.6",
+      "microchipId": "4302917115290829",
+      "registeredByVetId": 2,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "24",
+      "ownerId": 21,
+      "name": "Παλ",
+      "species": "cat",
+      "breed": "British Shorthair",
+      "gender": "male",
+      "birthDate": "2022-07-07",
+      "color": "Χρυσό",
+      "weight": "5.2",
+      "microchipId": "2547765353054587",
+      "registeredByVetId": 6,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "25",
+      "ownerId": 22,
+      "name": "Παλ",
+      "species": "dog",
+      "breed": "Dalmatian",
+      "gender": "female",
+      "birthDate": "2024-08-15",
+      "color": "Ασημί",
+      "weight": "45.0",
+      "microchipId": "477091947642445",
+      "registeredByVetId": 9,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "26",
+      "ownerId": 23,
+      "name": "Τίνα",
+      "species": "cat",
+      "breed": "Persian",
+      "gender": "female",
+      "birthDate": "2019-03-25",
+      "color": "Λευκό",
+      "weight": "3.6",
+      "microchipId": "6232157983206668",
+      "registeredByVetId": 13,
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "27",
+      "ownerId": 24,
+      "name": "Ζιγκ",
+      "species": "dog",
+      "breed": "German Shepherd",
+      "gender": "female",
+      "birthDate": "2019-08-06",
+      "color": "Χρυσό",
+      "weight": "20.4",
+      "microchipId": "1098561517848017",
+      "registeredByVetId": 8,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "28",
+      "ownerId": 24,
+      "name": "Τίνα",
+      "species": "dog",
+      "breed": "Husky",
+      "gender": "female",
+      "birthDate": "2020-10-10",
+      "color": "Κόκκινο",
+      "weight": "41.1",
+      "microchipId": "6356201588561441",
+      "registeredByVetId": 25,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "29",
+      "ownerId": 24,
+      "name": "Λούκι",
+      "species": "dog",
+      "breed": "Husky",
+      "gender": "male",
+      "birthDate": "2021-02-06",
+      "color": "Τρίχρωμο",
+      "weight": "35.2",
+      "microchipId": "185800747479001",
+      "registeredByVetId": 25,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "30",
+      "ownerId": 25,
+      "name": "Κόπι",
+      "species": "cat",
+      "breed": "Turkish Angora",
+      "gender": "female",
+      "birthDate": "2023-10-28",
+      "color": "Τρίχρωμο",
+      "weight": "5.3",
+      "microchipId": "430274233509055",
+      "registeredByVetId": 8,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "31",
+      "ownerId": 26,
+      "name": "Μάξ",
+      "species": "dog",
+      "breed": "Golden Retriever",
+      "gender": "female",
+      "birthDate": "2021-01-04",
+      "color": "Κόκκινο",
+      "weight": "40.5",
+      "microchipId": "5121748520743372",
+      "registeredByVetId": 5,
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "32",
+      "ownerId": 26,
+      "name": "Σάσα",
+      "species": "cat",
+      "breed": "Sphynx",
+      "gender": "male",
+      "birthDate": "2022-03-23",
+      "color": "Χρυσό",
+      "weight": "4.7",
+      "microchipId": "6452534719320266",
+      "registeredByVetId": 6,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "33",
+      "ownerId": 26,
+      "name": "Σίμπα",
+      "species": "dog",
+      "breed": "Poodle",
+      "gender": "female",
+      "birthDate": "2020-11-05",
+      "color": "Γκρι",
+      "weight": "16.8",
+      "microchipId": "1864237274668505",
+      "registeredByVetId": 3,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "34",
+      "ownerId": 27,
+      "name": "Σκάι",
+      "species": "dog",
+      "breed": "Labrador",
+      "gender": "male",
+      "birthDate": "2019-04-09",
+      "color": "Κόκκινο",
+      "weight": "35.6",
+      "microchipId": "9553394411088990",
+      "registeredByVetId": 5,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "35",
+      "ownerId": 27,
+      "name": "Λούκι",
+      "species": "cat",
+      "breed": "Abyssinian",
+      "gender": "male",
+      "birthDate": "2024-04-03",
+      "color": "Τρίχρωμο",
+      "weight": "5.8",
+      "microchipId": "1595553077063340",
+      "registeredByVetId": 15,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "36",
+      "ownerId": 28,
+      "name": "Μούσκα",
+      "species": "dog",
+      "breed": "Dachshund",
+      "gender": "male",
+      "birthDate": "2020-05-25",
+      "color": "Γκρι",
+      "weight": "24.3",
+      "microchipId": "5006989145457315",
+      "registeredByVetId": 4,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "37",
+      "ownerId": 28,
+      "name": "Λούκι",
+      "species": "dog",
+      "breed": "Dalmatian",
+      "gender": "male",
+      "birthDate": "2023-05-18",
+      "color": "Γκρι",
+      "weight": "48.6",
+      "microchipId": "5389047504145619",
+      "registeredByVetId": 25,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "38",
+      "ownerId": 28,
+      "name": "Λούκι",
+      "species": "cat",
+      "breed": "British Shorthair",
+      "gender": "female",
+      "birthDate": "2020-06-15",
+      "color": "Ασημί",
+      "weight": "5.2",
+      "microchipId": "9569700376265584",
+      "registeredByVetId": 27,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "39",
+      "ownerId": 29,
+      "name": "Τίνα",
+      "species": "cat",
+      "breed": "Sphynx",
+      "gender": "male",
+      "birthDate": "2019-09-09",
+      "color": "Τρίχρωμο",
+      "weight": "5.5",
+      "microchipId": "8486576457466377",
+      "registeredByVetId": 12,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "40",
+      "ownerId": 29,
+      "name": "Ντόρα",
+      "species": "dog",
+      "breed": "Poodle",
+      "gender": "male",
+      "birthDate": "2024-10-17",
+      "color": "Μαύρο",
+      "weight": "35.5",
+      "microchipId": "4039317072706845",
+      "registeredByVetId": 11,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "41",
+      "ownerId": 29,
+      "name": "Μίνι",
+      "species": "cat",
+      "breed": "Maine Coon",
+      "gender": "female",
+      "birthDate": "2019-09-11",
+      "color": "Γκρι",
+      "weight": "5.2",
+      "microchipId": "770615262750518",
+      "registeredByVetId": 23,
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "42",
+      "ownerId": 30,
+      "name": "Κόπι",
+      "species": "cat",
+      "breed": "Turkish Angora",
+      "gender": "male",
+      "birthDate": "2023-02-03",
+      "color": "Τρίχρωμο",
+      "weight": "5.0",
+      "microchipId": "4066862642547910",
+      "registeredByVetId": 22,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "43",
+      "ownerId": 30,
+      "name": "Σίμπα",
+      "species": "cat",
+      "breed": "Abyssinian",
+      "gender": "female",
+      "birthDate": "2023-01-10",
+      "color": "Καφέ",
+      "weight": "4.7",
+      "microchipId": "3904093883578394",
+      "registeredByVetId": 21,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "44",
+      "ownerId": 31,
+      "name": "Λούκι",
+      "species": "cat",
+      "breed": "Abyssinian",
+      "gender": "female",
+      "birthDate": "2022-11-26",
+      "color": "Γκρι",
+      "weight": "5.1",
+      "microchipId": "6658621827287317",
+      "registeredByVetId": 27,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "45",
+      "ownerId": 31,
+      "name": "Σάσα",
+      "species": "cat",
+      "breed": "Persian",
+      "gender": "female",
+      "birthDate": "2022-06-27",
+      "color": "Καφέ",
+      "weight": "4.4",
+      "microchipId": "8922609587673116",
+      "registeredByVetId": 5,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "46",
+      "ownerId": 31,
+      "name": "Σίμπα",
+      "species": "cat",
+      "breed": "Ragdoll",
+      "gender": "female",
+      "birthDate": "2023-05-05",
+      "color": "Γκρι",
+      "weight": "2.8",
+      "microchipId": "7307703054064287",
+      "registeredByVetId": 3,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "47",
+      "ownerId": 32,
+      "name": "Μίνι",
+      "species": "dog",
+      "breed": "Poodle",
+      "gender": "female",
+      "birthDate": "2020-08-13",
+      "color": "Καφέ",
+      "weight": "15.2",
+      "microchipId": "2650890743598284",
+      "registeredByVetId": 9,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "48",
+      "ownerId": 32,
+      "name": "Λούκι",
+      "species": "cat",
+      "breed": "Maine Coon",
+      "gender": "male",
+      "birthDate": "2021-02-09",
+      "color": "Λευκό",
+      "weight": "4.3",
+      "microchipId": "2426498211192480",
+      "registeredByVetId": 5,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "49",
+      "ownerId": 32,
+      "name": "Μάξ",
+      "species": "dog",
+      "breed": "Labrador",
+      "gender": "female",
+      "birthDate": "2021-11-03",
+      "color": "Μαύρο",
+      "weight": "29.7",
+      "microchipId": "2253298842881899",
+      "registeredByVetId": 31,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "50",
+      "ownerId": 33,
+      "name": "Μπέλα",
+      "species": "dog",
+      "breed": "Dachshund",
+      "gender": "male",
+      "birthDate": "2019-09-03",
+      "color": "Μαύρο",
+      "weight": "26.5",
+      "microchipId": "8008887664431930",
+      "registeredByVetId": 12,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "51",
+      "ownerId": 33,
+      "name": "Ντόρα",
+      "species": "cat",
+      "breed": "Sphynx",
+      "gender": "male",
+      "birthDate": "2020-05-28",
+      "color": "Χρυσό",
+      "weight": "6.0",
+      "microchipId": "8140838320605659",
+      "registeredByVetId": 7,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "52",
+      "ownerId": 33,
+      "name": "Μπέλα",
+      "species": "cat",
+      "breed": "Bengal",
+      "gender": "male",
+      "birthDate": "2021-05-27",
+      "color": "Καφέ",
+      "weight": "3.2",
+      "microchipId": "1885464954690163",
+      "registeredByVetId": 27,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "53",
+      "ownerId": 34,
+      "name": "Λούκι",
+      "species": "cat",
+      "breed": "Persian",
+      "gender": "male",
+      "birthDate": "2020-09-27",
+      "color": "Τρίχρωμο",
+      "weight": "4.5",
+      "microchipId": "1648804098356404",
+      "registeredByVetId": 13,
+      "createdAt": "2026-01-07T14:52:21.378Z"
+    },
+    {
+      "id": "54",
+      "ownerId": 35,
+      "name": "Κόπι",
+      "species": "dog",
+      "breed": "Husky",
+      "gender": "male",
+      "birthDate": "2022-09-25",
+      "color": "Ασημί",
+      "weight": "21.6",
+      "microchipId": "7876062170314357",
+      "registeredByVetId": 34,
+      "createdAt": "2026-01-07T14:52:21.378Z"
     }
   ],
   "lostPets": [
     {
-      "id": 1,
-      "reportedById": 1,
-      "name": "Λούκας",
-      "species": "Σκύλος",
-      "breed": "Labrador",
-      "description": "Μαύρο χρώμα, χαμένος στο Μαρούσι",
+      "id": "1",
+      "petId": 1,
+      "ownerId": 1,
+      "reportedByVetId": 2,
+      "microchipNumber": "123456789012345",
+      "petName": "Λούκας",
       "lostDate": "2025-01-01",
       "lostLocation": "Μαρούσι, Αθήνα",
-      "status": "pending",
+      "locationLat": "38.0505",
+      "locationLon": "23.8244",
+      "contactPhone": "6912345678",
+      "description": "Μαύρο χρώμα, χαμένος στο Μαρούσι",
+      "status": "active",
       "imageUrl": null,
       "createdAt": "2025-01-05T00:00:00Z"
     }
   ],
   "foundPets": [
     {
-      "id": 1,
-      "reportedById": 2,
-      "name": "Unknown",
+      "id": "1",
+      "petName": "Άγνωστο",
       "species": "Γάτα",
-      "breed": "Mixed",
+      "breed": "Μικτή",
       "description": "Τρίχρωμη γάτα, βρέθηκε κοντά στο κέντρο της Αθήνας",
       "foundDate": "2025-01-04",
       "foundLocation": "Κέντρο, Αθήνα",
+      "reporterFirstName": "Μαρία",
+      "reporterLastName": "Παπαδοπούλου",
+      "reporterEmail": "maria@example.com",
+      "reporterPhone": "6912345678",
       "status": "active",
       "imageUrl": null,
       "createdAt": "2025-01-05T00:00:00Z"
     }
   ],
+  "medicalProcedures": [
+    {
+      "id": "1",
+      "petId": 1,
+      "vetId": 2,
+      "type": "vaccination",
+      "date": "2025-01-10",
+      "description": "Ετήσιος εμβολιασμός κατά της φόνης",
+      "createdAt": "2025-01-10T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "petId": 1,
+      "vetId": 2,
+      "type": "checkup",
+      "date": "2025-01-10",
+      "description": "Γενική εξέταση υγείας - όλα φυσιολογικά",
+      "createdAt": "2025-01-10T10:15:00Z"
+    },
+    {
+      "id": "3",
+      "petId": 1,
+      "vetId": 10,
+      "type": "grooming",
+      "date": "2025-01-27",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:43:46.419Z"
+    },
+    {
+      "id": "4",
+      "petId": 1,
+      "vetId": 4,
+      "type": "grooming",
+      "date": "2024-07-29",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:43:46.419Z"
+    },
+    {
+      "id": "5",
+      "petId": 1,
+      "vetId": 5,
+      "type": "emergency",
+      "date": "2025-10-02",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:43:46.419Z"
+    },
+    {
+      "id": "6",
+      "petId": 1,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-08-10",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:43:46.419Z"
+    },
+    {
+      "id": "7",
+      "petId": 2,
+      "vetId": 7,
+      "type": "surgery",
+      "date": "2025-04-11",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "8",
+      "petId": 2,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2024-11-26",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "9",
+      "petId": 3,
+      "vetId": 6,
+      "type": "treatment",
+      "date": "2025-10-10",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "10",
+      "petId": 3,
+      "vetId": 11,
+      "type": "surgery",
+      "date": "2024-11-05",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "11",
+      "petId": 4,
+      "vetId": 11,
+      "type": "consultation",
+      "date": "2025-04-30",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "12",
+      "petId": 4,
+      "vetId": 2,
+      "type": "surgery",
+      "date": "2024-06-08",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "13",
+      "petId": 4,
+      "vetId": 10,
+      "type": "emergency",
+      "date": "2024-11-06",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:43:46.420Z"
+    },
+    {
+      "id": "14",
+      "petId": 5,
+      "vetId": 2,
+      "type": "dental",
+      "date": "2025-09-01",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "15",
+      "petId": 5,
+      "vetId": 5,
+      "type": "consultation",
+      "date": "2025-11-17",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "16",
+      "petId": 5,
+      "vetId": 4,
+      "type": "treatment",
+      "date": "2025-01-18",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "17",
+      "petId": 6,
+      "vetId": 2,
+      "type": "vaccination",
+      "date": "2025-09-20",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "18",
+      "petId": 6,
+      "vetId": 9,
+      "type": "emergency",
+      "date": "2024-09-15",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "19",
+      "petId": 6,
+      "vetId": 4,
+      "type": "treatment",
+      "date": "2025-03-17",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "20",
+      "petId": 6,
+      "vetId": 5,
+      "type": "grooming",
+      "date": "2025-02-25",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "21",
+      "petId": 7,
+      "vetId": 6,
+      "type": "vaccination",
+      "date": "2025-09-26",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "22",
+      "petId": 7,
+      "vetId": 10,
+      "type": "checkup",
+      "date": "2025-08-13",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "23",
+      "petId": 7,
+      "vetId": 7,
+      "type": "treatment",
+      "date": "2025-11-04",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "24",
+      "petId": 7,
+      "vetId": 7,
+      "type": "grooming",
+      "date": "2025-12-28",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "25",
+      "petId": 7,
+      "vetId": 3,
+      "type": "emergency",
+      "date": "2025-01-31",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:43:46.421Z"
+    },
+    {
+      "id": "26",
+      "petId": 8,
+      "vetId": 4,
+      "type": "emergency",
+      "date": "2024-09-18",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "27",
+      "petId": 8,
+      "vetId": 3,
+      "type": "grooming",
+      "date": "2024-08-23",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "28",
+      "petId": 8,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2025-02-22",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "29",
+      "petId": 8,
+      "vetId": 10,
+      "type": "grooming",
+      "date": "2024-07-27",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "30",
+      "petId": 8,
+      "vetId": 4,
+      "type": "treatment",
+      "date": "2025-04-07",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "31",
+      "petId": 9,
+      "vetId": 6,
+      "type": "vaccination",
+      "date": "2024-12-20",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "32",
+      "petId": 9,
+      "vetId": 3,
+      "type": "dental",
+      "date": "2025-06-25",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "33",
+      "petId": 9,
+      "vetId": 5,
+      "type": "grooming",
+      "date": "2024-07-03",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "34",
+      "petId": 9,
+      "vetId": 3,
+      "type": "grooming",
+      "date": "2025-04-30",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "35",
+      "petId": 10,
+      "vetId": 8,
+      "type": "checkup",
+      "date": "2025-07-25",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "36",
+      "petId": 10,
+      "vetId": 4,
+      "type": "emergency",
+      "date": "2025-10-28",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "37",
+      "petId": 10,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-09-02",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "38",
+      "petId": 11,
+      "vetId": 3,
+      "type": "treatment",
+      "date": "2025-04-21",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "39",
+      "petId": 11,
+      "vetId": 3,
+      "type": "treatment",
+      "date": "2025-07-08",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "40",
+      "petId": 11,
+      "vetId": 2,
+      "type": "grooming",
+      "date": "2025-12-22",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "41",
+      "petId": 12,
+      "vetId": 10,
+      "type": "surgery",
+      "date": "2025-01-20",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "42",
+      "petId": 12,
+      "vetId": 11,
+      "type": "surgery",
+      "date": "2025-04-21",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "43",
+      "petId": 12,
+      "vetId": 2,
+      "type": "consultation",
+      "date": "2025-04-03",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "44",
+      "petId": 12,
+      "vetId": 11,
+      "type": "treatment",
+      "date": "2024-07-07",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "45",
+      "petId": 12,
+      "vetId": 10,
+      "type": "checkup",
+      "date": "2025-04-26",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:43:46.422Z"
+    },
+    {
+      "id": "46",
+      "petId": 13,
+      "vetId": 2,
+      "type": "checkup",
+      "date": "2025-02-01",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "47",
+      "petId": 13,
+      "vetId": 10,
+      "type": "treatment",
+      "date": "2025-05-31",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "48",
+      "petId": 13,
+      "vetId": 5,
+      "type": "treatment",
+      "date": "2025-05-18",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "49",
+      "petId": 14,
+      "vetId": 7,
+      "type": "consultation",
+      "date": "2025-05-15",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "50",
+      "petId": 14,
+      "vetId": 6,
+      "type": "surgery",
+      "date": "2025-07-31",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "51",
+      "petId": 15,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2024-07-17",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "52",
+      "petId": 15,
+      "vetId": 8,
+      "type": "emergency",
+      "date": "2024-06-14",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "53",
+      "petId": 15,
+      "vetId": 11,
+      "type": "dental",
+      "date": "2024-09-06",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "54",
+      "petId": 15,
+      "vetId": 3,
+      "type": "consultation",
+      "date": "2025-05-19",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "55",
+      "petId": 16,
+      "vetId": 8,
+      "type": "emergency",
+      "date": "2024-09-29",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "56",
+      "petId": 16,
+      "vetId": 5,
+      "type": "grooming",
+      "date": "2024-09-09",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "57",
+      "petId": 17,
+      "vetId": 6,
+      "type": "dental",
+      "date": "2025-02-28",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "58",
+      "petId": 17,
+      "vetId": 8,
+      "type": "treatment",
+      "date": "2025-04-17",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "59",
+      "petId": 17,
+      "vetId": 2,
+      "type": "consultation",
+      "date": "2025-07-30",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:43:46.423Z"
+    },
+    {
+      "id": "60",
+      "petId": 1,
+      "vetId": 8,
+      "type": "vaccination",
+      "date": "2024-12-07",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "61",
+      "petId": 1,
+      "vetId": 15,
+      "type": "emergency",
+      "date": "2024-11-02",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "62",
+      "petId": 1,
+      "vetId": 15,
+      "type": "consultation",
+      "date": "2024-06-01",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "63",
+      "petId": 2,
+      "vetId": 16,
+      "type": "surgery",
+      "date": "2025-05-05",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "64",
+      "petId": 2,
+      "vetId": 2,
+      "type": "consultation",
+      "date": "2024-10-28",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "65",
+      "petId": 2,
+      "vetId": 7,
+      "type": "consultation",
+      "date": "2024-10-30",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "66",
+      "petId": 2,
+      "vetId": 4,
+      "type": "consultation",
+      "date": "2025-06-23",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "67",
+      "petId": 3,
+      "vetId": 19,
+      "type": "dental",
+      "date": "2025-03-30",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "68",
+      "petId": 3,
+      "vetId": 10,
+      "type": "vaccination",
+      "date": "2024-09-27",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "69",
+      "petId": 4,
+      "vetId": 8,
+      "type": "consultation",
+      "date": "2024-08-25",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "70",
+      "petId": 4,
+      "vetId": 17,
+      "type": "checkup",
+      "date": "2024-08-03",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "71",
+      "petId": 4,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-05-22",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "72",
+      "petId": 4,
+      "vetId": 2,
+      "type": "vaccination",
+      "date": "2025-03-26",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "73",
+      "petId": 5,
+      "vetId": 19,
+      "type": "emergency",
+      "date": "2024-12-25",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "74",
+      "petId": 5,
+      "vetId": 11,
+      "type": "checkup",
+      "date": "2025-07-29",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "75",
+      "petId": 5,
+      "vetId": 4,
+      "type": "emergency",
+      "date": "2025-02-01",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "76",
+      "petId": 6,
+      "vetId": 19,
+      "type": "treatment",
+      "date": "2025-10-31",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "77",
+      "petId": 6,
+      "vetId": 4,
+      "type": "consultation",
+      "date": "2025-10-16",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "78",
+      "petId": 6,
+      "vetId": 16,
+      "type": "dental",
+      "date": "2025-12-20",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "79",
+      "petId": 7,
+      "vetId": 16,
+      "type": "checkup",
+      "date": "2025-11-14",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "80",
+      "petId": 7,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2025-07-22",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "81",
+      "petId": 8,
+      "vetId": 18,
+      "type": "treatment",
+      "date": "2024-06-03",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "82",
+      "petId": 8,
+      "vetId": 13,
+      "type": "treatment",
+      "date": "2025-03-02",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "83",
+      "petId": 8,
+      "vetId": 15,
+      "type": "vaccination",
+      "date": "2025-08-10",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "84",
+      "petId": 8,
+      "vetId": 9,
+      "type": "surgery",
+      "date": "2024-06-08",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "85",
+      "petId": 9,
+      "vetId": 9,
+      "type": "consultation",
+      "date": "2024-09-11",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "86",
+      "petId": 9,
+      "vetId": 8,
+      "type": "grooming",
+      "date": "2025-08-04",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "87",
+      "petId": 9,
+      "vetId": 13,
+      "type": "checkup",
+      "date": "2025-03-27",
+      "description": "Ετήσιος κλινικός έλεγχος",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "88",
+      "petId": 9,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-09-05",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "89",
+      "petId": 9,
+      "vetId": 8,
+      "type": "treatment",
+      "date": "2025-02-28",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "90",
+      "petId": 10,
+      "vetId": 6,
+      "type": "checkup",
+      "date": "2025-10-30",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "91",
+      "petId": 10,
+      "vetId": 18,
+      "type": "vaccination",
+      "date": "2024-05-30",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "92",
+      "petId": 10,
+      "vetId": 15,
+      "type": "treatment",
+      "date": "2024-08-20",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "93",
+      "petId": 10,
+      "vetId": 14,
+      "type": "emergency",
+      "date": "2025-04-07",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "94",
+      "petId": 10,
+      "vetId": 17,
+      "type": "checkup",
+      "date": "2025-03-10",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "95",
+      "petId": 11,
+      "vetId": 2,
+      "type": "grooming",
+      "date": "2025-11-22",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "96",
+      "petId": 11,
+      "vetId": 18,
+      "type": "treatment",
+      "date": "2025-09-24",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "97",
+      "petId": 11,
+      "vetId": 12,
+      "type": "checkup",
+      "date": "2025-07-14",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "98",
+      "petId": 12,
+      "vetId": 4,
+      "type": "consultation",
+      "date": "2025-07-03",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "99",
+      "petId": 12,
+      "vetId": 4,
+      "type": "surgery",
+      "date": "2025-08-13",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "100",
+      "petId": 12,
+      "vetId": 3,
+      "type": "consultation",
+      "date": "2024-09-12",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "101",
+      "petId": 13,
+      "vetId": 14,
+      "type": "vaccination",
+      "date": "2025-08-03",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "102",
+      "petId": 13,
+      "vetId": 8,
+      "type": "consultation",
+      "date": "2024-09-01",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "103",
+      "petId": 13,
+      "vetId": 19,
+      "type": "consultation",
+      "date": "2025-08-08",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "104",
+      "petId": 13,
+      "vetId": 4,
+      "type": "treatment",
+      "date": "2024-05-22",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "105",
+      "petId": 13,
+      "vetId": 18,
+      "type": "consultation",
+      "date": "2024-11-10",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "106",
+      "petId": 14,
+      "vetId": 3,
+      "type": "treatment",
+      "date": "2024-11-14",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "107",
+      "petId": 14,
+      "vetId": 12,
+      "type": "grooming",
+      "date": "2025-12-14",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "108",
+      "petId": 14,
+      "vetId": 15,
+      "type": "emergency",
+      "date": "2025-06-17",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "109",
+      "petId": 15,
+      "vetId": 9,
+      "type": "consultation",
+      "date": "2024-12-10",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "110",
+      "petId": 15,
+      "vetId": 15,
+      "type": "treatment",
+      "date": "2025-05-01",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "111",
+      "petId": 15,
+      "vetId": 15,
+      "type": "dental",
+      "date": "2025-06-25",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "112",
+      "petId": 15,
+      "vetId": 16,
+      "type": "vaccination",
+      "date": "2024-05-13",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "113",
+      "petId": 15,
+      "vetId": 9,
+      "type": "vaccination",
+      "date": "2025-09-03",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "114",
+      "petId": 16,
+      "vetId": 13,
+      "type": "dental",
+      "date": "2025-11-22",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "115",
+      "petId": 16,
+      "vetId": 16,
+      "type": "dental",
+      "date": "2025-09-12",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "116",
+      "petId": 16,
+      "vetId": 14,
+      "type": "dental",
+      "date": "2025-04-10",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "117",
+      "petId": 16,
+      "vetId": 19,
+      "type": "vaccination",
+      "date": "2024-09-17",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "118",
+      "petId": 17,
+      "vetId": 2,
+      "type": "treatment",
+      "date": "2025-12-03",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "119",
+      "petId": 17,
+      "vetId": 4,
+      "type": "surgery",
+      "date": "2025-09-17",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "120",
+      "petId": 18,
+      "vetId": 2,
+      "type": "consultation",
+      "date": "2024-08-23",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "121",
+      "petId": 18,
+      "vetId": 11,
+      "type": "surgery",
+      "date": "2025-03-19",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "122",
+      "petId": 18,
+      "vetId": 12,
+      "type": "consultation",
+      "date": "2025-06-14",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "123",
+      "petId": 19,
+      "vetId": 15,
+      "type": "vaccination",
+      "date": "2024-10-11",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "124",
+      "petId": 19,
+      "vetId": 18,
+      "type": "checkup",
+      "date": "2025-06-09",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "125",
+      "petId": 20,
+      "vetId": 6,
+      "type": "checkup",
+      "date": "2024-11-24",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "126",
+      "petId": 20,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-05-09",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "127",
+      "petId": 20,
+      "vetId": 15,
+      "type": "dental",
+      "date": "2025-02-15",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "128",
+      "petId": 21,
+      "vetId": 16,
+      "type": "consultation",
+      "date": "2025-03-14",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "129",
+      "petId": 21,
+      "vetId": 5,
+      "type": "dental",
+      "date": "2025-03-26",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "130",
+      "petId": 21,
+      "vetId": 6,
+      "type": "grooming",
+      "date": "2025-09-11",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "131",
+      "petId": 21,
+      "vetId": 9,
+      "type": "treatment",
+      "date": "2025-08-06",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "132",
+      "petId": 22,
+      "vetId": 19,
+      "type": "treatment",
+      "date": "2025-03-04",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "133",
+      "petId": 22,
+      "vetId": 6,
+      "type": "treatment",
+      "date": "2024-06-09",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "134",
+      "petId": 22,
+      "vetId": 16,
+      "type": "surgery",
+      "date": "2024-12-02",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "135",
+      "petId": 22,
+      "vetId": 6,
+      "type": "vaccination",
+      "date": "2025-11-13",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "136",
+      "petId": 23,
+      "vetId": 6,
+      "type": "vaccination",
+      "date": "2025-07-19",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "137",
+      "petId": 23,
+      "vetId": 16,
+      "type": "treatment",
+      "date": "2024-11-05",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "138",
+      "petId": 23,
+      "vetId": 16,
+      "type": "grooming",
+      "date": "2025-10-16",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "139",
+      "petId": 24,
+      "vetId": 12,
+      "type": "surgery",
+      "date": "2025-08-31",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "140",
+      "petId": 24,
+      "vetId": 18,
+      "type": "treatment",
+      "date": "2025-10-10",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "141",
+      "petId": 25,
+      "vetId": 6,
+      "type": "emergency",
+      "date": "2024-05-21",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "142",
+      "petId": 25,
+      "vetId": 8,
+      "type": "dental",
+      "date": "2025-04-12",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "143",
+      "petId": 26,
+      "vetId": 18,
+      "type": "surgery",
+      "date": "2024-10-11",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "144",
+      "petId": 26,
+      "vetId": 16,
+      "type": "vaccination",
+      "date": "2024-09-02",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "145",
+      "petId": 26,
+      "vetId": 2,
+      "type": "treatment",
+      "date": "2025-01-05",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "146",
+      "petId": 26,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2025-07-26",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "147",
+      "petId": 26,
+      "vetId": 19,
+      "type": "dental",
+      "date": "2024-12-10",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:46:42.315Z"
+    },
+    {
+      "id": "148",
+      "petId": 1,
+      "vetId": 21,
+      "type": "consultation",
+      "date": "2025-04-02",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "149",
+      "petId": 1,
+      "vetId": 12,
+      "type": "consultation",
+      "date": "2024-11-27",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "150",
+      "petId": 1,
+      "vetId": 27,
+      "type": "surgery",
+      "date": "2025-02-11",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "151",
+      "petId": 1,
+      "vetId": 19,
+      "type": "dental",
+      "date": "2024-09-22",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "152",
+      "petId": 1,
+      "vetId": 17,
+      "type": "checkup",
+      "date": "2025-11-23",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "153",
+      "petId": 2,
+      "vetId": 25,
+      "type": "emergency",
+      "date": "2024-10-15",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "154",
+      "petId": 2,
+      "vetId": 21,
+      "type": "dental",
+      "date": "2025-07-09",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "155",
+      "petId": 3,
+      "vetId": 23,
+      "type": "surgery",
+      "date": "2024-06-20",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "156",
+      "petId": 3,
+      "vetId": 21,
+      "type": "consultation",
+      "date": "2024-06-15",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "157",
+      "petId": 3,
+      "vetId": 4,
+      "type": "treatment",
+      "date": "2025-04-02",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "158",
+      "petId": 3,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2025-02-26",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "159",
+      "petId": 3,
+      "vetId": 13,
+      "type": "dental",
+      "date": "2025-10-23",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "160",
+      "petId": 4,
+      "vetId": 17,
+      "type": "vaccination",
+      "date": "2025-06-17",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "161",
+      "petId": 4,
+      "vetId": 18,
+      "type": "dental",
+      "date": "2024-08-31",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "162",
+      "petId": 4,
+      "vetId": 6,
+      "type": "checkup",
+      "date": "2025-06-18",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "163",
+      "petId": 4,
+      "vetId": 18,
+      "type": "checkup",
+      "date": "2025-09-05",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "164",
+      "petId": 4,
+      "vetId": 23,
+      "type": "vaccination",
+      "date": "2025-01-18",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "165",
+      "petId": 5,
+      "vetId": 19,
+      "type": "vaccination",
+      "date": "2024-10-01",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "166",
+      "petId": 5,
+      "vetId": 24,
+      "type": "treatment",
+      "date": "2025-08-19",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "167",
+      "petId": 5,
+      "vetId": 8,
+      "type": "checkup",
+      "date": "2024-12-18",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "168",
+      "petId": 5,
+      "vetId": 13,
+      "type": "consultation",
+      "date": "2024-08-27",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "169",
+      "petId": 6,
+      "vetId": 12,
+      "type": "grooming",
+      "date": "2025-05-18",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "170",
+      "petId": 6,
+      "vetId": 9,
+      "type": "checkup",
+      "date": "2025-01-30",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "171",
+      "petId": 6,
+      "vetId": 25,
+      "type": "grooming",
+      "date": "2024-10-20",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "172",
+      "petId": 6,
+      "vetId": 8,
+      "type": "dental",
+      "date": "2025-09-19",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "173",
+      "petId": 6,
+      "vetId": 10,
+      "type": "vaccination",
+      "date": "2024-10-23",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "174",
+      "petId": 7,
+      "vetId": 16,
+      "type": "surgery",
+      "date": "2024-06-10",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "175",
+      "petId": 7,
+      "vetId": 26,
+      "type": "treatment",
+      "date": "2024-10-11",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "176",
+      "petId": 8,
+      "vetId": 16,
+      "type": "vaccination",
+      "date": "2024-07-25",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "177",
+      "petId": 8,
+      "vetId": 18,
+      "type": "dental",
+      "date": "2025-05-27",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "178",
+      "petId": 9,
+      "vetId": 22,
+      "type": "surgery",
+      "date": "2025-03-22",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "179",
+      "petId": 9,
+      "vetId": 11,
+      "type": "vaccination",
+      "date": "2025-12-04",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "180",
+      "petId": 9,
+      "vetId": 17,
+      "type": "dental",
+      "date": "2025-11-12",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "181",
+      "petId": 10,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2024-05-16",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "182",
+      "petId": 10,
+      "vetId": 12,
+      "type": "grooming",
+      "date": "2024-07-28",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "183",
+      "petId": 11,
+      "vetId": 19,
+      "type": "treatment",
+      "date": "2025-04-15",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "184",
+      "petId": 11,
+      "vetId": 18,
+      "type": "treatment",
+      "date": "2025-05-02",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "185",
+      "petId": 11,
+      "vetId": 9,
+      "type": "surgery",
+      "date": "2025-01-23",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "186",
+      "petId": 11,
+      "vetId": 12,
+      "type": "dental",
+      "date": "2025-11-10",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "187",
+      "petId": 11,
+      "vetId": 10,
+      "type": "surgery",
+      "date": "2025-09-04",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "188",
+      "petId": 12,
+      "vetId": 19,
+      "type": "emergency",
+      "date": "2024-06-26",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "189",
+      "petId": 12,
+      "vetId": 17,
+      "type": "consultation",
+      "date": "2025-04-06",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "190",
+      "petId": 12,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-04-03",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "191",
+      "petId": 12,
+      "vetId": 27,
+      "type": "vaccination",
+      "date": "2024-07-02",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "192",
+      "petId": 12,
+      "vetId": 18,
+      "type": "checkup",
+      "date": "2025-12-23",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "193",
+      "petId": 13,
+      "vetId": 6,
+      "type": "dental",
+      "date": "2024-08-13",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "194",
+      "petId": 13,
+      "vetId": 14,
+      "type": "emergency",
+      "date": "2025-09-13",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "195",
+      "petId": 13,
+      "vetId": 14,
+      "type": "surgery",
+      "date": "2025-06-05",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "196",
+      "petId": 13,
+      "vetId": 25,
+      "type": "treatment",
+      "date": "2024-05-30",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "197",
+      "petId": 13,
+      "vetId": 12,
+      "type": "checkup",
+      "date": "2025-07-07",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "198",
+      "petId": 14,
+      "vetId": 14,
+      "type": "checkup",
+      "date": "2025-03-24",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "199",
+      "petId": 14,
+      "vetId": 8,
+      "type": "grooming",
+      "date": "2024-12-04",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "200",
+      "petId": 15,
+      "vetId": 7,
+      "type": "emergency",
+      "date": "2025-01-31",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "201",
+      "petId": 15,
+      "vetId": 26,
+      "type": "grooming",
+      "date": "2025-09-15",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "202",
+      "petId": 16,
+      "vetId": 5,
+      "type": "emergency",
+      "date": "2025-01-18",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "203",
+      "petId": 16,
+      "vetId": 22,
+      "type": "checkup",
+      "date": "2025-09-07",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "204",
+      "petId": 17,
+      "vetId": 27,
+      "type": "consultation",
+      "date": "2024-06-11",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "205",
+      "petId": 17,
+      "vetId": 7,
+      "type": "checkup",
+      "date": "2024-10-23",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "206",
+      "petId": 17,
+      "vetId": 20,
+      "type": "consultation",
+      "date": "2025-05-18",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "207",
+      "petId": 18,
+      "vetId": 19,
+      "type": "emergency",
+      "date": "2025-03-07",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "208",
+      "petId": 18,
+      "vetId": 11,
+      "type": "vaccination",
+      "date": "2025-08-03",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "209",
+      "petId": 18,
+      "vetId": 24,
+      "type": "dental",
+      "date": "2025-11-29",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "210",
+      "petId": 18,
+      "vetId": 12,
+      "type": "vaccination",
+      "date": "2024-09-05",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "211",
+      "petId": 19,
+      "vetId": 21,
+      "type": "dental",
+      "date": "2025-01-05",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "212",
+      "petId": 19,
+      "vetId": 16,
+      "type": "dental",
+      "date": "2025-07-21",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "213",
+      "petId": 19,
+      "vetId": 10,
+      "type": "surgery",
+      "date": "2024-05-08",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "214",
+      "petId": 20,
+      "vetId": 20,
+      "type": "consultation",
+      "date": "2025-01-29",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.500Z"
+    },
+    {
+      "id": "215",
+      "petId": 20,
+      "vetId": 23,
+      "type": "emergency",
+      "date": "2024-08-24",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "216",
+      "petId": 21,
+      "vetId": 17,
+      "type": "dental",
+      "date": "2024-11-15",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "217",
+      "petId": 21,
+      "vetId": 11,
+      "type": "treatment",
+      "date": "2025-06-02",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "218",
+      "petId": 21,
+      "vetId": 17,
+      "type": "dental",
+      "date": "2025-02-10",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "219",
+      "petId": 21,
+      "vetId": 22,
+      "type": "grooming",
+      "date": "2025-11-29",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "220",
+      "petId": 21,
+      "vetId": 16,
+      "type": "vaccination",
+      "date": "2025-03-07",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "221",
+      "petId": 22,
+      "vetId": 12,
+      "type": "emergency",
+      "date": "2024-08-08",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "222",
+      "petId": 22,
+      "vetId": 19,
+      "type": "checkup",
+      "date": "2025-02-17",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "223",
+      "petId": 22,
+      "vetId": 10,
+      "type": "treatment",
+      "date": "2024-09-26",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "224",
+      "petId": 22,
+      "vetId": 23,
+      "type": "vaccination",
+      "date": "2024-06-02",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "225",
+      "petId": 23,
+      "vetId": 14,
+      "type": "consultation",
+      "date": "2025-08-22",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "226",
+      "petId": 23,
+      "vetId": 21,
+      "type": "grooming",
+      "date": "2024-11-10",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "227",
+      "petId": 23,
+      "vetId": 16,
+      "type": "treatment",
+      "date": "2024-08-03",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "228",
+      "petId": 23,
+      "vetId": 27,
+      "type": "emergency",
+      "date": "2024-11-25",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "229",
+      "petId": 24,
+      "vetId": 6,
+      "type": "dental",
+      "date": "2025-02-17",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "230",
+      "petId": 24,
+      "vetId": 8,
+      "type": "checkup",
+      "date": "2024-12-22",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "231",
+      "petId": 24,
+      "vetId": 14,
+      "type": "surgery",
+      "date": "2025-11-05",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "232",
+      "petId": 24,
+      "vetId": 19,
+      "type": "dental",
+      "date": "2024-07-21",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "233",
+      "petId": 25,
+      "vetId": 12,
+      "type": "consultation",
+      "date": "2024-12-14",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "234",
+      "petId": 25,
+      "vetId": 8,
+      "type": "surgery",
+      "date": "2024-07-21",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "235",
+      "petId": 25,
+      "vetId": 10,
+      "type": "vaccination",
+      "date": "2024-11-23",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "236",
+      "petId": 25,
+      "vetId": 21,
+      "type": "surgery",
+      "date": "2024-11-08",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "237",
+      "petId": 25,
+      "vetId": 20,
+      "type": "treatment",
+      "date": "2025-04-22",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "238",
+      "petId": 26,
+      "vetId": 19,
+      "type": "checkup",
+      "date": "2024-10-27",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "239",
+      "petId": 26,
+      "vetId": 11,
+      "type": "grooming",
+      "date": "2025-12-28",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "240",
+      "petId": 27,
+      "vetId": 3,
+      "type": "grooming",
+      "date": "2024-09-12",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "241",
+      "petId": 27,
+      "vetId": 26,
+      "type": "emergency",
+      "date": "2025-07-23",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "242",
+      "petId": 27,
+      "vetId": 27,
+      "type": "dental",
+      "date": "2025-03-26",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "243",
+      "petId": 27,
+      "vetId": 7,
+      "type": "checkup",
+      "date": "2024-08-18",
+      "description": "Ετήσιος κλινικός έλεγχος",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "244",
+      "petId": 27,
+      "vetId": 15,
+      "type": "consultation",
+      "date": "2025-12-04",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "245",
+      "petId": 28,
+      "vetId": 11,
+      "type": "vaccination",
+      "date": "2025-07-07",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "246",
+      "petId": 28,
+      "vetId": 13,
+      "type": "consultation",
+      "date": "2024-09-01",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "247",
+      "petId": 28,
+      "vetId": 26,
+      "type": "dental",
+      "date": "2024-10-12",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "248",
+      "petId": 28,
+      "vetId": 11,
+      "type": "emergency",
+      "date": "2025-02-21",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "249",
+      "petId": 28,
+      "vetId": 24,
+      "type": "treatment",
+      "date": "2025-03-06",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "250",
+      "petId": 29,
+      "vetId": 14,
+      "type": "checkup",
+      "date": "2024-09-25",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "251",
+      "petId": 29,
+      "vetId": 4,
+      "type": "consultation",
+      "date": "2024-11-27",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "252",
+      "petId": 30,
+      "vetId": 5,
+      "type": "consultation",
+      "date": "2025-02-11",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "253",
+      "petId": 30,
+      "vetId": 13,
+      "type": "consultation",
+      "date": "2024-09-13",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "254",
+      "petId": 30,
+      "vetId": 25,
+      "type": "consultation",
+      "date": "2025-01-12",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "255",
+      "petId": 30,
+      "vetId": 22,
+      "type": "vaccination",
+      "date": "2025-07-26",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "256",
+      "petId": 30,
+      "vetId": 27,
+      "type": "vaccination",
+      "date": "2024-06-21",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "257",
+      "petId": 31,
+      "vetId": 8,
+      "type": "consultation",
+      "date": "2024-11-26",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "258",
+      "petId": 31,
+      "vetId": 11,
+      "type": "dental",
+      "date": "2025-01-15",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "259",
+      "petId": 31,
+      "vetId": 17,
+      "type": "consultation",
+      "date": "2025-03-01",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "260",
+      "petId": 31,
+      "vetId": 19,
+      "type": "treatment",
+      "date": "2025-09-01",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "261",
+      "petId": 32,
+      "vetId": 25,
+      "type": "treatment",
+      "date": "2025-02-14",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "262",
+      "petId": 32,
+      "vetId": 19,
+      "type": "emergency",
+      "date": "2025-10-31",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "263",
+      "petId": 32,
+      "vetId": 14,
+      "type": "emergency",
+      "date": "2025-07-17",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "264",
+      "petId": 33,
+      "vetId": 6,
+      "type": "emergency",
+      "date": "2025-10-21",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "265",
+      "petId": 33,
+      "vetId": 10,
+      "type": "dental",
+      "date": "2025-01-26",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "266",
+      "petId": 34,
+      "vetId": 24,
+      "type": "grooming",
+      "date": "2025-09-24",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "267",
+      "petId": 34,
+      "vetId": 19,
+      "type": "vaccination",
+      "date": "2025-08-19",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "268",
+      "petId": 34,
+      "vetId": 25,
+      "type": "dental",
+      "date": "2025-05-12",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "269",
+      "petId": 35,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2024-08-26",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "270",
+      "petId": 35,
+      "vetId": 15,
+      "type": "treatment",
+      "date": "2024-07-08",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "271",
+      "petId": 35,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2024-11-13",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "272",
+      "petId": 35,
+      "vetId": 12,
+      "type": "vaccination",
+      "date": "2025-10-18",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "273",
+      "petId": 35,
+      "vetId": 8,
+      "type": "surgery",
+      "date": "2025-05-25",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "274",
+      "petId": 36,
+      "vetId": 15,
+      "type": "dental",
+      "date": "2024-05-25",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "275",
+      "petId": 36,
+      "vetId": 7,
+      "type": "surgery",
+      "date": "2025-06-20",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "276",
+      "petId": 37,
+      "vetId": 14,
+      "type": "surgery",
+      "date": "2024-06-12",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "277",
+      "petId": 37,
+      "vetId": 8,
+      "type": "dental",
+      "date": "2025-01-18",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "278",
+      "petId": 38,
+      "vetId": 16,
+      "type": "dental",
+      "date": "2025-02-21",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "279",
+      "petId": 38,
+      "vetId": 25,
+      "type": "consultation",
+      "date": "2025-07-27",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "280",
+      "petId": 38,
+      "vetId": 24,
+      "type": "treatment",
+      "date": "2025-06-22",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "281",
+      "petId": 38,
+      "vetId": 5,
+      "type": "consultation",
+      "date": "2025-07-21",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "282",
+      "petId": 39,
+      "vetId": 14,
+      "type": "dental",
+      "date": "2025-02-14",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "283",
+      "petId": 39,
+      "vetId": 27,
+      "type": "treatment",
+      "date": "2025-07-28",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "284",
+      "petId": 39,
+      "vetId": 2,
+      "type": "surgery",
+      "date": "2024-10-27",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "285",
+      "petId": 40,
+      "vetId": 26,
+      "type": "surgery",
+      "date": "2024-08-20",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "286",
+      "petId": 40,
+      "vetId": 5,
+      "type": "dental",
+      "date": "2024-12-23",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "287",
+      "petId": 40,
+      "vetId": 22,
+      "type": "vaccination",
+      "date": "2024-08-12",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "288",
+      "petId": 40,
+      "vetId": 12,
+      "type": "dental",
+      "date": "2025-05-13",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "289",
+      "petId": 41,
+      "vetId": 2,
+      "type": "dental",
+      "date": "2025-05-06",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "290",
+      "petId": 41,
+      "vetId": 8,
+      "type": "consultation",
+      "date": "2025-03-15",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "291",
+      "petId": 41,
+      "vetId": 7,
+      "type": "emergency",
+      "date": "2024-12-22",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "292",
+      "petId": 41,
+      "vetId": 20,
+      "type": "checkup",
+      "date": "2024-09-19",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "293",
+      "petId": 41,
+      "vetId": 13,
+      "type": "surgery",
+      "date": "2025-08-12",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:52:19.501Z"
+    },
+    {
+      "id": "294",
+      "petId": 1,
+      "vetId": 16,
+      "type": "vaccination",
+      "date": "2025-10-02",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "295",
+      "petId": 1,
+      "vetId": 10,
+      "type": "emergency",
+      "date": "2025-04-22",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "296",
+      "petId": 1,
+      "vetId": 30,
+      "type": "vaccination",
+      "date": "2025-09-07",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "297",
+      "petId": 1,
+      "vetId": 15,
+      "type": "consultation",
+      "date": "2024-10-23",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "298",
+      "petId": 2,
+      "vetId": 2,
+      "type": "vaccination",
+      "date": "2024-12-14",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "299",
+      "petId": 2,
+      "vetId": 13,
+      "type": "dental",
+      "date": "2024-12-30",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "300",
+      "petId": 2,
+      "vetId": 26,
+      "type": "emergency",
+      "date": "2025-05-25",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "301",
+      "petId": 3,
+      "vetId": 25,
+      "type": "vaccination",
+      "date": "2025-09-23",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "302",
+      "petId": 3,
+      "vetId": 10,
+      "type": "grooming",
+      "date": "2024-07-31",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "303",
+      "petId": 3,
+      "vetId": 7,
+      "type": "emergency",
+      "date": "2025-07-22",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "304",
+      "petId": 3,
+      "vetId": 11,
+      "type": "emergency",
+      "date": "2025-03-30",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "305",
+      "petId": 3,
+      "vetId": 11,
+      "type": "surgery",
+      "date": "2025-06-21",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "306",
+      "petId": 4,
+      "vetId": 20,
+      "type": "surgery",
+      "date": "2024-09-10",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "307",
+      "petId": 4,
+      "vetId": 6,
+      "type": "emergency",
+      "date": "2025-03-23",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "308",
+      "petId": 4,
+      "vetId": 7,
+      "type": "vaccination",
+      "date": "2024-11-22",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "309",
+      "petId": 4,
+      "vetId": 35,
+      "type": "dental",
+      "date": "2025-02-10",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "310",
+      "petId": 4,
+      "vetId": 24,
+      "type": "grooming",
+      "date": "2024-09-16",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "311",
+      "petId": 5,
+      "vetId": 35,
+      "type": "treatment",
+      "date": "2025-11-17",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "312",
+      "petId": 5,
+      "vetId": 27,
+      "type": "grooming",
+      "date": "2025-07-24",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "313",
+      "petId": 6,
+      "vetId": 15,
+      "type": "surgery",
+      "date": "2025-02-20",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "314",
+      "petId": 6,
+      "vetId": 27,
+      "type": "treatment",
+      "date": "2025-12-08",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "315",
+      "petId": 6,
+      "vetId": 9,
+      "type": "emergency",
+      "date": "2025-12-25",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "316",
+      "petId": 7,
+      "vetId": 28,
+      "type": "vaccination",
+      "date": "2025-10-19",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "317",
+      "petId": 7,
+      "vetId": 4,
+      "type": "grooming",
+      "date": "2024-11-25",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "318",
+      "petId": 8,
+      "vetId": 25,
+      "type": "consultation",
+      "date": "2024-12-22",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "319",
+      "petId": 8,
+      "vetId": 14,
+      "type": "emergency",
+      "date": "2024-05-20",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "320",
+      "petId": 8,
+      "vetId": 33,
+      "type": "checkup",
+      "date": "2024-10-25",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "321",
+      "petId": 9,
+      "vetId": 22,
+      "type": "emergency",
+      "date": "2024-10-26",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "322",
+      "petId": 9,
+      "vetId": 8,
+      "type": "surgery",
+      "date": "2024-12-15",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "323",
+      "petId": 10,
+      "vetId": 33,
+      "type": "checkup",
+      "date": "2025-07-07",
+      "description": "Ετήσιος κλινικός έλεγχος",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "324",
+      "petId": 10,
+      "vetId": 25,
+      "type": "surgery",
+      "date": "2025-12-24",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "325",
+      "petId": 10,
+      "vetId": 32,
+      "type": "emergency",
+      "date": "2024-10-21",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "326",
+      "petId": 10,
+      "vetId": 3,
+      "type": "dental",
+      "date": "2025-07-15",
+      "description": "Αφαίρεση δοντιού",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "327",
+      "petId": 11,
+      "vetId": 14,
+      "type": "emergency",
+      "date": "2025-06-20",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "328",
+      "petId": 11,
+      "vetId": 2,
+      "type": "emergency",
+      "date": "2025-01-05",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "329",
+      "petId": 11,
+      "vetId": 9,
+      "type": "emergency",
+      "date": "2024-11-19",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "330",
+      "petId": 11,
+      "vetId": 27,
+      "type": "surgery",
+      "date": "2025-04-01",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "331",
+      "petId": 12,
+      "vetId": 22,
+      "type": "emergency",
+      "date": "2025-07-08",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "332",
+      "petId": 12,
+      "vetId": 13,
+      "type": "dental",
+      "date": "2025-01-02",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "333",
+      "petId": 13,
+      "vetId": 10,
+      "type": "emergency",
+      "date": "2025-06-07",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "334",
+      "petId": 13,
+      "vetId": 20,
+      "type": "dental",
+      "date": "2025-03-23",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "335",
+      "petId": 13,
+      "vetId": 7,
+      "type": "surgery",
+      "date": "2025-11-03",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "336",
+      "petId": 14,
+      "vetId": 35,
+      "type": "grooming",
+      "date": "2025-03-13",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "337",
+      "petId": 14,
+      "vetId": 4,
+      "type": "surgery",
+      "date": "2024-07-03",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "338",
+      "petId": 14,
+      "vetId": 6,
+      "type": "surgery",
+      "date": "2025-11-24",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "339",
+      "petId": 14,
+      "vetId": 33,
+      "type": "emergency",
+      "date": "2025-08-02",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "340",
+      "petId": 14,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2025-11-25",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "341",
+      "petId": 15,
+      "vetId": 2,
+      "type": "emergency",
+      "date": "2025-04-01",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "342",
+      "petId": 15,
+      "vetId": 23,
+      "type": "surgery",
+      "date": "2024-07-21",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "343",
+      "petId": 15,
+      "vetId": 9,
+      "type": "grooming",
+      "date": "2024-10-01",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "344",
+      "petId": 16,
+      "vetId": 16,
+      "type": "checkup",
+      "date": "2024-05-20",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "345",
+      "petId": 16,
+      "vetId": 12,
+      "type": "treatment",
+      "date": "2024-07-08",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "346",
+      "petId": 16,
+      "vetId": 7,
+      "type": "vaccination",
+      "date": "2024-12-02",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "347",
+      "petId": 17,
+      "vetId": 3,
+      "type": "surgery",
+      "date": "2025-12-24",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "348",
+      "petId": 17,
+      "vetId": 5,
+      "type": "treatment",
+      "date": "2025-08-15",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "349",
+      "petId": 17,
+      "vetId": 4,
+      "type": "consultation",
+      "date": "2025-11-14",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "350",
+      "petId": 17,
+      "vetId": 29,
+      "type": "grooming",
+      "date": "2025-04-02",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "351",
+      "petId": 17,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2024-08-20",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "352",
+      "petId": 18,
+      "vetId": 9,
+      "type": "consultation",
+      "date": "2024-12-01",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "353",
+      "petId": 18,
+      "vetId": 15,
+      "type": "dental",
+      "date": "2025-04-05",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "354",
+      "petId": 19,
+      "vetId": 14,
+      "type": "treatment",
+      "date": "2025-11-16",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "355",
+      "petId": 19,
+      "vetId": 3,
+      "type": "treatment",
+      "date": "2025-02-16",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "356",
+      "petId": 19,
+      "vetId": 32,
+      "type": "vaccination",
+      "date": "2025-06-21",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "357",
+      "petId": 20,
+      "vetId": 12,
+      "type": "surgery",
+      "date": "2025-03-29",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "358",
+      "petId": 20,
+      "vetId": 10,
+      "type": "treatment",
+      "date": "2025-01-06",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "359",
+      "petId": 20,
+      "vetId": 35,
+      "type": "grooming",
+      "date": "2024-07-25",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "360",
+      "petId": 20,
+      "vetId": 22,
+      "type": "treatment",
+      "date": "2025-09-13",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "361",
+      "petId": 20,
+      "vetId": 35,
+      "type": "vaccination",
+      "date": "2025-02-10",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "362",
+      "petId": 21,
+      "vetId": 25,
+      "type": "checkup",
+      "date": "2025-03-23",
+      "description": "Γενικό τεστ αίματος",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "363",
+      "petId": 21,
+      "vetId": 7,
+      "type": "checkup",
+      "date": "2025-02-05",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "364",
+      "petId": 22,
+      "vetId": 21,
+      "type": "grooming",
+      "date": "2024-07-17",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "365",
+      "petId": 22,
+      "vetId": 33,
+      "type": "dental",
+      "date": "2024-06-13",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "366",
+      "petId": 23,
+      "vetId": 2,
+      "type": "grooming",
+      "date": "2024-11-15",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "367",
+      "petId": 23,
+      "vetId": 17,
+      "type": "emergency",
+      "date": "2024-12-19",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "368",
+      "petId": 24,
+      "vetId": 30,
+      "type": "checkup",
+      "date": "2025-09-11",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "369",
+      "petId": 24,
+      "vetId": 15,
+      "type": "emergency",
+      "date": "2024-08-28",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "370",
+      "petId": 25,
+      "vetId": 26,
+      "type": "checkup",
+      "date": "2025-01-24",
+      "description": "Ετήσιος κλινικός έλεγχος",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "371",
+      "petId": 25,
+      "vetId": 8,
+      "type": "vaccination",
+      "date": "2024-09-11",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "372",
+      "petId": 25,
+      "vetId": 16,
+      "type": "treatment",
+      "date": "2024-09-28",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "373",
+      "petId": 25,
+      "vetId": 4,
+      "type": "dental",
+      "date": "2025-07-01",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "374",
+      "petId": 25,
+      "vetId": 5,
+      "type": "checkup",
+      "date": "2025-10-05",
+      "description": "Έλεγχος καρδιάς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "375",
+      "petId": 26,
+      "vetId": 3,
+      "type": "vaccination",
+      "date": "2024-11-30",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "376",
+      "petId": 26,
+      "vetId": 22,
+      "type": "vaccination",
+      "date": "2024-06-03",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "377",
+      "petId": 27,
+      "vetId": 13,
+      "type": "consultation",
+      "date": "2025-03-18",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "378",
+      "petId": 27,
+      "vetId": 3,
+      "type": "vaccination",
+      "date": "2025-10-29",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "379",
+      "petId": 28,
+      "vetId": 7,
+      "type": "grooming",
+      "date": "2024-05-15",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "380",
+      "petId": 28,
+      "vetId": 22,
+      "type": "dental",
+      "date": "2025-12-06",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "381",
+      "petId": 28,
+      "vetId": 33,
+      "type": "grooming",
+      "date": "2024-05-30",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "382",
+      "petId": 28,
+      "vetId": 17,
+      "type": "dental",
+      "date": "2025-06-06",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "383",
+      "petId": 29,
+      "vetId": 19,
+      "type": "treatment",
+      "date": "2024-09-03",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "384",
+      "petId": 29,
+      "vetId": 2,
+      "type": "grooming",
+      "date": "2025-09-20",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "385",
+      "petId": 30,
+      "vetId": 3,
+      "type": "surgery",
+      "date": "2024-11-16",
+      "description": "Αφαίρεση όγκου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "386",
+      "petId": 30,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2025-05-01",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "387",
+      "petId": 30,
+      "vetId": 13,
+      "type": "emergency",
+      "date": "2024-09-19",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "388",
+      "petId": 31,
+      "vetId": 33,
+      "type": "emergency",
+      "date": "2025-02-19",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "389",
+      "petId": 31,
+      "vetId": 24,
+      "type": "grooming",
+      "date": "2025-09-27",
+      "description": "Καθαρισμός αναλ πόρων",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "390",
+      "petId": 31,
+      "vetId": 10,
+      "type": "emergency",
+      "date": "2025-12-11",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "391",
+      "petId": 31,
+      "vetId": 32,
+      "type": "surgery",
+      "date": "2025-11-28",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "392",
+      "petId": 31,
+      "vetId": 2,
+      "type": "grooming",
+      "date": "2025-04-30",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "393",
+      "petId": 32,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2025-05-26",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "394",
+      "petId": 32,
+      "vetId": 33,
+      "type": "emergency",
+      "date": "2024-12-08",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "395",
+      "petId": 32,
+      "vetId": 9,
+      "type": "treatment",
+      "date": "2025-12-13",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "396",
+      "petId": 32,
+      "vetId": 2,
+      "type": "consultation",
+      "date": "2024-10-10",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "397",
+      "petId": 32,
+      "vetId": 28,
+      "type": "checkup",
+      "date": "2025-01-19",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "398",
+      "petId": 33,
+      "vetId": 15,
+      "type": "emergency",
+      "date": "2024-10-10",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "399",
+      "petId": 33,
+      "vetId": 20,
+      "type": "surgery",
+      "date": "2025-02-20",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "400",
+      "petId": 33,
+      "vetId": 31,
+      "type": "dental",
+      "date": "2025-08-04",
+      "description": "Έλεγχος δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "401",
+      "petId": 33,
+      "vetId": 10,
+      "type": "treatment",
+      "date": "2025-12-14",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "402",
+      "petId": 34,
+      "vetId": 3,
+      "type": "consultation",
+      "date": "2025-04-30",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "403",
+      "petId": 34,
+      "vetId": 30,
+      "type": "consultation",
+      "date": "2025-10-28",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "404",
+      "petId": 34,
+      "vetId": 20,
+      "type": "surgery",
+      "date": "2025-08-29",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "405",
+      "petId": 35,
+      "vetId": 30,
+      "type": "emergency",
+      "date": "2025-04-04",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "406",
+      "petId": 35,
+      "vetId": 15,
+      "type": "grooming",
+      "date": "2025-10-02",
+      "description": "Καθαρισμός αυτιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "407",
+      "petId": 35,
+      "vetId": 31,
+      "type": "checkup",
+      "date": "2025-05-06",
+      "description": "Έλεγχος για ενδοπαράσιτα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "408",
+      "petId": 35,
+      "vetId": 35,
+      "type": "treatment",
+      "date": "2025-10-15",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "409",
+      "petId": 35,
+      "vetId": 7,
+      "type": "surgery",
+      "date": "2025-08-21",
+      "description": "Αφαίρεση χοληδόχου κύστης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "410",
+      "petId": 36,
+      "vetId": 18,
+      "type": "checkup",
+      "date": "2025-08-20",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "411",
+      "petId": 36,
+      "vetId": 14,
+      "type": "vaccination",
+      "date": "2024-12-03",
+      "description": "Εμβόλιο λύσσας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "412",
+      "petId": 37,
+      "vetId": 34,
+      "type": "consultation",
+      "date": "2025-02-01",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "413",
+      "petId": 37,
+      "vetId": 22,
+      "type": "dental",
+      "date": "2024-11-14",
+      "description": "Καθαρισμός δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "414",
+      "petId": 38,
+      "vetId": 4,
+      "type": "consultation",
+      "date": "2024-07-31",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "415",
+      "petId": 38,
+      "vetId": 3,
+      "type": "checkup",
+      "date": "2025-06-07",
+      "description": "Έλεγχος αναπνοής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "416",
+      "petId": 38,
+      "vetId": 29,
+      "type": "surgery",
+      "date": "2025-07-07",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "417",
+      "petId": 38,
+      "vetId": 26,
+      "type": "surgery",
+      "date": "2025-06-17",
+      "description": "Ευνουχοποίηση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "418",
+      "petId": 39,
+      "vetId": 9,
+      "type": "treatment",
+      "date": "2024-09-23",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "419",
+      "petId": 39,
+      "vetId": 27,
+      "type": "emergency",
+      "date": "2025-07-13",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "420",
+      "petId": 39,
+      "vetId": 23,
+      "type": "consultation",
+      "date": "2025-06-09",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "421",
+      "petId": 40,
+      "vetId": 30,
+      "type": "dental",
+      "date": "2024-11-04",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "422",
+      "petId": 40,
+      "vetId": 26,
+      "type": "emergency",
+      "date": "2025-06-06",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "423",
+      "petId": 40,
+      "vetId": 16,
+      "type": "dental",
+      "date": "2025-02-10",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "424",
+      "petId": 40,
+      "vetId": 24,
+      "type": "consultation",
+      "date": "2024-09-25",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "425",
+      "petId": 41,
+      "vetId": 16,
+      "type": "grooming",
+      "date": "2024-06-06",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "426",
+      "petId": 41,
+      "vetId": 17,
+      "type": "grooming",
+      "date": "2024-07-09",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "427",
+      "petId": 41,
+      "vetId": 9,
+      "type": "consultation",
+      "date": "2024-10-25",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "428",
+      "petId": 41,
+      "vetId": 12,
+      "type": "treatment",
+      "date": "2025-08-07",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "429",
+      "petId": 41,
+      "vetId": 33,
+      "type": "vaccination",
+      "date": "2025-01-27",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "430",
+      "petId": 42,
+      "vetId": 34,
+      "type": "vaccination",
+      "date": "2025-04-06",
+      "description": "Ετήσιος εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "431",
+      "petId": 42,
+      "vetId": 22,
+      "type": "checkup",
+      "date": "2025-11-06",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "432",
+      "petId": 42,
+      "vetId": 20,
+      "type": "dental",
+      "date": "2025-07-15",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "433",
+      "petId": 43,
+      "vetId": 19,
+      "type": "consultation",
+      "date": "2024-12-26",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "434",
+      "petId": 43,
+      "vetId": 6,
+      "type": "vaccination",
+      "date": "2024-05-17",
+      "description": "Εμβόλιο κατά της φόνης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "435",
+      "petId": 43,
+      "vetId": 32,
+      "type": "checkup",
+      "date": "2024-12-17",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "436",
+      "petId": 43,
+      "vetId": 30,
+      "type": "consultation",
+      "date": "2025-11-20",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "437",
+      "petId": 43,
+      "vetId": 13,
+      "type": "checkup",
+      "date": "2024-10-23",
+      "description": "Γενική εξέταση υγείας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "438",
+      "petId": 44,
+      "vetId": 29,
+      "type": "emergency",
+      "date": "2025-02-23",
+      "description": "Έκτακτη περίπτωση - αναφυλακτικό σοκ",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "439",
+      "petId": 44,
+      "vetId": 5,
+      "type": "consultation",
+      "date": "2025-03-31",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "440",
+      "petId": 44,
+      "vetId": 34,
+      "type": "treatment",
+      "date": "2025-11-15",
+      "description": "Θεραπεία γαστρεντερικής διαταραχής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "441",
+      "petId": 45,
+      "vetId": 30,
+      "type": "surgery",
+      "date": "2025-02-12",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "442",
+      "petId": 45,
+      "vetId": 20,
+      "type": "consultation",
+      "date": "2025-06-24",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "443",
+      "petId": 45,
+      "vetId": 13,
+      "type": "vaccination",
+      "date": "2024-06-22",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "444",
+      "petId": 45,
+      "vetId": 2,
+      "type": "surgery",
+      "date": "2025-08-09",
+      "description": "Στείρωση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "445",
+      "petId": 45,
+      "vetId": 17,
+      "type": "consultation",
+      "date": "2024-08-20",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "446",
+      "petId": 46,
+      "vetId": 14,
+      "type": "consultation",
+      "date": "2025-05-12",
+      "description": "Συμβουλή υγιεινής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "447",
+      "petId": 46,
+      "vetId": 6,
+      "type": "treatment",
+      "date": "2024-06-19",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "448",
+      "petId": 47,
+      "vetId": 3,
+      "type": "treatment",
+      "date": "2025-03-01",
+      "description": "Θεραπεία δερματικής νόσου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "449",
+      "petId": 47,
+      "vetId": 27,
+      "type": "treatment",
+      "date": "2024-10-01",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "450",
+      "petId": 48,
+      "vetId": 16,
+      "type": "emergency",
+      "date": "2025-09-08",
+      "description": "Έκτακτη περίπτωση - δηλητηρίαση",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "451",
+      "petId": 48,
+      "vetId": 12,
+      "type": "consultation",
+      "date": "2025-05-08",
+      "description": "Τηλεφωνική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "452",
+      "petId": 48,
+      "vetId": 2,
+      "type": "grooming",
+      "date": "2025-09-02",
+      "description": "Κοπή νυχιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "453",
+      "petId": 49,
+      "vetId": 8,
+      "type": "emergency",
+      "date": "2025-06-14",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "454",
+      "petId": 49,
+      "vetId": 22,
+      "type": "treatment",
+      "date": "2025-09-17",
+      "description": "Φυσιοθεραπεία",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "455",
+      "petId": 49,
+      "vetId": 9,
+      "type": "vaccination",
+      "date": "2025-07-02",
+      "description": "Πενταπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "456",
+      "petId": 50,
+      "vetId": 22,
+      "type": "treatment",
+      "date": "2025-05-23",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "457",
+      "petId": 50,
+      "vetId": 31,
+      "type": "surgery",
+      "date": "2025-10-31",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "458",
+      "petId": 50,
+      "vetId": 32,
+      "type": "treatment",
+      "date": "2025-05-08",
+      "description": "Θεραπεία λοίμωξης",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "459",
+      "petId": 51,
+      "vetId": 22,
+      "type": "vaccination",
+      "date": "2025-09-11",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "460",
+      "petId": 51,
+      "vetId": 23,
+      "type": "consultation",
+      "date": "2025-08-30",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "461",
+      "petId": 51,
+      "vetId": 6,
+      "type": "consultation",
+      "date": "2024-07-17",
+      "description": "Προ-χειρουργική συμβουλή",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "462",
+      "petId": 51,
+      "vetId": 18,
+      "type": "dental",
+      "date": "2025-01-02",
+      "description": "Σκάλινγκ δοντιών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "463",
+      "petId": 51,
+      "vetId": 21,
+      "type": "emergency",
+      "date": "2025-03-03",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "464",
+      "petId": 52,
+      "vetId": 14,
+      "type": "treatment",
+      "date": "2025-12-03",
+      "description": "Θεραπεία ωτίτιδας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "465",
+      "petId": 52,
+      "vetId": 12,
+      "type": "dental",
+      "date": "2025-06-18",
+      "description": "Θεραπεία περιοδοντίας",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "466",
+      "petId": 52,
+      "vetId": 22,
+      "type": "grooming",
+      "date": "2024-07-25",
+      "description": "Περιποίηση και κοπή τριχών",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "467",
+      "petId": 53,
+      "vetId": 17,
+      "type": "emergency",
+      "date": "2025-01-02",
+      "description": "Έκτακτη περίπτωση - τραυματισμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "468",
+      "petId": 53,
+      "vetId": 34,
+      "type": "consultation",
+      "date": "2024-07-20",
+      "description": "Συμβουλή συμπεριφοράς",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "469",
+      "petId": 53,
+      "vetId": 16,
+      "type": "emergency",
+      "date": "2024-09-14",
+      "description": "Έκτακτη περίπτωση - κατάγματα",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "470",
+      "petId": 53,
+      "vetId": 20,
+      "type": "consultation",
+      "date": "2024-10-27",
+      "description": "Συμβουλή διατροφής",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "471",
+      "petId": 54,
+      "vetId": 29,
+      "type": "vaccination",
+      "date": "2025-12-11",
+      "description": "Τριπλός εμβολιασμός",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    },
+    {
+      "id": "472",
+      "petId": 54,
+      "vetId": 6,
+      "type": "surgery",
+      "date": "2025-07-15",
+      "description": "Επιδιόρθωση δακτύλου",
+      "createdAt": "2026-01-07T14:52:21.379Z"
+    }
+  ],
+  "availability": [
+    {
+      "id": "a8d3",
+      "vetId": 2,
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T13:41:43.538Z"
+    },
+    {
+      "id": "4-friday-1",
+      "vetId": 4,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "4-friday-2",
+      "vetId": 4,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "4-tuesday-1",
+      "vetId": 4,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "4-wednesday-1",
+      "vetId": 4,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "4-wednesday-2",
+      "vetId": 4,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "5-wednesday-1",
+      "vetId": 5,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "5-wednesday-2",
+      "vetId": 5,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "5-saturday-1",
+      "vetId": 5,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "5-thursday-1",
+      "vetId": 5,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:07:10.752Z"
+    },
+    {
+      "id": "6-tuesday-1",
+      "vetId": 6,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-tuesday-2",
+      "vetId": 6,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-saturday-1",
+      "vetId": 6,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-saturday-2",
+      "vetId": 6,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-friday-1",
+      "vetId": 6,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-thursday-1",
+      "vetId": 6,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-thursday-2",
+      "vetId": 6,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "6-monday-1",
+      "vetId": 6,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "7-wednesday-1",
+      "vetId": 7,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "7-tuesday-1",
+      "vetId": 7,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "7-friday-1",
+      "vetId": 7,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "8-saturday-1",
+      "vetId": 8,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "8-monday-1",
+      "vetId": 8,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "8-tuesday-1",
+      "vetId": 8,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "9-monday-1",
+      "vetId": 9,
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "9-saturday-1",
+      "vetId": 9,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "9-thursday-1",
+      "vetId": 9,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "9-friday-1",
+      "vetId": 9,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "9-friday-2",
+      "vetId": 9,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10-saturday-1",
+      "vetId": 10,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10-saturday-2",
+      "vetId": 10,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10-thursday-1",
+      "vetId": 10,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10-thursday-2",
+      "vetId": 10,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10-tuesday-1",
+      "vetId": 10,
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "10-tuesday-2",
+      "vetId": 10,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:07:10.753Z"
+    },
+    {
+      "id": "11-tuesday-1",
+      "vetId": 11,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:07:10.754Z"
+    },
+    {
+      "id": "11-thursday-1",
+      "vetId": 11,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:07:10.754Z"
+    },
+    {
+      "id": "11-wednesday-1",
+      "vetId": 11,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:07:10.754Z"
+    },
+    {
+      "id": "12-thursday-1",
+      "vetId": 12,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "12-saturday-1",
+      "vetId": 12,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "12-tuesday-1",
+      "vetId": 12,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "12-tuesday-2",
+      "vetId": 12,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "12-friday-1",
+      "vetId": 12,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "13-monday-1",
+      "vetId": 13,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "13-saturday-1",
+      "vetId": 13,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "13-thursday-1",
+      "vetId": 13,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "13-thursday-2",
+      "vetId": 13,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "14-saturday-1",
+      "vetId": 14,
+      "day": "saturday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "14-saturday-2",
+      "vetId": 14,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "14-wednesday-1",
+      "vetId": 14,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "14-thursday-1",
+      "vetId": 14,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-friday-1",
+      "vetId": 15,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-friday-2",
+      "vetId": 15,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-tuesday-1",
+      "vetId": 15,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-tuesday-2",
+      "vetId": 15,
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-monday-1",
+      "vetId": 15,
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-monday-2",
+      "vetId": 15,
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-saturday-1",
+      "vetId": 15,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "15-saturday-2",
+      "vetId": 15,
+      "day": "saturday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "16-wednesday-1",
+      "vetId": 16,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "16-wednesday-2",
+      "vetId": 16,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "16-friday-1",
+      "vetId": 16,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "16-tuesday-1",
+      "vetId": 16,
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:46:42.313Z"
+    },
+    {
+      "id": "17-friday-1",
+      "vetId": 17,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "17-tuesday-1",
+      "vetId": 17,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "17-tuesday-2",
+      "vetId": 17,
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "17-wednesday-1",
+      "vetId": 17,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18-tuesday-1",
+      "vetId": 18,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18-thursday-1",
+      "vetId": 18,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18-thursday-2",
+      "vetId": 18,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18-friday-1",
+      "vetId": 18,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18-friday-2",
+      "vetId": 18,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "18-saturday-1",
+      "vetId": 18,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19-monday-1",
+      "vetId": 19,
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19-friday-1",
+      "vetId": 19,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19-friday-2",
+      "vetId": 19,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "19-thursday-1",
+      "vetId": 19,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:46:42.314Z"
+    },
+    {
+      "id": "20-wednesday-1",
+      "vetId": 20,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-wednesday-2",
+      "vetId": 20,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-saturday-1",
+      "vetId": 20,
+      "day": "saturday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-saturday-2",
+      "vetId": 20,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-thursday-1",
+      "vetId": 20,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-thursday-2",
+      "vetId": 20,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-friday-1",
+      "vetId": 20,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "20-friday-2",
+      "vetId": 20,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "21-monday-1",
+      "vetId": 21,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "21-thursday-1",
+      "vetId": 21,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "21-wednesday-1",
+      "vetId": 21,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "21-wednesday-2",
+      "vetId": 21,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "22-wednesday-1",
+      "vetId": 22,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "22-friday-1",
+      "vetId": 22,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "22-friday-2",
+      "vetId": 22,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "22-tuesday-1",
+      "vetId": 22,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "22-tuesday-2",
+      "vetId": 22,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "23-wednesday-1",
+      "vetId": 23,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "23-friday-1",
+      "vetId": 23,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "23-friday-2",
+      "vetId": 23,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "23-tuesday-1",
+      "vetId": 23,
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "23-tuesday-2",
+      "vetId": 23,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.498Z"
+    },
+    {
+      "id": "24-tuesday-1",
+      "vetId": 24,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "24-thursday-1",
+      "vetId": 24,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "24-thursday-2",
+      "vetId": 24,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "24-monday-1",
+      "vetId": 24,
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "24-saturday-1",
+      "vetId": 24,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "24-wednesday-1",
+      "vetId": 24,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-tuesday-1",
+      "vetId": 25,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-tuesday-2",
+      "vetId": 25,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-monday-1",
+      "vetId": 25,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-monday-2",
+      "vetId": 25,
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-saturday-1",
+      "vetId": 25,
+      "day": "saturday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-saturday-2",
+      "vetId": 25,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-wednesday-1",
+      "vetId": 25,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "25-wednesday-2",
+      "vetId": 25,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26-wednesday-1",
+      "vetId": 26,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26-wednesday-2",
+      "vetId": 26,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26-friday-1",
+      "vetId": 26,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26-monday-1",
+      "vetId": 26,
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "26-saturday-1",
+      "vetId": 26,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27-saturday-1",
+      "vetId": 27,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27-wednesday-1",
+      "vetId": 27,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27-wednesday-2",
+      "vetId": 27,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27-tuesday-1",
+      "vetId": 27,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "27-monday-1",
+      "vetId": 27,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:19.499Z"
+    },
+    {
+      "id": "28-friday-1",
+      "vetId": 28,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "28-wednesday-1",
+      "vetId": 28,
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "28-tuesday-1",
+      "vetId": 28,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "28-tuesday-2",
+      "vetId": 28,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "29-wednesday-1",
+      "vetId": 29,
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "29-wednesday-2",
+      "vetId": 29,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "29-friday-1",
+      "vetId": 29,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "29-friday-2",
+      "vetId": 29,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "29-tuesday-1",
+      "vetId": 29,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "30-tuesday-1",
+      "vetId": 30,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "30-wednesday-1",
+      "vetId": 30,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "30-wednesday-2",
+      "vetId": 30,
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "30-monday-1",
+      "vetId": 30,
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:21.376Z"
+    },
+    {
+      "id": "31-friday-1",
+      "vetId": 31,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "31-friday-2",
+      "vetId": 31,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "31-tuesday-1",
+      "vetId": 31,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "31-monday-1",
+      "vetId": 31,
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32-friday-1",
+      "vetId": 32,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32-friday-2",
+      "vetId": 32,
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32-saturday-1",
+      "vetId": 32,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32-tuesday-1",
+      "vetId": 32,
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32-thursday-1",
+      "vetId": 32,
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "32-thursday-2",
+      "vetId": 32,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "33-thursday-1",
+      "vetId": 33,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "33-tuesday-1",
+      "vetId": 33,
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "33-tuesday-2",
+      "vetId": 33,
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "consultation",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "33-monday-1",
+      "vetId": 33,
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "34-thursday-1",
+      "vetId": 34,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "34-thursday-2",
+      "vetId": 34,
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "34-friday-1",
+      "vetId": 34,
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "34-friday-2",
+      "vetId": 34,
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "34-saturday-1",
+      "vetId": 34,
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "35-monday-1",
+      "vetId": 35,
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "35-monday-2",
+      "vetId": 35,
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "15:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "35-thursday-1",
+      "vetId": 35,
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "14:00",
+      "serviceType": "grooming",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "35-saturday-1",
+      "vetId": 35,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "emergency",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    },
+    {
+      "id": "35-saturday-2",
+      "vetId": 35,
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-07T14:52:21.377Z"
+    }
+  ],
   "appointments": [
     {
-      "id": 1,
+      "id": "1",
       "petId": 1,
       "vetId": 2,
       "date": "2025-01-20",

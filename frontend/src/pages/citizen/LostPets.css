@@ -153,6 +153,37 @@
   box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
 }
 
+/* Loading and No Results Messages */
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 18px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.no-results-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.no-results-message svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.no-results-message p {
+  font-size: 18px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .lost-pets-page {

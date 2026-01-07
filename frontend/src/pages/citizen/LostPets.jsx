@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, List, Dog } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
@@ -24,44 +24,45 @@ const LostPets = () => {
   const [showMap, setShowMap] = useState(false); // Default to list view
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPet, setSelectedPet] = useState(null);
+  const [lostPets, setLostPets] = useState([]);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 9; // 3x3 grid
 
-  // Mock lost pets data with coordinates
-  const lostPets = [
-    { 
-      id: 1, 
-      name: 'Μπάμπης', 
-      type: 'Σκύλος',
-      breed: 'Golden Retriever', 
-      area: 'Κέντρο Αθήνας, Πλατεία Συντάγματος', 
-      dateLost: '05/11/2025',
-      color: 'Χρυσαφί',
-      lat: 37.9838,
-      lon: 23.7275,
-    },
-    { 
-      id: 2, 
-      name: 'Φιφή', 
-      type: 'Γάτα',
-      breed: 'Περσική', 
-      area: 'Θεσσαλονίκη, Καλαμαριά', 
-      dateLost: '10/11/2025',
-      color: 'Λευκό',
-      lat: 40.5828,
-      lon: 22.9425,
-    },
-    { 
-      id: 3, 
-      name: 'Ρεξ', 
-      type: 'Σκύλος',
-      breed: 'Λαμπραντόρ', 
-      area: 'Πάτρα, Κέντρο', 
-      dateLost: '08/11/2025',
-      color: 'Μαύρο',
-      lat: 38.2466,
-      lon: 21.7346,
-    },
-  ];
+  // Fetch lost pets from backend
+  useEffect(() => {
+    const fetchLostPets = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/lostPets');
+        if (!response.ok) {
+          throw new Error('Failed to fetch lost pets');
+        }
+        const data = await response.json();
+        
+        // Transform data for display (add default coordinates if missing)
+        const transformedPets = data.map((pet, index) => ({
+          ...pet,
+          name: pet.petName || 'Άγνωστο',
+          type: pet.species || 'Άγνωστο',
+          breed: pet.breed || 'Άγνωστο',
+          area: pet.lostLocation || 'Άγνωστη τοποθεσία',
+          dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
+          color: pet.description?.split(',')[0] || 'Άγνωστο χρώμα',
+          // Default coordinates for Athens if not specified
+          lat: pet.locationLat || 37.9838,
+          lon: pet.locationLon || 23.7275,
+        }));
+        
+        setLostPets(transformedPets);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching lost pets:', error);
+        setLostPets([]);
+        setLoading(false);
+      }
+    };
+
+    fetchLostPets();
+  }, []);
 
   const handleSelectChange = (name, value) => {
     setFilters(prev => ({
@@ -216,7 +217,16 @@ const LostPets = () => {
             </div>
           </div>
 
-          {showMap ? (
+          {loading ? (
+            <div className="loading-message">
+              <p>Φόρτωση χαμένων κατοικιδίων...</p>
+            </div>
+          ) : lostPets.length === 0 ? (
+            <div className="no-results-message">
+              <Dog size={48} color="#FCA47C" />
+              <p>Δεν υπάρχουν χαμένα κατοικίδια για προβολή</p>
+            </div>
+          ) : showMap ? (
             <MapWithMarkers
               center={mapCenter}
               zoom={mapZoom}

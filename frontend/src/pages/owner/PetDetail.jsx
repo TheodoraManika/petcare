@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download, Dog, Cat } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
@@ -10,111 +10,103 @@ import './PetDetail.css';
 const PetDetail = () => {
   const navigate = useNavigate();
   const { petId } = useParams();
+  const [petData, setPetData] = useState(null);
+  const [medicalHistory, setMedicalHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data - in real app, this would come from API/database
-  const petsData = {
-    pet1: {
-      name: 'Μπάμπης',
-      type: 'Σκύλος',
-      breed: 'Golden Retriever',
-      gender: 'Αρσενικό',
-      birthDate: '15/4/2020',
-      microchip: '123456789012345',
-      afm: '123456789',
-      icon: 'dog',
-      medicalHistory: [
-        {
-          id: 1,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Πενταπλός εμβολιασμός',
-          date: '10/11/2024',
-          vet: 'Δρ. Χώρης Παπαδόπουλος',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 2,
-          type: 'surgery',
-          title: 'Χειρουργείο',
-          description: 'Στείρωση',
-          date: '5/6/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 3,
-          type: 'examination',
-          title: 'Εξέταση',
-          description: 'Γενική εξέταση',
-          date: '20/7/2024',
-          vet: 'Δρ. Χώρης Παπαδόπουλος',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 4,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Εμβόλιο λύσσας',
-          date: '12/5/2024',
-          vet: 'Δρ. Ελένη Νικολάου',
-          status: 'Ολοκληρώθηκε',
-        },
-      ],
-      stats: {
-        vaccinations: 2,
-        surgeries: 1,
-        examinations: 1,
-      },
-    },
-    pet2: {
-      name: 'Μίνι',
-      type: 'Γάτα',
-      breed: 'Περσική',
-      gender: 'Θηλυκό',
-      birthDate: '22/6/2021',
-      microchip: '987654321098765',
-      afm: '123456788',
-      icon: 'cat',
-      medicalHistory: [
-        {
-          id: 1,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Τριπλός εμβολιασμός',
-          date: '10/10/2024',
-          vet: 'Δρ. Άννα Παπαδάκη',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 2,
-          type: 'examination',
-          title: 'Εξέταση',
-          description: 'Οδοντιατρικός έλεγχος',
-          date: '3/9/2024',
-          vet: 'Δρ. Νίκος Ιωάννου',
-          status: 'Ολοκληρώθηκε',
-        },
-      ],
-      stats: {
-        vaccinations: 1,
-        surgeries: 0,
-        examinations: 1,
-      },
-    },
-  };
+  useEffect(() => {
+    const fetchPetDetails = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch pet data
+        const petResponse = await fetch(`http://localhost:5000/pets/${petId}`);
+        if (!petResponse.ok) {
+          throw new Error('Το κατοικίδιο δεν βρέθηκε');
+        }
+        
+        const pet = await petResponse.json();
+        
+        // Fetch medical procedures for this pet
+        const medicalResponse = await fetch('http://localhost:5000/medicalProcedures');
+        const allProcedures = await medicalResponse.json();
+        const petProcedures = allProcedures.filter(proc => Number(proc.petId) === Number(petId));
+        
+        // Fetch vets for medical history
+        const vetsResponse = await fetch('http://localhost:5000/users');
+        const allVets = await vetsResponse.json();
+        
+        // Transform medical procedures for display
+        const transformedHistory = petProcedures.map(proc => {
+          const vet = allVets.find(v => Number(v.id) === Number(proc.vetId));
+          const typeMap = {
+            'vaccination': 'Εμβολιασμός',
+            'checkup': 'Εξέταση',
+            'surgery': 'Χειρουργείο',
+            'treatment': 'Θεραπεία',
+            'dental': 'Οδοντιατρική',
+            'emergency': 'Έκτακτη περίπτωση',
+            'consultation': 'Συμβουλή',
+            'grooming': 'Περιποίηση'
+          };
+          
+          return {
+            id: proc.id,
+            type: proc.type,
+            title: typeMap[proc.type] || proc.type,
+            description: proc.description || '-',
+            date: proc.date,
+            vet: vet ? `Δρ. ${vet.name} ${vet.lastName}` : 'Άγνωστος κτηνίατρος',
+            status: 'Ολοκληρώθηκε'
+          };
+        });
+        
+        // Calculate statistics
+        const stats = {
+          vaccinations: transformedHistory.filter(h => h.type === 'vaccination').length,
+          surgeries: transformedHistory.filter(h => h.type === 'surgery').length,
+          examinations: transformedHistory.filter(h => h.type === 'checkup').length,
+        };
+        
+        // Format pet data
+        const formattedPet = {
+          name: pet.name || 'Άγνωστο',
+          type: pet.species || 'Άγνωστο',
+          breed: pet.breed || '-',
+          gender: pet.gender || '-',
+          birthDate: pet.birthDate || '-',
+          microchip: pet.microchipId || '-',
+          color: pet.color || '-',
+          weight: pet.weight || '-',
+          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
+          stats: stats
+        };
+        
+        setPetData(formattedPet);
+        setMedicalHistory(transformedHistory);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching pet details:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
 
-  const pet = petsData[petId];
+    if (petId) {
+      fetchPetDetails();
+    }
+  }, [petId]);
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.owner.dashboard },
     { label: 'Βιβλιάριο Υγείας', path: ROUTES.owner.pets }
   ];
 
-
   const handlePrint = () => {
     window.print();
   };
-
 
   const getPetIcon = (iconType) => {
     switch (iconType) {
@@ -127,15 +119,33 @@ const PetDetail = () => {
     }
   };
 
-  if (!pet) {
+  if (loading) {
     return (
-      <PageLayout variant="owner" title="Κατοικίδιο" breadcrumbs={breadcrumbItems}>
+      <PageLayout variant="owner" title="Φόρτωση..." breadcrumbs={breadcrumbItems}>
         <div className="owner-pet-detail">
-          <p>Το κατοικίδιο δεν βρέθηκε.</p>
+          <p>Φόρτωση στοιχείων κατοικιδίου...</p>
         </div>
       </PageLayout>
     );
   }
+
+  if (error || !petData) {
+    return (
+      <PageLayout variant="owner" title="Σφάλμα" breadcrumbs={breadcrumbItems}>
+        <div className="owner-pet-detail">
+          <p style={{ color: '#d32f2f' }}>Σφάλμα: {error || 'Το κατοικίδιο δεν βρέθηκε'}</p>
+          <button 
+            onClick={() => navigate(ROUTES.owner.pets)}
+            style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+          >
+            Επιστροφή
+          </button>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  const pet = petData;
 
 return (
     <PageLayout variant="owner" title={pet.name} breadcrumbs={breadcrumbItems}>
@@ -187,7 +197,7 @@ return (
                     <h2 className="owner-pet-detail__section-title">Ιατρικό Ιστορικό</h2>
 
                     <div className="owner-pet-detail__events">
-                        {pet.medicalHistory.map((event) => (
+                        {medicalHistory.map((event) => (
                             <MedicalEventCard key={event.id} event={event} />
                         ))}
                     </div>

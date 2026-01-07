@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Star } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
@@ -24,6 +24,20 @@ const VetSearchMap = () => {
     }
   };
 
+  // Helper functions for day calculations
+  const getTodayDay = () => {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = days[new Date().getDay()];
+    console.log('getTodayDay() calculated as:', today, 'from getDay():', new Date().getDay());
+    return today;
+  };
+
+  const getTomorrowDay = () => {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const tomorrow = days[new Date(Date.now() + 86400000).getDay()];
+    return tomorrow;
+  };
+
   const currentUser = getCurrentUser();
   
   const [filters, setFilters] = useState({
@@ -38,61 +52,70 @@ const VetSearchMap = () => {
   const [showMap, setShowMap] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedVet, setSelectedVet] = useState(null);
+  const [allVets, setAllVets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const itemsPerPage = 5;
 
-  // Mock vets data with coordinates
-  const vets = [
-    { 
-      id: 1, 
-      name: 'Γιώργος Αντωνίου', 
-      specialty: 'Γενικός Κτηνίατρος', 
-      area: 'Αθήνα, Καλαμαριά', 
-      rating: 4.8,
-      lat: 37.9838,
-      lon: 23.7275,
-      position: { top: '42%', left: '52%' }
-    },
-    { 
-      id: 2, 
-      name: 'Μαρία Παπαδοπούλου', 
-      specialty: 'Χειρουργική', 
-      area: 'Αθήνα, Νέα Σμύρνη', 
-      rating: 4.9,
-      lat: 37.9400,
-      lon: 23.7280,
-      position: { top: '35%', left: '58%' }
-    },
-    { 
-      id: 3, 
-      name: 'Νίκος Οικονόμου', 
-      specialty: 'Οδοντιατρική', 
-      area: 'Αθήνα, Γλυφάδα', 
-      rating: 4.7,
-      lat: 37.8650,
-      lon: 23.7540,
-      position: { top: '60%', left: '48%' }
-    },
-    { 
-      id: 4, 
-      name: 'Ελένη Κωνσταντίνου', 
-      specialty: 'Ορθοπεδική', 
-      area: 'Αθήνα, Χαλάνδρι', 
-      rating: 4.6,
-      lat: 38.0214,
-      lon: 23.7950,
-      position: { top: '28%', left: '45%' }
-    },
-    { 
-      id: 5, 
-      name: 'Δημήτρης Σπανός', 
-      specialty: 'Γενικός Κτηνίατρος', 
-      area: 'Αθήνα, Περιστέρι', 
-      rating: 4.5,
-      lat: 38.0157,
-      lon: 23.6912,
-      position: { top: '50%', left: '35%' }
-    },
-  ];
+  // Fetch vets from backend
+  useEffect(() => {
+    const fetchVets = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log('Fetching vets from backend...');
+        
+        const response = await fetch('http://localhost:5000/users');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const users = await response.json();
+        console.log('Fetched users:', users);
+        
+        // Fetch availability data
+        const availabilityResponse = await fetch('http://localhost:5000/availability');
+        const availabilityRecords = await availabilityResponse.json();
+        console.log('Fetched availability records:', availabilityRecords);
+        
+        // Filter only vet users and add default coordinates and availability
+        const vetUsers = users
+          .filter(user => user.userType === 'vet')
+          .map((vet, index) => {
+            // Get availability for this vet (compare as numbers to handle string/number mismatch)
+            const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vet.id));
+            const availableDays = [...new Set(vetAvailability.map(a => a.day))];
+            
+            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays);
+            
+            return {
+              ...vet,
+              name: vet.name || 'Άγνωστος',
+              specialty: vet.specialization || 'Γενικός Κτηνίατρος',
+              area: `${vet.clinicCity || 'Αθήνα'}, ${vet.clinicAddress || 'Άγνωστη διεύθυνση'}`,
+              rating: 4.5 + (Math.random() * 0.4), // Random rating between 4.5-4.9
+              lat: 37.9838 + (Math.random() * 0.3 - 0.15), // Random latitude around Athens
+              lon: 23.7275 + (Math.random() * 0.3 - 0.15), // Random longitude around Athens
+              position: { top: `${30 + (index * 10)}%`, left: `${40 + (index * 8)}%` },
+              availableDays: availableDays,
+              availabilitySlots: vetAvailability
+            };
+          });
+        
+        console.log('Filtered vet users:', vetUsers);
+        setAllVets(vetUsers);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching vets:', error);
+        setError(error.message);
+        setAllVets([]);
+        setLoading(false);
+      }
+    };
+
+    fetchVets();
+  }, []);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -122,7 +145,117 @@ const VetSearchMap = () => {
       rating: '',
     });
     setLocationData(null);
+    setCurrentPage(1);
   };
+
+  // Filter vets based on selected filters
+  const filteredVets = useMemo(() => {
+    return allVets.filter(vet => {
+      // Filter by specialty
+      if (filters.specialty) {
+        const specialtyMap = {
+          'general': 'Γενική Κτηνιατρική',
+          'surgery': 'Χειρουργική',
+          'dentistry': 'Οδοντιατρική',
+          'orthopedics': 'Ορθοπεδική'
+        };
+        const targetSpecialty = specialtyMap[filters.specialty];
+        if (targetSpecialty && vet.specialty !== targetSpecialty) {
+          return false;
+        }
+      }
+
+      // Filter by area/location
+      if (filters.area && !vet.area.toLowerCase().includes(filters.area.toLowerCase())) {
+        return false;
+      }
+
+      // Filter by rating
+      if (filters.rating) {
+        const minRating = parseFloat(filters.rating);
+        if (vet.rating < minRating) {
+          return false;
+        }
+      }
+
+      // Filter by availability (day) - only if explicitly selected
+      if (filters.availability) {
+        const availabilityMap = {
+          'today': getTodayDay(),
+          'tomorrow': getTomorrowDay(),
+          'week': null // null means show all with any availability this week
+        };
+        
+        const targetDay = availabilityMap[filters.availability];
+        
+        // Skip filter if no availableDays data exists
+        if (!vet.availableDays) {
+          return false;
+        }
+        
+        if (filters.availability === 'week') {
+          // Check if vet has any availability this week
+          if (vet.availableDays.length === 0) {
+            return false;
+          }
+        } else if (targetDay) {
+          // Check if vet has availability on specific day - case insensitive comparison
+          const hasDay = vet.availableDays.some(day => 
+            day.toLowerCase() === targetDay.toLowerCase()
+          );
+          if (!hasDay) {
+            return false;
+          }
+        }
+      }
+
+      // Filter by time - works independently from day filter
+      if (filters.time && vet.availabilitySlots && vet.availabilitySlots.length > 0) {
+        const timeRanges = {
+          'morning': { start: 8 * 60, end: 12 * 60 },      // 08:00-12:00 in minutes
+          'afternoon': { start: 12 * 60, end: 18 * 60 },   // 12:00-18:00 in minutes
+          'evening': { start: 18 * 60, end: 21 * 60 }      // 18:00-21:00 in minutes
+        };
+        
+        const targetRange = timeRanges[filters.time];
+        if (targetRange) {
+          // If a specific day is selected, only check slots for that day
+          let slotsToCheck = vet.availabilitySlots;
+          
+          if (filters.availability && filters.availability !== 'week') {
+            const availabilityMap = {
+              'today': getTodayDay(),
+              'tomorrow': getTomorrowDay()
+            };
+            const targetDay = availabilityMap[filters.availability];
+            slotsToCheck = vet.availabilitySlots.filter(slot => slot.day === targetDay);
+          } else if (filters.availability === 'week') {
+            // For week filter, include all slots (which should already be limited to this week in backend)
+            slotsToCheck = vet.availabilitySlots;
+          }
+          
+          // Check if vet has any slots that overlap with the requested time range
+          const hasTimeSlot = slotsToCheck.some(slot => {
+            // Convert slot times to minutes for precise comparison
+            const [slotStartHour, slotStartMin] = slot.startTime.split(':').map(Number);
+            const [slotEndHour, slotEndMin] = slot.endTime.split(':').map(Number);
+            const slotStartMinutes = slotStartHour * 60 + slotStartMin;
+            const slotEndMinutes = slotEndHour * 60 + slotEndMin;
+            
+            // Check if there's any overlap between slot and requested time range
+            // Overlap exists if: slot starts before range ends AND slot ends after range starts
+            return slotStartMinutes < targetRange.end && slotEndMinutes > targetRange.start;
+          });
+          
+          if (!hasTimeSlot) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+  }, [allVets, filters]);
 
   const handleMarkerClick = (vet) => {
     setSelectedVet(selectedVet?.id === vet.id ? null : vet);
@@ -149,10 +282,10 @@ const VetSearchMap = () => {
   const mapZoom = locationData ? 14 : 12;
 
   // Pagination logic
-  const totalPages = Math.ceil(vets.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredVets.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentVets = vets.slice(startIndex, endIndex);
+  const currentVets = filteredVets.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -197,7 +330,7 @@ const VetSearchMap = () => {
           filters={filters}
           onSearch={() => {}}
           onClear={handleClear}
-          resultsCount={vets.length}
+          resultsCount={filteredVets.length}
         >
           {/* Area Filter with LocationPicker */}
           <div className="filter-group">
@@ -263,7 +396,7 @@ const VetSearchMap = () => {
         {/* Main Map Area */}
         <main className="map-container">
           <div className="map-header">
-            <h2 className="map-title">Αποτελέσματα ({vets.length})</h2>
+            <h2 className="map-title">Αποτελέσματα ({filteredVets.length})</h2>
             <div className="view-toggles">
               <button 
                 className={`toggle-btn ${showMap ? 'active' : ''}`} 
@@ -281,11 +414,25 @@ const VetSearchMap = () => {
             </div>
           </div>
 
-          {showMap ? (
+          {error ? (
+            <div className="error-message">
+              <p>Σφάλμα φόρτωσης δεδομένων: {error}</p>
+              <p style={{ fontSize: '14px', color: '#9ca3af' }}>Παρακαλώ ελέγξτε ότι ο server είναι ενεργός</p>
+            </div>
+          ) : loading ? (
+            <div className="loading-message">
+              <p>Φόρτωση κτηνιάτρων...</p>
+            </div>
+          ) : filteredVets.length === 0 ? (
+            <div className="no-results-message">
+              <Star size={48} color="#FCA47C" />
+              <p>Δεν βρέθηκαν κτηνίατροι με τα επιλεγμένα κριτήρια</p>
+            </div>
+          ) : showMap ? (
             <MapWithMarkers
               center={mapCenter}
               zoom={mapZoom}
-              markers={vets}
+              markers={filteredVets}
               selectedId={selectedVet?.id}
               onMarkerClick={handleMarkerClick}
               height="600px"

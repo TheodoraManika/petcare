@@ -92,19 +92,72 @@ const FoundPetForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const isFormValid = () => {
+    // Required fields: petName or species, foundLocation, foundDate, firstName, lastName, email, phone
+    if (!formData.foundLocation || !formData.foundDate || !formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
+      return false;
+    }
+    // Need either petName or species
+    if (!formData.petName && !formData.species) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    navigate('/confirmation', {
-      state: {
-        title: 'Δήλωση Εύρεσης Υποβλήθηκε',
-        message: 'Ευχαριστούμε για τη δήλωση εύρεσης. Θα επικοινωνήσουμε το συντομότερο δυνατό.',
-        buttonText: 'Επιστροφή',
-        buttonTo: '/',
-        icon: <AlertCircle size={56} style={{ color: '#23CED9' }} />
+    
+    if (!isFormValid()) {
+      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία (*)');
+      return;
+    }
+
+    try {
+      // Create the found pet declaration object
+      const newFoundPet = {
+        petName: formData.petName || 'Άγνωστο',
+        species: formData.species || '',
+        breed: formData.breed || '',
+        description: formData.description || '',
+        foundDate: formData.foundDate,
+        foundLocation: formData.foundLocation,
+        reporterFirstName: formData.firstName,
+        reporterLastName: formData.lastName,
+        reporterEmail: formData.email,
+        reporterPhone: formData.phone,
+        status: 'active',
+        imageUrl: null, // TODO: Implement file upload
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/foundPets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newFoundPet)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit found pet declaration');
       }
-    });
+
+      // Success - navigate to confirmation
+      alert('Δήλωση εύρεσης υποβλήθηκε με επιτυχία!');
+      navigate('/confirmation', {
+        state: {
+          title: 'Δήλωση Εύρεσης Υποβλήθηκε',
+          message: 'Ευχαριστούμε για τη δήλωση εύρεσης. Θα επικοινωνήσουμε το συντομότερο δυνατό.',
+          buttonText: 'Επιστροφή',
+          buttonTo: '/',
+          icon: <AlertCircle size={56} style={{ color: '#23CED9' }} />
+        }
+      });
+    } catch (error) {
+      console.error('Error submitting found pet declaration:', error);
+      alert('Σφάλμα κατά την υποβολή της δήλωσης. Παρακαλώ προσπαθήστε ξανά.');
+    }
   };
 
   const speciesOptions = [

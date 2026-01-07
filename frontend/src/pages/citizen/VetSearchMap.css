@@ -447,3 +447,53 @@
     padding: 12px;
   }
 }
+
+/* Loading and No Results Messages */
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 18px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  text-align: center;
+  padding: 24px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+}
+
+.error-message p {
+  color: #991b1b;
+  font-weight: 500;
+  margin: 8px 0;
+}
+
+.no-results-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.no-results-message svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.no-results-message p {
+  font-size: 18px;
+  color: #6b7280;
+  font-weight: 500;
+}
