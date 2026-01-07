@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig } from 'lucide-react';
+import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig, BookOpen } from 'lucide-react';
 import { useSidebar } from '../../../context/SidebarContext';
 import { ROUTES } from '../../../utils/constants';
 import './Sidebar.css';
@@ -32,7 +32,7 @@ const Sidebar = ({ variant = 'vet' }) => {
       ]
     },
     { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
-    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.vet.foundPetForm },
+    { icon: <BookOpen size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.vet.healthBook },
   ];
 
   const ownerMenuItems = [

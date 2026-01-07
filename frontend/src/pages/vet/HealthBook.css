@@ -1,0 +1,301 @@
+/* Health Book Page Styles */
+.health-book {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* Search Section */
+.health-book__search-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: var(--spacing-2xl);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.health-book__search-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.health-book__search-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  margin-bottom: var(--spacing-xl);
+}
+
+.health-book__search-form {
+  display: flex;
+  gap: var(--spacing-md);
+  max-width: 600px;
+}
+
+.health-book__search-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.health-book__search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.health-book__search-input {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: var(--font-size-md);
+  transition: all 0.2s ease;
+}
+
+.health-book__search-input:focus {
+  outline: none;
+  border-color: #FCA47C;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.health-book__search-btn {
+  padding: 14px 32px;
+  background: #FCA47C;
+  color: #101828;
+  border: none;
+  border-radius: 8px;
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.health-book__search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(252, 164, 124, 0.3);
+}
+
+.health-book__search-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Results Section */
+.health-book__results {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: var(--spacing-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.health-book__content {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: var(--spacing-2xl);
+}
+
+/* Sidebar */
+.health-book__sidebar {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+}
+
+.health-book__pet-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #D1D5DB;
+  transition: all 0.2s ease;
+}
+
+.health-book__pet-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px solid #FCA47C ;
+  background: rgba(252, 164, 124, 0.1);
+  color: #FCA47C;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+}
+
+.health-book__pet-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 24px 0;
+}
+
+.health-book__pet-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.health-book__info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.health-book__info-row:last-child {
+  border-bottom: none;
+}
+
+.health-book__info-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.health-book__info-value {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.health-book__download-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #FCA47C;
+  color: #101828;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.health-book__download-btn:hover {
+  background-color: #FCA47C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+/* Main Content */
+.health-book__main {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.health-book__section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 24px 0;
+}
+
+.health-book__events {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.health-book__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Not Found Section */
+.health-book__not-found {
+  padding: var(--spacing-3xl);
+  text-align: center;
+}
+
+.health-book__not-found-icon {
+  color: #FF5252;
+  margin-bottom: var(--spacing-lg);
+}
+
+.health-book__not-found-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: var(--spacing-sm);
+}
+
+.health-book__not-found-text {
+  font-size: 20px;
+  color: #393a3d;
+  margin-bottom: var(--spacing-sm);
+}
+
+.health-book__not-found-hint {
+    font-size: 16px;
+    color: #393a3d;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .health-book__content {
+    grid-template-columns: 1fr;
+  }
+
+  .health-book__sidebar {
+    position: relative;
+    top: 0;
+  }
+
+  .health-book__stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .health-book {
+    padding: var(--spacing-lg);
+  }
+
+  .health-book__search-form {
+    flex-direction: column;
+  }
+
+  .health-book__search-btn {
+    width: 100%;
+  }
+
+  .health-book__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .health-book__results,
+  .health-book__search-section {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .health-book__search-section {
+    display: none;
+  }
+
+  .health-book__download-btn {
+    display: none;
+  }
+}
