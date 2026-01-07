@@ -11,15 +11,6 @@ const FoundPetForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Determine variant based on route
-  const getVariant = () => {
-    if (location.pathname.includes('/owner/')) return 'owner';
-    if (location.pathname.includes('/vet/')) return 'vet';
-    return 'citizen';
-  };
-  
-  const variant = getVariant();
-  
   // Get current user from localStorage
   const getCurrentUser = () => {
     try {
@@ -31,6 +22,16 @@ const FoundPetForm = () => {
   };
   
   const currentUser = getCurrentUser();
+  
+  // Determine variant based on logged-in user type, not route
+  const getVariant = () => {
+    if (!currentUser) return 'citizen';
+    if (currentUser.userType === 'owner') return 'owner';
+    if (currentUser.userType === 'vet') return 'vet';
+    return 'citizen';
+  };
+  
+  const variant = getVariant();
   const isOwner = currentUser?.userType === 'owner';
   
   // Mock pet data for owner
@@ -476,7 +477,7 @@ const FoundPetForm = () => {
 
                 <button 
                   type="submit" 
-                  className={`submit-btn submit-btn--wide ${variant === 'vet' ? 'submit-btn--orange' : 'submit-btn--yellow'}`}
+                  className={`submit-btn submit-btn--wide ${variant === 'vet' ? 'submit-btn--orange' : variant === 'citizen' ? 'submit-btn--primary' : 'submit-btn--yellow'}`}
                   disabled={!isFormValid()}
                 >
                   Υποβολή Δήλωσης Εύρεσης

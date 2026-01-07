@@ -1,177 +1,207 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Star, MapPin, Phone, Clock } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import { ROUTES } from '../../utils/constants';
 import './VetProfile.css';
+import { Star, MapPin, GraduationCap, Briefcase, Clock } from 'lucide-react';
+import PageLayout from '../../components/global/layout/PageLayout';
 
-const mockVets = {
-  1: {
-    id: 1,
-    name: 'Μαρία Παπαπολιτάκου',
-    specialty: 'Γενικός Κτηνίατρος',
+const VetProfile = () => {
+  const [visibleReviews, setVisibleReviews] = useState(3);
+
+  // Get current user from localStorage
+  const getCurrentUser = () => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        return userData;
+      }
+    } catch (error) {
+      console.error('Error getting current user:', error);
+    }
+    return null;
+  };
+
+  const currentUser = getCurrentUser();
+  const isOwner = currentUser?.userType === 'owner' || currentUser?.role === 'owner';
+
+  // Sample vet data - this would typically come from props or API
+  const vetData = {
+    name: 'Δρ. Γιώργος Αντωνίου',
+    specialty: 'Γενική Κτηνιατρική',
     rating: 4.8,
-    reviewCount: 124,
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150',
-    address: 'Πανεπιστημίου 45, 10679',
-    phone: '210 1234567',
-    email: 'info@vetcare.gr',
-    workingHours: 'Δευτέρα - Παρασκευή, 09:00 - 18:00',
-    specializations: [
-      'Γενική Κτηνιατρική',
-      'Χειρουργική',
-      'Οδοντιατρική'
-    ],
-    biography: 'Εξειδικευμένη στη γενική κτηνιατρική με διαρκεί την πρακτική εργασία. Έχω μεγάλη δυνατότητα αντιμετώπισης, επιστημών, ιδιοτήτων και γενικού σχολείου.',
+    reviewCount: 127,
+    address: 'Λεωφόρος Συγγρού 123, Αθήνα',
+    phone: '+30 210 1234567',
+    education: 'Διδάκτορας Κτηνιατρικής, Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης',
+    experience: '15 χρόνια',
+    hours: {
+      weekdays: 'Δευτέρα - Παρασκευή: 09:00 - 18:00',
+      saturday: 'Σάββατο: 10:00 - 14:00',
+      sunday: 'Κυριακή: Κλειστά'
+    },
+    biography: 'Ειδικεύομαι στην προληπτική ιατρική, εμβολιασμούς, αποπαρασίτωση και στειρώσεις. Με πάνω από 15 χρόνια εμπειρίας στην κτηνιατρική φροντίδα, προσφέρω ολοκληρωμένες υπηρεσίες για τα κατοικίδιά σας. Η φιλοσοφία μου βασίζεται στην προσεκτική διάγνωση, τη σύγχρονη θεραπεία και την ενσυναίσθητη φροντίδα των ζώων.',
+    profileImage: '/api/placeholder/120/120',
     reviews: [
       {
         id: 1,
         author: 'Μαρία Κ.',
         rating: 5,
-        text: 'Εξαιρετική εξυπηρέτηση! Πολύ προσεκτική και συμπαθητική προς το κατοικίδιό μου.'
+        comment: 'Εξαιρετικός επαγγελματίας! Ο γιατρός είναι πολύ προσεκτικός και ενδιαφέρεται πραγματικά για την υγεία των ζώων. Το σκυλάκι μου ένιωσε άνετα από την πρώτη επίσκεψη.'
       },
       {
         id: 2,
-        author: 'Παναγιώτης Π.',
-        rating: 4,
-        text: 'Πολύ καλή εμπειρία, ωστόσο αρκετά περιορισμένη. Σαφώς επαγγελματική.'
+        author: 'Νίκος Π.',
+        rating: 5,
+        comment: 'Πολύ καλή εξυπηρέτηση και καθαρό ιατρείο. Οι τιμές είναι λογικές και ο γιατρός πολύ εξηγητικός. Σίγουρα θα επιστρέψω για τον επόμενο εμβολιασμό.'
       },
       {
         id: 3,
-        author: 'Αλέξανδρος Σ.',
+        author: 'Ελένη Σ.',
+        rating: 4,
+        comment: 'Πολύ ικανοποιημένη από τη φροντίδα που έλαβε η γάτα μου. Μόνο μικρή καθυστέρηση στο ραντεβού, αλλά συνολικά εξαιρετική εμπειρία.'
+      },
+      {
+        id: 4,
+        author: 'Κώστας Μ.',
         rating: 5,
-        text: 'Πολύ κατανοητική και αποτελεσματική. Σίγουρα θα επιστρέψω.'
+        comment: 'Άριστος κτηνίατρος με πολλή υπομονή και γνώση. Μας βοήθησε να αντιμετωπίσουμε ένα σοβαρό πρόβλημα υγείας του σκύλου μας.'
+      },
+      {
+        id: 5,
+        author: 'Σοφία Τ.',
+        rating: 5,
+        comment: 'Εξαιρετική εμπειρία! Το προσωπικό είναι φιλικό και ο γιατρός πολύ επαγγελματίας. Συνιστώ ανεπιφύλακτα!'
       }
-    ],
-    appointmentInfo: 'Το κάμπι Κλείσιμο Ραντεβού δεν ευμάθειστα επιπλέες γιατί θέλησαν να κλείσουν ραντεβού μήνο σε ώδόσα ώδη κ.λ.π.'
-  }
-};
+    ]
+  };
 
-const VetProfile = () => {
-  const { vetId = 1 } = useParams();
-  const navigate = useNavigate();
-  const [showAllReviews, setShowAllReviews] = useState(false);
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <Star 
+          key={i} 
+          size={16}
+          className={i <= rating ? "star-filled" : "star-empty"}
+          fill={i <= rating ? "currentColor" : "none"}
+        />
+      );
+    }
+    return stars;
+  };
 
-  const vet = mockVets[vetId] || mockVets[1];
-  const displayedReviews = showAllReviews ? vet.reviews : vet.reviews.slice(0, 2);
-
-  const breadcrumbItems = [
-    { label: 'Αναζήτηση Κτηνιάτρων', path: ROUTES.citizen.searchMap },
-  ];
+  const handleLoadMore = () => {
+    setVisibleReviews(prev => Math.min(prev + 3, vetData.reviews.length));
+  };
 
   return (
-    <PageLayout title={`Δρ. ${vet.name}`} breadcrumbs={breadcrumbItems}>
-      <div className="vet-profile">
-        {/* Main Content */}
-        <div className="vet-profile-container">
+    <PageLayout 
+      variant="citizen"
+      title={vetData.name}
+      breadcrumbs={[
+        { label: 'Κτηνίατροι', path: '/citizen/search-map' }
+      ]}
+    >
+      <div className="vet-profile-container">
+        <div className="vet-profile-card">
           {/* Header Section */}
-          <div className="vet-header">
-            <div className="vet-avatar">
-              <img src={vet.avatar} alt={vet.name} />
-            </div>
-            <div className="vet-header-info">
-              <h1 className="vet-name">Δρ. {vet.name}</h1>
-              <p className="vet-specialty">{vet.specialty}</p>
-              <div className="vet-rating">
-                <div className="rating-stars">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      fill={i < Math.floor(vet.rating) ? '#FCA47C' : '#e5e7eb'}
-                      color={i < Math.floor(vet.rating) ? '#FCA47C' : '#e5e7eb'}
-                    />
-                  ))}
+          <div className="profile-header">
+          <div className="profile-header-content">
+            <img 
+              src={vetData.profileImage} 
+              alt={vetData.name}
+              className="profile-image"
+            />
+            <div className="profile-identity">
+              <h1 className="vet-name">{vetData.name}</h1>
+              <p className="vet-specialty">{vetData.specialty}</p>
+              <div className="rating-section">
+                <div className="stars">
+                  {renderStars(Math.floor(vetData.rating))}
                 </div>
-                <span className="rating-value">{vet.rating}</span>
-                <span className="rating-count">({vet.reviewCount} αξιολογήσεις)</span>
+                <span className="rating-text">
+                  {vetData.rating} ({vetData.reviewCount} αξιολογήσεις)
+                </span>
               </div>
             </div>
-
+            {isOwner && (
+              <button className="book-appointment-btn">
+                Κλείστε Ραντεβού
+              </button>
+            )}
           </div>
+        </div>
 
-          <div className="vet-profile-content">
-            {/* Contact Information */}
-            <div className="info-section">
-              <h2 className="section-title">Δεδομένων Επαφής</h2>
-              <div className="contact-info">
-                <div className="contact-item">
-                  <MapPin size={20} className="contact-icon" />
-                  <div>
-                    <p className="contact-label">Διεύθυνση</p>
-                    <p className="contact-value">{vet.address}</p>
-                  </div>
-                </div>
-                <div className="contact-item">
-                  <Phone size={20} className="contact-icon" />
-                  <div>
-                    <p className="contact-label">Τηλέφωνο</p>
-                    <p className="contact-value">{vet.phone}</p>
-                  </div>
-                </div>
-                <div className="contact-item">
-                  <Clock size={20} className="contact-icon" />
-                  <div>
-                    <p className="contact-label">Ώρες Λειτουργίας</p>
-                    <p className="contact-value">{vet.workingHours}</p>
-                  </div>
-                </div>
+        {/* Professional Details Section */}
+        <div className="professional-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <div className="detail-header">
+                <MapPin className="detail-icon" size={20} />
+                <h3>Διεύθυνση Ιατρείου</h3>
               </div>
+              <p className="detail-content">{vetData.address}</p>
+              <p className="detail-content">{vetData.phone}</p>
             </div>
 
-            {/* Specializations */}
-            <div className="info-section">
-              <h2 className="section-title">Ειδικότητες</h2>
-              <div className="specializations">
-                {vet.specializations.map((spec, idx) => (
-                  <span key={idx} className="specialization-tag">
-                    {spec}
-                  </span>
-                ))}
+            <div className="detail-item">
+              <div className="detail-header">
+                <Briefcase className="detail-icon" size={20} />
+                <h3>Εμπειρία</h3>
               </div>
+              <p className="detail-content">{vetData.experience}</p>
             </div>
 
-            {/* Biography */}
-            <div className="info-section">
-              <h2 className="section-title">Βιογραφία</h2>
-              <p className="biography-text">{vet.biography}</p>
+            <div className="detail-item">
+              <div className="detail-header">
+                <GraduationCap className="detail-icon" size={20} />
+                <h3>Εκπαίδευση</h3>
+              </div>
+              <p className="detail-content">{vetData.education}</p>
             </div>
 
-            {/* Reviews */}
-            <div className="info-section">
-              <h2 className="section-title">Αξιολογήσεις Πελατών</h2>
-              <div className="reviews-list">
-                {displayedReviews.map((review) => (
-                  <div key={review.id} className="review-item">
-                    <div className="review-header">
-                      <div>
-                        <h4 className="review-author">{review.author}</h4>
-                        <div className="review-rating">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              size={14}
-                              fill={i < review.rating ? '#FCA47C' : '#e5e7eb'}
-                              color={i < review.rating ? '#FCA47C' : '#e5e7eb'}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="review-text">{review.text}</p>
-                  </div>
-                ))}
+            <div className="detail-item">
+              <div className="detail-header">
+                <Clock className="detail-icon" size={20} />
+                <h3>Ωράριο</h3>
               </div>
-              {vet.reviews.length > 2 && (
-                <button
-                  className="load-more-btn"
-                  onClick={() => setShowAllReviews(!showAllReviews)}
-                >
-                  {showAllReviews ? 'Απόκρυψη' : 'Φόρτωση περισσοτέρων'}
-                </button>
-              )}
+              <p className="detail-content">{vetData.hours.weekdays}</p>
+              <p className="detail-content">{vetData.hours.saturday}</p>
+              <p className="detail-content">{vetData.hours.sunday}</p>
             </div>
           </div>
+        </div>
+
+        {/* Biography Section */}
+        <div className="biography-section">
+          <h2 className="section-title">Βιογραφικό</h2>
+          <p className="biography-content">{vetData.biography}</p>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="reviews-section">
+          <h2 className="section-title">Κριτικές Πελατών</h2>
+          <div className="reviews-list">
+            {vetData.reviews.slice(0, visibleReviews).map(review => (
+              <div key={review.id} className="review-card">
+                <div className="review-header">
+                  <div className="review-stars">
+                    {renderStars(review.rating)}
+                  </div>
+                  <span className="review-author">{review.author}</span>
+                </div>
+                <p className="review-comment">{review.comment}</p>
+              </div>
+            ))}
+          </div>
+          {visibleReviews < vetData.reviews.length && (
+            <button 
+              className="load-more-btn"
+              onClick={handleLoadMore}
+            >
+              Φόρτωση περισσότερων
+            </button>
+          )}
+        </div>
         </div>
       </div>
     </PageLayout>

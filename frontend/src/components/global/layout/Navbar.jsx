@@ -117,7 +117,7 @@ const Navbar = ({ variant = 'vet' }) => {
         { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
       ]
     : [
-        { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.register },
+        { icon: <CirclePlus size={18} />, label: 'Καταγραφή', route: ROUTES.vet.registerpet },
         { icon: <FileText size={18} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
         { icon: <Star size={18} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
         { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.vet.history },

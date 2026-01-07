@@ -349,7 +349,8 @@
   cursor: pointer;
   transition: all var(--transition-fast);
 }
-Vet variant - orange button */
+
+/* Vet variant - orange button */
 .found-pet-form--vet .change-image-btn {
   background-color: #FCA47C;
 }
