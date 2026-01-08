@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import DatePicker from '../../components/common/DatePicker';
 import CustomSelect from '../../components/common/CustomSelect';
@@ -17,6 +17,7 @@ const Operation = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [microchipError, setMicrochipError] = useState('');
   const [formData, setFormData] = useState({
     petSearch: '',
     operationType: '',
@@ -26,10 +27,29 @@ const Operation = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for microchip number (petSearch)
+    if (name === 'petSearch') {
+      // Allow only numbers
+      const numericValue = value.replace(/[^0-9]/g, '');
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+      
+      // Validate length
+      if (numericValue.length > 0 && numericValue.length < 15) {
+        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
+      } else {
+        setMicrochipError('');
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -51,6 +71,7 @@ const Operation = () => {
       operationDate: '',
       description: ''
     });
+    setMicrochipError('');
     setShowCancelModal(false);
     
     // Show notification
@@ -69,69 +90,34 @@ const Operation = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validate required fields
-    if (!formData.petSearch.trim() || !formData.operationType || !formData.operationDate) {
-      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία');
+    // Validate microchip before submission
+    if (formData.petSearch.length !== 15) {
+      setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
       return;
     }
+    
+    // Show confirmation modal instead of submitting directly
+    setShowConfirmModal(true);
+  };
 
-    // Submit to backend
-    const submitMedicalProcedure = async () => {
-      try {
-        // First, find the pet by microchip number
-        const petsResponse = await fetch('http://localhost:5000/pets');
-        const pets = petsResponse.json();
-        
-        const foundPets = await pets;
-        const pet = foundPets.find(p => p.microchipId === formData.petSearch);
-
-        if (!pet) {
-          alert('Δεν βρέθηκε κατοικίδιο με αυτό το μικροτσίπ');
-          return;
-        }
-
-        // Get current vet from localStorage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser || currentUser.userType !== 'vet') {
-          alert('Παρακαλώ συνδεθείτε ως κτηνίατρος');
-          return;
-        }
-
-        // Create medical procedure object
-        const newProcedure = {
-          petId: pet.id,
-          vetId: currentUser.id,
-          type: formData.operationType,
-          date: formData.operationDate,
-          description: formData.description || '',
-          createdAt: new Date().toISOString(),
-        };
-
-        // POST to medicalProcedures endpoint
-        const response = await fetch('http://localhost:5000/medicalProcedures', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newProcedure),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to record medical procedure');
-        }
-
-        setShowSuccess(true);
-      } catch (err) {
-        console.error('Medical procedure error:', err);
-        alert('Σφάλμα κατά την καταγραφή της ιατρικής πράξης. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
-      }
-    };
-
-    submitMedicalProcedure();
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
   };
 
   const handleCancelSubmit = () => {
     setShowConfirmModal(false);
+  };
+
+  // Check if form is valid (all required fields filled and microchip is 15 digits)
+  const isFormValid = () => {
+    return (
+      formData.petSearch.trim() !== '' &&
+      formData.petSearch.length === 15 &&
+      formData.operationType.trim() !== '' &&
+      formData.operationDate.trim() !== ''
+    );
   };
 
   // Helper function to get label for operation type
@@ -156,9 +142,7 @@ const Operation = () => {
     { label: 'Περιγραφή', value: formData.description },
   ];
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   if (showSuccess) {
     return (
@@ -166,7 +150,7 @@ const Operation = () => {
         icon={FileText}
         title="Η Ιατρική Πράξη Καταχωρήθηκε!"
         description="Η ιατρική πράξη αποθηκεύτηκε επιτυχώς στο βιβλίο του κατοικιδίου."
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={() => navigate(ROUTES.vet.dashboard)}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"
@@ -192,12 +176,20 @@ const Operation = () => {
               <input
                 type="text"
                 name="petSearch"
-                className="operation__input"
-                placeholder="GR123456789012345"
+                className={`operation__input ${microchipError ? 'operation__input--error' : ''}`}
+                placeholder="123456789012345 (15 ψηφία)"
                 value={formData.petSearch}
                 onChange={handleInputChange}
+                maxLength={15}
                 required
               />
+              <span className="operation__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              {microchipError && (
+                <span className="operation__error-message">
+                  <AlertCircle size={14} />
+                  {microchipError}
+                </span>
+              )}
             </div>
 
             <div className="operation__field">
@@ -230,6 +222,7 @@ const Operation = () => {
                 name="operationDate"
                 value={formData.operationDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 
@@ -258,6 +251,8 @@ const Operation = () => {
               <button
                 type="submit"
                 className="operation__btn operation__btn--submit"
+                disabled={!isFormValid()}
+                title={!isFormValid() ? 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία' : ''}
               >
                 <Plus size={18} />
                 Καταγραφή

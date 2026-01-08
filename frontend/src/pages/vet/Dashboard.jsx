@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint, Search } from 'lucide-react';
+import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint, BookOpen} from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
 import { ROUTES } from '../../utils/constants';
@@ -28,20 +28,6 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.operation),
     },
     {
-      id: 'vet-reviews',
-      title: 'Αξιολογήσεις',
-      description: 'Προβολή αξιολογήσεων πελατών',
-      icon: <Star />,
-      onClick: () => navigate(ROUTES.vet.reviews),
-    },
-    {
-      id: 'history',
-      title: 'Ιστορικό',
-      description: 'Προβολή επισκέψεων, ιατρικών πράξεων και δηλώσεων',
-      icon: <History />,
-      onClick: () => navigate(ROUTES.vet.history),
-    },
-    {
       id: 'vet-appointments',
       title: 'Διαχείριση Ραντεβού',
       description: 'Προβολή και επεξεργασία ραντεβού',
@@ -56,11 +42,25 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.availability),
     },
     {
-      id: 'vet-life-event',
-      title: 'Δηλώσεις Συμβάντων Ζωής',
-      description: 'Μεταβίβαση, υιοθεσία, αναδοχή',
-      icon: <PawPrint />,
-      onClick: () => navigate(ROUTES.vet.lifeEvents),
+      id: 'health-book',
+      title: 'Βιβλιάριο Υγείας',
+      description: 'Προβολή και εκτύπωση του βιβλιαρίου υγείας ενός κατοικιδίου',
+      icon: <BookOpen />,
+      onClick: () => navigate(ROUTES.vet.healthBook),
+    },
+    {
+      id: 'history',
+      title: 'Ιστορικό',
+      description: 'Προβολή επισκέψεων, ιατρικών πράξεων και δηλώσεων',
+      icon: <History />,
+      onClick: () => navigate(ROUTES.vet.history),
+    },
+    {
+      id: 'vet-reviews',
+      title: 'Αξιολογήσεις',
+      description: 'Προβολή αξιολογήσεων πελατών',
+      icon: <Star />,
+      onClick: () => navigate(ROUTES.vet.reviews),
     },
     {
       id: 'lost-declaration',
@@ -70,16 +70,19 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.lostPetForm),
     },
     {
-      id: 'lost-pets',
-      title: 'Χαμένα Κατοικίδια',
-      description: 'Προβολή δηλωμένων χαμένων κατοικιδίων',
-      icon: <Search />,
-      onClick: () => navigate(ROUTES.citizen.lostPets),
+      id: 'vet-life-event',
+      title: 'Δηλώσεις Συμβάντων Ζωής',
+      description: 'Μεταβίβαση, υιοθεσία, αναδοχή',
+      icon: <PawPrint />,
+      onClick: () => navigate(ROUTES.vet.lifeEvents),
     },
   ];
 
   return (
-    <PageLayout title="Μενού">
+    <PageLayout title="Αρχική Κτηνιάτρου" showBreadcrumbs={false}>
+        <div className="dashboard__header">
+          <h1 className="dashboard__title">Αρχική Κτηνιάτρου</h1>
+        </div>
       <div className="dashboard">
         <div className="dashboard__cards">
           {dashboardCards.map((card) => (

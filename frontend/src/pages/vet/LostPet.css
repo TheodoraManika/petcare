@@ -46,9 +46,15 @@
 }
 
 .lost-pet__title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 600;
   color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.lost-pet__subtitle {
+  font-size: 14px;
+  color: #6b7280;
   margin: 0;
 }
 
@@ -103,6 +109,26 @@
 .lost-pet__input::placeholder,
 .lost-pet__textarea::placeholder {
   color: #9ca3af;
+}
+
+/* Error State */
+.lost-pet__input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.lost-pet__input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.lost-pet__error-message {
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: -4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .lost-pet__textarea {
@@ -209,9 +235,9 @@
 }
 
 .lost-pet__section-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: #1a1a1a;
   margin-top: 16px;
   padding-top: 24px;
   border-top: 1px solid #e5e7eb;

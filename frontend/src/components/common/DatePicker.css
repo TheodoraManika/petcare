@@ -142,3 +142,13 @@
 .datepicker--owner .datepicker__day--selected:hover {
   background-color: #1ab8c2;
 }
+
+.datepicker__day--disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.datepicker__day--disabled:hover {
+  background-color: transparent !important;
+}

@@ -36,9 +36,7 @@ const LifeEvents = () => {
     navigate(route);
   };
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   return (
     <PageLayout title="Δηλώσεις Συμβάντων Ζωής" breadcrumbs={breadcrumbItems}>

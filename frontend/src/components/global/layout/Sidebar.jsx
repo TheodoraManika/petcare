@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search } from 'lucide-react';
+import { House, CirclePlus, ArrowLeftRight, HandHeart, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig, BookOpen } from 'lucide-react';
 import { useSidebar } from '../../../context/SidebarContext';
 import { ROUTES } from '../../../utils/constants';
 import './Sidebar.css';
@@ -12,37 +12,35 @@ const Sidebar = ({ variant = 'vet' }) => {
   const [isLifeEventsOpen, setIsLifeEventsOpen] = useState(false);
 
   const vetMenuItems = [
-    { icon: <UserRound size={20} />, label: 'Προφίλ', route: ROUTES.vet.profile },
-    { icon: <House size={20} />, label: 'Αρχική Κτηνίατρου', route: ROUTES.vet.dashboard },
+    { icon: <House size={20} />, label: 'Αρχική Κτηνιάτρου', route: ROUTES.vet.dashboard },
     { icon: <CirclePlus size={20} />, label: 'Καταγραφή', route: ROUTES.vet.registerpet },
     { icon: <FileText size={20} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
-    { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
-    { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
     { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },
     { icon: <Clock size={20} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
+    { icon: <BookOpen size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.vet.healthBook },
+    { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
+    { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
+    { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
     { 
       icon: <PawPrint size={20} />, 
       label: 'Συμβάντα Ζωής', 
       route: ROUTES.vet.lifeEvents,
       isDropdown: true,
       subItems: [
-        { label: 'Μεταβίβαση', route: ROUTES.vet.transfer },
-        { label: 'Υιοθεσία', route: ROUTES.vet.adoption },
-        { label: 'Αναδοχή', route: ROUTES.vet.foster },
+        { icon: <ArrowLeftRight size={14} />, label: 'Μεταβίβαση', route: ROUTES.vet.transfer },
+        { icon: <Heart size={14} />, label: 'Υιοθεσία', route: ROUTES.vet.adoption },
+        { icon: <HandHeart size={14} />, label: 'Αναδοχή', route: ROUTES.vet.foster },
       ]
     },
-    { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
-    { icon: <Search size={20} />, label: 'Χαμένα Κατοικίδια', route: ROUTES.citizen.lostPets },
   ];
 
   const ownerMenuItems = [
-    { icon: <UserRound size={20} />, label: 'Προφίλ', route: ROUTES.owner.profile },
     { icon: <House size={20} />, label: 'Αρχική Ιδιοκτήτη', route: ROUTES.owner.dashboard },
-    { icon: <FileText size={20} />, label: 'Τα Κατοικίδιά μου', route: ROUTES.owner.pets },
+    { icon: <FileText size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.owner.pets },
     { icon: <Calendar size={20} />, label: 'Τα Ραντεβού μου', route: ROUTES.owner.appointments },
     { icon: <Search size={20} />, label: 'Αναζήτηση Κτηνιάτρων', route: ROUTES.citizen.searchMap },
     { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.owner.lostPetForm },
-    { icon: <Search size={20} />, label: 'Χαμένα Κατοικίδια', route: ROUTES.citizen.lostPets },
+    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.owner.foundPetForm },
     { icon: <History size={20} />, label: 'Ιστορικό Δηλώσεων', route: ROUTES.owner.lostHistory },
   ];
 
@@ -101,6 +99,7 @@ const Sidebar = ({ variant = 'vet' }) => {
                             onClick={() => navigate(subItem.route)}
                             title={subItem.label}
                           >
+                            <span className="sidebar__subitem-icon">{subItem.icon}</span>
                             <span className="sidebar__label">{subItem.label}</span>
                           </button>
                         ))}

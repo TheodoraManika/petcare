@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../ui/Avatar';
 import './Navbar.css';
@@ -56,8 +56,6 @@ const Navbar = ({ variant = 'vet' }) => {
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
-  const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
-  const infoRef = useRef(null);
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -111,37 +109,29 @@ const Navbar = ({ variant = 'vet' }) => {
     };
   }, []);
 
-  // Menu items only for owner (vet uses sidebar)
-  const menuItems = [
-    { icon: <FileText size={18} />, label: 'Κατοικίδια', route: ROUTES.owner.pets },
-    { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.owner.appointments },
-    { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.owner.lostPetForm },
-    { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
-  ];
-
   const navLinks = isCitizen
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.citizen.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.home, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : isOwner
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.owner.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.owner.info, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
+        { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ];
-
-  const infoOptions = [
-    { label: 'Ιδιοκτήτης', path: '/owner/information', icon: <Users size={16} /> },
-    { label: 'Κτηνίατρος', path: '/vet/information', icon: <Stethoscope size={16} /> },
-    { label: 'Πολίτης', path: '/citizen/information', icon: <UserRound size={16} /> },
-  ];
 
   return (
     <nav className={`navbar ${isOwner ? 'navbar--owner' : ''}`}>
@@ -198,135 +188,114 @@ const Navbar = ({ variant = 'vet' }) => {
               </Link>
             ))}
             
-            {/* Information Dropdown */}
-            <div className="navbar__nav-dropdown navbar__info-dropdown" ref={infoRef}>
-              <button
-                className="navbar__nav-link navbar__nav-link--dropdown"
-                aria-haspopup="true"
-              >
-                <Info size={18} />
-                <span>Πληροφορίες</span>
-                <ChevronDown className="navbar__dropdown-chevron" size={16} />
-              </button>
-              
-              <div className="navbar__nav-dropdown-menu navbar__info-dropdown-menu">
-                {infoOptions.map((option, index) => (
-                  <Link
-                    key={index}
-                    to={option.path}
-                    className="navbar__nav-dropdown-item navbar__info-option"
-                  >
-                    <span className="navbar__nav-dropdown-icon">{option.icon}</span>
-                    <span>{option.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
+            {/* Menu Dropdown removed - now using Sidebar for both vet and owner */}
           </div>
+        </div>
 
-          {/* Citizen: Simple Login/Register Buttons or Authenticated: Profile Dropdown */}
-          {!isLoggedIn ? (
-            <div className="navbar__auth-buttons">
+        {/* Auth Buttons - Outside navbar__right */}
+        {!isLoggedIn && (
+          <div className="navbar__auth-buttons">
+            <button
+              className="navbar__auth-btn navbar__auth-btn--signin"
+              onClick={() => navigate(ROUTES.login)}
+            >
+              <UserRound size={16} />
+              <span>Σύνδεση</span>
+            </button>
+            
+            {/* Register Dropdown */}
+            <div className="navbar__register-dropdown">
               <button
-                className="navbar__auth-btn navbar__auth-btn--signin"
-                onClick={() => navigate(ROUTES.login)}
+                className="navbar__auth-btn navbar__auth-btn--signup"
+                onClick={() => setIsRegisterDropdownOpen(!isRegisterDropdownOpen)}
               >
-                <UserRound size={16} />
-                <span>Σύνδεση</span>
-              </button>
-              
-              {/* Register Dropdown */}
-              <div className="navbar__register-dropdown">
-                <button
-                  className="navbar__auth-btn navbar__auth-btn--signup"
-                  onClick={() => setIsRegisterDropdownOpen(!isRegisterDropdownOpen)}
-                >
-                  <span>Εγγραφή</span>
-                  <ChevronDown
-                    size={16}
-                    className={`navbar__register-chevron ${isRegisterDropdownOpen ? 'navbar__register-chevron--open' : ''}`}
-                  />
-                </button>
-                
-                {isRegisterDropdownOpen && (
-                  <div className="navbar__register-menu">
-                    <button
-                      className="navbar__register-option"
-                      onClick={() => {
-                        navigate(ROUTES.owner.register);
-                        setIsRegisterDropdownOpen(false);
-                      }}
-                    >
-                      <Users size={20} color="#23CED9" />
-                      <span>Ως Ιδιοκτήτης</span>
-                    </button>
-                    
-                    <button
-                      className="navbar__register-option"
-                      onClick={() => {
-                        navigate(ROUTES.vet.register);
-                        setIsRegisterDropdownOpen(false);
-                      }}
-                    >
-                      <Stethoscope size={20} color="#FCA47C" />
-                      <span>Ως Κτηνίατρος</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="navbar__profile" ref={profileRef}>
-              <button
-                className="navbar__profile-btn"
-                onClick={toggleProfileMenu}
-                aria-expanded={isProfileOpen}
-                aria-haspopup="true"
-              >
-                <Avatar
-                  src={user.avatar}
-                  name={user.name}
-                  size="sm"
+                <span>Εγγραφή</span>
+                <ChevronDown
+                  size={16}
+                  className={`navbar__register-chevron ${isRegisterDropdownOpen ? 'navbar__register-chevron--open' : ''}`}
                 />
-                <span className="navbar__profile-name">{user.name}</span>
-                <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
               </button>
               
-              {isProfileOpen && (
-                <div className="navbar__profile-menu">
-                  <div className="navbar__profile-menu-header">
-                    <p className="navbar__profile-menu-name">{user.name}</p>
-                  </div>
-                  <Link
-                    to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
-                    className="navbar__profile-menu-item"
-                    onClick={() => setIsProfileOpen(false)}
-                  >
-                    <span className="navbar__profile-menu-icon">
-                      <UserRound size={16} />
-                    </span>
-                    <span>Προφίλ</span>
-                  </Link>
+              {isRegisterDropdownOpen && (
+                <div className="navbar__register-menu">
                   <button
-                    className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                    className="navbar__register-option"
                     onClick={() => {
-                      setIsProfileOpen(false);
-                      localStorage.removeItem('currentUser');
-                      window.dispatchEvent(new Event('loginStatusChanged'));
-                      navigate(ROUTES.home);
+                      navigate(ROUTES.owner.register);
+                      setIsRegisterDropdownOpen(false);
                     }}
                   >
-                    <span className="navbar__profile-menu-icon">
-                      <LogOut size={16} />
-                    </span>
-                    <span>Αποσύνδεση</span>
+                    <Users size={20} color="#23CED9" />
+                    <span>Ως Ιδιοκτήτης</span>
+                  </button>
+                  
+                  <button
+                    className="navbar__register-option"
+                    onClick={() => {
+                      navigate(ROUTES.vet.register);
+                      setIsRegisterDropdownOpen(false);
+                    }}
+                  >
+                    <Stethoscope size={20} color="#FCA47C" />
+                    <span>Ως Κτηνίατρος</span>
                   </button>
                 </div>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* Profile Dropdown - Outside navbar__right */}
+        {isLoggedIn && (
+          <div className="navbar__profile" ref={profileRef}>
+            <button
+              className="navbar__profile-btn"
+              onClick={toggleProfileMenu}
+              aria-expanded={isProfileOpen}
+              aria-haspopup="true"
+            >
+              <Avatar
+                src={user.avatar}
+                name={user.name}
+                size="sm"
+              />
+              <span className="navbar__profile-name">{user.name}</span>
+              <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
+            </button>
+            
+            {isProfileOpen && (
+              <div className="navbar__profile-menu">
+                <div className="navbar__profile-menu-header">
+                  <p className="navbar__profile-menu-name">{user.name}</p>
+                </div>
+                <Link
+                  to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
+                  className="navbar__profile-menu-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <UserRound size={16} />
+                  </span>
+                  <span>Προφίλ</span>
+                </Link>
+                <button
+                  className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    localStorage.removeItem('currentUser');
+                    window.dispatchEvent(new Event('loginStatusChanged'));
+                    navigate(ROUTES.home);
+                  }}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <LogOut size={16} />
+                  </span>
+                  <span>Αποσύνδεση</span>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );

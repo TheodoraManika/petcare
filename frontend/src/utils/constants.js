@@ -44,5 +44,6 @@ export const ROUTES = {
     lifeEvents: '/vet/life-events',
     lostPetForm: '/vet/lost-pet',
     foundPetForm: '/vet/found-pet',
+    healthBook: '/vet/health-book',
   },
 };

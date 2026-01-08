@@ -380,9 +380,7 @@ const Appointments = () => {
     return months[date.getMonth()];
   };
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   return (
     <PageLayout title="Διαχείριση Ραντεβού" breadcrumbs={breadcrumbItems}>
