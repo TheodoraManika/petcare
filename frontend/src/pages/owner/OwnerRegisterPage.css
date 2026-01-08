@@ -362,3 +362,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ProgressBar overrides for Owner Register to match container size and smaller circles */
+.register-container .progress-bar {
+  padding: 16px 0;
+}
+.register-container .progress-bar__container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.register-container .progress-bar__circle {
+  width: 44px;
+  height: 44px;
+}
+.register-container .progress-bar__circle--active {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+.register-container .progress-bar__label {
+  font-size: 13px;
+}
+.register-container .progress-bar__line {
+  margin-top: 20px;
+}

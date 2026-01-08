@@ -4,6 +4,7 @@ import { Eye, EyeOff, Stethoscope, ChevronLeft } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/global/ui/CustomSelect';
+import ProgressBar from '../../components/common/ProgressBar';
 import './VetRegisterPage.css';
 
 const VetRegisterPage = () => {
@@ -194,6 +195,15 @@ const VetRegisterPage = () => {
     }
   };
 
+  const vetSteps = [
+    { label: 'Προσωπικά', icon: '1' },
+    { label: 'Εξειδίκευση', icon: '2' },
+    { label: 'Κλινική', icon: '3' },
+    { label: 'Διεύθυνση', icon: '4' },
+    { label: 'Επικοινωνία', icon: '5' },
+    { label: 'Κωδικός', icon: '6' },
+  ];
+
   return (
     <PageLayout title="Εγγραφή Κτηνιάτρου">
       <div className="vet-register-page">
@@ -210,15 +220,7 @@ const VetRegisterPage = () => {
           </div>
 
           {/* Steps Indicator */}
-          <div className="vet-register-steps">
-            {[1, 2, 3, 4, 5, 6].map((step) => (
-              <div key={step} className={`vet-register-step ${currentStep >= step ? 'vet-register-step--active' : ''}`}>
-                <div className={`vet-register-step-circle ${currentStep === step ? 'vet-register-step-circle--current' : ''}`}>
-                  {currentStep > step ? '✓' : step}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProgressBar steps={vetSteps} currentStep={currentStep} />
 
           {/* Error Message */}
           {error && <div className="vet-register-error">{error}</div>}

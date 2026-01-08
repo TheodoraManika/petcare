@@ -16,7 +16,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   padding: 50px 40px;
   width: 100%;
-  max-width: 550px;
+  max-width: 800px;
 }
 
 /* Header Section */
@@ -368,4 +368,38 @@
   .vet-register-actions {
     grid-template-columns: 1fr;
   }
+}
+
+/* ProgressBar overrides for Vet Register to match container size and smaller circles */
+.vet-register-container .progress-bar {
+  padding: 12px 0 20px;
+}
+.vet-register-container .progress-bar__container {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vet-register-container .progress-bar__circle {
+  width: 44px;
+  height: 44px;
+}
+.vet-register-container .progress-bar__circle--active {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+.vet-register-container .progress-bar__label {
+  font-size: 13px;
+}
+.vet-register-container .progress-bar__line {
+  flex: 1;
+  height: 3px;
+  background-color: #e6e6e6;
+  margin: 0 8px;
+  align-self: center;
+  transition: background-color 0.3s ease;
+}
+.vet-register-container .progress-bar__line--completed {
+  background-color: #FCA47C;
 }

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Home, ChevronLeft } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/global/layout/PageLayout';
+import ProgressBar from '../../components/common/ProgressBar';
 import './OwnerRegisterPage.css';
 
 const OwnerRegisterPage = () => {
@@ -163,6 +164,13 @@ const OwnerRegisterPage = () => {
     }
   };
 
+  const ownerSteps = [
+    { label: 'Προσωπικά', icon: '1' },
+    { label: 'Επικοινωνία', icon: '2' },
+    { label: 'Διεύθυνση', icon: '3' },
+    { label: 'Κωδικός', icon: '4' },
+  ];
+
   return (
     <PageLayout title="Εγγραφή Ιδιοκτήτη">
       <div className="register-page">
@@ -179,15 +187,7 @@ const OwnerRegisterPage = () => {
           </div>
 
           {/* Steps Indicator */}
-          <div className="register-steps">
-            {[1, 2, 3, 4].map((step) => (
-              <div key={step} className={`register-step ${currentStep >= step ? 'register-step--active' : ''}`}>
-                <div className={`register-step-circle ${currentStep === step ? 'register-step-circle--current' : ''}`}>
-                  {currentStep > step ? '✓' : step}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProgressBar steps={ownerSteps} currentStep={currentStep} />
 
           {/* Error Message */}
           {error && <div className="register-error">{error}</div>}
