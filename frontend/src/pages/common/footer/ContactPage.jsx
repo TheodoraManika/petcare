@@ -56,7 +56,7 @@ const ContactPage = () => {
               <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="fullName" className="form-label">
-                    Όνοματεπώνυμο *
+                    Όνοματεπώνυμο <span className="required-icon">*</span>
                   </label>
                   <input
                     type="text"
@@ -72,7 +72,7 @@ const ContactPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="email" className="form-label">
-                    Email *
+                    Email <span className="required-icon">*</span>
                   </label>
                   <input
                     type="email"
@@ -103,7 +103,7 @@ const ContactPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="subject" className="form-label">
-                    Θέμα *
+                    Θέμα <span className="required-icon">*</span>
                   </label>
                   <input
                     type="text"
@@ -119,7 +119,7 @@ const ContactPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="message" className="form-label">
-                    Μήνυμα *
+                    Μήνυμα <span className="required-icon">*</span>
                   </label>
                   <textarea
                     id="message"
