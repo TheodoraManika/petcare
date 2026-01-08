@@ -18,7 +18,6 @@ import OwnerLostPetHistoryEdit from './pages/owner/LostPetHistoryEdit';
 // Citizen Pages
 import HomePage from './pages/citizen/HomePage';
 import LostPets from './pages/citizen/LostPets';
-import CitizenFoundPetForm from './pages/citizen/FoundPetForm';
 import VetSearchMap from './pages/citizen/VetSearchMap';
 import VetProfile from './pages/citizen/VetProfile';
 import CitizenInformation from './pages/citizen/CitizenInformation';
@@ -68,7 +67,6 @@ function App() {
         <Route path={ROUTES.owner.profile} element={<OwnerProfile />} />
         <Route path={ROUTES.owner.register} element={<OwnerRegisterPage />} />
         <Route path={ROUTES.owner.lostPetForm} element={<OwnerLostPet />} />
-        <Route path={ROUTES.owner.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path={ROUTES.owner.pets} element={<OwnerHealthBook />} />
         <Route path={`${ROUTES.owner.pets}/:petId`} element={<OwnerPetDetail />} />
         <Route path={ROUTES.owner.appointments} element={<OwnerAppointments />} />
@@ -81,7 +79,6 @@ function App() {
         {/* Citizen Routes */}
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.citizen.lostPets} element={<LostPets />} />
-        <Route path={ROUTES.citizen.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path={ROUTES.citizen.searchMap} element={<VetSearchMap />} />
         <Route path="/vet-profile/:vetId" element={<VetProfile />} />
         <Route path="/citizen/information" element={<CitizenInformation />} />
@@ -102,7 +99,6 @@ function App() {
         <Route path={ROUTES.vet.history} element={<History />} />
         <Route path={`${ROUTES.vet.history}/:id`} element={<HistoryDetail />} />
         <Route path={ROUTES.vet.lostPetForm} element={<LostPet />} />
-        <Route path={ROUTES.vet.foundPetForm} element={<CitizenFoundPetForm />} />
         <Route path="/vet/information" element={<VetInformation />} />
 
         {/* Common Pages */}

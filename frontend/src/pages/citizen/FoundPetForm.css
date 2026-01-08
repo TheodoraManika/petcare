@@ -5,6 +5,7 @@
   padding: 40px;
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
 }
 
 .form-container {
@@ -427,6 +428,34 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
+}
+
+/* Inline form top-right close button */
+.inline-form-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.inline-form-close:hover {
+  background: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #ffffff;
+}
+
+.inline-form-close svg {
+  stroke: currentColor;
 }
 
 /* Vet variant - orange button */

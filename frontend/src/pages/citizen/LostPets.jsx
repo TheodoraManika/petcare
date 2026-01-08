@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MapPin, List, Dog, Cat, X, AlertCircle, Search as SearchIcon, FileText, Scan, Palette, MapPinned } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/common/CustomSelect';
@@ -9,9 +9,11 @@ import SearchSidebar from '../../components/citizen/SearchSidebar';
 import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './LostPets.css';
+import FoundPetForm from './FoundPetForm';
 
 const LostPets = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [filters, setFilters] = useState({
     animal: '',
@@ -30,6 +32,8 @@ const LostPets = () => {
   const [showReportOptions, setShowReportOptions] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailPet, setDetailPet] = useState(null);
+  const [showFoundForm, setShowFoundForm] = useState(false);
+  const [foundFormPrefill, setFoundFormPrefill] = useState({});
   const itemsPerPage = 9; // 3x3 grid
 
   // Fetch lost pets from backend
@@ -92,10 +96,12 @@ const LostPets = () => {
 
   // Filter pets based on microchip
   const filteredPets = useMemo(() => {
-    if (!filters.microchip) return lostPets;
-    return lostPets.filter(pet => 
-      pet.microchip.toLowerCase().includes(filters.microchip.toLowerCase())
-    );
+    const needle = (filters.microchip || '').toString().toLowerCase();
+    if (!needle) return lostPets;
+    return lostPets.filter(pet => {
+      const chip = (pet.microchip || '').toString().toLowerCase();
+      return chip.includes(needle);
+    });
   }, [filters.microchip, lostPets]);
 
   const hasSearched = filters.microchip.length > 0;
@@ -111,47 +117,41 @@ const LostPets = () => {
   };
 
   const handleFoundPet = (pet) => {
-    navigate(ROUTES.citizen.foundPetForm, {
-      state: {
-        petDetails: {
-          petName: pet.name,
-          species: pet.type,
-          breed: pet.breed,
-          foundLocation: pet.area,
-          description: pet.description,
-          dateReported: pet.dateLost,
-          microchip: pet.microchip
-        }
-      }
-    });
+    setFoundFormPrefill({ petDetails: {
+      petName: pet.name,
+      species: pet.type,
+      breed: pet.breed,
+      foundLocation: pet.area,
+      description: pet.description,
+      dateReported: pet.dateLost,
+      microchip: pet.microchip
+    }});
+    setShowFoundForm(true);
   };
 
   const handleReportQuick = () => {
     setShowReportOptions(false);
-    // If there's a microchip in filters, pass it to pre-fill the form
     if (filters.microchip) {
-      navigate(ROUTES.citizen.foundPetForm, {
-        state: { microchipId: filters.microchip }
-      });
+      setFoundFormPrefill({ microchipId: filters.microchip });
     } else {
-      navigate(ROUTES.citizen.foundPetForm);
+      setFoundFormPrefill({});
     }
+    setShowFoundForm(true);
   };
 
   const handleReportWithMicrochip = () => {
     setShowReportOptions(false);
-    // If there's a microchip in filters, pass it
     if (filters.microchip) {
       const foundPet = lostPets.find(pet => pet.microchip === filters.microchip);
       if (foundPet) {
         handleFoundPet(foundPet);
       } else {
-        navigate(ROUTES.citizen.foundPetForm, {
-          state: { microchipId: filters.microchip }
-        });
+        setFoundFormPrefill({ microchipId: filters.microchip });
+        setShowFoundForm(true);
       }
     } else {
-      navigate(ROUTES.citizen.foundPetForm);
+      setFoundFormPrefill({});
+      setShowFoundForm(true);
     }
   };
 
@@ -178,6 +178,21 @@ const LostPets = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  // If navigated here with state to open the found form, honor it
+  useEffect(() => {
+    if (location.state) {
+      if (location.state.openFoundForm) {
+        setFoundFormPrefill({
+          microchipId: location.state.microchipId || undefined,
+          petDetails: location.state.petDetails || undefined,
+        });
+        setShowFoundForm(true);
+      }
+    }
+    // clear location state after handling (optional)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
   // Options for CustomSelect components with icons
   const animalOptions = [
@@ -207,6 +222,19 @@ const LostPets = () => {
 
   return (
     <PageLayout title="Χαμένα Κατοικίδια" breadcrumbs={breadcrumbItems}>
+      <section className="found-actions-section">
+        <div className="found-actions-container">
+          <div className="found-actions-text">
+            <h2 className="hero-search-title">Βρήκατε κάποιο ζωάκι;</h2>
+            <p className="hero-search-subtitle">Βοηθήστε να επιστρέψει στην οικογένειά του</p>
+          </div>
+          <div className="found-actions-buttons">
+            <button className="found-action-btn primary-btn" onClick={handleReportQuick}>
+              Δήλωση Εύρεσης
+            </button>
+          </div>
+        </div>
+      </section>
       <div className="lost-pets-page">
         {/* Sidebar with filters */}
         <SearchSidebar
@@ -289,7 +317,7 @@ const LostPets = () => {
         </SearchSidebar>
 
         {/* Main Content Area */}
-        <main className="lost-pets-container">
+        <main className={`lost-pets-container ${showFoundForm ? 'has-inline-form' : ''}`}>
 
           <div className="lost-pets-header">
             <h2 className="lost-pets-title">Αποτελέσματα ({filteredPets.length})</h2>
@@ -313,7 +341,15 @@ const LostPets = () => {
             
           </div>
 
-          {loading ? (
+          {showFoundForm ? (
+            <div className="found-form-replace">
+              <FoundPetForm
+                inline={true}
+                prefill={foundFormPrefill}
+                onClose={() => setShowFoundForm(false)}
+              />
+            </div>
+          ) : loading ? (
             <div className="loading-message">
               <p>Φόρτωση χαμένων κατοικιδίων...</p>
             </div>
@@ -430,26 +466,7 @@ const LostPets = () => {
           )}
         </main>
 
-        {/* Right-hand Report Sidebar */}
-        <aside className="report-sidebar">
-          <h4 className="report-sidebar-title">Βρήκατε ένα χαμένο κατοικίδιο που δεν είναι στη λίστα;</h4>
-          <div className="report-cards ">
-            <button className="report-card report-card--compact" onClick={handleReportQuick}>
-              <div className="report-card__icon">
-                <FileText size={22} />
-              </div>
-              <h3 className="report-card__title">Δήλωση Εύρεσης</h3>
-              <p className="report-card__description">Για κατοικίδια χωρίς microchip</p>
-            </button>
-            <button className="report-card report-card--compact" onClick={handleReportWithMicrochip}>
-              <div className="report-card__icon">
-                <Scan size={22} />
-              </div>
-              <h3 className="report-card__title">Δήλωση με Microchip</h3>
-              <p className="report-card__description">Προ-συμπληρωμένη φόρμα</p>
-            </button>
-          </div>
-        </aside>
+        {/* Right-hand Report Sidebar removed (moved into main) */}
 
         {/* Pet Detail Modal */}
         {showDetailModal && detailPet && (
@@ -536,6 +553,7 @@ const LostPets = () => {
             </div>
           </div>
         )}
+        
       </div>
     </PageLayout>
   );

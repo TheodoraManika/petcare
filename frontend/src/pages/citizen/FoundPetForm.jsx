@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Upload, AlertCircle, MapPin, Calendar, PawPrint, Search as SearchIcon } from 'lucide-react';
+import { Upload, AlertCircle, MapPin, Calendar, PawPrint, Search as SearchIcon, X } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import LocationPicker from '../../components/common/LocationPicker';
 import DatePicker from '../../components/common/DatePicker';
@@ -47,7 +47,7 @@ const lostPetsDatabase = [
   },
 ];
 
-const FoundPetForm = () => {
+const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -81,11 +81,12 @@ const FoundPetForm = () => {
     { value: 'pet3', label: 'Ρεξ - GR555666777888999', name: 'Ρεξ', type: 'Σκύλος', breed: 'German Shepherd', microchip: 'GR555666777888999' },
   ];
   
-  // Get pet details from navigation state if coming from LostPetDetails
-  const navigationPetData = location.state?.petDetails || {};
+  // Get pet details from prefill prop or navigation state if coming from LostPetDetails
+  const navigationState = location.state || {};
+  const navigationPetData = (prefill && prefill.petDetails) || navigationState.petDetails || {};
   
   // Get microchip ID if passed directly (for unregistered pets)
-  const navigationMicrochipId = location.state?.microchipId || '';
+  const navigationMicrochipId = (prefill && prefill.microchipId) || navigationState.microchipId || '';
   
   const [selectedOwnPet, setSelectedOwnPet] = useState('');
   const [prefilledPetData, setPrefilledPetData] = useState(
@@ -280,17 +281,28 @@ const FoundPetForm = () => {
     { label: 'Χαμένα Κατοικίδια', path: '/citizen/lost-pets' },
   ];
 
-  return (
-    <PageLayout title="Δήλωση Εύρεσης" variant={variant} breadcrumbs={breadcrumbItems}>
-      <div className={`found-pet-form found-pet-form--${variant}`}>
-        <h1 className="form-title">Δήλωση Εύρεσης </h1>
-        <p className="form-subtitle">
-          Βρήκατε ένα χαμένο κατοικίδιο; Συμπληρώστε τη φόρμα για να βοηθήσετε την επιστροφή του στους ιδιοκτήτες
-        </p>
-        <div className="form-header">
-        </div>
+  const formContent = (
+    <div className={`found-pet-form found-pet-form--${variant}`}>
+      {inline && (
+        <button
+          type="button"
+          className="inline-form-close"
+          onClick={() => {
+            if (onClose) onClose(); else navigate('/');
+          }}
+          aria-label="Κλείσιμο φόρμας"
+        >
+          <X size={16} />
+        </button>
+      )}
+      <h1 className="form-title">Δήλωση Εύρεσης </h1>
+      <p className="form-subtitle">
+        Βρήκατε ένα χαμένο κατοικίδιο; Συμπληρώστε τη φόρμα για να βοηθήσετε την επιστροφή του στους ιδιοκτήτες
+      </p>
+      <div className="form-header">
+      </div>
 
-        <form onSubmit={handleSubmit} className="form-container">
+      <form onSubmit={handleSubmit} className="form-container">
           {/* Microchip Search - Always visible when no prefilled data */}
           {!hasPrefilledData && (
             <div className="microchip-search-section">
@@ -619,12 +631,12 @@ const FoundPetForm = () => {
 
           {/* Submit Button */}
           <div className="form-actions">
-            {isOwner ? (
+                {isOwner ? (
               <>
                 <button 
                   type="button" 
                   className="submit-btn submit-btn--cancel"
-                  onClick={() => navigate('/')}
+                  onClick={() => { if (inline && onClose) onClose(); else navigate('/'); }}
                 >
                   Ακύρωση
                 </button>
@@ -649,7 +661,7 @@ const FoundPetForm = () => {
                 <button 
                   type="button" 
                   className="submit-btn submit-btn--cancel"
-                  onClick={() => navigate('/')}
+                  onClick={() => { if (inline && onClose) onClose(); else navigate('/'); }}
                 >
                   Ακύρωση
                 </button>
@@ -666,6 +678,16 @@ const FoundPetForm = () => {
           </div>
         </form>
       </div>
+  );
+
+  // When `inline` is true, render the form embedded in the page (no modal, no PageLayout)
+  if (inline) {
+    return formContent;
+  }
+
+  return (
+    <PageLayout title="Δήλωση Εύρεσης" variant={variant} breadcrumbs={breadcrumbItems}>
+      {formContent}
     </PageLayout>
   );
 };

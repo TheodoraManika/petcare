@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus } from 'lucide-react';
+import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/global/layout/PageLayout';
 import CustomSelect from '../../components/global/ui/CustomSelect';
@@ -61,35 +61,65 @@ const HomePage = () => {
     },
   ];
 
-  // Mock top-rated vets data
+  // Mock top-rated vets data (expanded)
   const topVets = [
-    {
-      id: 1,
-      name: 'Δρ. Παπαδόπουλος',
-      specialty: 'Γενικός Κτηνίατρος',
-      initials: 'ΔΠ',
-      area: 'Αθήνα, Ψυχικό',
-      rating: 5.0,
-      reviews: 127,
-    },
-    {
-      id: 2,
-      name: 'Δρ. Κωνσταντίνου',
-      specialty: 'Ειδικός Γατών',
-      initials: 'ΜΚ',
-      area: 'Θεσσαλονίκη, Πανόραμα',
-      rating: 4.9,
-      reviews: 98,
-    },
-    {
-      id: 3,
-      name: 'Δρ. Σωτηρίου',
-      specialty: 'Χειρουργός',
-      initials: 'ΑΣ',
-      area: 'Πάτρα, Κέντρο',
-      rating: 4.8,
-      reviews: 156,
-    },
+    { id: 1, name: 'Δρ. Παπαδόπουλος', specialty: 'Γενικός Κτηνίατρος', initials: 'ΔΠ', area: 'Αθήνα, Ψυχικό', rating: 5.0, reviews: 127 },
+    { id: 2, name: 'Δρ. Κωνσταντίνου', specialty: 'Ειδικός Γατών', initials: 'ΜΚ', area: 'Θεσσαλονίκη, Πανόραμα', rating: 4.9, reviews: 98 },
+    { id: 3, name: 'Δρ. Σωτηρίου', specialty: 'Χειρουργός', initials: 'ΑΣ', area: 'Πάτρα, Κέντρο', rating: 4.8, reviews: 156 },
+      {
+        id: 4,
+        name: 'Δρ. Νικολάου',
+        specialty: 'Οδοντίατρος Ζώων',
+        initials: 'ΝΚ',
+        area: 'Αθήνα, Κολωνάκι',
+        rating: 4.7,
+        reviews: 64,
+      },
+      {
+        id: 5,
+        name: 'Δρ. Μαρίνα',
+        specialty: 'Δερματολόγος',
+        initials: 'ΜΡ',
+        area: 'Θεσσαλονίκη',
+        rating: 4.6,
+        reviews: 88,
+      },
+      {
+        id: 6,
+        name: 'Δρ. Ηλίας',
+        specialty: 'Ειδικός Μικρών Ζώων',
+        initials: 'ΗΛ',
+        area: 'Πάτρα',
+        rating: 4.5,
+        reviews: 42,
+      },
+      {
+        id: 7,
+        name: 'Δρ. Στέλλα',
+        specialty: 'Γενικός Κτηνίατρος',
+        initials: 'ΣΤ',
+        area: 'Ηράκλειο',
+        rating: 4.4,
+        reviews: 51,
+      },
+      {
+        id: 8,
+        name: 'Δρ. Γιώργος',
+        specialty: 'Χειρουργός',
+        initials: 'ΓΡ',
+        area: 'Λάρισα',
+        rating: 4.3,
+        reviews: 37,
+      },
+      {
+        id: 9,
+        name: 'Δρ. Ελένη',
+        specialty: 'Ειδικός Γατών',
+        initials: 'ΕΛ',
+        area: 'Ρέθυμνο',
+        rating: 4.2,
+        reviews: 22,
+      },
   ];
 
   // Auto-advance carousel
@@ -99,6 +129,26 @@ const HomePage = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, [lostPets.length]);
+
+  // Vets carousel state and helpers (3 cards per slide)
+  const [currentVetSlide, setCurrentVetSlide] = useState(0);
+  const vetsPerSlide = 3;
+  const vetSlides = [];
+  for (let i = 0; i < topVets.length; i += vetsPerSlide) {
+    vetSlides.push(topVets.slice(i, i + vetsPerSlide));
+  }
+
+  const nextVetSlide = useCallback(() => {
+    setCurrentVetSlide((prev) => (prev + 1) % Math.max(1, vetSlides.length));
+  }, [vetSlides.length]);
+
+  const prevVetSlide = useCallback(() => {
+    setCurrentVetSlide((prev) => (prev - 1 + Math.max(1, vetSlides.length)) % Math.max(1, vetSlides.length));
+  }, [vetSlides.length]);
+
+  const goToVetSlide = (index) => {
+    setCurrentVetSlide(index);
+  };
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % lostPets.length);
@@ -111,6 +161,8 @@ const HomePage = () => {
     setCurrentSlide(index);
   };
 
+  // vets displayed as cards; no carousel handlers required
+
   // Handle vet click
   const handleVetClick = (vet) => {
     navigate(`/citizen/vet/${vet.id}`);
@@ -118,17 +170,17 @@ const HomePage = () => {
 
   // Handle hero "Δήλωση Εύρεσης" button
   const handleHeroFoundClick = () => {
-    navigate(ROUTES.citizen.foundPetForm);
+    navigate(ROUTES.citizen.lostPets, { state: { openFoundForm: true } });
   };
 
   const handleReportQuick = () => {
     // navigate to found pet form (quick report)
-    navigate(ROUTES.citizen.foundPetForm);
+    navigate(ROUTES.citizen.lostPets, { state: { openFoundForm: true } });
   };
 
   const handleReportWithMicrochip = () => {
     // navigate to found pet form (with microchip option)
-    navigate(ROUTES.citizen.foundPetForm);
+    navigate(ROUTES.citizen.lostPets, { state: { openFoundForm: true } });
   };
 
   // Navigate to lost pets page with pet details
@@ -180,7 +232,7 @@ const HomePage = () => {
       id: 'vets',
       title: 'Κτηνίατροι',
       color: 'orange',
-      icon: <Star size={24} />,
+      icon: <Stethoscope size={24} />,
       features: [
         'Καταγραφή κατοικιδίων',
         'Ιατρικές πράξεις',
@@ -284,14 +336,8 @@ const HomePage = () => {
               <p className="hero-search-subtitle">Βοηθήστε να επιστρέψει στην οικογένειά του</p>
             </div>
             <div className="found-actions-buttons">
-              <button className="report-card report-card--compact" onClick={handleReportQuick}>
-                <h3 className="report-card__title">Δήλωση Εύρεσης</h3>
-                <p className="report-card__description">Για κατοικίδια χωρίς microchip</p>
-              </button>
-
-              <button className="report-card report-card--compact" onClick={handleReportWithMicrochip}>
-                <h3 className="report-card__title">Δήλωση με Microchip</h3>
-                <p className="report-card__description">Προ-συμπληρωμένη φόρμα</p>
+              <button className="found-action-btn primary-btn" onClick={handleReportQuick}>
+                Δήλωση Εύρεσης Kατοικιδίου
               </button>
             </div>
           </div>
@@ -304,7 +350,7 @@ const HomePage = () => {
               <div key={userType.id} className={`user-type-card ${userType.color}-card`}>
                 <button 
                   className="card-info-btn"
-                  onClick={() => navigate('/about')}
+                  onClick={() => navigate(userType.id === 'pet-owners' ? '/owner/information' : '/vet/information')}
                   aria-label="Πληροφορίες"
                 >
                   <Info size={18} />
@@ -324,14 +370,14 @@ const HomePage = () => {
                 <div className="card-auth-buttons">
                   <button
                     className={`card-auth-btn card-auth-btn--signin ${userType.color}-signin`}
-                    onClick={() => navigate('/login')}
+                    onClick={() => navigate(ROUTES.login)}
                   >
                     <LogIn size={16} />
                     Σύνδεση
                   </button>
                   <button
                     className={`card-auth-btn card-auth-btn--signup ${userType.color}-signup`}
-                    onClick={() => navigate('/register')}
+                    onClick={() => navigate(userType.id === 'pet-owners' ? ROUTES.owner.register : ROUTES.vet.register)}
                   >
                     <UserPlus size={16} />
                     Εγγραφή
@@ -341,47 +387,126 @@ const HomePage = () => {
             ))}
           </div>
         </section>
-
         {/* Top Rated Vets Section */}
-        <section className="vets-section">
-          <div className="vets-section__title">
-            <Star size={20} className="vets-section__icon" />
-            <h2>Κορυφαίοι Κτηνίατροι</h2>
+        <section className="vet-section">
+          <div className="hero-search-box">
+            <div className="search-field">
+              <input
+                type="text"
+                placeholder="Αναζήτηση κτηνιάτρων..."
+                className="search-input search-text-input"
+              />
+              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="0" y="0" width="20" height="20" fill="white"/>
+                <path d="M17.5 17.5L13.8833 13.8834" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className="search-field">
+              <LocationPicker
+                value={selectedArea}
+                onChange={setSelectedArea}
+                onSelect={handleLocationSelect}
+                placeholder="Περιοχή..."
+                variant="citizen"
+              />
+            </div>
+            <div className="search-field">
+              <Calendar className="field-icon" size={20} />
+              <CustomSelect
+                value={selectedAvailability}
+                onChange={setSelectedAvailability}
+                placeholder="Διαθεσιμότητα..."
+                options={[
+                  { value: 'today', label: 'Σήμερα' },
+                  { value: 'tomorrow', label: 'Αύριο' },
+                  { value: 'week', label: 'Αυτή την εβδομάδα' },
+                  { value: 'month', label: 'Αυτό το μήνα' },
+                ]}
+              />
+            </div>
+            <div className="search-field">
+              <Stethoscope className="field-icon" size={20} />
+              <CustomSelect
+                value={selectedSpecialty}
+                onChange={setSelectedSpecialty}
+                placeholder="Ειδικότητα..."
+                options={[
+                  { value: 'general', label: 'Γενικός Ιατρός' },
+                  { value: 'surgery', label: 'Χειρουργός' },
+                  { value: 'dentistry', label: 'Οδοντολόγος' },
+                  { value: 'dermatology', label: 'Δερματολόγος' },
+                ]}
+              />
+            </div>
             <button 
-              className="vets-section__search-btn"
-              onClick={() => navigate(ROUTES.citizen.vetSearch)}
+              className="search-button"
+              onClick={() => navigate(ROUTES.citizen.searchMap)}
             >
-              Αναζήτηση Κτηνιάτρων →
+              Αναζήτηση Κτηνιάτρων
             </button>
           </div>
-          <div className="vets-container">
-            {topVets.map((vet) => (
-              <div key={vet.id} className="vet-card orange-card">
-                <div className="vet-card__avatar-circle orange-icon">
-                  {vet.initials}
-                </div>
-                <h3 className="card-title">{vet.name}</h3>
-                <p className="vet-card__specialty-text">{vet.specialty}</p>
-                <div className="vet-card__location-info">
-                  <MapPin size={14} />
-                  <span>{vet.area}</span>
-                </div>
-                <div className="vet-card__rating-display">
-                  <div className="rating-stars">
-                    {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        size={16} 
-                        fill={i < Math.floor(vet.rating) ? "#FCA47C" : "#E5D6CE"}
-                        color={i < Math.floor(vet.rating) ? "#FCA47C" : "#E5D6CE"}
-                      />
-                    ))}
+          <div className="vets-section__title">
+            <Stethoscope size={20} className="vets-section__icon" />
+            <h2>Κορυφαίοι Κτηνίατροι</h2>
+          </div>
+          <div className="vet-section__carousel">
+            <div className="vet-carousel-wrapper">
+              <button 
+                className="vet-carousel-nav vet-carousel-nav--prev"
+                onClick={prevVetSlide}
+                aria-label="Προηγούμενος"
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              <div className="vet-carousel-track">
+                {vetSlides.map((slide, sIdx) => (
+                  <div key={sIdx} className={`vet-carousel-slide ${sIdx === currentVetSlide ? 'active' : ''}`}>
+                    <div className="vet-carousel-slide-inner">
+                      {slide.map((vet) => (
+                        <div key={vet.id} className="vet-carousel-card">
+                          <div className="vet-card__avatar-circle orange-icon">{vet.initials}</div>
+                          <h3 className="card-title">{vet.name}</h3>
+                          <p className="vet-card__specialty-text">{vet.specialty}</p>
+                          <div className="vet-card__location-info">
+                            <MapPin size={14} />
+                            <span>{vet.area}</span>
+                          </div>
+                          <div className="vet-card__rating-display">
+                            <div className="rating-stars">
+                              {[...Array(5)].map((_, i) => (
+                                <Star key={i} size={16} fill={i < Math.floor(vet.rating) ? "#FCA47C" : "#E5D6CE"} color={i < Math.floor(vet.rating) ? "#FCA47C" : "#E5D6CE"} />
+                              ))}
+                            </div>
+                            <span className="rating-value">{vet.rating}</span>
+                            <span className="reviews-count">({vet.reviews} αξιολογήσεις)</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <span className="rating-value">{vet.rating}</span>
-                  <span className="reviews-count">({vet.reviews} αξιολογήσεις)</span>
-                </div>
+                ))}
               </div>
-            ))}
+
+              <button 
+                className="vet-carousel-nav vet-carousel-nav--next"
+                onClick={nextVetSlide}
+                aria-label="Επόμενος"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
+            <div className="vet-carousel-indicators">
+              {topVets.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`vet-carousel-indicator ${idx === currentVetSlide ? 'active' : ''}`}
+                  onClick={() => goToVetSlide(idx)}
+                />
+              ))}
+            </div>
           </div>
         </section>
 

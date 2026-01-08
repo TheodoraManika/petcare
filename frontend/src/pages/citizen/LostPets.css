@@ -1,7 +1,8 @@
 /* Lost Pets Page */
 .lost-pets-page {
   display: grid;
-  grid-template-columns: 350px 700px 350px;
+  /* left sidebar + main content (right panel removed) */
+  grid-template-columns: 350px 1fr;
   column-gap: 16px;
   padding: 24px;
   max-width: 1280px;
@@ -38,6 +39,98 @@
   position: sticky;
   top: 100px;
   align-self: start;
+}
+
+/* The right report sidebar has been removed from layout; keep styles for reuse if needed */
+
+/* Top found actions inside main content */
+.found-actions-top {
+  margin-bottom: 18px;
+}
+
+.report-cards--inline {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.report-cards--inline .report-card {
+  flex: 1 1 260px;
+}
+
+/* HomePage-like found actions (top of main) */
+.found-actions-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 24px auto 18px; /* center and add top spacing to match other sections */
+  padding: 0 16px; /* align horizontal padding with other sections */
+  box-sizing: border-box;
+}
+
+/* Inline found-pet form container shown inside the page */
+.found-form-inline {
+  width: 100%;
+  max-width: 920px;
+  margin: 18px auto;
+  padding: 18px;
+  background: #ffffff;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  z-index: 60;
+}
+
+.found-actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background-color: #ffffff;
+  border: 2px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.found-actions-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.found-actions-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.found-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  height: 48px;
+  min-width: 180px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-size: 15px;
+}
+
+.found-action-btn.primary-btn {
+  background: linear-gradient(135deg, #23CED9 0%, #1AB8C3 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(35, 206, 217, 0.18);
+}
+
+.found-action-btn.ghost-btn {
+  background: #ffffff;
+  border: 2px solid #E5E7EB;
+  color: #1f2937;
+}
+
+.found-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
 .report-sidebar-title {
@@ -149,6 +242,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+}
+
+/* When the inline found form is visible, hide the page header to reduce clutter */
+.lost-pets-container.has-inline-form .lost-pets-header {
+  display: none;
 }
 
 
