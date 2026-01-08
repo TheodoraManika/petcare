@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight } from 'lucide-react';
+import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
@@ -18,6 +18,9 @@ const Transfer = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [microchipError, setMicrochipError] = useState('');
+  const [currentOwnerAfmError, setCurrentOwnerAfmError] = useState('');
+  const [newOwnerAfmError, setNewOwnerAfmError] = useState('');
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -53,21 +56,131 @@ const Transfer = () => {
     { icon: <ArrowLeftRight size={24} />, label: 'Μεταβίβαση' }
   ];
 
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for microchip number
+    if (name === 'microchipNumber') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 15) {
+        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
+      } else {
+        setMicrochipError('');
+      }
+    } 
+    // Special handling for pet name
+    else if (name === 'petName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner AFM
+    else if (name === 'currentOwnerAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setCurrentOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setCurrentOwnerAfmError('');
+      }
+    }
+    // Special handling for current owner name
+    else if (name === 'currentOwnerName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner surname
+    else if (name === 'currentOwnerSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner phone
+    else if (name === 'currentOwnerPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner email
+    else if (name === 'currentOwnerEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner AFM
+    else if (name === 'newOwnerAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setNewOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setNewOwnerAfmError('');
+      }
+    }
+    // Special handling for new owner name
+    else if (name === 'newOwnerName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner surname
+    else if (name === 'newOwnerSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner phone
+    else if (name === 'newOwnerPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner email
+    else if (name === 'newOwnerEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner city
+    else if (name === 'newOwnerCity') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for postal code
+    else if (name === 'newOwnerPostalCode') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+    else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
-        return formData.microchipNumber.trim() !== '' && formData.petName.trim() !== '';
+        return (
+          formData.microchipNumber.trim() !== '' && 
+          formData.microchipNumber.length === 15 && 
+          formData.petName.trim() !== ''
+        );
       case 2:
         return (
           formData.currentOwnerAfm.trim() !== '' &&
+          formData.currentOwnerAfm.length === 9 &&
           formData.currentOwnerName.trim() !== '' &&
           formData.currentOwnerSurname.trim() !== '' &&
           formData.currentOwnerPhone.trim() !== '' &&
@@ -76,6 +189,7 @@ const Transfer = () => {
       case 3:
         return (
           formData.newOwnerAfm.trim() !== '' &&
+          formData.newOwnerAfm.length === 9 &&
           formData.newOwnerName.trim() !== '' &&
           formData.newOwnerSurname.trim() !== '' &&
           formData.newOwnerPhone.trim() !== '' &&
@@ -149,6 +263,10 @@ const Transfer = () => {
       transferReason: '',
       notes: ''
     });
+    // Reset error states
+    setMicrochipError('');
+    setCurrentOwnerAfmError('');
+    setNewOwnerAfmError('');
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
@@ -202,13 +320,20 @@ const Transfer = () => {
               <input
                 type="text"
                 name="microchipNumber"
-                className="transfer__input"
-                placeholder="GR123456789012345"
+                className={`transfer__input ${microchipError ? 'transfer__input--error' : ''}`}
+                placeholder="123456789012345 (15 ψηφία)"
                 value={formData.microchipNumber}
                 onChange={handleInputChange}
                 maxLength={15}
                 required
               />
+              <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              {microchipError && (
+                <span className="transfer__error-message">
+                  <AlertCircle size={14} />
+                  {microchipError}
+                </span>
+              )}
             </div>
 
             <div className="transfer__field">
@@ -219,10 +344,12 @@ const Transfer = () => {
                 type="text"
                 name="petName"
                 className="transfer__input"
+                placeholder="Γράψτε το όνομα του κατοικιδίου"
                 value={formData.petName}
                 onChange={handleInputChange}
                 required
               />
+              <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
             </div>
           </div>
         );
@@ -240,13 +367,20 @@ const Transfer = () => {
                 <input
                   type="text"
                   name="currentOwnerAfm"
-                  className="transfer__input"
-                  placeholder="123456789"
+                  className={`transfer__input ${currentOwnerAfmError ? 'transfer__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.currentOwnerAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {currentOwnerAfmError && (
+                  <span className="transfer__error-message">
+                    <AlertCircle size={14} />
+                    {currentOwnerAfmError}
+                  </span>
+                )}
               </div>
 
               <div className="transfer__field">
@@ -262,6 +396,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -279,6 +414,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="transfer__field">
@@ -289,11 +425,12 @@ const Transfer = () => {
                   type="tel"
                   name="currentOwnerPhone"
                   className="transfer__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.currentOwnerPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -310,6 +447,7 @@ const Transfer = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="transfer__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
           </div>
         );
@@ -327,13 +465,20 @@ const Transfer = () => {
                 <input
                   type="text"
                   name="newOwnerAfm"
-                  className="transfer__input"
-                  placeholder="123456789"
+                  className={`transfer__input ${newOwnerAfmError ? 'transfer__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.newOwnerAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {newOwnerAfmError && (
+                  <span className="transfer__error-message">
+                    <AlertCircle size={14} />
+                    {newOwnerAfmError}
+                  </span>
+                )}
               </div>
 
               <div className="transfer__field">
@@ -349,6 +494,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -366,6 +512,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="transfer__field">
@@ -376,11 +523,12 @@ const Transfer = () => {
                   type="tel"
                   name="newOwnerPhone"
                   className="transfer__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.newOwnerPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -397,6 +545,7 @@ const Transfer = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="transfer__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
 
             <div className="transfer__field">
@@ -429,6 +578,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="transfer__field">
@@ -445,6 +595,7 @@ const Transfer = () => {
                   maxLength={5}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
           </div>
@@ -463,6 +614,7 @@ const Transfer = () => {
                 name="transferDate"
                 value={formData.transferDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 
@@ -474,6 +626,7 @@ const Transfer = () => {
                 type="text"
                 name="transferReason"
                 className="transfer__input"
+                placeholder="Αναφέρετε συνοπτικά το λόγο μεταβίβασης"
                 value={formData.transferReason}
                 onChange={handleInputChange}
                 required

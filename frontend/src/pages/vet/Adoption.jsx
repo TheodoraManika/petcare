@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, FileHeart, Heart } from 'lucide-react';
+import { PawPrint, UserRound, Heart } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
@@ -50,7 +50,7 @@ const Adoption = () => {
   const steps = [
     { icon: <PawPrint size={24} />, label: 'Κατοικίδιο' },
     { icon: <UserRound size={24} />, label: 'Ιδιοκτήτης' },
-    { icon: <FileHeart size={24} />, label: 'Υιοθεσία' }
+    { icon: <Heart size={24} />, label: 'Υιοθεσία' }
   ];
 
   const handleInputChange = (e) => {

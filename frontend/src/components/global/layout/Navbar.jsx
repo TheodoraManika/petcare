@@ -109,14 +109,6 @@ const Navbar = ({ variant = 'vet' }) => {
     };
   }, []);
 
-  // Menu items only for owner (vet uses sidebar)
-  const menuItems = [
-    { icon: <FileText size={18} />, label: 'Βιβλιάριο', route: ROUTES.owner.pets },
-    { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.owner.appointments },
-    { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.owner.lostPetForm },
-    { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
-  ];
-
   const navLinks = isCitizen
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
@@ -198,109 +190,112 @@ const Navbar = ({ variant = 'vet' }) => {
             
             {/* Menu Dropdown removed - now using Sidebar for both vet and owner */}
           </div>
+        </div>
 
-          {/* Citizen: Simple Login/Register Buttons or Authenticated: Profile Dropdown */}
-          {!isLoggedIn ? (
-            <div className="navbar__auth-buttons">
+        {/* Auth Buttons - Outside navbar__right */}
+        {!isLoggedIn && (
+          <div className="navbar__auth-buttons">
+            <button
+              className="navbar__auth-btn navbar__auth-btn--signin"
+              onClick={() => navigate(ROUTES.login)}
+            >
+              <UserRound size={16} />
+              <span>Σύνδεση</span>
+            </button>
+            
+            {/* Register Dropdown */}
+            <div className="navbar__register-dropdown">
               <button
-                className="navbar__auth-btn navbar__auth-btn--signin"
-                onClick={() => navigate(ROUTES.login)}
+                className="navbar__auth-btn navbar__auth-btn--signup"
+                onClick={() => setIsRegisterDropdownOpen(!isRegisterDropdownOpen)}
               >
-                <UserRound size={16} />
-                <span>Σύνδεση</span>
-              </button>
-              
-              {/* Register Dropdown */}
-              <div className="navbar__register-dropdown">
-                <button
-                  className="navbar__auth-btn navbar__auth-btn--signup"
-                  onClick={() => setIsRegisterDropdownOpen(!isRegisterDropdownOpen)}
-                >
-                  <span>Εγγραφή</span>
-                  <ChevronDown
-                    size={16}
-                    className={`navbar__register-chevron ${isRegisterDropdownOpen ? 'navbar__register-chevron--open' : ''}`}
-                  />
-                </button>
-                
-                {isRegisterDropdownOpen && (
-                  <div className="navbar__register-menu">
-                    <button
-                      className="navbar__register-option"
-                      onClick={() => {
-                        navigate(ROUTES.owner.register);
-                        setIsRegisterDropdownOpen(false);
-                      }}
-                    >
-                      <Users size={20} color="#23CED9" />
-                      <span>Ως Ιδιοκτήτης</span>
-                    </button>
-                    
-                    <button
-                      className="navbar__register-option"
-                      onClick={() => {
-                        navigate(ROUTES.vet.register);
-                        setIsRegisterDropdownOpen(false);
-                      }}
-                    >
-                      <Stethoscope size={20} color="#FCA47C" />
-                      <span>Ως Κτηνίατρος</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="navbar__profile" ref={profileRef}>
-              <button
-                className="navbar__profile-btn"
-                onClick={toggleProfileMenu}
-                aria-expanded={isProfileOpen}
-                aria-haspopup="true"
-              >
-                <Avatar
-                  src={user.avatar}
-                  name={user.name}
-                  size="sm"
+                <span>Εγγραφή</span>
+                <ChevronDown
+                  size={16}
+                  className={`navbar__register-chevron ${isRegisterDropdownOpen ? 'navbar__register-chevron--open' : ''}`}
                 />
-                <span className="navbar__profile-name">{user.name}</span>
-                <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
               </button>
               
-              {isProfileOpen && (
-                <div className="navbar__profile-menu">
-                  <div className="navbar__profile-menu-header">
-                    <p className="navbar__profile-menu-name">{user.name}</p>
-                  </div>
-                  <Link
-                    to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
-                    className="navbar__profile-menu-item"
-                    onClick={() => setIsProfileOpen(false)}
-                  >
-                    <span className="navbar__profile-menu-icon">
-                      <UserRound size={16} />
-                    </span>
-                    <span>Προφίλ</span>
-                  </Link>
+              {isRegisterDropdownOpen && (
+                <div className="navbar__register-menu">
                   <button
-                    className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                    className="navbar__register-option"
                     onClick={() => {
-                      setIsProfileOpen(false);
-                      localStorage.removeItem('currentUser');
-                      window.dispatchEvent(new Event('loginStatusChanged'));
-                      navigate(ROUTES.home);
+                      navigate(ROUTES.owner.register);
+                      setIsRegisterDropdownOpen(false);
                     }}
                   >
-                    <span className="navbar__profile-menu-icon">
-                      <LogOut size={16} />
-                    </span>
-                    <span>Αποσύνδεση</span>
+                    <Users size={20} color="#23CED9" />
+                    <span>Ως Ιδιοκτήτης</span>
+                  </button>
+                  
+                  <button
+                    className="navbar__register-option"
+                    onClick={() => {
+                      navigate(ROUTES.vet.register);
+                      setIsRegisterDropdownOpen(false);
+                    }}
+                  >
+                    <Stethoscope size={20} color="#FCA47C" />
+                    <span>Ως Κτηνίατρος</span>
                   </button>
                 </div>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* Profile Dropdown - Outside navbar__right */}
+        {isLoggedIn && (
+          <div className="navbar__profile" ref={profileRef}>
+            <button
+              className="navbar__profile-btn"
+              onClick={toggleProfileMenu}
+              aria-expanded={isProfileOpen}
+              aria-haspopup="true"
+            >
+              <Avatar
+                src={user.avatar}
+                name={user.name}
+                size="sm"
+              />
+              <span className="navbar__profile-name">{user.name}</span>
+              <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
+            </button>
+            
+            {isProfileOpen && (
+              <div className="navbar__profile-menu">
+                <div className="navbar__profile-menu-header">
+                  <p className="navbar__profile-menu-name">{user.name}</p>
+                </div>
+                <Link
+                  to={isOwner ? ROUTES.owner.profile : ROUTES.vet.profile}
+                  className="navbar__profile-menu-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <UserRound size={16} />
+                  </span>
+                  <span>Προφίλ</span>
+                </Link>
+                <button
+                  className="navbar__profile-menu-item navbar__profile-menu-item--logout"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    localStorage.removeItem('currentUser');
+                    window.dispatchEvent(new Event('loginStatusChanged'));
+                    navigate(ROUTES.home);
+                  }}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <LogOut size={16} />
+                  </span>
+                  <span>Αποσύνδεση</span>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );

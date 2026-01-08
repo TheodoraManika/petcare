@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { House, UserRound, CirclePlus, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig, BookOpen } from 'lucide-react';
+import { House, CirclePlus, ArrowLeftRight, HandHeart, FileText, Star, History, Calendar, Clock, PawPrint, AlertCircle, Menu, X, ChevronDown, ChevronUp, Heart, Search, CircleCheckBig, BookOpen } from 'lucide-react';
 import { useSidebar } from '../../../context/SidebarContext';
 import { ROUTES } from '../../../utils/constants';
 import './Sidebar.css';
@@ -27,9 +27,9 @@ const Sidebar = ({ variant = 'vet' }) => {
       route: ROUTES.vet.lifeEvents,
       isDropdown: true,
       subItems: [
-        { label: 'Μεταβίβαση', route: ROUTES.vet.transfer },
-        { label: 'Υιοθεσία', route: ROUTES.vet.adoption },
-        { label: 'Αναδοχή', route: ROUTES.vet.foster },
+        { icon: <ArrowLeftRight size={14} />, label: 'Μεταβίβαση', route: ROUTES.vet.transfer },
+        { icon: <Heart size={14} />, label: 'Υιοθεσία', route: ROUTES.vet.adoption },
+        { icon: <HandHeart size={14} />, label: 'Αναδοχή', route: ROUTES.vet.foster },
       ]
     },
   ];
@@ -99,6 +99,7 @@ const Sidebar = ({ variant = 'vet' }) => {
                             onClick={() => navigate(subItem.route)}
                             title={subItem.label}
                           >
+                            <span className="sidebar__subitem-icon">{subItem.icon}</span>
                             <span className="sidebar__label">{subItem.label}</span>
                           </button>
                         ))}
