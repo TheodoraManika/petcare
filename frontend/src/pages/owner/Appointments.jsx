@@ -17,7 +17,7 @@ const Appointments = () => {
   const itemsPerPage = 5;
 
   // Booking form expanded state
-  // Booking form expanded state
+
   const locationStateVet = location.state?.vet || null;
   const [bookingVet, setBookingVet] = useState(locationStateVet);
   const [isBookingExpanded, setIsBookingExpanded] = useState(!!locationStateVet);
@@ -241,7 +241,7 @@ const Appointments = () => {
             <div key={appointment.id} className="owner-appointments__card">
               <div className="owner-appointments__card-header">
                 <div className="owner-appointments__card-title">
-                  <h3>{appointment.vet}</h3>
+
                   {getStatusBadge(appointment.status)}
                 </div>
                 {activeTab === 'active' && (
