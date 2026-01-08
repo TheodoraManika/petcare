@@ -315,7 +315,7 @@ const Transfer = () => {
             
             <div className="transfer__field">
               <label className="transfer__label">
-                Κωδικός Μικροτσίπ <span className="transfer__required">*</span>
+                Κωδικός Μικροτσίπ <span className="transfer__required"> *</span>
               </label>
               <input
                 type="text"

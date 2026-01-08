@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, HandHeart } from 'lucide-react';
+import { PawPrint, UserRound, HandHeart, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
@@ -20,6 +20,8 @@ const Foster = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [microchipError, setMicrochipError] = useState('');
+  const [fosterParentAfmError, setFosterParentAfmError] = useState('');
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -55,12 +57,89 @@ const Foster = () => {
     { icon: <HandHeart size={24} />, label: 'Αναδοχή' }
   ];
 
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for microchip number
+    if (name === 'microchipNumber') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 15) {
+        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
+      } else {
+        setMicrochipError('');
+      }
+    }
+    // Special handling for pet name
+    else if (name === 'petName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for foster parent AFM
+    else if (name === 'fosterParentAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setFosterParentAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setFosterParentAfmError('');
+      }
+    }
+    // Special handling for foster parent name
+    else if (name === 'fosterParentName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for foster parent surname
+    else if (name === 'fosterParentSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for foster parent phone
+    else if (name === 'fosterParentPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for foster parent email
+    else if (name === 'fosterParentEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for foster parent city
+    else if (name === 'fosterParentCity') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for foster parent postal code
+    else if (name === 'fosterParentPostalCode') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+    // Special handling for age
+    else if (name === 'age') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+    // All other fields
+    else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -75,6 +154,7 @@ const Foster = () => {
       case 1:
         return (
           formData.microchipNumber.trim() !== '' &&
+          formData.microchipNumber.length === 15 &&
           formData.petName.trim() !== '' &&
           formData.species.trim() !== '' &&
           formData.age.trim() !== '' &&
@@ -83,6 +163,7 @@ const Foster = () => {
       case 2:
         return (
           formData.fosterParentAfm.trim() !== '' &&
+          formData.fosterParentAfm.length === 9 &&
           formData.fosterParentName.trim() !== '' &&
           formData.fosterParentSurname.trim() !== '' &&
           formData.fosterParentPhone.trim() !== '' &&
@@ -162,6 +243,9 @@ const Foster = () => {
       existingPets: '',
       notes: ''
     });
+    // Reset error states
+    setMicrochipError('');
+    setFosterParentAfmError('');
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
@@ -235,24 +319,31 @@ const Foster = () => {
             
             <div className="foster__field">
               <label className="foster__label">
-                Κωδικός Μικροτσίπ<span className="foster__required">*</span>
+                Κωδικός Μικροτσίπ<span className="foster__required"> *</span>
               </label>
               <input
                 type="text"
                 name="microchipNumber"
-                className="foster__input"
-                placeholder="GR123456789012345"
+                className={`foster__input ${microchipError ? 'foster__input--error' : ''}`}
+                placeholder="123456789012345 (15 ψηφία)"
                 value={formData.microchipNumber}
                 onChange={handleInputChange}
                 maxLength={15}
                 required
               />
+              <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί και πρέπει να είναι 15 ψηφία.</span>
+              {microchipError && (
+                <div className="foster__error-message">
+                  <AlertCircle size={16} />
+                  <span>{microchipError}</span>
+                </div>
+              )}
             </div>
 
             <div className="foster__row">
               <div className="foster__field">
                 <label className="foster__label">
-                  Είδος Ζώου<span className="foster__required">*</span>
+                  Είδος Ζώου<span className="foster__required"> *</span>
                 </label>
                 <CustomSelect
                   name="species"
@@ -282,6 +373,7 @@ const Foster = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
 
@@ -310,10 +402,12 @@ const Foster = () => {
                   type="text"
                   name="petName"
                   className="foster__input"
+                  placeholder="Γράψτε το όνομα του κατοικιδίου"
                   value={formData.petName}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
           </div>
@@ -332,13 +426,20 @@ const Foster = () => {
                 <input
                   type="text"
                   name="fosterParentAfm"
-                  className="foster__input"
-                  placeholder="123456789"
+                  className={`foster__input ${fosterParentAfmError ? 'foster__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.fosterParentAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {fosterParentAfmError && (
+                  <div className="foster__error-message">
+                    <AlertCircle size={16} />
+                    <span>{fosterParentAfmError}</span>
+                  </div>
+                )}
               </div>
 
               <div className="foster__field">
@@ -354,6 +455,7 @@ const Foster = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -371,6 +473,7 @@ const Foster = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="foster__field">
@@ -381,11 +484,12 @@ const Foster = () => {
                   type="tel"
                   name="fosterParentPhone"
                   className="foster__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.fosterParentPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -402,6 +506,7 @@ const Foster = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="foster__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
 
             <div className="foster__field">
@@ -434,6 +539,7 @@ const Foster = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="foster__field">
@@ -450,6 +556,7 @@ const Foster = () => {
                   maxLength={5}
                   required
                 />
+                <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
           </div>
@@ -468,6 +575,7 @@ const Foster = () => {
                 name="fosterDate"
                 value={formData.fosterDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 

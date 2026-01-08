@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, Heart } from 'lucide-react';
+import { PawPrint, UserRound, Heart, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import ProgressBar from '../../components/common/ProgressBar';
 import DatePicker from '../../components/common/DatePicker';
@@ -20,6 +20,8 @@ const Adoption = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [microchipError, setMicrochipError] = useState('');
+  const [ownerAfmError, setOwnerAfmError] = useState('');
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
@@ -53,12 +55,91 @@ const Adoption = () => {
     { icon: <Heart size={24} />, label: 'Υιοθεσία' }
   ];
 
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for microchip number
+    if (name === 'microchipNumber') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 15) {
+        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
+      } else {
+        setMicrochipError('');
+      }
+    }
+    // Special handling for pet name
+    else if (name === 'petName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner AFM
+    else if (name === 'ownerAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setOwnerAfmError('');
+      }
+    }
+    // Special handling for owner name
+    else if (name === 'ownerName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner surname
+    else if (name === 'ownerSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner phone
+    else if (name === 'ownerPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner email
+    else if (name === 'ownerEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner city
+    else if (name === 'ownerCity') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for postal code
+    else if (name === 'ownerPostalCode') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+    // Special handling for age (only numbers)
+    else if (name === 'age') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+    else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -73,6 +154,7 @@ const Adoption = () => {
       case 1:
         return (
           formData.microchipNumber.trim() !== '' &&
+          formData.microchipNumber.length === 15 &&
           formData.petName.trim() !== '' &&
           formData.species.trim() !== '' &&
           formData.age.trim() !== '' &&
@@ -81,6 +163,7 @@ const Adoption = () => {
       case 2:
         return (
           formData.ownerAfm.trim() !== '' &&
+          formData.ownerAfm.length === 9 &&
           formData.ownerName.trim() !== '' &&
           formData.ownerSurname.trim() !== '' &&
           formData.ownerPhone.trim() !== '' &&
@@ -158,6 +241,9 @@ const Adoption = () => {
       existingPets: '',
       notes: ''
     });
+    // Reset error states
+    setMicrochipError('');
+    setOwnerAfmError('');
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
@@ -231,24 +317,31 @@ const Adoption = () => {
             
             <div className="adoption__field">
               <label className="adoption__label">
-                Κωδικός Μικροτσίπ<span className="adoption__required">*</span>
+                Κωδικός Μικροτσίπ<span className="adoption__required"> *</span>
               </label>
               <input
                 type="text"
                 name="microchipNumber"
-                className="adoption__input"
-                placeholder="GR123456789012345"
+                className={`adoption__input ${microchipError ? 'adoption__input--error' : ''}`}
+                placeholder="123456789012345 (15 ψηφία)"
                 value={formData.microchipNumber}
                 onChange={handleInputChange}
                 maxLength={15}
                 required
               />
+              <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              {microchipError && (
+                <span className="adoption__error-message">
+                  <AlertCircle size={14} />
+                  {microchipError}
+                </span>
+              )}
             </div>
 
             <div className="adoption__row">
               <div className="adoption__field">
                 <label className="adoption__label">
-                  Είδος Ζώου<span className="adoption__required">*</span>
+                  Είδος Ζώου<span className="adoption__required"> *</span>
                 </label>
                 <CustomSelect
                   name="species"
@@ -278,6 +371,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
 
@@ -306,10 +400,12 @@ const Adoption = () => {
                   type="text"
                   name="petName"
                   className="adoption__input"
+                  placeholder="Γράψτε το όνομα του κατοικιδίου"
                   value={formData.petName}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
           </div>
@@ -328,13 +424,20 @@ const Adoption = () => {
                 <input
                   type="text"
                   name="ownerAfm"
-                  className="adoption__input"
-                  placeholder="123456789"
+                  className={`adoption__input ${ownerAfmError ? 'adoption__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.ownerAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {ownerAfmError && (
+                  <div className="adoption__error-message">
+                    <AlertCircle size={16} />
+                    <span>{ownerAfmError}</span>
+                  </div>
+                )}
               </div>
 
               <div className="adoption__field">
@@ -350,6 +453,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -367,6 +471,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="adoption__field">
@@ -377,11 +482,12 @@ const Adoption = () => {
                   type="tel"
                   name="ownerPhone"
                   className="adoption__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.ownerPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -398,6 +504,7 @@ const Adoption = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="adoption__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
 
             <div className="adoption__field">
@@ -430,6 +537,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="adoption__field">
@@ -446,6 +554,7 @@ const Adoption = () => {
                   maxLength={5}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
           </div>
@@ -464,6 +573,7 @@ const Adoption = () => {
                 name="adoptionDate"
                 value={formData.adoptionDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 
