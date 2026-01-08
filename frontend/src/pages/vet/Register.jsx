@@ -306,6 +306,7 @@ const Register = () => {
   return (
     <PageLayout title="Καταγραφή Κατοικιδίου" breadcrumbs={breadcrumbItems}>
       <div className="register">
+        <h1 className="register__title">Καταγραφή Κατοικιδίου</h1>
         {/* Info Banner */}
         <div className="register__banner">
           <div className="register__banner-icon">
@@ -321,7 +322,7 @@ const Register = () => {
 
         {/* Registration Form */}
         <div className="register__form-wrapper">
-          <h1 className="register__title">Ταυτότητα Κατοικιδίου</h1>
+          <h2 className="register__section-title">Ταυτότητα Κατοικιδίου</h2>
 
           <form className="register__form" onSubmit={handleSubmit}>
             {/* Pet Identity Section */}

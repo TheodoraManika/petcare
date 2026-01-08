@@ -299,7 +299,7 @@ const LostPet = () => {
       <div className="lost-pet">
         <div className="lost-pet__header">
           <h1 className="lost-pet__title">Δήλωση Απώλειας Κατοικιδίου</h1>
-          <p className="lost-pet__subtitle-main">Συμπληρώστε τα στοιχεία του χαμένου κατοικιδίου</p>
+          <p className="lost-pet__subtitle">Συμπληρώστε τα στοιχεία του χαμένου κατοικιδίου</p>
         </div>
 
         <div className="lost-pet__content">
