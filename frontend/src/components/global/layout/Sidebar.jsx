@@ -12,14 +12,15 @@ const Sidebar = ({ variant = 'vet' }) => {
   const [isLifeEventsOpen, setIsLifeEventsOpen] = useState(false);
 
   const vetMenuItems = [
-    { icon: <UserRound size={20} />, label: 'Προφίλ', route: ROUTES.vet.profile },
     { icon: <House size={20} />, label: 'Αρχική Κτηνίατρου', route: ROUTES.vet.dashboard },
     { icon: <CirclePlus size={20} />, label: 'Καταγραφή', route: ROUTES.vet.registerpet },
     { icon: <FileText size={20} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
-    { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
-    { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
     { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },
     { icon: <Clock size={20} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
+    { icon: <BookOpen size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.vet.healthBook },
+    { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
+    { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
+    { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
     { 
       icon: <PawPrint size={20} />, 
       label: 'Συμβάντα Ζωής', 
@@ -31,12 +32,9 @@ const Sidebar = ({ variant = 'vet' }) => {
         { label: 'Αναδοχή', route: ROUTES.vet.foster },
       ]
     },
-    { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
-    { icon: <BookOpen size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.vet.healthBook },
   ];
 
   const ownerMenuItems = [
-    { icon: <UserRound size={20} />, label: 'Προφίλ', route: ROUTES.owner.profile },
     { icon: <House size={20} />, label: 'Αρχική Ιδιοκτήτη', route: ROUTES.owner.dashboard },
     { icon: <FileText size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.owner.pets },
     { icon: <Calendar size={20} />, label: 'Τα Ραντεβού μου', route: ROUTES.owner.appointments },

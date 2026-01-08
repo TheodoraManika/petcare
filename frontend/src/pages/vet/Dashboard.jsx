@@ -28,20 +28,6 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.operation),
     },
     {
-      id: 'vet-reviews',
-      title: 'Αξιολογήσεις',
-      description: 'Προβολή αξιολογήσεων πελατών',
-      icon: <Star />,
-      onClick: () => navigate(ROUTES.vet.reviews),
-    },
-    {
-      id: 'history',
-      title: 'Ιστορικό',
-      description: 'Προβολή επισκέψεων, ιατρικών πράξεων και δηλώσεων',
-      icon: <History />,
-      onClick: () => navigate(ROUTES.vet.history),
-    },
-    {
       id: 'vet-appointments',
       title: 'Διαχείριση Ραντεβού',
       description: 'Προβολή και επεξεργασία ραντεβού',
@@ -56,11 +42,25 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.availability),
     },
     {
-      id: 'vet-life-event',
-      title: 'Δηλώσεις Συμβάντων Ζωής',
-      description: 'Μεταβίβαση, υιοθεσία, αναδοχή',
-      icon: <PawPrint />,
-      onClick: () => navigate(ROUTES.vet.lifeEvents),
+      id: 'health-book',
+      title: 'Βιβλιάριο Υγείας',
+      description: 'Προβολή και εκτύπωση του βιβλιαρίου υγείας ενός κατοικιδίου',
+      icon: <BookOpen />,
+      onClick: () => navigate(ROUTES.vet.healthBook),
+    },
+    {
+      id: 'history',
+      title: 'Ιστορικό',
+      description: 'Προβολή επισκέψεων, ιατρικών πράξεων και δηλώσεων',
+      icon: <History />,
+      onClick: () => navigate(ROUTES.vet.history),
+    },
+    {
+      id: 'vet-reviews',
+      title: 'Αξιολογήσεις',
+      description: 'Προβολή αξιολογήσεων πελατών',
+      icon: <Star />,
+      onClick: () => navigate(ROUTES.vet.reviews),
     },
     {
       id: 'lost-declaration',
@@ -70,11 +70,11 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.lostPetForm),
     },
     {
-      id: 'health-book',
-      title: 'Βιβλιάριο Υγείας',
-      description: 'Προβολή και εκτύπωση του βιβλιαρίου υγείας ενός κατοικιδίου',
-      icon: <BookOpen />,
-      onClick: () => navigate(ROUTES.vet.healthBook),
+      id: 'vet-life-event',
+      title: 'Δηλώσεις Συμβάντων Ζωής',
+      description: 'Μεταβίβαση, υιοθεσία, αναδοχή',
+      icon: <PawPrint />,
+      onClick: () => navigate(ROUTES.vet.lifeEvents),
     },
   ];
 
