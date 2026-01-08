@@ -15,6 +15,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import CustomSelect from '../common/forms/CustomSelect';
+import ConfirmModal from '../common/modals/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './BookingForm.css';
 
@@ -58,15 +59,15 @@ const BookingForm = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const serviceOptions = [
-    { value: 'Γενική Εξέταση', label: 'Γενική Εξέταση' },
     { value: 'Εμβολιασμός', label: 'Εμβολιασμός' },
-    { value: 'Στείρωση', label: 'Στείρωση' },
+    { value: 'Γενική Εξέταση', label: 'Γενική Εξέταση' },
     { value: 'Χειρουργείο', label: 'Χειρουργείο' },
-    { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },
     { value: 'Θεραπεία', label: 'Θεραπεία' },
-    { value: 'Επείγον', label: 'Επείγον' },
+    { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },
+    { value: 'Επείγον Περιστατικό', label: 'Επείγον Περιστατικό' },
     { value: 'Άλλο', label: 'Άλλο' },
   ];
 
@@ -325,10 +326,19 @@ const BookingForm = ({
   };
 
   const handleCancel = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
     resetForm();
+    setShowCancelModal(false);
     if (onClose) {
       onClose();
     }
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
   };
 
   return (
@@ -407,7 +417,7 @@ const BookingForm = ({
                 <input
                   type="text"
                   className="booking-form__search-input"
-                  placeholder="Αναζήτηση κτηνιάτρου (όνομα, κλινική, εξειδίκευση)..."
+                  placeholder="Αναζήτηση κτηνιάτρου (με το όνομα ή επώνυμό του)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -599,7 +609,9 @@ const BookingForm = ({
 
             <div className="booking-form__form-grid">
               <div className="booking-form__form-group">
-                <label className="booking-form__label">Κατοικίδιο *</label>
+                <label className="booking-form__label">
+                  Κατοικίδιο <span className="booking-form__required"> *</span>
+                  </label>
                 <CustomSelect
                   value={selectedPet}
                   onChange={setSelectedPet}
@@ -613,7 +625,9 @@ const BookingForm = ({
               </div>
 
               <div className="booking-form__form-group">
-                <label className="booking-form__label">Τύπος Υπηρεσίας *</label>
+                <label className="booking-form__label">
+                  Τύπος Υπηρεσίας <span className="booking-form__required"> *</span>
+                </label>
                 <CustomSelect
                   value={serviceType}
                   onChange={setServiceType}
@@ -643,7 +657,7 @@ const BookingForm = ({
             className="booking-form__btn booking-form__btn--secondary"
             onClick={handleCancel}
           >
-            {inline ? 'Ακύρωση' : <><ChevronLeft size={18} /> Επιστροφή</>}
+            {inline ? 'Ακύρωση' : <><X size={18} /> Ακύρωση</>}
           </button>
           <button
             className="booking-form__btn booking-form__btn--primary"
@@ -655,6 +669,18 @@ const BookingForm = ({
           </button>
         </div>
       </div>
+
+      {/* Cancel Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showCancelModal}
+        title="Είστε σίγουροι ότι θέλετε να ακυρώσετε τη συμπλήρωση του αιτήματος για ραντεβού;"
+        description="Όλα τα στοιχεία που έχετε συμπληρώσει θα διαγραφούν."
+        cancelText="Όχι, επιστροφή"
+        confirmText="Ναι, ακύρωση"
+        onCancel={handleCancelCancel}
+        onConfirm={handleConfirmCancel}
+        isDanger={true}
+      />
     </div>
   );
 };

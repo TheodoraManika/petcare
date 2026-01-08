@@ -43,7 +43,6 @@ import HealthBook from './pages/vet/HealthBook';
 // Common Pages
 import LoginPage from './pages/common/login/LoginPage';
 import ForgotPasswordPage from './pages/common/login/ForgotPasswordPage';
-import ConfirmationPage from './pages/common/footer/ConfirmationPage';
 import AboutPage from './pages/common/footer/AboutPage';
 import ContactPage from './pages/common/footer/ContactPage';
 import PrivacyPage from './pages/common/footer/PrivacyPage';
@@ -106,7 +105,6 @@ function App() {
         {/* Common Pages */}
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
-        <Route path={ROUTES.confirmation} element={<ConfirmationPage />} />
         <Route path={ROUTES.about} element={<AboutPage />} />
         <Route path={ROUTES.contact} element={<ContactPage />} />
         <Route path={ROUTES.privacy} element={<PrivacyPage />} />

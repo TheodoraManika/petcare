@@ -231,7 +231,7 @@ const Appointments = () => {
             className={`owner-appointments__tab ${activeTab === 'history' ? 'owner-appointments__tab--active' : ''}`}
             onClick={() => { setActiveTab('history'); setCurrentPage(1); }}
           >
-            Ιστορικά ({historyAppointments.length})
+            Ιστορικό ({historyAppointments.length})
           </button>
         </div>
 
