@@ -708,7 +708,6 @@ const Foster = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard },
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
 
@@ -719,7 +718,7 @@ const Foster = () => {
         icon={HandHeart}
         title="Η Δήλωση Αναδοχής ολοκληρώθηκε!"
         description="Η δήλωση αναδοχής καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ανάδοχου ιδιοκτήτη"
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={handleSuccessReturn}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"

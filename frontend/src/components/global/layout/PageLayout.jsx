@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import { useSidebar } from '../../../context/SidebarContext';
+import { ROUTES } from '../../../utils/constants';
 import './PageLayout.css';
 
 /**
@@ -97,7 +98,14 @@ const PageLayout = ({ children, title, variant, breadcrumbs, showBreadcrumbs = t
       <main className="page-layout__main">
         {showBreadcrumbs && (
           <nav className="page-layout__breadcrumbs">
-            <Link to="/" className="page-layout__breadcrumb-link">
+            <Link 
+              to={
+                isVet ? ROUTES.vet.dashboard : 
+                isOwner ? ROUTES.owner.dashboard : 
+                "/"
+              } 
+              className="page-layout__breadcrumb-link"
+            >
               <Home size={16} />
             </Link>
             

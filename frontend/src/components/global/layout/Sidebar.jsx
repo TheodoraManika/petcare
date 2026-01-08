@@ -12,7 +12,7 @@ const Sidebar = ({ variant = 'vet' }) => {
   const [isLifeEventsOpen, setIsLifeEventsOpen] = useState(false);
 
   const vetMenuItems = [
-    { icon: <House size={20} />, label: 'Αρχική Κτηνίατρου', route: ROUTES.vet.dashboard },
+    { icon: <House size={20} />, label: 'Αρχική Κτηνιάτρου', route: ROUTES.vet.dashboard },
     { icon: <CirclePlus size={20} />, label: 'Καταγραφή', route: ROUTES.vet.registerpet },
     { icon: <FileText size={20} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
     { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },

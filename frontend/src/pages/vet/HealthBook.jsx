@@ -136,12 +136,10 @@ const HealthBook = () => {
     }
   };
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   return (
-    <PageLayout variant="vet" title="Βιβλιάριο Υγείας Κατοικιδίου" breadcrumbs={breadcrumbItems}>
+    <PageLayout variant="vet" title="Βιβλιάριο Υγείας" breadcrumbs={breadcrumbItems}>
       <div className="health-book">
         {/* Search Section */}
         <div className="health-book__search-section">

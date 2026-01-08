@@ -706,7 +706,6 @@ const Adoption = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard },
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
 
@@ -717,7 +716,7 @@ const Adoption = () => {
         icon={Heart}
         title="Η Δήλωση Υιοθεσίας ολοκληρώθηκε!"
         description="Η υιοθεσία καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ιδιοκτήτη."
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={handleSuccessReturn}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"

@@ -134,7 +134,6 @@ const HistoryDetail = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard },
     { label: 'Ιστορικό', path: ROUTES.vet.history }
   ];
 

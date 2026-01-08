@@ -79,7 +79,10 @@ const Dashboard = () => {
   ];
 
   return (
-    <PageLayout title="Μενού">
+    <PageLayout title="Αρχική Κτηνιάτρου" showBreadcrumbs={false}>
+        <div className="dashboard__header">
+          <h1 className="dashboard__title">Αρχική Κτηνιάτρου</h1>
+        </div>
       <div className="dashboard">
         <div className="dashboard__cards">
           {dashboardCards.map((card) => (

@@ -151,9 +151,7 @@ const Availability = () => {
     return slots.length;
   };
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   return (
     <PageLayout title="Διαθεσιμότητα" breadcrumbs={breadcrumbItems}>

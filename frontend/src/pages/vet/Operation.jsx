@@ -142,9 +142,7 @@ const Operation = () => {
     { label: 'Περιγραφή', value: formData.description },
   ];
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   if (showSuccess) {
     return (
@@ -152,7 +150,7 @@ const Operation = () => {
         icon={FileText}
         title="Η Ιατρική Πράξη Καταχωρήθηκε!"
         description="Η ιατρική πράξη αποθηκεύτηκε επιτυχώς στο βιβλίο του κατοικιδίου."
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={() => navigate(ROUTES.vet.dashboard)}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"

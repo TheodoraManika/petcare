@@ -275,9 +275,7 @@ const LostPet = () => {
     { label: 'Email Ιδιοκτήτη', value: formData.ownerEmail },
   ];
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   // Show success page after successful submission
   if (showSuccess) {
@@ -286,7 +284,7 @@ const LostPet = () => {
         icon={Send}
         title="Η Δήλωση Απώλειας Υποβλήθηκε!"
         description="Η δήλωση απώλειας καταχωρήθηκε επιτυχώς στο σύστημα. Μπορείτε να δείτε τη δήλωση στο ιστορικό δηλώσεών σας ενώ ο ιδιοκτήτης μπορεί να τη δει στις δικές του δηλώσεις."
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={handleSuccessReturn}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"
