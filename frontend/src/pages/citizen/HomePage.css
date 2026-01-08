@@ -37,7 +37,6 @@
   gap: 40px;
   border-radius: 16px;
   padding: 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   position: relative;
   overflow: hidden;
   background-image: url('/Main Page Photo.png');
@@ -45,6 +44,7 @@
   background-position: center;
   min-height: 380px;
   align-items: center;
+  margin-top: 40px;
 }
 
 .lost-pets-hero__container::before {
@@ -83,10 +83,10 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
-  font-size: 14px;
+  margin-left: 60px;
+  font-size: 16px;
   font-weight: 600;
   color: #101727;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -269,9 +269,10 @@
   width: 100%;
   max-width: 1235px;
   margin: 0 auto;
-  padding: 24px 16px; /* reduce outer padding so inner content sits nicely */
-  box-sizing: border-box;
-  background: linear-gradient(90deg, rgba(252, 164, 124, 0.25) 0%, rgba(249, 215, 121, 0.25) 100%);/* white card background */
+  padding: 40px;
+  background: linear-gradient(90deg, rgba(252, 164, 124, 0.85) 0%, rgba(252, 164, 124, 0.20) 100%), url('/dog_vet_visit.jpg');
+  background-size: cover;
+  background-position: center;
   border: 2px solid #E5E7EB;
   border-radius: 16px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
@@ -348,14 +349,17 @@
     grid-template-columns: 1fr;
     padding: 24px;
   }
+
   .lost-pets-hero__text {
     order: 2;
     margin-top: 12px;
   }
+
   .hero-title {
     font-size: 22px;
   }
 }
+
 .vet-search-header {
   display: flex;
   align-items: center;
@@ -475,6 +479,7 @@
   align-items: stretch;
   padding: 18px 0;
 }
+
 .vet-carousel-card {
   /* match .vet-card styles so carousel cards look identical to the grid */
   background-color: #ffffff;
@@ -488,7 +493,8 @@
   flex: 0 0 calc((100% - 48px) / 3);
   max-width: 390px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  height: auto; /* allow the card to grow with content */
+  height: auto;
+  /* allow the card to grow with content */
   min-height: 220px;
 }
 
@@ -506,7 +512,6 @@
   font-size: 14px;
   font-weight: 600;
   color: #5a6c7d;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -525,7 +530,8 @@
   flex: 1;
   overflow: hidden;
   position: relative;
-  min-height: 400px; /* increased so cards are fully visible */
+  min-height: 400px;
+  /* increased so cards are fully visible */
   border-radius: 12px;
 }
 
@@ -550,7 +556,8 @@
   background: #ffffff;
   border-radius: 12px;
   border: 2px solid #F5E6DE;
-  height: auto; /* allow content to determine height */
+  height: auto;
+  /* allow content to determine height */
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -700,7 +707,7 @@
     grid-template-columns: 1fr;
     gap: 32px;
   }
-  
+
   .vet-search-content {
     max-width: 100%;
   }
@@ -767,9 +774,7 @@
   line-height: 1.4;
 }
 
-/* ==========================================
-   LEGACY HERO SECTION (HIDDEN)
-   ========================================== */
+
 /* Hero Section */
 .hero-section {
   background-color: rgba(255, 255, 255, 0);
@@ -877,7 +882,8 @@
 .search-field .field-icon {
   position: absolute;
   left: 16px;
-  color: #FCA47C; /* orange accent */
+  color: #FCA47C;
+  /* orange accent */
   z-index: 10;
   pointer-events: none;
 }
@@ -916,7 +922,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #FCA47C; /* orange */
+  border-color: #FCA47C;
+  /* orange */
   box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.08);
 }
 
@@ -990,7 +997,8 @@ select.search-input option {
 }
 
 .search-button {
-  background-color: #FCA47C; /* orange */
+  background-color: #FCA47C;
+  /* orange */
   padding: 0 40px;
   height: 48px;
   border: none;
@@ -1044,7 +1052,8 @@ select.search-input option {
 .hero-search-box .custom-select__trigger:focus,
 .hero-search-box .custom-select__trigger--open,
 .hero-search-box .location-picker__input:focus {
-  border-color: #FCA47C; /* orange */
+  border-color: #FCA47C;
+  /* orange */
   box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.08);
 }
 
@@ -1078,7 +1087,7 @@ select.search-input option {
   width: 100%;
   max-width: 1235px;
   margin: 0 auto;
-  padding: 48px 16px;
+  padding: 16px 16px;
 }
 
 .user-types-container {
@@ -1481,12 +1490,12 @@ select.search-input option {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .user-type-card {
     width: 100%;
     max-width: 100%;
   }
-  
+
   .card-auth-buttons {
     flex-direction: column;
   }
@@ -1498,20 +1507,20 @@ select.search-input option {
     padding: 32px;
     gap: 24px;
   }
-  
+
   .hero-search-content {
     padding: 28px;
   }
-  
+
   .hero-search-title {
     font-size: 26px;
   }
-  
+
   .carousel-card__image {
     width: 90px;
     height: 90px;
   }
-  
+
   .carousel-card__name {
     font-size: 20px;
   }
@@ -1522,28 +1531,28 @@ select.search-input option {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  
+
   .lost-pets-hero__carousel {
     order: 2;
   }
-  
+
   .lost-pets-hero__search-panel {
     order: 1;
   }
-  
+
   .hero-search-content {
     max-width: 100%;
   }
-  
+
   .carousel-track {
     height: 180px;
   }
-  
+
   .carousel-card__image {
     width: 80px;
     height: 80px;
   }
-  
+
   .carousel-card__name {
     font-size: 18px;
   }
@@ -1553,101 +1562,102 @@ select.search-input option {
   .lost-pets-hero {
     padding: 0 12px;
   }
-  
+
   .lost-pets-hero__container {
     padding: 24px;
     border-radius: 12px;
   }
-  
+
   .carousel-header {
     font-size: 12px;
     margin-bottom: 16px;
   }
-  
+
   .carousel-track {
     height: 160px;
   }
-  
+
   .carousel-card {
     padding: 16px;
     gap: 12px;
   }
-  
+
   .carousel-card__image {
     width: 64px;
     height: 64px;
   }
-  
+
   .carousel-card__image svg {
     width: 40px;
     height: 40px;
   }
-  
+
   .carousel-card__name {
     font-size: 16px;
   }
-  
+
   .carousel-card__breed {
     font-size: 13px;
   }
-  
+
   .carousel-card__location {
     font-size: 12px;
   }
-  
+
   .carousel-nav {
     width: 36px;
     height: 36px;
   }
-  
+
   .carousel-nav svg {
     width: 18px;
     height: 18px;
   }
-  
+
   .carousel-indicators {
     gap: 8px;
     margin-top: 14px;
   }
-  
+
   .carousel-indicator {
     width: 8px;
     height: 8px;
   }
-  
+
   .hero-search-content {
     padding: 24px;
     border-radius: 12px;
   }
-  
+
   .hero-search-title {
     font-size: 24px;
+    font-weight: 500;
   }
-  
+
   .hero-search-subtitle {
     font-size: 14px;
     margin-bottom: 20px;
   }
-  
+
   .hero-field {
     padding: 12px 14px;
   }
-  
+
   .hero-input,
   .hero-select {
     font-size: 14px;
   }
-  
+
   .hero-cta-button {
     padding: 16px 24px;
     font-size: 16px;
   }
-  
+
   .hero-search-note {
     font-size: 12px;
     margin-top: 14px;
   }
-  
+
   .view-all-btn {
     padding: 10px 20px;
     font-size: 13px;
@@ -1658,29 +1668,30 @@ select.search-input option {
   .lost-pets-hero__container {
     padding: 20px;
   }
-  
+
   .carousel-wrapper {
     gap: 8px;
   }
-  
+
   .carousel-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  
+
   .carousel-card__location {
     justify-content: center;
   }
-  
+
   .carousel-track {
     height: 200px;
   }
-  
+
   .hero-search-title {
     font-size: 20px;
+    font-weight: 500;
   }
-  
+
   .hero-search-content {
     padding: 20px;
   }
@@ -1700,11 +1711,12 @@ select.search-input option {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-top: 40px;
   margin-bottom: 20px;
+  margin-left: 60px;
   font-size: 14px;
   font-weight: 600;
   color: #101727;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   justify-content: space-between;
 }
@@ -1715,13 +1727,11 @@ select.search-input option {
 
 .vets-section__title h2 {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #101727;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   flex: 1;
-  margin-left: 10px;
 }
 
 .vets-section__search-btn {
@@ -1842,8 +1852,8 @@ select.search-input option {
 .found-actions-section {
   width: 100%;
   max-width: 1235px;
-  margin: 32px auto 0; /* add more space from hero */
-  padding: 0 16px; /* align horizontal padding with other sections */
+  margin: 64px auto;
+  padding: 0 16px;
   box-sizing: border-box;
 }
 
@@ -1856,7 +1866,6 @@ select.search-input option {
   border: 2px solid #E5E7EB;
   border-radius: 16px;
   padding: 18px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
 .found-actions-text {
@@ -1880,19 +1889,7 @@ select.search-input option {
   justify-content: flex-end;
 }
 
-.found-action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 22px;
-  height: 48px;
-  min-width: 180px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  font-size: 15px;
-}
+
 
 .found-action-btn.ghost-btn {
   background: #ffffff;
@@ -1904,14 +1901,14 @@ select.search-input option {
 /* Ensure homepage instance of found-action button overrides other page styles */
 .home-page .found-actions-container .found-action-btn.primary-btn {
   background: #23CED9;
-  background-image: none;
   color: #101727;
-  box-shadow: 0 8px 20px rgba(35, 206, 217, 0.18);
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .found-action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 900px) {
@@ -1919,6 +1916,7 @@ select.search-input option {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .found-actions-buttons {
     width: 100%;
     justify-content: flex-start;
