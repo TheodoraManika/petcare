@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download, Dog, Cat } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import MedicalEventCard from '../../components/owner/healthcard/MedicalEventCard';
 import StatCard from '../../components/owner/healthcard/StatCard';
 import { ROUTES } from '../../utils/constants';
@@ -100,7 +100,6 @@ const PetDetail = () => {
   }, [petId]);
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard },
     { label: 'Τα Κατοικίδιά μου', path: ROUTES.owner.pets }
   ];
 

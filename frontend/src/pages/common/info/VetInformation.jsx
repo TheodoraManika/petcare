@@ -2,7 +2,7 @@ import React from 'react';
 import { Book, Clock, FileCheck, Calendar, ArrowUp, CheckCircle2, SquareCheckBig } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './VetInformation.css';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const VetInformation = () => {
   const navigate = useNavigate();

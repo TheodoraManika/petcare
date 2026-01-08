@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Upload, AlertCircle, MapPin, Calendar, PawPrint, Search as SearchIcon, X } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import LocationPicker from '../../components/common/LocationPicker';
-import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
+import PageLayout from '../../components/common/layout/PageLayout';
+import LocationPicker from '../../components/common/forms/LocationPicker';
+import DatePicker from '../../components/common/forms/DatePicker';
+import CustomSelect from '../../components/common/forms/CustomSelect';
 import './FoundPetForm.css';
 
 // Mock lost pets database

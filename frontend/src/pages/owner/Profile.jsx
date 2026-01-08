@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SquarePen, X, Save, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -97,7 +97,6 @@ const Profile = () => {
   }
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard }
   ];
 
   return (

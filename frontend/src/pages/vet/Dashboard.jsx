@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint, BookOpen} from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
 import { ROUTES } from '../../utils/constants';
 import './Dashboard.css';

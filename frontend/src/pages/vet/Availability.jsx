@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, Trash2, Plus } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import CustomSelect from '../../components/common/CustomSelect';
-import ConfirmModal from '../../components/common/ConfirmModal';
-import Notification from '../../components/common/Notification';
+import PageLayout from '../../components/common/layout/PageLayout';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Availability.css';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Printer, Download } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import PetCard from '../../components/owner/healthcard/PetCard';
 import { ROUTES } from '../../utils/constants';
 import './HealthBook.css';
@@ -81,7 +81,6 @@ const HealthBook = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard }
   ];
 
   return (

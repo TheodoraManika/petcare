@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, FileCheck } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
+import PageLayout from '../../components/common/layout/PageLayout';
+import DatePicker from '../../components/common/forms/DatePicker';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryEdit.css';
 
@@ -33,7 +33,6 @@ const LostPetHistoryEdit = () => {
   ];
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard },
     { label: 'Ιστορικό Δηλώσεων', path: ROUTES.owner.lostHistory },
     { label: 'Δήλωση Απώλειας', path: `${ROUTES.owner.lostHistory}/${declarationId}` },
   ];

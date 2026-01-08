@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ContactPage.css';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({

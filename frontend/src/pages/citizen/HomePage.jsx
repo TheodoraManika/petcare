@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
-import PageLayout from '../../components/global/layout/PageLayout';
-import CustomSelect from '../../components/global/ui/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
+import PageLayout from '../../components/common/layout/PageLayout';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
 import './HomePage.css';
 
 const HomePage = () => {

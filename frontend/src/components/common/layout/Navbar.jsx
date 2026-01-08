@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
-import Avatar from '../ui/Avatar';
+import Avatar from '../Avatar';
 import './Navbar.css';
 
 /**
@@ -56,6 +56,8 @@ const Navbar = ({ variant = 'vet' }) => {
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
+  const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
+  const infoRef = useRef(null);
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -113,25 +115,25 @@ const Navbar = ({ variant = 'vet' }) => {
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.citizen.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-        { to: ROUTES.home, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : isOwner
     ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.owner.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-        { to: ROUTES.owner.info, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ]
     : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.vet.foundPetForm, icon: <CheckCircle2 size={18} />, label: 'Δήλωση Εύρεσης' },
         { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
-        { to: ROUTES.vet.pets, icon: <Info size={18} />, label: 'Πληροφορίες' },
       ];
+
+  const infoOptions = [
+    { label: 'Για Ιδιοκτήτες', to: ROUTES.owner.information, icon: <Users size={16} /> },
+    { label: 'Για Κτηνίατρους', to: ROUTES.vet.information, icon: <Stethoscope size={16} /> },
+    { label: 'Για Όλους', to: ROUTES.citizen.information, icon: <UserRound size={16} /> },
+  ];
 
   return (
     <nav className={`navbar ${isOwner ? 'navbar--owner' : ''}`}>
@@ -188,7 +190,30 @@ const Navbar = ({ variant = 'vet' }) => {
               </Link>
             ))}
             
-            {/* Menu Dropdown removed - now using Sidebar for both vet and owner */}
+            {/* Information Dropdown */}
+            <div className="navbar__nav-dropdown navbar__info-dropdown" ref={infoRef}>
+              <button
+                className="navbar__nav-link navbar__nav-link--dropdown"
+                aria-haspopup="true"
+              >
+                <Info size={18} />
+                <span>Πληροφορίες</span>
+                <ChevronDown className="navbar__dropdown-chevron" size={16} />
+              </button>
+              
+              <div className="navbar__nav-dropdown-menu navbar__info-dropdown-menu">
+                {infoOptions.map((option, index) => (
+                  <Link
+                    key={index}
+                    to={option.to}
+                    className="navbar__nav-dropdown-item navbar__info-option"
+                  >
+                    <span className="navbar__nav-dropdown-icon">{option.icon}</span>
+                    <span>{option.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

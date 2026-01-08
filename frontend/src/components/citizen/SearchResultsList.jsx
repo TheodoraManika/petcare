@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, X } from 'lucide-react';
-import Pagination from '../common/Pagination';
+import Pagination from '../common/layout/Pagination';
 import './SearchResultsList.css';
 
 /**

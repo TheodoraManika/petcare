@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import PageLayout from '../../components/global/layout/PageLayout';
-import MultiSelect from '../../components/common/MultiSelect';
-import SuccessPage from '../../components/common/SuccessPage';
-import ConfirmModal from '../../components/common/ConfirmModal';
+import PageLayout from '../../components/common/layout/PageLayout';
+import MultiSelect from '../../components/common/forms/MultiSelect';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 

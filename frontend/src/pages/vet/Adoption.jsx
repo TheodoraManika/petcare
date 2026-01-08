@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PawPrint, UserRound, Heart, AlertCircle } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import ProgressBar from '../../components/common/ProgressBar';
-import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
-import ConfirmModal from '../../components/common/ConfirmModal';
-import ConfirmDetailModal from '../../components/common/ConfirmDetailModal';
-import SuccessPage from '../../components/common/SuccessPage';
-import Notification from '../../components/common/Notification';
+import PageLayout from '../../components/common/layout/PageLayout';
+import ProgressBar from '../../components/common/forms/ProgressBar';
+import DatePicker from '../../components/common/forms/DatePicker';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
 

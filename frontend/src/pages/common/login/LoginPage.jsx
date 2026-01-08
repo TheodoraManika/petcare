@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import { ROUTES } from '../../utils/constants';
-import PageLayout from '../../components/global/layout/PageLayout';
+import { ROUTES } from '../../../utils/constants';
+import PageLayout from '../../../components/common/layout/PageLayout';
 import './LoginPage.css';
 
 const LoginPage = () => {

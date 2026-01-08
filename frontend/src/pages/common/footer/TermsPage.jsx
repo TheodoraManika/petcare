@@ -1,6 +1,6 @@
 import React from 'react';
 import './TermsPage.css';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const TermsPage = () => {
   return (

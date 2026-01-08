@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserRound } from 'lucide-react';
-import PageLayout from '../global/layout/PageLayout';
+import PageLayout from '../layout/PageLayout';
 import './SuccessPage.css';
 
 const SuccessPage = ({ 

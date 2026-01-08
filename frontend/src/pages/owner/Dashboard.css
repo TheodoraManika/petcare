@@ -5,7 +5,7 @@
 
 .owner-dashboard__cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-lg);
   max-width: 1200px;
   margin: 0 auto;

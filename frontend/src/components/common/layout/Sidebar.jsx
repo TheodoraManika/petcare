@@ -36,11 +36,9 @@ const Sidebar = ({ variant = 'vet' }) => {
 
   const ownerMenuItems = [
     { icon: <House size={20} />, label: 'Αρχική Ιδιοκτήτη', route: ROUTES.owner.dashboard },
-    { icon: <FileText size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.owner.pets },
+    { icon: <FileText size={20} />, label: 'Τα Κατοικίδιά μου', route: ROUTES.owner.pets },
     { icon: <Calendar size={20} />, label: 'Τα Ραντεβού μου', route: ROUTES.owner.appointments },
-    { icon: <Search size={20} />, label: 'Αναζήτηση Κτηνιάτρων', route: ROUTES.citizen.searchMap },
     { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.owner.lostPetForm },
-    { icon: <CircleCheckBig size={20} />, label: 'Δήλωση Εύρεσης', route: ROUTES.owner.foundPetForm },
     { icon: <History size={20} />, label: 'Ιστορικό Δηλώσεων', route: ROUTES.owner.lostHistory },
   ];
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './Review.css';
 
@@ -45,7 +45,6 @@ const Review = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard },
     { label: 'Ραντεβού', path: ROUTES.owner.appointments },
     { label: `Δρ. ${appointment.vet}`, path: ROUTES.owner.appointments }
   ];

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Download, Dog, Cat, AlertCircle } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import MedicalEventCard from '../../components/owner/healthcard/MedicalEventCard';
 import StatCard from '../../components/owner/healthcard/StatCard';
 import { ROUTES } from '../../utils/constants';

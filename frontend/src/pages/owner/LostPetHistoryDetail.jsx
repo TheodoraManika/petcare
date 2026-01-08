@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Eye, Edit2, Trash2, AlertCircle, Printer, Download, CheckCircle } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryDetail.css';
 
@@ -26,7 +26,6 @@ const LostPetHistoryDetail = () => {
   });
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard },
     { label: 'Ιστορικό Δηλώσεων', path: ROUTES.owner.lostHistory },
   ];
 

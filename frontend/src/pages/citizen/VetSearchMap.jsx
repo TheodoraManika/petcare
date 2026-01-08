@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Star } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import Pagination from '../../components/common/Pagination';
-import CustomSelect from '../../components/common/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
+import PageLayout from '../../components/common/layout/PageLayout';
+import Pagination from '../../components/common/layout/Pagination';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
 import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
 import SearchResultsList from '../../components/citizen/SearchResultsList';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './PrivacyPage.css';
-import PageLayout from '../../components/global/layout/PageLayout';
-import { ROUTES } from '../../utils/constants';
+import PageLayout from '../../../components/common/layout/PageLayout';
+import { ROUTES } from "../../../utils/constants";
 
 const PrivacyPage = () => {
   return (

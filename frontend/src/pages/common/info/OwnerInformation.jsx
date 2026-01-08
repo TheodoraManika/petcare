@@ -2,7 +2,7 @@ import React from 'react';
 import { Book, Search, Clock, FileCheck, ArrowUp, CheckCircle2, SquareCheckBig } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './OwnerInformation.css';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const OwnerInformation = () => {
   const navigate = useNavigate();

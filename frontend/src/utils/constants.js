@@ -16,6 +16,7 @@ export const ROUTES = {
     lostPets: '/citizen/lost-pets',
     foundPetForm: '/citizen/found-pet',
     searchMap: '/vet/search-map',
+    information: '/citizen/information',
   },
   owner: {
     dashboard: '/owner/dashboard',
@@ -26,6 +27,7 @@ export const ROUTES = {
     lostPetForm: '/owner/lost-pet',
     foundPetForm: '/owner/found-pet',
     lostHistory: '/owner/history',
+    information: '/owner/information',
   },
   vet: {
     dashboard: '/vet/dashboard',
@@ -45,5 +47,6 @@ export const ROUTES = {
     lostPetForm: '/vet/lost-pet',
     foundPetForm: '/vet/found-pet',
     healthBook: '/vet/health-book',
+    information: '/vet/information',
   },
 };

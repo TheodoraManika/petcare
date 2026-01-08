@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Calendar, Plus, Minus, Check, RotateCcw } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import Pagination from '../../components/common/Pagination';
+import PageLayout from '../../components/common/layout/PageLayout';
+import Pagination from '../../components/common/layout/Pagination';
 import BookingForm from '../../components/owner/BookingForm';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
@@ -134,7 +134,6 @@ const Appointments = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard }
   ];
 
   const getStatusBadge = (status) => {

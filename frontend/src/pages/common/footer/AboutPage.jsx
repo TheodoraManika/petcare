@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles, Heart, Shield, Award, Check, Users } from 'lucide-react';
 import './AboutPage.css';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const AboutPage = () => {
   const values = [

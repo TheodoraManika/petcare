@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageLayout from '../../components/global/layout/PageLayout';
-import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
+import PageLayout from '../../components/common/layout/PageLayout';
+import DatePicker from '../../components/common/forms/DatePicker';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
 import { ROUTES } from '../../utils/constants';
 import './OwnerLostPet.css';
 
@@ -118,7 +118,6 @@ const OwnerLostPet = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard }
   ];
 
   return (

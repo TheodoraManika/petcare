@@ -14,7 +14,7 @@ import {
   X,
   ArrowLeft
 } from 'lucide-react';
-import CustomSelect from '../global/ui/CustomSelect';
+import CustomSelect from '../common/forms/CustomSelect';
 import { ROUTES } from '../../utils/constants';
 import './BookingForm.css';
 

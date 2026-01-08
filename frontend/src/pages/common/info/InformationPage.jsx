@@ -2,7 +2,7 @@ import React from 'react';
 import { Search, FileText, CheckCircle2, ArrowUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './InformationPage.css';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const InformationPage = () => {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const InformationPage = () => {
   ];
 
   return (
-    <PageLayout title="Πληροφορίες για Πολίτες">
+    <PageLayout title="Γενικές Πληροφορίες">
       <div className="information-page">
         <div className="cards-container">
           {cards.map((card, idx) => (

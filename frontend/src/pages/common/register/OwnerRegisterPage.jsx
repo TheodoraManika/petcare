@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Home, ChevronLeft } from 'lucide-react';
-import { ROUTES } from '../../utils/constants';
-import PageLayout from '../../components/global/layout/PageLayout';
-import ProgressBar from '../../components/common/ProgressBar';
+import { ROUTES } from '../../../utils/constants';
+import PageLayout from '../../../components/common/layout/PageLayout';
+import ProgressBar from '../../../components/common/forms/ProgressBar';
 import './OwnerRegisterPage.css';
 
 const OwnerRegisterPage = () => {

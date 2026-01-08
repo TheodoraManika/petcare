@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MapPin, List, Dog, Cat, X, AlertCircle, Search as SearchIcon, FileText, Scan, Palette, MapPinned } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import CustomSelect from '../../components/common/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
+import PageLayout from '../../components/common/layout/PageLayout';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
 import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
-import Pagination from '../../components/common/Pagination';
+import Pagination from '../../components/common/layout/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './LostPets.css';
 import FoundPetForm from './FoundPetForm';
