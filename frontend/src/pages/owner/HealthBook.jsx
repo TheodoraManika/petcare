@@ -18,7 +18,7 @@ const HealthBook = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get current user
         const storedUser = localStorage.getItem('currentUser');
         if (!storedUser) {
@@ -26,20 +26,20 @@ const HealthBook = () => {
           setLoading(false);
           return;
         }
-        
+
         const currentUser = JSON.parse(storedUser);
-        
+
         // Fetch all pets from backend
         const response = await fetch('http://localhost:5000/pets');
         if (!response.ok) {
           throw new Error('Σφάλμα φόρτωσης κατοικιδίων');
         }
-        
+
         const allPets = await response.json();
-        
+
         // Filter pets that belong to this owner
         const ownerPets = allPets.filter(pet => Number(pet.ownerId) === Number(currentUser.id));
-        
+
         // Transform pets for display
         const transformedPets = ownerPets.map(pet => ({
           id: pet.id,
@@ -51,9 +51,11 @@ const HealthBook = () => {
           microchipId: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
-          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet'
+          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
+          // MOCK: Set pet with ID 1 as 'lost' for demonstration
+          status: pet.id === 1 ? 'lost' : 'safe'
         }));
-        
+
         setUserPets(transformedPets);
         setLoading(false);
       } catch (err) {
@@ -68,6 +70,14 @@ const HealthBook = () => {
 
   const handlePetClick = (petId) => {
     navigate(`${ROUTES.owner.pets}/${petId}`);
+  };
+
+  const handleFound = (petId) => {
+    setUserPets(currentPets =>
+      currentPets.map(pet =>
+        pet.id === petId ? { ...pet, status: 'safe' } : pet
+      )
+    );
   };
 
   const breadcrumbItems = [
@@ -105,6 +115,7 @@ const HealthBook = () => {
                   key={pet.id}
                   pet={pet}
                   onClick={() => handlePetClick(pet.id)}
+                  onFound={() => handleFound(pet.id)}
                 />
               ))}
             </div>
