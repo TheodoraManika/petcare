@@ -655,7 +655,6 @@ const Transfer = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard },
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
 
@@ -666,7 +665,7 @@ const Transfer = () => {
         icon={ArrowLeftRight}
         title="Η Δήλωση Μεταβίβασης ολοκληρώθηκε!"
         description="Η αλλαγή ιδιοκτήτη καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο έχει μεταφερθεί στο προφίλ του νέου ιδιοκτήτη."
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={handleSuccessReturn}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"

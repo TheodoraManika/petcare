@@ -285,9 +285,7 @@ const Register = () => {
     { label: 'ΑΦΜ', value: formData.afm },
   ];
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   if (showSuccess) {
     return (
@@ -295,7 +293,7 @@ const Register = () => {
         icon={Send}
         title="Η καταγραφή ολοκληρώθηκε!"
         description="Το κατοικίδιο καταχωρήθηκε με επιτυχία στο σύστημα."
-        buttonText="Επιστροφή στο Μενού"
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
         onButtonClick={() => navigate(ROUTES.vet.dashboard)}
         iconColor="#FCA47C"
         iconBgColor="#FFF4ED"
