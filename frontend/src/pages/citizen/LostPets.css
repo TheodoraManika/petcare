@@ -116,10 +116,11 @@
   font-size: 15px;
 }
 
-.found-action-btn.primary-btn {
-  background: linear-gradient(135deg, #23CED9 0%, #1AB8C3 100%);
-  color: #ffffff;
-  box-shadow: 0 8px 20px rgba(35, 206, 217, 0.18);
+.found-actions-container .found-action-btn.primary-btn {
+  background: #23CED9;
+  color: #101727;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .found-action-btn.ghost-btn {
@@ -683,7 +684,7 @@
   margin: 0 24px 20px;
   width: calc(100% - 48px);
   padding: 14px;
-  background: linear-gradient(135deg, #23CED9 0%, #1ab8c2 100%);
+  background: #23CED9;
   color: #000000;
   border: none;
   border-radius: 10px;

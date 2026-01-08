@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../utils/constants';
-import PageLayout from '../../components/common/layout/PageLayout';
+import { ROUTES } from '../../../utils/constants';
+import PageLayout from '../../../components/common/layout/PageLayout';
 import './ConfirmationPage.css';
 import { CheckCircle } from 'lucide-react';
 

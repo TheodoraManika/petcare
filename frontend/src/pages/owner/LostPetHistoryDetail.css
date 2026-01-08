@@ -51,9 +51,9 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: #10b981;
-  color: white;
-  border: none;
+  background: rgba(1, 102, 48, 0.1);
+  color: #016630;
+  border: 1px solid #016630;
   border-radius: 6px;
   font-weight: 500;
   font-size: 14px;
@@ -63,9 +63,9 @@
 }
 
 .lost-pet-detail__btn-found:hover {
-  background: #059669;
+  background: rgba(1, 102, 48, 0.2);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 8px rgba(1, 102, 48, 0.15);
 }
 
 .lost-pet-detail__found-message {
@@ -73,8 +73,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: #d1fae5;
-  color: #065f46;
+  background: rgba(1, 102, 48, 0.1);
+  color: #016630;
   border-radius: 6px;
   font-weight: 500;
   font-size: 14px;

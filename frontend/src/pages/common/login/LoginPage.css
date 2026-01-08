@@ -209,14 +209,26 @@
   margin: 0;
 }
 
-.login-signup-link {
+.login-owner-signup-link {
+  color: #23CED9;  
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-vet-signup-link {
   color: #FCA47C;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
-.login-signup-link:hover {
+.login-owner-signup-link:hover {
+  color: #23CED9;
+  text-decoration: underline;
+}
+
+.login-vet-signup-link:hover {
   color: #FCA47C;
   text-decoration: underline;
 }

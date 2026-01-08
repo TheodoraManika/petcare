@@ -253,7 +253,6 @@ const HomePage = () => {
             {/* Left Side - Carousel */}
             <div className="lost-pets-hero__carousel">
               <div className="carousel-header">
-                <PawPrint size={20} className="carousel-header-icon" />
                 <span>Πρόσφατα Χαμένα Κατοικίδια</span>
               </div>
               
@@ -447,7 +446,6 @@ const HomePage = () => {
             </button>
           </div>
           <div className="vets-section__title">
-            <Stethoscope size={20} className="vets-section__icon" />
             <h2>Κορυφαίοι Κτηνίατροι</h2>
           </div>
           <div className="vet-section__carousel">
