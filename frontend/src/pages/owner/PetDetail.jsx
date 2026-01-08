@@ -101,7 +101,7 @@ const PetDetail = () => {
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.owner.dashboard },
-    { label: 'Βιβλιάριο Υγείας', path: ROUTES.owner.pets }
+    { label: 'Τα Κατοικίδιά μου', path: ROUTES.owner.pets }
   ];
 
   const handlePrint = () => {

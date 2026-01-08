@@ -15,7 +15,7 @@ const Dashboard = () => {
   const dashboardCards = [
     {
       id: 'health-book',
-      title: 'Βιβλιάριο Υγείας',
+      title: 'Τα Κατοικίδιά μου',
       description: 'Προβολή στοιχείων κατοικιδίων',
       icon: <FileText />,
       iconVariant: 'primary',

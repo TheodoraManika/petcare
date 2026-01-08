@@ -142,6 +142,32 @@
   flex-direction: column;
 }
 
+.map-container.has-booking-form {
+  padding: 0;
+  overflow: hidden;
+}
+
+.map-container.has-booking-form .booking-form--inline {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* Booking Success Message */
+.booking-success-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  border-radius: 10px;
+  color: #065f46;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
 .map-header {
   display: flex;
   justify-content: space-between;

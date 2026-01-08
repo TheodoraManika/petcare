@@ -75,11 +75,11 @@ const HealthBook = () => {
   ];
 
   return (
-    <PageLayout variant="owner" title="Βιβλιάριο Υγείας" breadcrumbs={breadcrumbItems}>
+    <PageLayout variant="owner" title="Τα Κατοικίδιά μου" breadcrumbs={breadcrumbItems}>
       <div className="owner-health-book">
         <div className="owner-health-book__header">
         </div>
-        <h1 className="owner-health-book__title">Βιβλιάριο Υγείας Κατοικιδίων</h1>
+        <h1 className="owner-health-book__title">Τα Κατοικίδιά μου</h1>
         <p className="owner-health-book__subtitle">
           Προβολή και εκτύπωση των στοιχείων των κατοικιδίων σας
         </p>

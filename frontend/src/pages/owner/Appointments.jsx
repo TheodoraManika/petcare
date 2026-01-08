@@ -1,16 +1,42 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { X, Calendar, Plus, Minus, Check } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import Pagination from '../../components/common/Pagination';
+import BookingForm from '../../components/owner/BookingForm';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Appointments state
   const [activeTab, setActiveTab] = useState('active');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  
+  // Booking form expanded state
+  const prefilledVet = location.state?.vet || null;
+  const [isBookingExpanded, setIsBookingExpanded] = useState(!!prefilledVet);
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
+
+  // Clear success message after 5 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(''), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  const handleBookingSuccess = (message) => {
+    setSuccessMessage(message);
+    setIsBookingExpanded(false);
+  };
+
+  const handleBookingClose = () => {
+    setIsBookingExpanded(false);
+  };
 
   // Mock data - in real app, this would come from API/database
   const activeAppointments = [
@@ -106,6 +132,42 @@ const Appointments = () => {
           <p className="owner-appointments__subtitle">Διαχείριση και παρακολούθηση ραντεβού</p>
         </div>
 
+        {successMessage && (
+          <div className="owner-appointments__success">
+            <Check size={18} />
+            {successMessage}
+          </div>
+        )}
+
+        {/* Booking Form Section */}
+        <div className="owner-appointments__booking-section">
+          <div 
+            className="owner-appointments__booking-header"
+            onClick={() => setIsBookingExpanded(!isBookingExpanded)}
+          >
+            <div className="owner-appointments__booking-title">
+              <Calendar size={20} />
+              <h2>Κλείσιμο Νέου Ραντεβού</h2>
+            </div>
+            <button className="owner-appointments__expand-btn">
+              {isBookingExpanded ? <Minus size={20} /> : <Plus size={20} />}
+            </button>
+          </div>
+
+          {isBookingExpanded && (
+            <div className="owner-appointments__booking-content">
+              <BookingForm
+                vet={prefilledVet}
+                onClose={handleBookingClose}
+                onSuccess={handleBookingSuccess}
+                inline={false}
+                showVetSearch={true}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Appointments List */}
         <div className="owner-appointments__tabs">
           <button
             className={`owner-appointments__tab ${activeTab === 'active' ? 'owner-appointments__tab--active' : ''}`}
@@ -126,7 +188,7 @@ const Appointments = () => {
             <div key={appointment.id} className="owner-appointments__card">
               <div className="owner-appointments__card-header">
                 <div className="owner-appointments__card-title">
-                  <h3>Δρ. {appointment.vet}</h3>
+                  <h3>{appointment.vet}</h3>
                   {getStatusBadge(appointment.status)}
                 </div>
                 {activeTab === 'active' && (

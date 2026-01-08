@@ -8,6 +8,8 @@ import LocationPicker from '../../components/common/LocationPicker';
 import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
 import SearchResultsList from '../../components/citizen/SearchResultsList';
+import BookingForm from '../../components/owner/BookingForm';
+import { ROUTES } from '../../utils/constants';
 import './VetSearchMap.css';
 
 const VetSearchMap = () => {
@@ -56,6 +58,11 @@ const VetSearchMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const itemsPerPage = 5;
+  
+  // Booking form state
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [bookingVet, setBookingVet] = useState(null);
+  const [bookingSuccess, setBookingSuccess] = useState('');
 
   // Fetch vets from backend
   useEffect(() => {
@@ -266,8 +273,22 @@ const VetSearchMap = () => {
   };
 
   const handleCloseAppointment = (vet) => {
-    // Handle close appointment
-    console.log('Close appointment for:', vet.name);
+    // Show booking form inline instead of navigating away
+    setBookingVet(vet);
+    setShowBookingForm(true);
+  };
+
+  const handleBookingClose = () => {
+    setShowBookingForm(false);
+    setBookingVet(null);
+  };
+
+  const handleBookingSuccess = (message) => {
+    setShowBookingForm(false);
+    setBookingVet(null);
+    setBookingSuccess(message);
+    // Clear success message after 5 seconds
+    setTimeout(() => setBookingSuccess(''), 5000);
   };
 
   // Calculate map center
@@ -394,66 +415,91 @@ const VetSearchMap = () => {
         </SearchSidebar>
 
         {/* Main Map Area */}
-        <main className="map-container">
-          <div className="map-header">
-            <h2 className="map-title">Αποτελέσματα ({filteredVets.length})</h2>
-            <div className="view-toggles">
-              <button 
-                className={`toggle-btn ${showMap ? 'active' : ''}`} 
-                onClick={() => setShowMap(true)}
-              >
-                <MapPin size={18} />
-                Χάρτης
-              </button>
-              <button 
-                className={`toggle-btn ${!showMap ? 'active' : ''}`} 
-                onClick={() => setShowMap(false)}
-              >
-                Λίστα
-              </button>
-            </div>
-          </div>
-
-          {error ? (
-            <div className="error-message">
-              <p>Σφάλμα φόρτωσης δεδομένων: {error}</p>
-              <p style={{ fontSize: '14px', color: '#9ca3af' }}>Παρακαλώ ελέγξτε ότι ο server είναι ενεργός</p>
-            </div>
-          ) : loading ? (
-            <div className="loading-message">
-              <p>Φόρτωση κτηνιάτρων...</p>
-            </div>
-          ) : filteredVets.length === 0 ? (
-            <div className="no-results-message">
-              <Star size={48} color="#FCA47C" />
-              <p>Δεν βρέθηκαν κτηνίατροι με τα επιλεγμένα κριτήρια</p>
-            </div>
-          ) : showMap ? (
-            <MapWithMarkers
-              center={mapCenter}
-              zoom={mapZoom}
-              markers={filteredVets}
-              selectedId={selectedVet?.id}
-              onMarkerClick={handleMarkerClick}
-              height="600px"
-              width="100%"
-              currentUser={currentUser}
-              onViewProfile={handleViewProfile}
-              onCloseAppointment={handleCloseAppointment}
-            />
+        <main className={`map-container ${showBookingForm ? 'has-booking-form' : ''}`}>
+          {showBookingForm ? (
+            <>
+              {bookingSuccess && (
+                <div className="booking-success-message">
+                  {bookingSuccess}
+                </div>
+              )}
+              <BookingForm
+                vet={bookingVet}
+                onClose={handleBookingClose}
+                onSuccess={handleBookingSuccess}
+                inline={true}
+                showVetSearch={false}
+              />
+            </>
           ) : (
-            <SearchResultsList
-              items={currentVets}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              variant="citizen"
-              actionButtonText="Προβολή Προφίλ"
-              onActionClick={handleViewProfile}
-              showCloseAppointment={true}
-              onCloseAppointment={handleCloseAppointment}
-              currentUser={currentUser}
-            />
+            <>
+              <div className="map-header">
+                <h2 className="map-title">Αποτελέσματα ({filteredVets.length})</h2>
+                <div className="view-toggles">
+                  <button 
+                    className={`toggle-btn ${showMap ? 'active' : ''}`} 
+                    onClick={() => setShowMap(true)}
+                  >
+                    <MapPin size={18} />
+                    Χάρτης
+                  </button>
+                  <button 
+                    className={`toggle-btn ${!showMap ? 'active' : ''}`} 
+                    onClick={() => setShowMap(false)}
+                  >
+                    Λίστα
+                  </button>
+                </div>
+              </div>
+
+              {bookingSuccess && (
+                <div className="booking-success-message">
+                  {bookingSuccess}
+                </div>
+              )}
+
+              {error ? (
+                <div className="error-message">
+                  <p>Σφάλμα φόρτωσης δεδομένων: {error}</p>
+                  <p style={{ fontSize: '14px', color: '#9ca3af' }}>Παρακαλώ ελέγξτε ότι ο server είναι ενεργός</p>
+                </div>
+              ) : loading ? (
+                <div className="loading-message">
+                  <p>Φόρτωση κτηνιάτρων...</p>
+                </div>
+              ) : filteredVets.length === 0 ? (
+                <div className="no-results-message">
+                  <Star size={48} color="#FCA47C" />
+                  <p>Δεν βρέθηκαν κτηνίατροι με τα επιλεγμένα κριτήρια</p>
+                </div>
+              ) : showMap ? (
+                <MapWithMarkers
+                  center={mapCenter}
+                  zoom={mapZoom}
+                  markers={filteredVets}
+                  selectedId={selectedVet?.id}
+                  onMarkerClick={handleMarkerClick}
+                  height="600px"
+                  width="100%"
+                  currentUser={currentUser}
+                  onViewProfile={handleViewProfile}
+                  onCloseAppointment={handleCloseAppointment}
+                />
+              ) : (
+                <SearchResultsList
+                  items={currentVets}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  variant="citizen"
+                  actionButtonText="Προβολή Προφίλ"
+                  onActionClick={handleViewProfile}
+                  showCloseAppointment={true}
+                  onCloseAppointment={handleCloseAppointment}
+                  currentUser={currentUser}
+                />
+              )}
+            </>
           )}
         </main>
       </div>

@@ -113,7 +113,7 @@ const Navbar = ({ variant = 'vet' }) => {
 
   // Menu items only for owner (vet uses sidebar)
   const menuItems = [
-    { icon: <FileText size={18} />, label: 'Βιβλιάριο', route: ROUTES.owner.pets },
+    { icon: <FileText size={18} />, label: 'Κατοικίδια', route: ROUTES.owner.pets },
     { icon: <Calendar size={18} />, label: 'Ραντεβού', route: ROUTES.owner.appointments },
     { icon: <AlertCircle size={18} />, label: 'Απώλεια', route: ROUTES.owner.lostPetForm },
     { icon: <History size={18} />, label: 'Ιστορικό', route: ROUTES.owner.lostHistory },
