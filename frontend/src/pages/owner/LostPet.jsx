@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import LocationPicker from '../../components/common/forms/LocationPicker';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './OwnerLostPet.css';
 
@@ -41,13 +45,32 @@ const OwnerLostPet = () => {
   });
 
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [phoneError, setPhoneError] = useState('');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for phone
+    if (name === 'contactPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue
+      }));
+      // Clear phone error when user starts typing
+      if (phoneError) setPhoneError('');
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handlePetSelect = (value) => {
@@ -106,15 +129,69 @@ const OwnerLostPet = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmitClick = () => {
     if (isFormValid()) {
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.owner.dashboard);
+      setShowSubmitModal(true);
     }
   };
 
-  const handleCancel = () => {
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowSubmitModal(false);
     navigate(ROUTES.owner.dashboard);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowSubmitModal(false);
+  };
+
+  const handleCancelClick = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Reset all form fields
+    setFormData({
+      selectedPet: '',
+      microchipNumber: '',
+      petName: '',
+      lostDate: '',
+      contactPhone: '',
+      location: '',
+      locationLat: '',
+      locationLon: '',
+      description: '',
+      photo: ''
+    });
+    setPhotoPreview(null);
+    setPhoneError('');
+    setShowCancelModal(false);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Prepare fields for ConfirmDetailModal
+  const getSubmitFields = () => {
+    const selectedPetData = userPets.find(p => p.value === formData.selectedPet);
+    return [
+      { label: 'Κατοικίδιο', value: selectedPetData?.label || '-' },
+      { label: 'Αριθμός Μικροτσίπ', value: formData.microchipNumber },
+      { label: 'Ημερομηνία Εξαφάνισης', value: formData.lostDate },
+      { label: 'Τηλέφωνο Επικοινωνίας', value: formData.contactPhone },
+      { label: 'Τοποθεσία', value: formData.location },
+      { label: 'Περιγραφή', value: formData.description || '-' },
+      { label: 'Φωτογραφία', value: formData.photo ? 'Προστέθηκε' : 'Δεν προστέθηκε' }
+    ];
   };
 
   const breadcrumbItems = [
@@ -184,6 +261,7 @@ const OwnerLostPet = () => {
                   value={formData.lostDate}
                   onChange={handleInputChange}
                   variant="owner"
+                  maxDate={new Date()}
                 />
               </div>
 
@@ -194,12 +272,19 @@ const OwnerLostPet = () => {
                 <input
                   type="tel"
                   name="contactPhone"
-                  className="owner-lost-pet__input"
-                  placeholder="69XXXXXXXX"
+                  className={`owner-lost-pet__input ${phoneError ? 'owner-lost-pet__input--error' : ''}`}
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.contactPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="owner-lost-pet__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
+                {phoneError && (
+                  <div className="owner-lost-pet__error-message">
+                    <AlertCircle size={16} />
+                    <span>{phoneError}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -272,7 +357,7 @@ const OwnerLostPet = () => {
               <button
                 type="button"
                 className="owner-lost-pet__btn owner-lost-pet__btn--cancel"
-                onClick={handleCancel}
+                onClick={handleCancelClick}
               >
                 Ακύρωση
               </button>
@@ -287,7 +372,7 @@ const OwnerLostPet = () => {
               <button
                 type="button"
                 className="owner-lost-pet__btn owner-lost-pet__btn--primary"
-                onClick={handleSubmit}
+                onClick={handleSubmitClick}
                 disabled={!isFormValid()}
               >
                 Οριστική Υποβολή
@@ -296,6 +381,37 @@ const OwnerLostPet = () => {
           </form>
         </div>
       </div>
+
+      {/* Cancel Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showCancelModal}
+        title="Είστε σίγουροι ότι θέλετε να ακυρώσετε τη δήλωση απώλειας κατοικιδίου;"
+        description="Αυτή η ενέργεια δεν αναιρείται. Η δήλωσή σας θα χαθεί"
+        cancelText="Όχι"
+        confirmText="Ναι, Ακύρωση"
+        onCancel={handleCancelCancel}
+        onConfirm={handleConfirmCancel}
+        isDanger={true}
+      />
+
+      {/* Submit Confirmation Modal */}
+      <ConfirmDetailModal
+        isOpen={showSubmitModal}
+        title="Επιβεβαίωση Δήλωσης Απώλειας"
+        subtitle="Παρακαλώ ελέγξτε τα στοιχεία πριν την οριστική υποβολή:"
+        fields={getSubmitFields()}
+        cancelText="Επιστροφή"
+        confirmText="Οριστική Υποβολή"
+        onCancel={handleCancelSubmit}
+        onConfirm={handleConfirmSubmit}
+      />
+
+      {/* Notification */}
+      <Notification
+        isVisible={notification !== null}
+        message="Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
+        type="error"
+      />
     </PageLayout>
   );
 };

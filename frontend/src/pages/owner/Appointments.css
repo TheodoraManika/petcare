@@ -799,8 +799,8 @@
   flex: 1;
   width: auto;
   padding: 10px;
-  background: #f9d7796b;
-  border: 1px solid #f9d7796b;
+  background: #F9D779;
+  border: 1px solid #F9D779;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -810,9 +810,10 @@
 }
 
 .owner-appointments__review-btn:hover {
-  background: #f9d779c8;
-  border-color: #f9d779c8;
-  color: #92590e;
+  background: #ffcc3fc8;
+  border-color: #ffcc3fc8;
+  color: #92590E;
+  box-shadow: 0 4px 8px rgba(214, 172, 59, 0.702);
 }
 
 .owner-appointments__actions-row {
@@ -827,22 +828,22 @@
   justify-content: center;
   gap: 8px;
   padding: 10px;
-  background: #23cdd93f;
-  border: 1px solid #23cdd93f;
+  background: #23CED9;
+  border: 1px solid #23CED9;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #2b4aae;
+  color: #1f2937;
   cursor: pointer;
   transition: all 0.2s ease;
   flex: 1;
 }
 
 .owner-appointments__rebook-btn:hover {
-  background: #23cdd985;
-  border-color: #23cdd985;
+  background: #1cc0cc;
+  border-color: #1cc0cc;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
+  box-shadow: 0 4px 8px rgba(28, 192, 204, 0.3);
 }
 
 

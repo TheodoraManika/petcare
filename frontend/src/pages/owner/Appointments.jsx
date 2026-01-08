@@ -4,6 +4,7 @@ import { X, Calendar, Plus, Minus, Check, RotateCcw } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import BookingForm from '../../components/owner/BookingForm';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
@@ -22,6 +23,8 @@ const Appointments = () => {
   const [bookingVet, setBookingVet] = useState(locationStateVet);
   const [isBookingExpanded, setIsBookingExpanded] = useState(!!locationStateVet);
   const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [appointmentToCancel, setAppointmentToCancel] = useState(null);
 
   // Clear success message after 5 seconds
   useEffect(() => {
@@ -41,7 +44,7 @@ const Appointments = () => {
   };
 
   // Mock data - in real app, this would come from API/database
-  const activeAppointments = [
+  const [activeAppointments, setActiveAppointments] = useState([
     {
       id: 1,
       vet: 'Δρ. Μαρία Παπαδοπούλου',
@@ -78,9 +81,9 @@ const Appointments = () => {
         rating: 4.9
       }
     },
-  ];
+  ]);
 
-  const historyAppointments = [
+  const [historyAppointments, setHistoryAppointments] = useState([
     {
       id: 3,
       vet: 'Δρ. Ελένη Γεωργίου',
@@ -120,7 +123,7 @@ const Appointments = () => {
         rating: 4.8
       }
     },
-  ];
+  ]);
 
   const appointments = activeTab === 'active' ? activeAppointments : historyAppointments;
 
@@ -157,8 +160,38 @@ const Appointments = () => {
   };
 
   const handleCancel = (appointmentId) => {
-    console.log('Cancel appointment:', appointmentId);
-    // In real app, this would call an API to cancel the appointment
+    setAppointmentToCancel(appointmentId);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Find the appointment to cancel
+    const appointmentToMove = activeAppointments.find(app => app.id === appointmentToCancel);
+    
+    if (appointmentToMove) {
+      // Update the appointment status and add cancellation message
+      const cancelledAppointment = {
+        ...appointmentToMove,
+        status: 'cancelled',
+        canReview: false,
+        cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.'
+      };
+      
+      // Remove from active appointments
+      setActiveAppointments(prev => prev.filter(app => app.id !== appointmentToCancel));
+      
+      // Add to history appointments
+      setHistoryAppointments(prev => [cancelledAppointment, ...prev]);
+    }
+    
+    setShowCancelModal(false);
+    setAppointmentToCancel(null);
+    setSuccessMessage('Το ραντεβού ακυρώθηκε με επιτυχία!');
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+    setAppointmentToCancel(null);
   };
 
   const handleRebook = (appointment) => {
@@ -319,6 +352,18 @@ const Appointments = () => {
           totalPages={totalPages}
           onPageChange={handlePageChange}
           variant="owner"
+        />
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε αυτό το ραντεβού;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
         />
       </div>
     </PageLayout>
