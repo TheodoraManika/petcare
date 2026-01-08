@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Edit2, X, PawPrint } from 'lucide-react';
+import { Eye, Edit2, X, PawPrint, CheckCircle } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import Pagination from '../../components/common/Pagination';
 import { ROUTES } from '../../utils/constants';
@@ -49,6 +49,7 @@ const LostPetHistory = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       submitted: { label: 'Υποβλήθηκε', class: 'submitted' },
+      found: { label: 'Βρέθηκε', class: 'found' },
       draft: { label: 'Πρόχειρη', class: 'draft' },
     };
     const config = statusConfig[status] || statusConfig.submitted;
@@ -65,6 +66,16 @@ const LostPetHistory = () => {
 
   const handleEdit = (id) => {
     navigate(`${ROUTES.owner.lostHistory}/${id}/edit`);
+  };
+
+  const handleFound = (id) => {
+    const updatedDeclarations = declarations.map(d => {
+      if (d.id === id) {
+        return { ...d, status: 'found' };
+      }
+      return d;
+    });
+    setDeclarations(updatedDeclarations);
   };
 
   const handleDelete = (declaration) => {
@@ -138,6 +149,24 @@ const LostPetHistory = () => {
                       <Edit2 size={16} />
                     </button>
                   )}
+
+                  {declaration.type === 'loss' && declaration.status === 'submitted' && (
+                    <button
+                      className="lost-pet-history__btn lost-pet-history__btn--found"
+                      onClick={() => handleFound(declaration.id)}
+                    >
+                      <CheckCircle size={16} />
+                      Βρέθηκε
+                    </button>
+                  )}
+
+                  {declaration.status === 'found' && (
+                    <div className="lost-pet-history__found-message">
+                      <CheckCircle size={16} />
+                      Το κατοικίδιο βρέθηκε!
+                    </div>
+                  )}
+
                   {declaration.status === 'draft' && (
                     <button
                       className="lost-pet-history__btn lost-pet-history__btn--delete"

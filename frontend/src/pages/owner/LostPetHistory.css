@@ -231,6 +231,34 @@
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
 
+.lost-pet-history__btn--found {
+  background: #10b981;
+  color: white;
+}
+
+.lost-pet-history__btn--found:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.lost-pet-history__found-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.lost-pet-history__status--found {
+  background: #d1fae5;
+  color: #065f46;
+}
+
 .lost-pet-history__pagination {
   display: flex;
   justify-content: space-between;

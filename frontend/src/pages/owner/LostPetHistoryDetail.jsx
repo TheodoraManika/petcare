@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Eye, Edit2, Trash2, AlertCircle, Printer, Download } from 'lucide-react';
+import { Eye, Edit2, Trash2, AlertCircle, Printer, Download, CheckCircle } from 'lucide-react';
 import PageLayout from '../../components/global/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryDetail.css';
@@ -10,7 +10,7 @@ const LostPetHistoryDetail = () => {
   const { declarationId } = useParams();
 
   // Mock data - in real app, this would come from API
-  const declaration = {
+  const [declaration, setDeclaration] = useState({
     id: declarationId,
     type: 'loss',
     petName: 'Μπάμπης',
@@ -23,7 +23,7 @@ const LostPetHistoryDetail = () => {
     description: 'Ακούει στο όνομα του και είναι πολύ φιλικός',
     status: 'submitted',
     statusLabel: 'Υποβλήθηκε',
-  };
+  });
 
   const breadcrumbItems = [
     { label: 'Μενού', path: ROUTES.owner.dashboard },
@@ -41,6 +41,10 @@ const LostPetHistoryDetail = () => {
 
   const handleEdit = () => {
     navigate(`${ROUTES.owner.lostHistory}/${declarationId}/edit`);
+  };
+
+  const handleFound = () => {
+    setDeclaration(prev => ({ ...prev, status: 'found', statusLabel: 'Βρέθηκε' }));
   };
 
   const handlePrint = () => {
@@ -63,6 +67,23 @@ const LostPetHistoryDetail = () => {
       <div className="lost-pet-detail">
         <div className="lost-pet-detail__header">
           <div className="lost-pet-detail__header-actions">
+            {declaration.status === 'found' && (
+              <div className="lost-pet-detail__found-message">
+                <CheckCircle size={18} />
+                Το κατοικίδιο βρέθηκε!
+              </div>
+            )}
+
+            {declaration.type === 'loss' && declaration.status === 'submitted' && (
+              <button
+                className="lost-pet-detail__btn-found"
+                onClick={handleFound}
+              >
+                <CheckCircle size={18} />
+                Βρέθηκε
+              </button>
+            )}
+
             <button
               className="lost-pet-detail__btn-icon"
               onClick={handlePrint}
@@ -77,7 +98,7 @@ const LostPetHistoryDetail = () => {
             >
               <Download size={18} />
             </button>
-            {declaration.status !== 'submitted' && (
+            {declaration.status !== 'submitted' && declaration.status !== 'found' && (
               <>
                 <button
                   className="lost-pet-detail__btn-icon"
