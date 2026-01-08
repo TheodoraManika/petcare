@@ -180,6 +180,37 @@ const OwnerLostPet = () => {
     setShowCancelModal(false);
   };
 
+  const handleDraft = () => {
+    // TODO: Save form data to backend with status 'draft'
+    // API call example: await saveLostPetDraft(formData);
+    
+    console.log('Draft saved:', formData);
+    
+    // Reset all form fields
+    setFormData({
+      selectedPet: '',
+      microchipNumber: '',
+      petName: '',
+      lostDate: '',
+      contactPhone: '',
+      location: '',
+      locationLat: '',
+      locationLon: '',
+      description: '',
+      photo: ''
+    });
+    setPhotoPreview(null);
+    setPhoneError('');
+    
+    // Show success notification
+    setNotification('draft');
+    
+    // Auto-hide notification after 8 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 8000);
+  };
+
   // Prepare fields for ConfirmDetailModal
   const getSubmitFields = () => {
     const selectedPetData = userPets.find(p => p.value === formData.selectedPet);
@@ -365,6 +396,7 @@ const OwnerLostPet = () => {
               <button
                 type="button"
                 className="owner-lost-pet__btn owner-lost-pet__btn--secondary"
+                onClick={handleDraft}
               >
                 Πρόχειρο
               </button>
@@ -409,8 +441,12 @@ const OwnerLostPet = () => {
       {/* Notification */}
       <Notification
         isVisible={notification !== null}
-        message="Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
-        type="error"
+        message={
+          notification === 'draft' 
+            ? "Η δήλωση απώλειας αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων"
+            : "Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
+        }
+        type={notification === 'draft' ? 'success' : 'error'}
       />
     </PageLayout>
   );

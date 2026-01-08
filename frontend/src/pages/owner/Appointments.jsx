@@ -5,6 +5,7 @@ import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import BookingForm from '../../components/owner/BookingForm';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
@@ -25,6 +26,7 @@ const Appointments = () => {
   const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   // Clear success message after 5 seconds
   useEffect(() => {
@@ -186,7 +188,14 @@ const Appointments = () => {
     
     setShowCancelModal(false);
     setAppointmentToCancel(null);
-    setSuccessMessage('Το ραντεβού ακυρώθηκε με επιτυχία!');
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -364,6 +373,13 @@ const Appointments = () => {
           onCancel={handleCancelCancel}
           onConfirm={handleConfirmCancel}
           isDanger={true}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message="Το ραντεβού ακυρώθηκε με επιτυχία!"
+          type="error"
         />
       </div>
     </PageLayout>
