@@ -331,7 +331,7 @@ const Foster = () => {
                 maxLength={15}
                 required
               />
-              <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί και πρέπει να είναι 15 ψηφία.</span>
+              <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               {microchipError && (
                 <div className="foster__error-message">
                   <AlertCircle size={16} />
