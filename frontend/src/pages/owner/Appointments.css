@@ -797,23 +797,62 @@
 }
 
 .owner-appointments__review-btn {
-  width: 100%;
-  padding: 10px 16px;
+  flex: 1;
+  width: auto;
+  padding: 10px;
   background: #fef3c7;
   border: 1px solid #fbbf24;
   border-radius: 8px;
-  color: #92400e;
   font-size: 14px;
   font-weight: 500;
+  color: #92400e;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 12px;
 }
 
 .owner-appointments__review-btn:hover {
   background: #fde68a;
   border-color: #f59e0b;
+  color: #92400e;
 }
+
+.owner-appointments__actions-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.owner-appointments__rebook-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: #23CED9;
+  border: 1px solid #23CED9;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.owner-appointments__rebook-btn:hover {
+  background: #1ab8c2;
+  border-color: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
+}
+
+
+
+.owner-appointments__rebook-btn--full {
+  width: 100%;
+  margin-top: 16px;
+}
+
 
 .owner-appointments__pagination {
   display: flex;
@@ -849,6 +888,37 @@
 .owner-appointments__pagination-btn:disabled {
   color: #d1d5db;
   cursor: not-allowed;
+}
+
+.owner-appointments .custom-select__trigger {
+  border-radius: 10px;
+  padding: 12px 16px;
+  border-color: #d1d5db;
+  height: 48px;
+  transition: all 0.2s ease;
+}
+
+.owner-appointments .custom-select__trigger:hover {
+  border-color: #23CED9;
+  background-color: #f0fdfe;
+}
+
+.owner-appointments .custom-select__trigger:focus,
+.owner-appointments .custom-select__trigger--open {
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
+.owner-appointments .custom-select__dropdown {
+  border-radius: 10px;
+  border-color: #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+}
+
+.owner-appointments .custom-select__option {
+  padding: 12px 16px;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {

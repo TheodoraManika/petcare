@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Search, 
-  Calendar, 
-  Clock, 
-  ChevronLeft, 
+import {
+  Search,
+  Calendar,
+  Clock,
+  ChevronLeft,
   ChevronRight,
   MapPin,
   Star,
@@ -18,15 +18,15 @@ import CustomSelect from '../global/ui/CustomSelect';
 import { ROUTES } from '../../utils/constants';
 import './BookingForm.css';
 
-const BookingForm = ({ 
-  vet: prefilledVet = null, 
-  onClose, 
+const BookingForm = ({
+  vet: prefilledVet = null,
+  onClose,
   onSuccess,
   inline = false,
-  showVetSearch = true 
+  showVetSearch = true
 }) => {
   const navigate = useNavigate();
-  
+
   // Booking form state
   const [selectedVet, setSelectedVet] = useState(prefilledVet);
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,18 +34,28 @@ const BookingForm = ({
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [allVets, setAllVets] = useState([]);
   const [vetAvailability, setVetAvailability] = useState([]);
-  
+
+  // Update selected vet when prop changes
+  useEffect(() => {
+    if (prefilledVet) {
+      setSelectedVet(prefilledVet);
+      setSelectedSlot(null);
+      setSearchQuery('');
+      setShowSearchResults(false);
+    }
+  }, [prefilledVet]);
+
   // Calendar state
   const [viewMode, setViewMode] = useState('week');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
-  
+
   // Form state
   const [serviceType, setServiceType] = useState('');
   const [notes, setNotes] = useState('');
   const [selectedPet, setSelectedPet] = useState('');
   const [userPets, setUserPets] = useState([]);
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -63,7 +73,7 @@ const BookingForm = ({
   // Fetch all vets for search
   useEffect(() => {
     if (!showVetSearch && prefilledVet) return;
-    
+
     const fetchVets = async () => {
       try {
         const response = await fetch('http://localhost:5000/users?userType=vet');
@@ -115,7 +125,7 @@ const BookingForm = ({
   // Search vets
   useEffect(() => {
     if (searchQuery.trim().length > 0) {
-      const filtered = allVets.filter(vet => 
+      const filtered = allVets.filter(vet =>
         vet.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         vet.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         vet.clinicName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -163,7 +173,7 @@ const BookingForm = ({
 
   const getMonthName = (date) => {
     const months = ['Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου',
-                    'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου'];
+      'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου'];
     return months[date.getMonth()];
   };
 
@@ -196,9 +206,9 @@ const BookingForm = ({
     const dayOfWeek = date.getDay();
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const dayName = dayNames[dayOfWeek];
-    
+
     const dayAvailability = vetAvailability.find(a => a.day?.toLowerCase() === dayName);
-    
+
     if (!dayAvailability || !dayAvailability.isAvailable) {
       return [];
     }
@@ -298,12 +308,12 @@ const BookingForm = ({
       }
 
       resetForm();
-      
+
       if (onSuccess) {
         onSuccess('Το ραντεβού σας καταχωρήθηκε με επιτυχία!');
       } else {
-        navigate(ROUTES.owner.appointments, { 
-          state: { message: 'Το ραντεβού σας καταχωρήθηκε με επιτυχία!' } 
+        navigate(ROUTES.owner.appointments, {
+          state: { message: 'Το ραντεβού σας καταχωρήθηκε με επιτυχία!' }
         });
       }
     } catch (err) {
@@ -594,9 +604,9 @@ const BookingForm = ({
                   value={selectedPet}
                   onChange={setSelectedPet}
                   placeholder="Επιλέξτε κατοικίδιο"
-                  options={userPets.map(pet => ({ 
-                    value: String(pet.id), 
-                    label: `${pet.name} (${pet.species})` 
+                  options={userPets.map(pet => ({
+                    value: String(pet.id),
+                    label: `${pet.name} (${pet.species})`
                   }))}
                   variant="owner"
                 />
