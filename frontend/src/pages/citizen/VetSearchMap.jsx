@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Search, MapPin, Star } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
@@ -9,7 +9,7 @@ import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
 import SearchResultsList from '../../components/citizen/SearchResultsList';
 import BookingForm from '../../components/owner/BookingForm';
-import VetProfileModal from './VetProfile';
+import VetProfileModal from '../../components/citizen/VetProfile';
 import { ROUTES } from '../../utils/constants';
 import './VetSearchMap.css';
 
@@ -31,6 +31,7 @@ const VetSearchMap = () => {
   const getTodayDay = () => {
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const today = days[new Date().getDay()];
+    console.log('getTodayDay() calculated as:', today, 'from getDay():', new Date().getDay());
     return today;
   };
 
@@ -74,6 +75,7 @@ const VetSearchMap = () => {
       try {
         setLoading(true);
         setError(null);
+        console.log('Fetching vets from backend...');
 
         const response = await fetch('http://localhost:5000/users');
 
@@ -82,10 +84,12 @@ const VetSearchMap = () => {
         }
 
         const users = await response.json();
+        console.log('Fetched users:', users);
 
         // Fetch availability data
         const availabilityResponse = await fetch('http://localhost:5000/availability');
         const availabilityRecords = await availabilityResponse.json();
+        console.log('Fetched availability records:', availabilityRecords);
 
         // Filter only vet users and add default coordinates and availability
         const vetUsers = users
@@ -94,6 +98,8 @@ const VetSearchMap = () => {
             // Get availability for this vet (compare as numbers to handle string/number mismatch)
             const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vet.id));
             const availableDays = [...new Set(vetAvailability.map(a => a.day))];
+
+            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays);
 
             return {
               ...vet,
@@ -109,6 +115,7 @@ const VetSearchMap = () => {
             };
           });
 
+        console.log('Filtered vet users:', vetUsers);
         setAllVets(vetUsers);
         setLoading(false);
       } catch (error) {
@@ -343,6 +350,11 @@ const VetSearchMap = () => {
 
   return (
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
+      {(!currentUser || currentUser.userType !== 'owner') && (
+        <div className="appointment-alert">
+          Για να κλείσετε ραντεβού, μπορείτε να κάνετε <Link to={ROUTES.login}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
+        </div>
+      )}
       <div className="vet-search-map-page">
         {/* Sidebar Filters */}
         <SearchSidebar

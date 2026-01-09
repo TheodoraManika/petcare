@@ -523,3 +523,27 @@
   color: #6b7280;
   font-weight: 500;
 }
+
+.appointment-alert {
+  background-color: #23cdd962;
+  color: black;
+  border-radius: 4px;
+  border-left: 6px solid #23CED9;
+  text-align: left;
+  font-weight: 400;
+  font-size: 16px;
+  margin: 24px 24px 4px 24px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.appointment-alert a {
+  color: #FCA47C;
+  font-weight: 700;
+  text-decoration: underline;
+  margin: 0 4px;
+}
+
+.appointment-alert a:hover {
+  color: #f08d5f;
+}

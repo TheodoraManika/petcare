@@ -611,7 +611,7 @@ const BookingForm = ({
               <div className="booking-form__form-group">
                 <label className="booking-form__label">
                   Κατοικίδιο <span className="booking-form__required"> *</span>
-                  </label>
+                </label>
                 <CustomSelect
                   value={selectedPet}
                   onChange={setSelectedPet}
@@ -653,12 +653,14 @@ const BookingForm = ({
 
         {/* Actions */}
         <div className="booking-form__actions">
-          <button
-            className="booking-form__btn booking-form__btn--secondary"
-            onClick={handleCancel}
-          >
-            {inline ? 'Ακύρωση' : <><X size={18} /> Ακύρωση</>}
-          </button>
+          {selectedVet && (
+            <button
+              className="booking-form__btn booking-form__btn--secondary"
+              onClick={handleCancel}
+            >
+              {inline ? 'Ακύρωση' : <><X size={18} /> Ακύρωση</>}
+            </button>
+          )}
           <button
             className="booking-form__btn booking-form__btn--primary"
             onClick={handleSubmit}

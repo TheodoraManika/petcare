@@ -1086,7 +1086,7 @@ select.search-input option {
 .user-types-section {
   width: 100%;
   max-width: 1235px;
-  margin: 0 auto;
+  margin: 0 auto 32px auto;
   padding: 16px 16px;
 }
 
@@ -1863,7 +1863,6 @@ select.search-input option {
   justify-content: space-between;
   gap: 20px;
   background-color: #ffffff;
-  border: 2px solid #E5E7EB;
   border-radius: 16px;
   padding: 18px;
 }

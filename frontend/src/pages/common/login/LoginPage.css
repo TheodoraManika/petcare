@@ -154,12 +154,12 @@
 .login-button {
   width: 100%;
   padding: 14px 16px;
-  background: linear-gradient(90deg, #23CED9 0%, #23CED9 100%);
-  color: white;
+  background: #23CED9;
+  color: black;
   border: none;
   border-radius: 8px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);

@@ -81,7 +81,7 @@
 
 /* Header Section */
 .profile-header {
-  background: linear-gradient(135deg, #ffeee6 0%, #ffd9c9 100%);
+  background: #FCA47C;
   padding: 2.5rem 2rem;
   flex-shrink: 0;
   /* Header stays fixed at top if needed, or scrolls if inside scroll-content? Design choice: user likes LostPets style. LostPets header scrolls OR is fixed. Let's make header part of flow but styled distinctly. */
@@ -104,7 +104,14 @@
   border-radius: 50%;
   border: 4px solid #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background: #fff;
+  background: #FCA47C;
+}
+
+.profile-avatar-wrapper .avatar {
+  width: 120px;
+  height: 120px;
+  font-size: 2.5rem;
+  background-color: #FCA47C;
 }
 
 /* Reuse existing styles but scoped */
@@ -139,7 +146,7 @@
 }
 
 .star-filled {
-  color: #ffa500;
+  color: #FCA47C;
   font-size: 1rem;
 }
 

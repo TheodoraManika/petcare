@@ -2,7 +2,7 @@ import React from 'react';
 import { Book, Search, FileCheck, Heart, ArrowUp, CheckCircle2, SquareCheckBig } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './CitizenInformation.css';
-import PageLayout from '../../components/common/layout/PageLayout';
+import PageLayout from '../../../components/common/layout/PageLayout';
 
 const CitizenInformation = () => {
   const navigate = useNavigate();
