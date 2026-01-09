@@ -5,6 +5,10 @@ import PageLayout from '../../components/common/layout/PageLayout';
 import LocationPicker from '../../components/common/forms/LocationPicker';
 import DatePicker from '../../components/common/forms/DatePicker';
 import CustomSelect from '../../components/common/forms/CustomSelect';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import Notification from '../../components/common/modals/Notification';
+import { ROUTES } from '../../utils/constants';
 import './FoundPetForm.css';
 
 // Mock lost pets database
@@ -111,13 +115,69 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
   });
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [notification, setNotification] = useState(null);
+  
+  // Validation errors
+  const [errors, setErrors] = useState({
+    petName: '',
+    species: '',
+    foundLocation: '',
+    foundDate: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    microchip: '',
+    description: ''
+  });
+
+  // Helper functions for validation
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+  const allowedNameChars = (value) => value.replace(/[^a-zA-ZΑ-Ωα-ωάέήίόύώΆΈΉΊΌΎΏ\s]/g, ''); // Επιτρέπει μόνο γράμματα και κενά
+  const allowedMicrochipChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const cleanPhone = phone.replace(/\s/g, '');
+    return cleanPhone.length >= 10;
+  };
+
+  const validateMicrochip = (microchip) => {
+    return microchip.length === 15;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let filteredValue = value;
+    
+    // Apply character filters based on field
+    if (name === 'phone') {
+      filteredValue = allowedPhoneChars(value);
+    } else if (name === 'firstName' || name === 'lastName') {
+      filteredValue = allowedNameChars(value);
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: filteredValue
     }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    
+    // Also clear description error when user types in description
+    if (name === 'description' && errors.description) {
+      setErrors(prev => ({ ...prev, description: '' }));
+    }
   };
 
   const handleImageChange = (e) => {
@@ -140,6 +200,179 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
       ...prev,
       foundLocation: place?.label || formData.foundLocation
     }));
+    // Clear error when location is selected
+    if (errors.foundLocation) {
+      setErrors(prev => ({ ...prev, foundLocation: '' }));
+    }
+  };
+
+  const handleSubmitClick = () => {
+    // Validate all fields
+    const newErrors = {
+      petName: '',
+      species: '',
+      foundLocation: '',
+      foundDate: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      microchip: '',
+      description: ''
+    };
+
+    let hasError = false;
+
+    // Required field validations
+    if (!formData.foundLocation.trim()) {
+      newErrors.foundLocation = 'Το πεδίο είναι υποχρεωτικό';
+      hasError = true;
+    }
+
+    if (!formData.foundDate.trim()) {
+      newErrors.foundDate = 'Το πεδίο είναι υποχρεωτικό';
+      hasError = true;
+    }
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'Το πεδίο είναι υποχρεωτικό';
+      hasError = true;
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Το πεδίο είναι υποχρεωτικό';
+      hasError = true;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Το πεδίο είναι υποχρεωτικό';
+      hasError = true;
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Μη έγκυρη διεύθυνση email';
+      hasError = true;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Το πεδίο είναι υποχρεωτικό';
+      hasError = true;
+    } else if (!validatePhone(formData.phone)) {
+      newErrors.phone = 'Το τηλέφωνο πρέπει να έχει τουλάχιστον 10 ψηφία';
+      hasError = true;
+    }
+
+    // If no prefilled data, description is required
+    if (!hasPrefilledData && !formData.description.trim()) {
+      newErrors.description = 'Το πεδίο είναι υποχρεωτικό όταν δεν έχει γίνει αναζήτηση μικροτσίπ';
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!hasError && isFormValid()) {
+      setShowSubmitModal(true);
+    }
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowSubmitModal(false);
+    await handleSubmit({ preventDefault: () => {} });
+  };
+
+  const handleCancelSubmit = () => {
+    setShowSubmitModal(false);
+  };
+
+  const handleCancelClick = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Reset all form fields
+    setFormData({
+      petName: '',
+      species: '',
+      breed: '',
+      foundLocation: '',
+      foundDate: '',
+      description: '',
+      photo: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+    });
+    setImagePreview(null);
+    setErrors({
+      petName: '',
+      species: '',
+      foundLocation: '',
+      foundDate: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      microchip: '',
+      description: ''
+    });
+    setSelectedOwnPet('');
+    setPrefilledPetData({});
+    setMicrochipInput('');
+    setShowCancelModal(false);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  const handleDraft = () => {
+    console.log('Draft saved:', formData);
+    
+    // Reset all form fields
+    setFormData({
+      petName: '',
+      species: '',
+      breed: '',
+      foundLocation: '',
+      foundDate: '',
+      description: '',
+      photo: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+    });
+    setImagePreview(null);
+    setErrors({
+      petName: '',
+      species: '',
+      foundLocation: '',
+      foundDate: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      microchip: '',
+      description: ''
+    });
+    setSelectedOwnPet('');
+    setPrefilledPetData({});
+    setMicrochipInput('');
+    
+    // Show success notification
+    setNotification('draft');
+    
+    // Auto-hide notification after 8 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 8000);
   };
 
 
@@ -182,17 +415,19 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
         throw new Error('Failed to submit found pet declaration');
       }
 
-      // Success - navigate to confirmation
-      alert('Δήλωση εύρεσης υποβλήθηκε με επιτυχία!');
-      navigate('/confirmation', {
-        state: {
-          title: 'Δήλωση Εύρεσης Υποβλήθηκε',
-          message: 'Ευχαριστούμε για τη δήλωση εύρεσης. Θα επικοινωνήσουμε το συντομότερο δυνατό.',
-          buttonText: 'Επιστροφή',
-          buttonTo: '/',
-          icon: <AlertCircle size={56} style={{ color: '#23CED9' }} />
+      // Success - show notification
+      setNotification('success');
+      
+      // Wait a bit for user to see the notification, then navigate
+      setTimeout(() => {
+        setNotification(null);
+        if (inline && onClose) {
+          onClose();
+        } else {
+          navigate(ROUTES.home);
         }
-      });
+      }, 3000); // Show notification for 3 seconds before navigating
+      
     } catch (error) {
       console.error('Error submitting found pet declaration:', error);
       alert('Σφάλμα κατά την υποβολή της δήλωσης. Παρακαλώ προσπαθήστε ξανά.');
@@ -202,8 +437,8 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
   const speciesOptions = [
     { value: 'dog', label: 'Σκύλος' },
     { value: 'cat', label: 'Γάτα' },
-    { value: 'bird', label: 'Πουλί' },
-    { value: 'rabbit', label: 'Λαγός' },
+    { value: 'bird', label: 'Πτηνό' },
+    { value: 'reptile', label: 'Ερπετό' },
     { value: 'other', label: 'Άλλο' }
   ];
 
@@ -272,10 +507,52 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
   };
 
   const handleMicrochipInputChange = (e) => {
-    setMicrochipInput(e.target.value);
+    const filteredValue = allowedMicrochipChars(e.target.value);
+    if (filteredValue.length <= 15) {
+      setMicrochipInput(filteredValue);
+      // Clear error when user starts typing
+      if (errors.microchip) {
+        setErrors(prev => ({ ...prev, microchip: '' }));
+      }
+    }
   };
 
   const hasPrefilledData = Object.keys(prefilledPetData).length > 0;
+
+  // Prepare fields for ConfirmDetailModal
+  const getSubmitFields = () => {
+    const fields = [];
+    
+    if (hasPrefilledData && prefilledPetData.petName) {
+      fields.push({ label: 'Όνομα Κατοικιδίου', value: prefilledPetData.petName });
+      fields.push({ label: 'Είδος', value: prefilledPetData.species || '-' });
+      fields.push({ label: 'Ράτσα', value: prefilledPetData.breed || '-' });
+      if (prefilledPetData.microchip) {
+        fields.push({ label: 'Αριθμός Μικροτσίπ', value: prefilledPetData.microchip });
+      }
+    } else if (hasPrefilledData && prefilledPetData.microchip) {
+      fields.push({ label: 'Αριθμός Μικροτσίπ', value: prefilledPetData.microchip });
+      fields.push({ label: 'Όνομα Κατοικιδίου', value: formData.petName || 'Άγνωστο' });
+      fields.push({ label: 'Είδος', value: formData.species || '-' });
+      fields.push({ label: 'Ράτσα', value: formData.breed || '-' });
+      fields.push({ label: 'Περιγραφή', value: formData.description || '-' });
+    } else {
+      fields.push({ label: 'Όνομα Κατοικιδίου', value: formData.petName || 'Άγνωστο' });
+      fields.push({ label: 'Είδος', value: formData.species || '-' });
+      fields.push({ label: 'Ράτσα', value: formData.breed || '-' });
+      fields.push({ label: 'Περιγραφή', value: formData.description || '-' });
+    }
+    
+    fields.push({ label: 'Τοποθεσία Εύρεσης', value: formData.foundLocation });
+    fields.push({ label: 'Ημερομηνία Εύρεσης', value: formData.foundDate });
+    fields.push({ label: 'Όνομα', value: formData.firstName });
+    fields.push({ label: 'Επώνυμο', value: formData.lastName });
+    fields.push({ label: 'Email', value: formData.email });
+    fields.push({ label: 'Τηλέφωνο', value: formData.phone });
+    fields.push({ label: 'Φωτογραφία', value: formData.photo ? 'Προστέθηκε' : 'Δεν προστέθηκε' });
+    
+    return fields;
+  };
 
   const breadcrumbItems = [
     { label: 'Χαμένα Κατοικίδια', path: '/citizen/lost-pets' },
@@ -315,8 +592,9 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                   type="text"
                   value={microchipInput}
                   onChange={handleMicrochipInputChange}
-                  placeholder="π.χ. GR123456789012345"
-                  className="form-input microchip-search-input"
+                  placeholder="π.χ. 123456789012345 (15 χαρακτήρες)"
+                  className={`form-input microchip-search-input ${errors.microchip ? 'form-input--error' : ''}`}
+                  maxLength={15}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -334,8 +612,14 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                   Αναζήτηση
                 </button>
               </div>
+              {errors.microchip && (
+                <div className="form-error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.microchip}</span>
+                </div>
+              )}
               <p className="microchip-search-hint">
-                Εάν το κατοικίδιο έχει microchip, εισάγετε τον αριθμό για αυτόματη συμπλήρωση των στοιχείων
+                Εάν το κατοικίδιο έχει microchip, εισάγετε τον αριθμό (15 ψηφία) για αυτόματη συμπλήρωση των στοιχείων. Επιτρέπονται μόνο αριθμοί.
               </p>
             </div>
           )}
@@ -481,10 +765,18 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                   placeholder="Περιγράψτε το κατοικίδιο που βρήκατε (χρώμα, μέγεθος, ιδιαίτερα χαρακτηριστικά...)"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="form-textarea"
+                  className={`form-textarea ${errors.description ? 'form-input--error' : ''}`}
                   rows="5"
+                  maxLength={500}
                   required
                 />
+                <span className="form-field-note">Μέγιστος αριθμός χαρακτήρων: 500</span>
+                {errors.description && (
+                  <div className="form-error-message">
+                    <AlertCircle size={16} />
+                    <span>{errors.description}</span>
+                  </div>
+                )}
               </div>
             </>
           )}
@@ -501,7 +793,14 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
               onSelect={handleLocationSelect}
               placeholder="π.χ. Πλατεία Συντάγματος, Αθήνα"
               variant={variant}
+              className={errors.foundLocation ? 'form-input--error' : ''}
             />
+            {errors.foundLocation && (
+              <div className="form-error-message">
+                <AlertCircle size={16} />
+                <span>{errors.foundLocation}</span>
+              </div>
+            )}
           </div>
 
           {/* Date Row - Always visible */}
@@ -515,7 +814,15 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
               value={formData.foundDate}
               onChange={handleInputChange}
               variant={variant}
+              className={errors.foundDate ? 'form-input--error' : ''}
+              maxDate={new Date()}
             />
+            {errors.foundDate && (
+              <div className="form-error-message">
+                <AlertCircle size={16} />
+                <span>{errors.foundDate}</span>
+              </div>
+            )}
           </div>
 
           {/* Photo Upload (optional) */}
@@ -573,9 +880,16 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                 placeholder="Όνομα"
                 value={formData.firstName}
                 onChange={handleInputChange}
-                className="form-input"
+                className={`form-input ${errors.firstName ? 'form-input--error' : ''}`}
                 required
               />
+              <span className="form-field-note">Επιτρέπονται μόνο γράμματα</span>
+              {errors.firstName && (
+                <div className="form-error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.firstName}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-group">
@@ -588,9 +902,16 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                 placeholder="Επώνυμο"
                 value={formData.lastName}
                 onChange={handleInputChange}
-                className="form-input"
+                className={`form-input ${errors.lastName ? 'form-input--error' : ''}`}
                 required
               />
+              <span className="form-field-note">Επιτρέπονται μόνο γράμματα</span>
+              {errors.lastName && (
+                <div className="form-error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.lastName}</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -609,9 +930,15 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
               placeholder="example@email.com"
               value={formData.email}
               onChange={handleInputChange}
-              className="form-input"
+              className={`form-input ${errors.email ? 'form-input--error' : ''}`}
               required
             />
+            {errors.email && (
+              <div className="form-error-message">
+                <AlertCircle size={16} />
+                <span>{errors.email}</span>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
@@ -621,12 +948,19 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
             <input
               type="tel"
               name="phone"
-              placeholder="69XXXXXXXX"
+              placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
               value={formData.phone}
               onChange={handleInputChange}
-              className="form-input"
+              className={`form-input ${errors.phone ? 'form-input--error' : ''}`}
               required
             />
+            <span className="form-field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
+            {errors.phone && (
+              <div className="form-error-message">
+                <AlertCircle size={16} />
+                <span>{errors.phone}</span>
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
@@ -636,7 +970,7 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                 <button 
                   type="button" 
                   className="submit-btn submit-btn--cancel"
-                  onClick={() => { if (inline && onClose) onClose(); else navigate('/'); }}
+                  onClick={handleCancelClick}
                 >
                   Ακύρωση
                 </button>
@@ -644,13 +978,15 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                 <button 
                   type="button" 
                   className="submit-btn submit-btn--draft"
+                  onClick={handleDraft}
                 >
                   Πρόχειρο
                 </button>
 
                 <button 
-                  type="submit" 
+                  type="button" 
                   className="submit-btn submit-btn--primary"
+                  onClick={handleSubmitClick}
                   disabled={!isFormValid()}
                 >
                   Οριστική Υποβολή
@@ -661,14 +997,15 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
                 <button 
                   type="button" 
                   className="submit-btn submit-btn--cancel"
-                  onClick={() => { if (inline && onClose) onClose(); else navigate('/'); }}
+                  onClick={handleCancelClick}
                 >
                   Ακύρωση
                 </button>
 
                 <button 
-                  type="submit" 
+                  type="button" 
                   className={`submit-btn submit-btn--wide ${variant === 'vet' ? 'submit-btn--orange' : variant === 'citizen' ? 'submit-btn--primary' : 'submit-btn--yellow'}`}
+                  onClick={handleSubmitClick}
                   disabled={!isFormValid()}
                 >
                   Υποβολή Δήλωσης Εύρεσης
@@ -677,6 +1014,43 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
             )}
           </div>
         </form>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε τη δήλωση εύρεσης;"
+          description="Αυτή η ενέργεια δεν αναιρείται. Η δήλωσή σας θα χαθεί"
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, Ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showSubmitModal}
+          title="Επιβεβαίωση Δήλωσης Εύρεσης"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία πριν την οριστική υποβολή:"
+          fields={getSubmitFields()}
+          cancelText="Επιστροφή"
+          confirmText="Οριστική Υποβολή"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message={
+            notification === 'draft' 
+              ? "Η δήλωση εύρεσης αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε αργότερα"
+              : notification === 'success'
+              ? "Η δήλωση εύρεσης υποβλήθηκε με επιτυχία!"
+              : "Η δήλωση εύρεσης ακυρώθηκε με επιτυχία!"
+          }
+          type={notification === 'cancelled' ? 'error' : 'success'}
+        />
       </div>
   );
 
