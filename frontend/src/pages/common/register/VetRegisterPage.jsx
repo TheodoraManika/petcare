@@ -36,6 +36,7 @@ const VetRegisterPage = () => {
   const [afmError, setAfmError] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showEmailExistsModal, setShowEmailExistsModal] = useState(false);
   const navigate = useNavigate();
 
   const specializations = [
@@ -285,6 +286,16 @@ const VetRegisterPage = () => {
   const handleSubmit = async () => {
     // Handle registration submission
     try {
+      // Check if email already exists
+      const checkEmailResponse = await fetch(`http://localhost:5000/users?email=${encodeURIComponent(formData.email)}`);
+      const existingUsers = await checkEmailResponse.json();
+      
+      if (existingUsers && existingUsers.length > 0) {
+        // Email already exists, show modal
+        setShowEmailExistsModal(true);
+        return;
+      }
+
       const newVet = {
         email: formData.email,
         password: formData.password,
@@ -386,6 +397,18 @@ const VetRegisterPage = () => {
   const handleConfirmSubmit = async () => {
     setShowSubmitModal(false);
     await handleSubmit();
+  };
+
+  const handleEmailExistsReturn = () => {
+    setShowEmailExistsModal(false);
+    // Go back to step 4 (contact info) to change email
+    setCurrentStep(4);
+  };
+
+  const handleEmailExistsLogin = () => {
+    setShowEmailExistsModal(false);
+    // Navigate to login page
+    navigate(ROUTES.login);
   };
 
   // Function to get fields for the detail modal
@@ -822,6 +845,20 @@ const VetRegisterPage = () => {
           confirmText="Εγγραφή"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Email Already Exists Modal */}
+        <ConfirmModal
+          isOpen={showEmailExistsModal}
+          title="Αποτυχία Δημιουργίας Λογαριασμού"
+          description="Φαίνεται πως το email αυτό χρησιμοποιείται ήδη.
+
+          Αν έχετε λογαριασμό, δοκιμάστε να συνδεθείτε ή να επαναφέρετε τον κωδικό πρόσβασης σας."
+          cancelText="Επιστροφή"
+          confirmText="Σύνδεση"
+          onCancel={handleEmailExistsReturn}
+          onConfirm={handleEmailExistsLogin}
+          isDanger={false}
         />
       </div>
     </PageLayout>

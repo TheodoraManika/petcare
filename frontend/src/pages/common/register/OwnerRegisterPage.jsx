@@ -29,6 +29,7 @@ const OwnerRegisterPage = () => {
   const [afmError, setAfmError] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showEmailExistsModal, setShowEmailExistsModal] = useState(false);
   const navigate = useNavigate();
 
   // Helper function to filter only Greek and English letters and spaces
@@ -203,6 +204,16 @@ const OwnerRegisterPage = () => {
   const handleSubmit = async () => {
     // Handle registration submission
     try {
+      // Check if email already exists
+      const checkEmailResponse = await fetch(`http://localhost:5000/users?email=${encodeURIComponent(formData.email)}`);
+      const existingUsers = await checkEmailResponse.json();
+      
+      if (existingUsers && existingUsers.length > 0) {
+        // Email already exists, show modal
+        setShowEmailExistsModal(true);
+        return;
+      }
+
       const newUser = {
         email: formData.email,
         password: formData.password,
@@ -302,6 +313,18 @@ const OwnerRegisterPage = () => {
   const handleConfirmSubmit = async () => {
     setShowSubmitModal(false);
     await handleSubmit();
+  };
+
+  const handleEmailExistsReturn = () => {
+    setShowEmailExistsModal(false);
+    // Go back to step 3 (contact info) to change email
+    setCurrentStep(3);
+  };
+
+  const handleEmailExistsLogin = () => {
+    setShowEmailExistsModal(false);
+    // Navigate to login page
+    navigate(ROUTES.login);
   };
 
   // Function to get fields for the detail modal
@@ -628,6 +651,20 @@ const OwnerRegisterPage = () => {
           confirmText="Εγγραφή"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Email Already Exists Modal */}
+        <ConfirmModal
+          isOpen={showEmailExistsModal}
+          title="Αποτυχία Δημιουργίας Λογαριασμού"
+          description="Φαίνεται πως το email αυτό χρησιμοποιείται ήδη.
+
+Αν έχετε λογαριασμό, δοκιμάστε να συνδεθείτε ή να επαναφέρετε τον κωδικό πρόσβασης σας."
+          cancelText="Επιστροφή"
+          confirmText="Σύνδεση"
+          onCancel={handleEmailExistsReturn}
+          onConfirm={handleEmailExistsLogin}
+          variant="blue"
         />
       </div>
     </PageLayout>

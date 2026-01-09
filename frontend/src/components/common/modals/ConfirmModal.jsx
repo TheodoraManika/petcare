@@ -9,9 +9,20 @@ const ConfirmModal = ({
   confirmText = 'Επιβεβαίωση',
   onCancel,
   onConfirm,
-  isDanger = false
+  isDanger = false,
+  variant = 'default' // 'default', 'blue'
 }) => {
   if (!isOpen) return null;
+
+  // Determine button class based on isDanger or variant
+  let confirmButtonClass = 'confirm-modal-btn';
+  if (isDanger) {
+    confirmButtonClass += ' confirm-modal-btn--danger';
+  } else if (variant === 'blue') {
+    confirmButtonClass += ' confirm-modal-btn--blue';
+  } else {
+    confirmButtonClass += ' confirm-modal-btn--confirm';
+  }
 
   return (
     <div className="confirm-modal-overlay">
@@ -26,7 +37,7 @@ const ConfirmModal = ({
             {cancelText}
           </button>
           <button 
-            className={`confirm-modal-btn ${isDanger ? 'confirm-modal-btn--danger' : 'confirm-modal-btn--confirm'}`}
+            className={confirmButtonClass}
             onClick={onConfirm}
           >
             {confirmText}
