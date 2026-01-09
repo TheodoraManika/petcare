@@ -1293,6 +1293,28 @@
       "postalCode": "16010",
       "avatar": null,
       "createdAt": "2026-01-07T15:30:30.737Z"
+    },
+    {
+      "id": "5404",
+      "email": "gnjerh@mail.com",
+      "password": "123456",
+      "name": "γξφξ",
+      "lastName": "γξξγφ",
+      "userType": "vet",
+      "phone": "6456464",
+      "afm": "111111111",
+      "specialization": [
+        "Γενική Κτηνιατρική"
+      ],
+      "licenseNumber": "5435",
+      "yearsOfExperience": "54",
+      "clinicName": "φβφγβ",
+      "licenseType": "",
+      "clinicAddress": "βφββ",
+      "clinicCity": "φβφβ",
+      "clinicPostalCode": "3434",
+      "avatar": null,
+      "createdAt": "2026-01-09T16:00:07.222Z"
     }
   ],
   "pets": [

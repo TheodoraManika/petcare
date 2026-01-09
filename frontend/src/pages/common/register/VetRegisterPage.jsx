@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff, Stethoscope, ChevronLeft } from 'lucide-react';
+import { Eye, EyeOff, Stethoscope, ChevronLeft, AlertCircle } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import PageLayout from '../../../components/common/layout/PageLayout';
-import CustomSelect from '../../../components/common/forms/CustomSelect';
+import MultiSelect from '../../../components/common/forms/MultiSelect';
 import ProgressBar from '../../../components/common/forms/ProgressBar';
+import ConfirmModal from '../../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../../components/common/modals/ConfirmDetailModal';
 import './VetRegisterPage.css';
 
 const VetRegisterPage = () => {
@@ -13,9 +15,10 @@ const VetRegisterPage = () => {
     firstName: '',
     lastName: '',
     afm: '',
-    specialization: '',
-    clinicName: '',
+    specialization: [],
     licenseNumber: '',
+    yearsOfExperience: '',
+    clinicName: '',
     licenseType: '',
     clinicAddress: '',
     clinicCity: '',
@@ -28,24 +31,142 @@ const VetRegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [afmError, setAfmError] = useState('');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
   const navigate = useNavigate();
 
   const specializations = [
     'Γενική Κτηνιατρική',
     'Χειρουργική',
-    'Ορθοδοντική',
     'Δερματολογία',
-    'Εσωτερικές Ασθένειες',
-    'Επείγουσα Ιατρική',
-    'Αναισθησιολογία',
+    'Καρδιολογία',
+    'Οδοντιατρική',
+    'Οφθαλμολογία',
   ];
+
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
+
+  // Helper function to filter password characters - no Greek letters and spaces
+  const allowedPasswordChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF\s]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες και κενά
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // Special handling for first name
+    if (name === 'firstName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // Special handling for last name
+    else if (name === 'lastName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // Special handling for AFM
+    else if (name === 'afm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+      
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setAfmError('');
+      }
+    }
+    // Special handling for email
+    else if (name === 'email') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // Special handling for phone
+    else if (name === 'phone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // Special handling for city
+    else if (name === 'clinicCity') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // Special handling for postal code
+    else if (name === 'clinicPostalCode') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    }
+    // Special handling for license number (numbers and dashes only)
+    else if (name === 'licenseNumber') {
+      const numericValue = value.replace(/[^0-9\-]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    }
+    // Special handling for years of experience (numbers only)
+    else if (name === 'yearsOfExperience') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    }
+    // Special handling for password
+    else if (name === 'password') {
+      const filteredValue = allowedPasswordChars(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // Special handling for confirm password
+    else if (name === 'confirmPassword') {
+      const filteredValue = allowedPasswordChars(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: filteredValue,
+      }));
+    }
+    // All other fields
+    else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+    
     setError('');
   };
 
@@ -64,8 +185,12 @@ const VetRegisterPage = () => {
         return false;
       }
     } else if (step === 2) {
-      if (!formData.specialization.trim()) {
-        setError('Παρακαλώ επιλέξτε εξειδίκευση');
+      if (formData.specialization.length === 0) {
+        setError('Παρακαλώ επιλέξτε τουλάχιστον μία ειδικότητα');
+        return false;
+      }
+      if (!formData.licenseNumber.trim()) {
+        setError('Παρακαλώ εισάγετε τον αριθμό άδειας');
         return false;
       }
     } else if (step === 3) {
@@ -73,11 +198,6 @@ const VetRegisterPage = () => {
         setError('Παρακαλώ εισάγετε το όνομα της κλινικής');
         return false;
       }
-      if (!formData.licenseNumber.trim()) {
-        setError('Παρακαλώ εισάγετε τον αριθμό αδείας');
-        return false;
-      }
-    } else if (step === 4) {
       if (!formData.clinicAddress.trim()) {
         setError('Παρακαλώ εισάγετε τη διεύθυνση');
         return false;
@@ -90,7 +210,7 @@ const VetRegisterPage = () => {
         setError('Παρακαλώ εισάγετε το ΤΚ');
         return false;
       }
-    } else if (step === 5) {
+    } else if (step === 4) {
       if (!formData.email.trim()) {
         setError('Παρακαλώ εισάγετε το email');
         return false;
@@ -104,17 +224,9 @@ const VetRegisterPage = () => {
         setError('Παρακαλώ εισάγετε τον αριθμό τηλεφώνου');
         return false;
       }
-    } else if (step === 6) {
-      if (!formData.password.trim()) {
-        setError('Παρακαλώ εισάγετε ένα κωδικό');
-        return false;
-      }
+    } else if (step === 5) {
       if (formData.password.length < 6) {
         setError('Ο κωδικός πρέπει να είναι τουλάχιστον 6 χαρακτήρες');
-        return false;
-      }
-      if (!formData.confirmPassword.trim()) {
-        setError('Παρακαλώ επιβεβαιώστε τον κωδικό');
         return false;
       }
       if (formData.password !== formData.confirmPassword) {
@@ -125,66 +237,112 @@ const VetRegisterPage = () => {
     return true;
   };
 
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          formData.firstName.trim() !== '' &&
+          formData.lastName.trim() !== '' &&
+          formData.afm.trim() !== '' &&
+          formData.afm.length === 9
+        );
+      case 2:
+        return formData.specialization.length > 0 && formData.licenseNumber.trim() !== '';
+      case 3:
+        return (
+          formData.clinicName.trim() !== '' &&
+          formData.clinicAddress.trim() !== '' &&
+          formData.clinicCity.trim() !== '' &&
+          formData.clinicPostalCode.trim() !== ''
+        );
+      case 4:
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return (
+          formData.email.trim() !== '' &&
+          emailRegex.test(formData.email) &&
+          formData.phone.trim() !== ''
+        );
+      case 5:
+        return true; // Always enabled in step 5
+      default:
+        return false;
+    }
+  };
+
   const handleContinue = async () => {
     if (validateStep(currentStep)) {
-      if (currentStep < 6) {
+      if (currentStep < 5) {
         setCurrentStep(currentStep + 1);
       } else {
-        // Handle registration submission
-        try {
-          const newVet = {
-            email: formData.email,
-            password: formData.password,
-            name: formData.firstName,
-            lastName: formData.lastName,
-            userType: 'vet',
-            phone: formData.phone,
-            afm: formData.afm,
-            specialization: formData.specialization,
-            clinicName: formData.clinicName,
-            licenseNumber: formData.licenseNumber,
-            licenseType: formData.licenseType,
-            clinicAddress: formData.clinicAddress,
-            clinicCity: formData.clinicCity,
-            clinicPostalCode: formData.clinicPostalCode,
-            avatar: null,
-            createdAt: new Date().toISOString(),
-          };
-
-          // POST to JSON Server
-          const response = await fetch('http://localhost:5000/users', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newVet),
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to register user');
-          }
-
-          const registeredVet = await response.json();
-
-          // Save to localStorage and redirect
-          localStorage.setItem('currentUser', JSON.stringify({
-            id: registeredVet.id,
-            email: registeredVet.email,
-            name: registeredVet.name,
-            username: registeredVet.name,
-            userType: registeredVet.userType,
-            avatar: registeredVet.avatar,
-          }));
-
-          // Dispatch custom event to notify auth change
-          window.dispatchEvent(new Event('loginStatusChanged'));
-
-          navigate(ROUTES.vet.dashboard);
-        } catch (err) {
-          console.error('Registration error:', err);
-          setError('Σφάλμα κατά την εγγραφή. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
-        }
+        // Show confirmation modal instead of submitting directly
+        setShowSubmitModal(true);
       }
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Handle registration submission
+    try {
+      const newVet = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        userType: 'vet',
+        phone: formData.phone,
+        afm: formData.afm,
+        specialization: formData.specialization,
+        licenseNumber: formData.licenseNumber,
+        yearsOfExperience: formData.yearsOfExperience,
+        clinicName: formData.clinicName,
+        licenseType: formData.licenseType,
+        clinicAddress: formData.clinicAddress,
+        clinicCity: formData.clinicCity,
+        clinicPostalCode: formData.clinicPostalCode,
+        avatar: null,
+        createdAt: new Date().toISOString(),
+      };
+
+      // POST to JSON Server
+      const response = await fetch('http://localhost:5000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newVet),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to register user');
+      }
+
+      const registeredVet = await response.json();
+
+      // Save to localStorage and redirect
+      localStorage.setItem('currentUser', JSON.stringify({
+        id: registeredVet.id,
+        email: registeredVet.email,
+        name: registeredVet.name,
+        username: registeredVet.name,
+        userType: registeredVet.userType,
+        avatar: registeredVet.avatar,
+      }));
+
+      // Dispatch custom event to notify auth change
+      window.dispatchEvent(new Event('loginStatusChanged'));
+
+      // Navigate to home with success notification
+      navigate(ROUTES.home, {
+        state: {
+          notification: {
+            message: 'Η εγγραφή ολοκληρώθηκε με επιτυχία!',
+            type: 'success'
+          }
+        }
+      });
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError('Σφάλμα κατά την εγγραφή. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
     }
   };
 
@@ -195,13 +353,61 @@ const VetRegisterPage = () => {
     }
   };
 
+  const handleCancel = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelModal(false);
+    
+    // Navigate to home with notification state
+    navigate(ROUTES.home, {
+      state: {
+        notification: {
+          message: 'Η εγγραφή ακυρώθηκε με επιτυχία!',
+          type: 'error'
+        }
+      }
+    });
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowSubmitModal(false);
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowSubmitModal(false);
+    await handleSubmit();
+  };
+
+  // Function to get fields for the detail modal
+  const getSubmitFields = () => {
+    return [
+      { label: 'Όνομα', value: formData.firstName },
+      { label: 'Επώνυμο', value: formData.lastName },
+      { label: 'ΑΦΜ', value: formData.afm },
+      { label: 'Ειδικότητα/ες', value: formData.specialization.join(', ') },
+      { label: 'Αριθμός Άδειας', value: formData.licenseNumber },
+      { label: 'Έτη Εμπειρίας', value: formData.yearsOfExperience || 'Δεν έχει συμπληρωθεί' },
+      { label: 'Όνομα Κλινικής', value: formData.clinicName },
+      { label: 'Διεύθυνση Κλινικής', value: formData.clinicAddress },
+      { label: 'Πόλη', value: formData.clinicCity },
+      { label: 'ΤΚ', value: formData.clinicPostalCode },
+      { label: 'Email', value: formData.email },
+      { label: 'Τηλέφωνο', value: formData.phone },
+    ];
+  };
+
   const vetSteps = [
     { label: 'Προσωπικά', icon: '1' },
-    { label: 'Εξειδίκευση', icon: '2' },
+    { label: 'Επαγγελματικά', icon: '2' },
     { label: 'Κλινική', icon: '3' },
-    { label: 'Διεύθυνση', icon: '4' },
-    { label: 'Επικοινωνία', icon: '5' },
-    { label: 'Κωδικός', icon: '6' },
+    { label: 'Επικοινωνία', icon: '4' },
+    { label: 'Κωδικός', icon: '5' },
   ];
 
   return (
@@ -216,7 +422,7 @@ const VetRegisterPage = () => {
               </div>
             </div>
             <h1 className="vet-register-title">Εγγραφή Κτηνιάτρου</h1>
-            <p className="vet-register-subtitle">Δημιουργήστε λογαριασμό για τη διαχείριση της κλινικής σας</p>
+            <p className="vet-register-subtitle">Δημιουργήστε λογαριασμό για την ολοκληρωμένη διαχείριση της υγείας των κατοικιδίων και των ραντεβού σας</p>
           </div>
 
           {/* Steps Indicator */}
@@ -229,11 +435,12 @@ const VetRegisterPage = () => {
           {currentStep === 1 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Προσωπικά Στοιχεία</h2>
-              <p className="vet-register-step-subtitle">Δώστε τα βασικά στοιχεία σας</p>
               
               <div className="vet-register-form-row">
                 <div className="vet-register-form-group">
-                  <label htmlFor="firstName" className="vet-register-label">Όνομα *</label>
+                  <label htmlFor="firstName" className="vet-register-label">
+                    Όνομα<span className="vet-register__required"> *</span>
+                  </label>
                   <input
                     type="text"
                     id="firstName"
@@ -242,10 +449,14 @@ const VetRegisterPage = () => {
                     placeholder="Όνομα"
                     value={formData.firstName}
                     onChange={handleInputChange}
+                    required
                   />
+                  <span className="vet-register__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
                 </div>
                 <div className="vet-register-form-group">
-                  <label htmlFor="lastName" className="vet-register-label">Επώνυμο *</label>
+                  <label htmlFor="lastName" className="vet-register-label">
+                    Επώνυμο<span className="vet-register__required"> *</span>
+                  </label>
                   <input
                     type="text"
                     id="lastName"
@@ -254,21 +465,34 @@ const VetRegisterPage = () => {
                     placeholder="Επώνυμο"
                     value={formData.lastName}
                     onChange={handleInputChange}
+                    required
                   />
+                  <span className="vet-register__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
                 </div>
               </div>
 
               <div className="vet-register-form-group">
-                <label htmlFor="afm" className="vet-register-label">ΑΦΜ *</label>
+                <label htmlFor="afm" className="vet-register-label">
+                  ΑΦΜ<span className="vet-register__required"> *</span>
+                </label>
                 <input
                   type="text"
                   id="afm"
                   name="afm"
-                  className="vet-register-input"
-                  placeholder="123456789"
+                  className={`vet-register-input ${afmError ? 'vet-register-input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.afm}
                   onChange={handleInputChange}
+                  maxLength={9}
+                  required
                 />
+                <span className="vet-register__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {afmError && (
+                  <div className="vet-register__error-message">
+                    <AlertCircle size={16} />
+                    <span>{afmError}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -276,18 +500,52 @@ const VetRegisterPage = () => {
           {/* Step 2: Specialization */}
           {currentStep === 2 && (
             <div className="vet-register-step-content">
-              <h2 className="vet-register-step-title">Εξειδίκευση</h2>
-              <p className="vet-register-step-subtitle">Επιλέξτε την εξειδίκευσή σας</p>
+              <h2 className="vet-register-step-title">Επαγγελματικά Στοιχεία</h2>
               
               <div className="vet-register-form-group">
-                <label htmlFor="specialization" className="vet-register-label">Εξειδίκευση *</label>
-                <CustomSelect
+                <label htmlFor="specialization" className="vet-register-label">
+                  Ειδικότητα/ες<span className="vet-register__required"> *</span>
+                </label>
+                <MultiSelect
                   value={formData.specialization}
                   onChange={(value) => setFormData({...formData, specialization: value})}
-                  placeholder="Επιλέξτε εξειδίκευση"
+                  placeholder="Επιλέξτε ειδικότητες"
                   options={specializations.map((spec) => ({ value: spec, label: spec }))}
                   variant="vet"
                 />
+              </div>
+
+              <div className="vet-register-form-group">
+                <label htmlFor="licenseNumber" className="vet-register-label">
+                  Αριθμός Άδειας Άσκησης Επαγγέλματος<span className="vet-register__required"> *</span>
+                </label>
+                <input
+                  type="text"
+                  id="licenseNumber"
+                  name="licenseNumber"
+                  className="vet-register-input"
+                  placeholder="π.χ. 1-12345"
+                  value={formData.licenseNumber}
+                  onChange={handleInputChange}
+                  required
+                />
+                <span className="vet-register__field-note">Επιτρέπονται μόνο αριθμοί και παύλα (-).</span>
+              </div>
+
+              <div className="vet-register-form-group">
+                <label htmlFor="yearsOfExperience" className="vet-register-label">
+                  Έτη Εμπειρίας (προαιρετικό)
+                </label>
+                <input
+                  type="text"
+                  id="yearsOfExperience"
+                  name="yearsOfExperience"
+                  className="vet-register-input"
+                  placeholder="π.χ. 5"
+                  value={formData.yearsOfExperience}
+                  onChange={handleInputChange}
+                />
+                <span className="vet-register__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
           )}
@@ -295,11 +553,12 @@ const VetRegisterPage = () => {
           {/* Step 3: Clinic Information */}
           {currentStep === 3 && (
             <div className="vet-register-step-content">
-              <h2 className="vet-register-step-title">Στοιχεία Κλινικής/Οργανισμού</h2>
-              <p className="vet-register-step-subtitle">Δώστε τα στοιχεία της κλινικής σας</p>
+              <h2 className="vet-register-step-title">Στοιχεία Κλινικής/Ιατρείου</h2>
               
               <div className="vet-register-form-group">
-                <label htmlFor="clinicName" className="vet-register-label">Όνομα Κλινικής/Οργανισμού *</label>
+                <label htmlFor="clinicName" className="vet-register-label">
+                  Όνομα Κλινικής/Ιατρείου<span className="vet-register__required"> *</span>
+                </label>
                 <input
                   type="text"
                   id="clinicName"
@@ -308,59 +567,33 @@ const VetRegisterPage = () => {
                   placeholder="Όνομα κλινικής"
                   value={formData.clinicName}
                   onChange={handleInputChange}
+                  required
                 />
+                <span className="vet-register__field-note">Συμπληρώστε "Ιδιωτικό Ιατρείο" αν το ιατρείο σας δεν έχει όνομα.</span>
               </div>
 
               <div className="vet-register-form-group">
-                <label htmlFor="licenseNumber" className="vet-register-label">Αριθμός Άδειας Ασκήσεως *</label>
-                <input
-                  type="text"
-                  id="licenseNumber"
-                  name="licenseNumber"
-                  className="vet-register-input"
-                  placeholder="π.χ. ΥΕT-12345"
-                  value={formData.licenseNumber}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className="vet-register-form-group">
-                <label htmlFor="licenseType" className="vet-register-label">Τύπος Βιβλίου/Έγκρισης</label>
-                <input
-                  type="text"
-                  id="licenseType"
-                  name="licenseType"
-                  className="vet-register-input"
-                  placeholder="π.χ. Άδεια Ασκήσεως"
-                  value={formData.licenseType}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Step 4: Address */}
-          {currentStep === 4 && (
-            <div className="vet-register-step-content">
-              <h2 className="vet-register-step-title">Στοιχεία Διεύθυνσης</h2>
-              <p className="vet-register-step-subtitle">Δώστε τη διεύθυνση της κλινικής σας</p>
-              
-              <div className="vet-register-form-group">
-                <label htmlFor="clinicAddress" className="vet-register-label">Διεύθυνση (ημιουπολείου) *</label>
+                <label htmlFor="clinicAddress" className="vet-register-label">
+                  Διεύθυνση<span className="vet-register__required"> *</span>
+                </label>
                 <input
                   type="text"
                   id="clinicAddress"
                   name="clinicAddress"
                   className="vet-register-input"
-                  placeholder="Πατριάρχου Γρηγορίου 26"
+                  placeholder="π.χ. Ακαδημίας 23"
                   value={formData.clinicAddress}
                   onChange={handleInputChange}
+                  required
                 />
+                <span className="vet-register__field-note">Οδός, Αριθμός</span>
               </div>
 
               <div className="vet-register-form-row">
                 <div className="vet-register-form-group">
-                  <label htmlFor="clinicCity" className="vet-register-label">Πόλη *</label>
+                  <label htmlFor="clinicCity" className="vet-register-label">
+                    Πόλη<span className="vet-register__required"> *</span>
+                  </label>
                   <input
                     type="text"
                     id="clinicCity"
@@ -369,10 +602,14 @@ const VetRegisterPage = () => {
                     placeholder="Αθήνα"
                     value={formData.clinicCity}
                     onChange={handleInputChange}
+                    required
                   />
+                  <span className="vet-register__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
                 </div>
                 <div className="vet-register-form-group">
-                  <label htmlFor="clinicPostalCode" className="vet-register-label">ΤΚ *</label>
+                  <label htmlFor="clinicPostalCode" className="vet-register-label">
+                    ΤΚ<span className="vet-register__required"> *</span>
+                  </label>
                   <input
                     type="text"
                     id="clinicPostalCode"
@@ -381,20 +618,24 @@ const VetRegisterPage = () => {
                     placeholder="12345"
                     value={formData.clinicPostalCode}
                     onChange={handleInputChange}
+                    maxLength={5}
+                    required
                   />
+                  <span className="vet-register__field-note">Επιτρέπονται μόνο αριθμοί.</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 5: Contact Information */}
-          {currentStep === 5 && (
+          {/* Step 4: Contact Information */}
+          {currentStep === 4 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Στοιχεία Επικοινωνίας</h2>
-              <p className="vet-register-step-subtitle">Δώστε τα στοιχεία επικοινωνίας σας</p>
               
               <div className="vet-register-form-group">
-                <label htmlFor="email" className="vet-register-label">Email *</label>
+                <label htmlFor="email" className="vet-register-label">
+                  Email<span className="vet-register__required"> *</span>
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -403,32 +644,39 @@ const VetRegisterPage = () => {
                   placeholder="example@email.com"
                   value={formData.email}
                   onChange={handleInputChange}
+                  required
                 />
+                <span className="vet-register__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
               </div>
 
               <div className="vet-register-form-group">
-                <label htmlFor="phone" className="vet-register-label">Τηλέφωνο *</label>
+                <label htmlFor="phone" className="vet-register-label">
+                  Τηλέφωνο<span className="vet-register__required"> *</span>
+                </label>
                 <input
                   type="tel"
                   id="phone"
                   name="phone"
                   className="vet-register-input"
-                  placeholder="69XXXXXXXX"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.phone}
                   onChange={handleInputChange}
+                  required
                 />
+                <span className="vet-register__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
           )}
 
-          {/* Step 6: Password */}
-          {currentStep === 6 && (
+          {/* Step 5: Password */}
+          {currentStep === 5 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Κωδικός Πρόσβασης</h2>
-              <p className="vet-register-step-subtitle">Ορίστε έναν ισχυρό κωδικό</p>
               
               <div className="vet-register-form-group">
-                <label htmlFor="password" className="vet-register-label">Κωδικός *</label>
+                <label htmlFor="password" className="vet-register-label">
+                  Κωδικός<span className="vet-register__required"> *</span>
+                </label>
                 <div className="vet-register-input-wrapper">
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -438,6 +686,7 @@ const VetRegisterPage = () => {
                     placeholder="Ορίστε έναν κωδικό"
                     value={formData.password}
                     onChange={handleInputChange}
+                    required
                   />
                   <button
                     type="button"
@@ -447,10 +696,13 @@ const VetRegisterPage = () => {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                <span className="vet-register__field-note">Ο κωδικός πρέπει να περιέχει τουλάχιστον 6 χαρακτήρες. Δεν επιτρέπονται ελληνικοί χαρακτήρες και κενά</span>
               </div>
 
               <div className="vet-register-form-group">
-                <label htmlFor="confirmPassword" className="vet-register-label">Επιβεβαίωση Κωδικού *</label>
+                <label htmlFor="confirmPassword" className="vet-register-label">
+                  Επιβεβαίωση Κωδικού<span className="vet-register__required"> *</span>
+                </label>
                 <div className="vet-register-input-wrapper">
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -460,6 +712,7 @@ const VetRegisterPage = () => {
                     placeholder="Επιβεβαιώστε τον κωδικό"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
+                    required
                   />
                   <button
                     type="button"
@@ -477,19 +730,29 @@ const VetRegisterPage = () => {
           <div className="vet-register-actions">
             <button
               type="button"
-              className="vet-register-btn vet-register-btn--back"
-              onClick={handleBack}
-              disabled={currentStep === 1}
+              className="vet-register-btn vet-register-btn--cancel"
+              onClick={handleCancel}
             >
-              <ChevronLeft size={18} />
-              Πίσω
+              Ακύρωση
             </button>
+
+            {currentStep > 1 && (
+              <button
+                type="button"
+                className="vet-register-btn vet-register-btn--secondary"
+                onClick={handleBack}
+              >
+                Προηγούμενη
+              </button>
+            )}
+
             <button
               type="button"
-              className="vet-register-btn vet-register-btn--continue"
+              className="vet-register-btn vet-register-btn--primary"
               onClick={handleContinue}
+              disabled={!isStepValid()}
             >
-              {currentStep === 6 ? 'Εγγραφή' : 'Συνέχεια'}
+              {currentStep === 5 ? 'Εγγραφή' : 'Επόμενη'}
             </button>
           </div>
 
@@ -498,6 +761,29 @@ const VetRegisterPage = () => {
             <p>Έχετε ήδη λογαριασμό; <Link to={ROUTES.login} className="vet-register-login-link">Σύνδεση</Link></p>
           </div>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την εγγραφή;"
+          description="Αυτή η ενέργεια δεν αναιρείται. Όλα τα στοιχεία που έχετε εισάγει θα χαθούν."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal with Details */}
+        <ConfirmDetailModal
+          isOpen={showSubmitModal}
+          title="Επιβεβαίωση Στοιχείων Εγγραφής"
+          fields={getSubmitFields()}
+          cancelText="Επιστροφή"
+          confirmText="Εγγραφή"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );
