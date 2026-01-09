@@ -18,6 +18,8 @@ const VetRegisterPage = () => {
     specialization: [],
     licenseNumber: '',
     yearsOfExperience: '',
+    university: '',
+    bio: '',
     clinicName: '',
     licenseType: '',
     clinicAddress: '',
@@ -294,6 +296,8 @@ const VetRegisterPage = () => {
         specialization: formData.specialization,
         licenseNumber: formData.licenseNumber,
         yearsOfExperience: formData.yearsOfExperience,
+        university: formData.university,
+        bio: formData.bio,
         clinicName: formData.clinicName,
         licenseType: formData.licenseType,
         clinicAddress: formData.clinicAddress,
@@ -393,6 +397,8 @@ const VetRegisterPage = () => {
       { label: 'Ειδικότητα/ες', value: formData.specialization.join(', ') },
       { label: 'Αριθμός Άδειας', value: formData.licenseNumber },
       { label: 'Έτη Εμπειρίας', value: formData.yearsOfExperience || 'Δεν έχει συμπληρωθεί' },
+      { label: 'Εκπαίδευση', value: formData.university || 'Δεν έχει συμπληρωθεί' },
+      { label: 'Βιογραφικό', value: formData.bio || 'Δεν έχει συμπληρωθεί' },
       { label: 'Όνομα Κλινικής', value: formData.clinicName },
       { label: 'Διεύθυνση Κλινικής', value: formData.clinicAddress },
       { label: 'Πόλη', value: formData.clinicCity },
@@ -546,6 +552,39 @@ const VetRegisterPage = () => {
                   onChange={handleInputChange}
                 />
                 <span className="vet-register__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              </div>
+
+              <div className="vet-register-form-group">
+                <label htmlFor="university" className="vet-register-label">
+                  Εκπαίδευση (προαιρετικό)
+                </label>
+                <input
+                  type="text"
+                  id="university"
+                  name="university"
+                  className="vet-register-input"
+                  placeholder="π.χ. Γεωπονικό Πανεπιστήμιο Αθηνών"
+                  value={formData.university}
+                  onChange={handleInputChange}
+                />
+                <span className="vet-register__field-note">Συμπληρώστε το εκπαιδευτικό ίδρυμα απόκτησης πτυχίου.</span>
+              </div>
+
+              <div className="vet-register-form-group">
+                <label htmlFor="bio" className="vet-register-label">
+                  Βιογραφικό (προαιρετικό)
+                </label>
+                <textarea
+                  id="bio"
+                  name="bio"
+                  className="vet-register-input"
+                  placeholder="Συντομη περιγραφή του επαγγελματικού σας προφίλ..."
+                  value={formData.bio}
+                  onChange={handleInputChange}
+                  rows="4"
+                  style={{ resize: 'vertical', fontFamily: 'inherit' }}
+                />
+                <span className="vet-register__field-note">Προαιρετική περιγραφή της εμπειρίας και εξειδίκευσής σας.</span>
               </div>
             </div>
           )}

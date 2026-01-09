@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { SquarePen, X, Save, UserRound } from 'lucide-react';
+import { SquarePen, X, Save, UserRound, UserRoundCheck, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -9,9 +11,12 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  
+  // Original data that won't change unless saved
+  const [originalData, setOriginalData] = useState({
     firstName: 'Μαρία',
     lastName: 'Παπαδοπούλου',
     email: 'maria.p@example.com',
@@ -21,6 +26,9 @@ const Profile = () => {
     city: 'Αθήνα',
     postalCode: '10679',
   });
+  
+  // Working copy for editing
+  const [formData, setFormData] = useState({...originalData});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +49,8 @@ const Profile = () => {
   const handleConfirmCancel = () => {
     setIsEditing(false);
     setShowCancelModal(false);
+    // Reset form data to original values
+    setFormData({...originalData});
   };
 
   const handleCancelCancel = () => {
@@ -54,7 +64,12 @@ const Profile = () => {
   const handleConfirmDelete = () => {
     console.log('Account deleted');
     setShowDeleteModal(false);
-    navigate(ROUTES.owner.dashboard);
+    setShowSuccessModal(true);
+    
+    // Redirect to home after 5 seconds
+    setTimeout(() => {
+      navigate(ROUTES.home);
+    }, 5000);
   };
 
   const handleCancelDelete = () => {
@@ -64,40 +79,36 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+    // Save the changes to originalData
+    setOriginalData({...formData});
     setIsEditing(false);
     setShowSaveSuccessModal(true);
   };
 
-  const handleBackToDashboard = () => {
-    navigate(ROUTES.owner.dashboard);
+  const handleBackToProfile = () => {
+    setShowSaveSuccessModal(false);
   };
-
-  if (showSaveSuccessModal) {
-    return (
-      <PageLayout variant="owner">
-        <div className="owner-profile-success">
-          <div className="owner-profile-success__content">
-            <div className="owner-profile-success__icon">
-              <UserRound size={64} />
-            </div>
-            <h1 className="owner-profile-success__title">Το προφίλ ανανεώθηκε!</h1>
-            <p className="owner-profile-success__description">
-              Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας.
-            </p>
-            <button 
-              className="owner-profile-success__btn"
-              onClick={handleBackToDashboard}
-            >
-              Επιστροφή στο Μενού
-            </button>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
 
   const breadcrumbItems = [
   ];
+
+  // If showing save success, render only the success page
+  if (showSaveSuccessModal) {
+    return (
+      <SuccessPage
+        icon={UserRound}
+        title="Το προφίλ ανανεώθηκε!"
+        description="Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας."
+        buttonText="Επιστροφή στο Προφίλ μου"
+        onButtonClick={handleBackToProfile}
+        iconColor="#23CDD9"
+        iconBgColor="#E8F8FA"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Προφίλ"
+        variant="owner"
+      />
+    );
+  }
 
   return (
     <PageLayout variant="owner" title="Προφίλ" breadcrumbs={breadcrumbItems}>
@@ -276,52 +287,46 @@ const Profile = () => {
         </form>
 
         {/* Delete Confirmation Modal */}
-        {showDeleteModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;</h2>
-              <p className="modal-description">
-                Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν.
-              </p>
-              <div className="modal-actions">
-                <button 
-                  className="modal-btn modal-btn--cancel"
-                  onClick={handleCancelDelete}
-                >
-                  Ακύρωση
-                </button>
-                <button 
-                  className="modal-btn modal-btn--delete"
-                  onClick={handleConfirmDelete}
-                >
-                  Διαγραφή
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmModal
+          isOpen={showDeleteModal}
+          title="Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;"
+          description="Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν."
+          cancelText="Ακύρωση"
+          confirmText="Διαγραφή"
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          isDanger={true}
+        />
 
         {/* Cancel Edit Confirmation Modal */}
-        {showCancelModal && (
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Success Modal */}
+        {showSuccessModal && (
           <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;</h2>
+            <div className="modal-content modal-content--success">
+              <div className="success-icon">
+                <UserRoundCheck size={48} />
+              </div>
+              <h2 className="modal-title">Επιτυχής Διαγραφή!</h2>
               <p className="modal-description">
-                Αυτή η ενέργεια δεν αναιρείται.
+                Ο λογαριασμός σας διαγράφηκε με επιτυχία.
+                <br />
+                Επιστροφή στην αρχική.
+                <br />
+                Παρακαλώ περιμένετε...
               </p>
-              <div className="modal-actions">
-                <button 
-                  className="modal-btn modal-btn--cancel"
-                  onClick={handleCancelCancel}
-                >
-                  Όχι, επιστροφή
-                </button>
-                <button 
-                  className="modal-btn modal-btn--delete"
-                  onClick={handleConfirmCancel}
-                >
-                  Ναι, ακύρωση
-                </button>
+              <div className="loading-spinner">
+                <Loader2 size={32} className="spinner" />
               </div>
             </div>
           </div>

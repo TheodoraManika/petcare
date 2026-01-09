@@ -22,6 +22,7 @@ const Profile = () => {
     lastName: 'Πετρίδης',
     email: 'john@example.com',
     phone: '6912345678',
+    afm: '123456789',
     vetLicense: 'VET12345',
     specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'],
     yearsOfExperience: '5',
@@ -244,6 +245,23 @@ const Profile = () => {
               />
             </div>
 
+            {/* AFM */}
+            <div className="profile__field">
+              <label className="profile__label">
+                ΑΦΜ <span className="profile__required">*</span>
+              </label>
+              <input
+                type="text"
+                name="afm"
+                className="profile__input"
+                value={formData.afm}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                maxLength={9}
+                required
+              />
+            </div>
+
             {/* Vet License */}
             <div className="profile__field">
               <label className="profile__label">
@@ -263,7 +281,7 @@ const Profile = () => {
             {/* Specialty */}
             <div className="profile__field">
               <label className="profile__label">
-                Ειδικότητα/ες <span className="profile__required">*</span>
+                Ειδικότητα/ες <span className="profile__required"> *</span>
               </label>
               <MultiSelect
                 name="specialties"
@@ -294,7 +312,7 @@ const Profile = () => {
             {/* Clinic Name */}
             <div className="profile__field">
               <label className="profile__label">
-                Όνομα Κλινικής/Ιατρείου
+                Όνομα Κλινικής/Ιατρείου<span className="profile__required"> *</span>
               </label>
               <input
                 type="text"
