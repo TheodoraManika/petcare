@@ -9,12 +9,13 @@ import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
 import SearchResultsList from '../../components/citizen/SearchResultsList';
 import BookingForm from '../../components/owner/BookingForm';
+import VetProfileModal from './VetProfile';
 import { ROUTES } from '../../utils/constants';
 import './VetSearchMap.css';
 
 const VetSearchMap = () => {
   const navigate = useNavigate();
-  
+
   // Get current user from localStorage
   const getCurrentUser = () => {
     try {
@@ -30,7 +31,6 @@ const VetSearchMap = () => {
   const getTodayDay = () => {
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const today = days[new Date().getDay()];
-    console.log('getTodayDay() calculated as:', today, 'from getDay():', new Date().getDay());
     return today;
   };
 
@@ -41,7 +41,7 @@ const VetSearchMap = () => {
   };
 
   const currentUser = getCurrentUser();
-  
+
   const [filters, setFilters] = useState({
     area: '',
     specialty: '',
@@ -58,11 +58,15 @@ const VetSearchMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const itemsPerPage = 5;
-  
+
   // Booking form state
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingVet, setBookingVet] = useState(null);
   const [bookingSuccess, setBookingSuccess] = useState('');
+
+  // Profile Modal State
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedProfileVet, setSelectedProfileVet] = useState(null);
 
   // Fetch vets from backend
   useEffect(() => {
@@ -70,22 +74,19 @@ const VetSearchMap = () => {
       try {
         setLoading(true);
         setError(null);
-        console.log('Fetching vets from backend...');
-        
+
         const response = await fetch('http://localhost:5000/users');
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const users = await response.json();
-        console.log('Fetched users:', users);
-        
+
         // Fetch availability data
         const availabilityResponse = await fetch('http://localhost:5000/availability');
         const availabilityRecords = await availabilityResponse.json();
-        console.log('Fetched availability records:', availabilityRecords);
-        
+
         // Filter only vet users and add default coordinates and availability
         const vetUsers = users
           .filter(user => user.userType === 'vet')
@@ -93,9 +94,7 @@ const VetSearchMap = () => {
             // Get availability for this vet (compare as numbers to handle string/number mismatch)
             const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vet.id));
             const availableDays = [...new Set(vetAvailability.map(a => a.day))];
-            
-            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays);
-            
+
             return {
               ...vet,
               name: vet.name || 'Άγνωστος',
@@ -109,8 +108,7 @@ const VetSearchMap = () => {
               availabilitySlots: vetAvailability
             };
           });
-        
-        console.log('Filtered vet users:', vetUsers);
+
         setAllVets(vetUsers);
         setLoading(false);
       } catch (error) {
@@ -192,14 +190,14 @@ const VetSearchMap = () => {
           'tomorrow': getTomorrowDay(),
           'week': null // null means show all with any availability this week
         };
-        
+
         const targetDay = availabilityMap[filters.availability];
-        
+
         // Skip filter if no availableDays data exists
         if (!vet.availableDays) {
           return false;
         }
-        
+
         if (filters.availability === 'week') {
           // Check if vet has any availability this week
           if (vet.availableDays.length === 0) {
@@ -207,7 +205,7 @@ const VetSearchMap = () => {
           }
         } else if (targetDay) {
           // Check if vet has availability on specific day - case insensitive comparison
-          const hasDay = vet.availableDays.some(day => 
+          const hasDay = vet.availableDays.some(day =>
             day.toLowerCase() === targetDay.toLowerCase()
           );
           if (!hasDay) {
@@ -223,12 +221,12 @@ const VetSearchMap = () => {
           'afternoon': { start: 12 * 60, end: 18 * 60 },   // 12:00-18:00 in minutes
           'evening': { start: 18 * 60, end: 21 * 60 }      // 18:00-21:00 in minutes
         };
-        
+
         const targetRange = timeRanges[filters.time];
         if (targetRange) {
           // If a specific day is selected, only check slots for that day
           let slotsToCheck = vet.availabilitySlots;
-          
+
           if (filters.availability && filters.availability !== 'week') {
             const availabilityMap = {
               'today': getTodayDay(),
@@ -240,7 +238,7 @@ const VetSearchMap = () => {
             // For week filter, include all slots (which should already be limited to this week in backend)
             slotsToCheck = vet.availabilitySlots;
           }
-          
+
           // Check if vet has any slots that overlap with the requested time range
           const hasTimeSlot = slotsToCheck.some(slot => {
             // Convert slot times to minutes for precise comparison
@@ -248,12 +246,12 @@ const VetSearchMap = () => {
             const [slotEndHour, slotEndMin] = slot.endTime.split(':').map(Number);
             const slotStartMinutes = slotStartHour * 60 + slotStartMin;
             const slotEndMinutes = slotEndHour * 60 + slotEndMin;
-            
+
             // Check if there's any overlap between slot and requested time range
             // Overlap exists if: slot starts before range ends AND slot ends after range starts
             return slotStartMinutes < targetRange.end && slotEndMinutes > targetRange.start;
           });
-          
+
           if (!hasTimeSlot) {
             return false;
           }
@@ -269,7 +267,8 @@ const VetSearchMap = () => {
   };
 
   const handleViewProfile = (vet) => {
-    navigate(`/vet-profile/${vet.id}`);
+    setSelectedProfileVet(vet);
+    setShowProfileModal(true);
   };
 
   const handleCloseAppointment = (vet) => {
@@ -349,7 +348,7 @@ const VetSearchMap = () => {
         <SearchSidebar
           title="Φίλτρα Αναζήτησης"
           filters={filters}
-          onSearch={() => {}}
+          onSearch={() => { }}
           onClear={handleClear}
           resultsCount={filteredVets.length}
         >
@@ -436,15 +435,15 @@ const VetSearchMap = () => {
               <div className="map-header">
                 <h2 className="map-title">Αποτελέσματα ({filteredVets.length})</h2>
                 <div className="view-toggles">
-                  <button 
-                    className={`toggle-btn ${showMap ? 'active' : ''}`} 
+                  <button
+                    className={`toggle-btn ${showMap ? 'active' : ''}`}
                     onClick={() => setShowMap(true)}
                   >
                     <MapPin size={18} />
                     Χάρτης
                   </button>
-                  <button 
-                    className={`toggle-btn ${!showMap ? 'active' : ''}`} 
+                  <button
+                    className={`toggle-btn ${!showMap ? 'active' : ''}`}
                     onClick={() => setShowMap(false)}
                   >
                     Λίστα
@@ -502,6 +501,12 @@ const VetSearchMap = () => {
             </>
           )}
         </main>
+
+        <VetProfileModal
+          isOpen={showProfileModal}
+          onClose={() => setShowProfileModal(false)}
+          vet={selectedProfileVet}
+        />
       </div>
     </PageLayout>
   );

@@ -1,71 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Star, MapPin, Phone, Clock, Briefcase, GraduationCap } from 'lucide-react';
-import PageLayout from '../../components/common/layout/PageLayout';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Star, MapPin, Phone, Clock, Briefcase, GraduationCap, X } from 'lucide-react';
+import Avatar from '../../components/common/Avatar';
 import { ROUTES } from '../../utils/constants';
 import './VetProfile.css';
 
-const VetProfile = () => {
-  const { vetId } = useParams();
+const VetProfileModal = ({ vet, isOpen, onClose }) => {
   const navigate = useNavigate();
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const [vet, setVet] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [visibleReviews, setVisibleReviews] = useState(2);
 
-  // Fetch vet data from backend
-  useEffect(() => {
-    const fetchVet = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await fetch(`http://localhost:5000/users/${vetId}`);
-        if (!response.ok) {
-          throw new Error('Ο κτηνίατρος δεν βρέθηκε');
-        }
-        
-        const vetData = await response.json();
-        
-        // Fetch availability for this vet
-        const availabilityResponse = await fetch('http://localhost:5000/availability');
-        const availabilityRecords = await availabilityResponse.json();
-        const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vetId));
-        
-        // Format the vet data with defaults
-        const formattedVet = {
-          id: vetData.id,
-          name: vetData.name || 'Άγνωστος',
-          lastName: vetData.lastName || '',
-          specialty: vetData.specialization || 'Γενικός Κτηνίατρος',
-          rating: 4.5 + (Math.random() * 0.4), // Random rating for now
-          reviewCount: Math.floor(Math.random() * 200) + 20,
-          avatar: vetData.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150',
-          address: `${vetData.clinicAddress || ''}, ${vetData.clinicCity || ''}`,
-          phone: vetData.phone || 'Δεν διατίθεται',
-          email: vetData.email || 'Δεν διατίθεται',
-          clinicName: vetData.clinicName || 'Κλινική',
-          workingHours: 'Ελέγξτε τη διαθεσιμότητα',
-          availability: vetAvailability,
-          specializations: [vetData.specialization || 'Γενική Κτηνιατρική'],
-          biography: `Άδεια Ασκήσεως: ${vetData.licenseNumber || 'Δεν διατίθεται'}`,
-          reviews: [] // Mock reviews - can be enhanced later
-        };
-        
-        setVet(formattedVet);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching vet:', err);
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    if (vetId) {
-      fetchVet();
-    }
-  }, [vetId]);
+  if (!isOpen || !vet) return null;
 
   const currentUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('currentUser') || 'null') : null;
   const isOwner = currentUser && currentUser.userType === 'owner';
@@ -82,74 +27,52 @@ const VetProfile = () => {
     setVisibleReviews(prev => Math.min(prev + 2, vet.reviews.length));
   };
 
-  if (loading) {
-    return (
-      <PageLayout title="Φόρτωση...">
-        <div style={{ padding: '40px', textAlign: 'center' }}>
-          <p>Φόρτωση δεδομένων κτηνιάτρου...</p>
-        </div>
-      </PageLayout>
-    );
-  }
-
-  if (error || !vet) {
-    return (
-      <PageLayout title="Σφάλμα">
-        <div style={{ padding: '40px', textAlign: 'center' }}>
-          <p style={{ color: '#d32f2f' }}>Σφάλμα: {error || 'Ο κτηνίατρος δεν βρέθηκε'}</p>
-          <button 
-            onClick={() => navigate(ROUTES.citizen.searchMap)}
-            style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
-          >
-            Επιστροφή στην Αναζήτηση
-          </button>
-        </div>
-      </PageLayout>
-    );
-  }
   const displayedReviews = showAllReviews ? (vet.reviews || []) : (vet.reviews || []).slice(0, visibleReviews);
 
   return (
-    <PageLayout
-      variant="citizen"
-      title={vet.name}
-      breadcrumbs={[
-        { label: 'Κτηνίατροι', path: ROUTES.citizen.searchMap }
-      ]}
-    >
-      <div className="vet-profile-container">
-        <div className="vet-profile-card">
-          {/* Header Section */}
-          <div className="profile-header">
-            <div className="profile-header-content">
-              <img
-                src={vet.avatar}
-                alt={vet.name}
-                className="profile-image"
-              />
-              <div className="profile-identity">
-                <h1 className="vet-name">{vet.name}</h1>
-                <p className="vet-specialty">{vet.specialty}</p>
-                <div className="rating-section">
-                  <div className="stars">
-                    {renderStars(Math.floor(vet.rating || 0))}
-                  </div>
-                  <span className="rating-text">
-                    {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || 0} αξιολογήσεις)
-                  </span>
-                </div>
-              </div>
-              {isOwner && (
-                <button 
-                  className="book-appointment-btn"
-                  onClick={() => navigate(ROUTES.owner.appointments, { state: { vet } })}
-                >
-                  Κλείστε Ραντεβού
-                </button>
-              )}
-            </div>
-          </div>
+    <div className="vet-profile-overlay" onClick={onClose}>
+      <div className="vet-profile-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="vet-profile-close" onClick={onClose}>
+          <X size={24} />
+        </button>
 
+        {/* Header Section */}
+        <div className="profile-header">
+          <div className="profile-header-content">
+            <div className="profile-avatar-wrapper">
+              <Avatar
+                src={vet.avatar}
+                name={vet.name}
+                size="xl"
+              />
+            </div>
+            <div className="profile-identity">
+              <h1 className="vet-name">{vet.name}</h1>
+              <p className="vet-specialty">{vet.specialty}</p>
+              <div className="rating-section">
+                <div className="stars">
+                  {renderStars(Math.floor(vet.rating || 0))}
+                </div>
+                <span className="rating-text">
+                  {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || 0} αξιολογήσεις)
+                </span>
+              </div>
+            </div>
+            {isOwner && (
+              <button
+                className="book-appointment-btn"
+                onClick={() => {
+                  onClose();
+                  navigate(ROUTES.owner.appointments, { state: { vet } });
+                }}
+              >
+                Κλείστε Ραντεβού
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="vet-profile-scroll-content">
           {/* Professional Details Section */}
           <div className="professional-details">
             <div className="details-grid">
@@ -198,8 +121,8 @@ const VetProfile = () => {
           <div className="reviews-section">
             <h2 className="section-title">Κριτικές Πελατών</h2>
             <div className="reviews-list">
-              {displayedReviews.map(review => (
-                <div key={review.id} className="review-card">
+              {displayedReviews.map((review, idx) => (
+                <div key={review.id || idx} className="review-card">
                   <div className="review-header">
                     <div className="review-stars">
                       {renderStars(review.rating || 0)}
@@ -221,8 +144,8 @@ const VetProfile = () => {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 };
 
-export default VetProfile;
+export default VetProfileModal;
