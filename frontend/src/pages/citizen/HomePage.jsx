@@ -1,18 +1,38 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import LocationPicker from '../../components/common/forms/LocationPicker';
+import Notification from '../../components/common/modals/Notification';
 import './HomePage.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedArea, setSelectedArea] = useState('');
   const [locationData, setLocationData] = useState(null);
   const [selectedAvailability, setSelectedAvailability] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
+  const [notification, setNotification] = useState(null);
+
+  // Check for notification from navigation state
+  useEffect(() => {
+    if (location.state?.notification) {
+      setNotification(location.state.notification);
+      
+      // Clear the notification after 5 seconds
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+
+      // Clear navigation state
+      window.history.replaceState({}, document.title);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location]);
 
   // Hero carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -509,6 +529,15 @@ const HomePage = () => {
         </section>
 
       </div>
+
+      {/* Notification */}
+      {notification && (
+        <Notification
+          isVisible={true}
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
     </PageLayout>
   );
 };

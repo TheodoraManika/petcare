@@ -141,15 +141,15 @@
 
 .register-step-title {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: #1a1a1a;
-  margin: 0 0 8px 0;
+  margin: 32px 0 32px 0;
 }
 
 .register-step-subtitle {
   font-size: 14px;
-  color: #666;
-  margin: 0 0 24px 0;
+  color: #6b7280;
+  margin: 0 0 32px 0;
 }
 
 /* Form Styles */
@@ -201,6 +201,39 @@
   color: #999;
 }
 
+/* Input Error State */
+.register-input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+
+.register-input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Field Note */
+.register__field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: -4px;
+}
+
+/* Error Message */
+.register__error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.register__error-message svg {
+  flex-shrink: 0;
+}
+
 .register-password-toggle {
   position: absolute;
   right: 12px;
@@ -221,15 +254,15 @@
 
 /* Action Buttons */
 .register-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 12px;
   margin-top: 32px;
   margin-bottom: 24px;
+  justify-content: space-between;
 }
 
 .register-btn {
-  padding: 12px 16px;
+  padding: 12px 24px;
   border: none;
   border-radius: 8px;
   font-size: 16px;
@@ -242,32 +275,86 @@
   gap: 8px;
 }
 
-.register-btn--back {
+.register-btn--secondary {
   background-color: #f0f0f0;
   color: #333;
 }
 
-.register-btn--back:hover:not(:disabled) {
+.register-btn--secondary:hover {
   background-color: #e0e0e0;
+  transform: translateY(-1px);
 }
 
-.register-btn--back:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.register-btn--cancel {
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
 }
 
-.register-btn--continue {
-  background: linear-gradient(90deg, #23cdd9 0%, #20b8c3 100%);
-  color: white;
+.register-btn--cancel:hover {
+  background-color: #f9f9f9;
+  border-color: #ccc;
+  transform: translateY(-1px);
+}
+
+.register-btn--primary {
+  background: #23cdd9;
+  color: #101828;
   box-shadow: 0 4px 12px rgba(35, 205, 217, 0.3);
+  position: relative;
 }
 
-.register-btn--continue:hover {
+.register-btn--primary:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(35, 205, 217, 0.4);
 }
 
-.register-btn--continue:active {
+.register-btn--primary:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.register-btn--primary:disabled:hover::before {
+  content: 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία';
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background-color: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.register-btn--primary:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register-btn--primary:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(35, 205, 217, 0.3);
 }
@@ -383,4 +470,8 @@
 }
 .register-container .progress-bar__line {
   margin-top: 20px;
+}
+
+.register__required {
+  color: #ef4444;
 }
