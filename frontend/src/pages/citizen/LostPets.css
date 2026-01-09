@@ -302,6 +302,36 @@
   font-size: 13px;
 }
 
+.filter-note {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
+.filter-input::placeholder {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
 .view-toggles {
   display: flex;
   gap: 8px;
@@ -850,6 +880,10 @@
 
    .filter-label--emphasis {
      font-size: 14px;
+   }
+
+   .filter-note {
+     font-size: 11px;
    }
 
    .empty-state {

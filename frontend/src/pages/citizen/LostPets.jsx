@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, List, Dog, Cat, X, AlertCircle, Search as SearchIcon, FileText, Scan, Palette, MapPinned } from 'lucide-react';
+import { MapPin, List, Dog, Cat, X, AlertCircle, Search as SearchIcon, FileText } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
+import DatePicker from '../../components/common/forms/DatePicker';
 import LocationPicker from '../../components/common/forms/LocationPicker';
 import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
@@ -21,6 +22,7 @@ const LostPets = () => {
     color: '',
     breed: '',
     microchip: '',
+    lostDate: '',
   });
 
   const [locationData, setLocationData] = useState(null);
@@ -73,10 +75,21 @@ const LostPets = () => {
   }, []);
 
   const handleSelectChange = (name, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    // Validate microchip input - only numbers, max 15 digits
+    if (name === 'microchip') {
+      const filteredValue = value.replace(/[^0-9]/g, ''); // Only allow numbers
+      if (filteredValue.length <= 15) {
+        setFilters(prev => ({
+          ...prev,
+          [name]: filteredValue
+        }));
+      }
+    } else {
+      setFilters(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleLocationSelect = (location) => {
@@ -90,6 +103,7 @@ const LostPets = () => {
       color: '',
       breed: '',
       microchip: '',
+      lostDate: '',
     });
     setLocationData(null);
   };
@@ -196,25 +210,11 @@ const LostPets = () => {
 
   // Options for CustomSelect components with icons
   const animalOptions = [
-    { value: '', label: 'Επιλέξτε είδος...' },
     { value: 'dog', label: 'Σκύλος', icon: <Dog size={16} /> },
     { value: 'cat', label: 'Γάτα', icon: <Cat size={16} /> },
+    { value: 'bird', label: 'Πτηνό'},
+    { value: 'reptile', label: 'Ερπετό'},
     { value: 'other', label: 'Άλλο' }
-  ];
-
-  const colorOptions = [
-    { value: '', label: 'Επιλέξτε χρώμα...' },
-    { value: 'golden', label: 'Χρυσαφί', icon: <Palette size={16} /> },
-    { value: 'black', label: 'Μαύρο', icon: <Palette size={16} /> },
-    { value: 'white', label: 'Λευκό', icon: <Palette size={16} /> },
-    { value: 'brown', label: 'Καφέ', icon: <Palette size={16} /> }
-  ];
-
-  const breedOptions = [
-    { value: '', label: 'Επιλέξτε ράτσα...' },
-    { value: 'golden-retriever', label: 'Golden Retriever' },
-    { value: 'labrador', label: 'Λαμπραντόρ' },
-    { value: 'persian', label: 'Περσική' }
   ];
 
   const breadcrumbItems = [
@@ -253,11 +253,13 @@ const LostPets = () => {
               <input
                 type="text"
                 className="microchip-input"
-                placeholder="GR123456789012345"
+                placeholder="123456789012345 (15 ψηφία)"
                 value={filters.microchip}
                 onChange={(e) => handleSelectChange('microchip', e.target.value)}
+                maxLength={15}
               />
             </div>
+            <span className="filter-note">Επιτρέπονται μόνο αριθμοί (μέγιστο 15 ψηφία)</span>
           </div>
 
           {/* Divider */}
@@ -272,6 +274,20 @@ const LostPets = () => {
               onLocationSelect={handleLocationSelect}
               placeholder="Αναζήτηση περιοχής..."
               variant="citizen"
+            />
+          </div>
+
+          {/* Lost Date Filter */}
+          <div className="filter-group">
+            <label className="filter-label">
+              Ημερομηνία Εξαφάνισης
+            </label>
+            <DatePicker
+              name="lostDate"
+              value={filters.lostDate}
+              onChange={(e) => handleSelectChange('lostDate', e.target.value)}
+              variant="citizen"
+              maxDate={new Date()}
             />
           </div>
 
@@ -294,26 +310,29 @@ const LostPets = () => {
             <label className="filter-label">
               Χρώμα
             </label>
-            <CustomSelect
+            <input
+              type="text"
               name="color"
+              className="filter-input"
+              placeholder="π.χ. Μαύρο, Καφέ, Λευκό"
               value={filters.color}
-              onChange={(val) => handleSelectChange('color', val)}
-              options={colorOptions}
-              variant="citizen"
+              onChange={(e) => handleSelectChange('color', e.target.value)}
             />
           </div>
 
           {/* Breed Filter */}
           <div className="filter-group">
             <label className="filter-label">Ράτσα</label>
-            <CustomSelect
+            <input
+              type="text"
               name="breed"
+              className="filter-input"
+              placeholder="π.χ. Golden Retriever"
               value={filters.breed}
-              onChange={(val) => handleSelectChange('breed', val)}
-              options={breedOptions}
-              variant="citizen"
+              onChange={(e) => handleSelectChange('breed', e.target.value)}
             />
           </div>
+
         </SearchSidebar>
 
         {/* Main Content Area */}
