@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2 } from 'lucide-react';
+import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
 import MultiSelect from '../../components/common/forms/MultiSelect';
@@ -14,6 +14,18 @@ const Profile = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    afm: '',
+    vetLicense: '',
+    specialties: '',
+    clinicName: '',
+    address: '',
+    city: '',
+  });
   const navigate = useNavigate();
   
   // Original data that won't change unless saved
@@ -36,6 +48,35 @@ const Profile = () => {
   // Working copy for editing
   const [formData, setFormData] = useState({...originalData});
 
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, '');
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, '');
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, '');
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const cleanPhone = phone.replace(/[\s+]/g, '');
+    return cleanPhone.length >= 10;
+  };
+
+  const validateAFM = (afm) => {
+    return afm.length === 9;
+  };
+
   const specialtyOptions = [
     { value: 'Γενική Κτηνιατρική', label: 'Γενική Κτηνιατρική' },
     { value: 'Χειρουργική', label: 'Χειρουργική' },
@@ -47,10 +88,42 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    let filteredValue = value;
+
+    // Apply character filters based on field type
+    if (name === 'firstName' || name === 'lastName' || name === 'city') {
+      filteredValue = filterLettersOnly(value);
+    } else if (name === 'afm') {
+      filteredValue = allowedAFMChars(value);
+      if (filteredValue.length > 9) {
+        filteredValue = filteredValue.slice(0, 9);
+      }
+    } else if (name === 'phone') {
+      filteredValue = allowedPhoneChars(value);
+    } else if (name === 'email') {
+      filteredValue = allowedEmailChars(value);
+    } else if (name === 'vetLicense') {
+      // Allow only numbers and dashes for license number
+      filteredValue = value.replace(/[^0-9\-]/g, '');
+    } else if (name === 'yearsOfExperience') {
+      // Allow only numbers for years of experience
+      filteredValue = allowedAFMChars(value);
+    }
+    // clinicName, address, bio - no filtering, allow all characters
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: filteredValue
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const handleSpecialtiesChange = (selectedSpecialties) => {
@@ -58,6 +131,14 @@ const Profile = () => {
       ...prev,
       specialties: selectedSpecialties
     }));
+    
+    // Clear error when specialties are selected
+    if (errors.specialties && selectedSpecialties.length > 0) {
+      setErrors(prev => ({
+        ...prev,
+        specialties: ''
+      }));
+    }
   };
 
   const handleEditToggle = () => {
@@ -73,6 +154,19 @@ const Profile = () => {
     setShowCancelModal(false);
     // Reset form data to original values
     setFormData({...originalData});
+    // Clear all errors
+    setErrors({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      afm: '',
+      vetLicense: '',
+      specialties: '',
+      clinicName: '',
+      address: '',
+      city: '',
+    });
   };
 
   const handleCancelCancel = () => {
@@ -101,7 +195,57 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+    
+    // Validate all fields
+    const newErrors = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!validateEmail(formData.email)) {
+      newErrors.email = 'Μη έγκυρη διεύθυνση email';
+    }
+
+    if (!validatePhone(formData.phone)) {
+      newErrors.phone = 'Το τηλέφωνο πρέπει να έχει τουλάχιστον 10 ψηφία';
+    }
+
+    if (!validateAFM(formData.afm)) {
+      newErrors.afm = 'Το ΑΦΜ πρέπει να έχει ακριβώς 9 ψηφία';
+    }
+
+    if (!formData.vetLicense.trim()) {
+      newErrors.vetLicense = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!formData.specialties || formData.specialties.length === 0) {
+      newErrors.specialties = 'Πρέπει να επιλέξετε τουλάχιστον μία ειδικότητα';
+    }
+
+    if (!formData.clinicName.trim()) {
+      newErrors.clinicName = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    // If there are errors, set them and stop submission
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // If validation passes, save the changes
     console.log('Form submitted:', formData);
     // Save the changes to originalData
     setOriginalData({...formData});
@@ -128,6 +272,7 @@ const Profile = () => {
         iconBgColor="#FFF4ED"
         breadcrumbs={breadcrumbItems}
         pageTitle="Προφίλ"
+        variant="vet"
       />
     );
   }
@@ -189,12 +334,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="firstName"
-                className="profile__input"
+                className={`profile__input ${errors.firstName ? 'profile__input--error' : ''}`}
                 value={formData.firstName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+              )}
+              {errors.firstName && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.firstName}</span>
+                </div>
+              )}
             </div>
 
             {/* Last Name */}
@@ -205,12 +359,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="lastName"
-                className="profile__input"
+                className={`profile__input ${errors.lastName ? 'profile__input--error' : ''}`}
                 value={formData.lastName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+              )}
+              {errors.lastName && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.lastName}</span>
+                </div>
+              )}
             </div>
 
             {/* Email */}
@@ -221,12 +384,21 @@ const Profile = () => {
               <input
                 type="email"
                 name="email"
-                className="profile__input"
+                className={`profile__input ${errors.email ? 'profile__input--error' : ''}`}
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
+              )}
+              {errors.email && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.email}</span>
+                </div>
+              )}
             </div>
 
             {/* Phone */}
@@ -237,12 +409,21 @@ const Profile = () => {
               <input
                 type="tel"
                 name="phone"
-                className="profile__input"
+                className={`profile__input ${errors.phone ? 'profile__input--error' : ''}`}
                 value={formData.phone}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
+              )}
+              {errors.phone && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.phone}</span>
+                </div>
+              )}
             </div>
 
             {/* AFM */}
@@ -253,13 +434,22 @@ const Profile = () => {
               <input
                 type="text"
                 name="afm"
-                className="profile__input"
+                className={`profile__input ${errors.afm ? 'profile__input--error' : ''}`}
                 value={formData.afm}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 maxLength={9}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              )}
+              {errors.afm && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.afm}</span>
+                </div>
+              )}
             </div>
 
             {/* Vet License */}
@@ -270,12 +460,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="vetLicense"
-                className="profile__input"
+                className={`profile__input ${errors.vetLicense ? 'profile__input--error' : ''}`}
                 value={formData.vetLicense}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται μόνο αριθμοί και παύλα (-).</span>
+              )}
+              {errors.vetLicense && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.vetLicense}</span>
+                </div>
+              )}
             </div>
 
             {/* Specialty */}
@@ -291,7 +490,14 @@ const Profile = () => {
                 placeholder="Επιλέξτε ειδικότητες..."
                 disabled={!isEditing}
                 required
+                className={errors.specialties ? 'profile__input--error' : ''}
               />
+              {errors.specialties && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.specialties}</span>
+                </div>
+              )}
             </div>
 
             {/* Years of Experience */}
@@ -307,6 +513,9 @@ const Profile = () => {
                 onChange={handleInputChange}
                 disabled={!isEditing}
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              )}
             </div>
 
             {/* Clinic Name */}
@@ -317,11 +526,20 @@ const Profile = () => {
               <input
                 type="text"
                 name="clinicName"
-                className="profile__input"
+                className={`profile__input ${errors.clinicName ? 'profile__input--error' : ''}`}
                 value={formData.clinicName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
               />
+              {isEditing && (
+                <span className="profile__field-note">Συμπληρώστε "Ιδιωτικό Ιατρείο" αν το ιατρείο σας δεν έχει όνομα.</span>
+              )}
+              {errors.clinicName && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.clinicName}</span>
+                </div>
+              )}
             </div>
 
             {/* Address */}
@@ -332,12 +550,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="address"
-                className="profile__input"
+                className={`profile__input ${errors.address ? 'profile__input--error' : ''}`}
                 value={formData.address}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Οδός, Αριθμός, Τ.Κ.</span>
+              )}
+              {errors.address && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.address}</span>
+                </div>
+              )}
             </div>
 
             {/* City */}
@@ -348,12 +575,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="city"
-                className="profile__input"
+                className={`profile__input ${errors.city ? 'profile__input--error' : ''}`}
                 value={formData.city}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="profile__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+              )}
+              {errors.city && (
+                <div className="profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.city}</span>
+                </div>
+              )}
             </div>
 
             {/* University */}

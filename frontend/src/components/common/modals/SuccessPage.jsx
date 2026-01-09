@@ -12,7 +12,8 @@ const SuccessPage = ({
   iconColor = '#FCA47C',
   iconBgColor = '#FFF4ED',
   breadcrumbs = [],
-  pageTitle = ''
+  pageTitle = '',
+  variant = 'citizen' // 'citizen', 'owner', 'vet'
 }) => {
   return (
     <PageLayout title={pageTitle} breadcrumbs={breadcrumbs}>
@@ -31,7 +32,7 @@ const SuccessPage = ({
           <h1 className="success-page__title">{title}</h1>
           <p className="success-page__description">{description}</p>
           <button 
-            className="success-page__btn"
+            className={`success-page__btn success-page__btn--${variant}`}
             onClick={onButtonClick}
           >
             {buttonText}

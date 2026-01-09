@@ -162,6 +162,37 @@
   cursor: not-allowed;
 }
 
+.profile__input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+
+.profile__input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.profile__field-note {
+  display: block;
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.profile__error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.profile__error-message svg {
+  flex-shrink: 0;
+}
+
 .profile__textarea {
   resize: vertical;
   min-height: 100px;
