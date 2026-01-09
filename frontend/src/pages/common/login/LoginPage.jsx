@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import PageLayout from '../../../components/common/layout/PageLayout';
 import './LoginPage.css';
@@ -61,7 +61,7 @@ const LoginPage = () => {
           navigate(ROUTES.home);
         }
       } else {
-        setError('Email ή κωδικός λάθος');
+        setError('Λάθος email ή κωδικός πρόσβασης');
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -72,6 +72,11 @@ const LoginPage = () => {
   return (
     <PageLayout title="Σύνδεση" showBreadcrumbs={true} showNavbar={false} showFooter={false}>
       <div className="login-page">
+        <Link to={ROUTES.home} className="login-back-link">
+          <ArrowLeft size={20} />
+          <span>Πίσω</span>
+        </Link>
+        
         <div className="login-container">
           {/* Logo and Title Section */}
           <div className="login-header">
@@ -112,7 +117,7 @@ const LoginPage = () => {
               </svg>
             </div>
             <h1 className="login-title">Σύνδεση</h1>
-            <p className="login-subtitle">Συνδέσλείτε στο λογαριασμό σας</p>
+            <p className="login-subtitle">Συνδεθείτε στο λογαριασμό σας</p>
           </div>
 
           {/* Form */}
@@ -140,7 +145,7 @@ const LoginPage = () => {
 
             {/* Password Field */}
             <div className="login-form-group">
-              <label htmlFor="password" className="login-label">Κωδικός</label>
+              <label htmlFor="password" className="login-label">Κωδικός Πρόσβασης</label>
               <div className="login-input-wrapper">
                 <input
                   type={showPassword ? 'text' : 'password'}

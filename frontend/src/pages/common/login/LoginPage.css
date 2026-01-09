@@ -2,11 +2,40 @@
 
 .login-page {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
   min-height: 100vh;
   width: 100%;
+}
+
+/* Back Link */
+.login-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+  margin-right: 350px;
+}
+
+.login-back-link:hover {
+  color: #23CED9;
+}
+
+.login-back-link svg {
+  transition: transform 0.2s ease;
+}
+
+.login-back-link:hover svg {
+  transform: translateX(-3px);
 }
 
 /* Override page layout background for login page */
@@ -61,9 +90,9 @@
 }
 
 .login-error {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  color: #c00;
+  background-color: #ff525229;
+  border: 1px solid #FF5252;
+  color: #FF5252;
   padding: 12px 14px;
   border-radius: 8px;
   font-size: 13px;
