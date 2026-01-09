@@ -523,38 +523,38 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
             <label className="form-label">
               Φωτογραφία <span className="form-label-optional">(προαιρετικό)</span>
             </label>
-            <div className="image-upload-area">
-              {!imagePreview ? (
-                <label className="image-upload-label">
-                  <div className="upload-icon">
-                    <Upload size={32} color={variant === 'vet' ? '#FCA47C' : '#23CED9'} />
-                  </div>
-                  <p className="upload-text">Κάντε κλικ για να ανεβάσετε φωτογραφία</p>
-                  <p className="upload-subtext">ή σύρετε και αφήστε εδώ</p>
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="file-input"
-                  />
+            
+            {!imagePreview ? (
+              <div className="form-file-upload">
+                <input
+                  type="file"
+                  id="photo-upload"
+                  name="photo"
+                  className="form-file-input"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                <label htmlFor="photo-upload" className="form-file-label">
+                  <span className="form-file-text">Επιλέξτε Φωτογραφία</span>
                 </label>
-              ) : (
-                <div className="image-preview-container">
-                  <img src={imagePreview} alt="Preview" className="image-preview" />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImagePreview(null);
-                      setFormData(prev => ({ ...prev, photo: null }));
-                    }}
-                    className="change-image-btn"
-                  >
-                    Αλλαγή Εικόνας
-                  </button>
-                </div>
-              )}
-            </div>
+                <span className="form-field-note">Προσθέστε φωτογραφία του κατοικιδίου</span>
+              </div>
+            ) : (
+              <div className="form-photo-preview">
+                <img src={imagePreview} alt="Preview" className="form-preview-image" />
+                <button
+                  type="button"
+                  className="form-remove-photo"
+                  onClick={() => {
+                    setImagePreview(null);
+                    setFormData(prev => ({ ...prev, photo: null }));
+                  }}
+                  title="Αφαίρεση φωτογραφίας"
+                >
+                  ×
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Personal Details Section */}

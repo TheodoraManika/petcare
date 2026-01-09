@@ -333,7 +333,105 @@
   min-height: 120px;
 }
 
-/* Image Upload Area */
+/* Photo Upload Styles */
+.form-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-file-input {
+  display: none;
+}
+
+.form-file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.form-file-label:hover {
+  border-color: #23CED9;
+  background-color: #f0fcfd;
+  color: #23CED9;
+}
+
+.found-pet-form--vet .form-file-label:hover {
+  border-color: #FCA47C;
+  background-color: #fff7f3;
+  color: #FCA47C;
+}
+
+.form-file-text {
+  font-size: 15px;
+}
+
+.form-field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Photo Preview Styles */
+.form-photo-preview {
+  position: relative;
+  display: inline-block;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  max-width: 300px;
+}
+
+.form-preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.form-remove-photo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(239, 68, 68, 0.95);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  padding: 0;
+  padding-bottom: 2px;
+}
+
+.form-remove-photo:hover {
+  background-color: #dc2626;
+  transform: scale(1.1);
+}
+
+.form-remove-photo:active {
+  transform: scale(0.95);
+}
+
+/* Old Image Upload Area - kept for backwards compatibility */
 .image-upload-area {
   border: 2px dashed #E0E0E0;
   border-radius: 8px;
