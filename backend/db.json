@@ -1303,9 +1303,10 @@
       "species": "dog",
       "breed": "Golden Retriever",
       "gender": "male",
-      "birthDate": "2022-01-15",
+      "birthDate": "15-01-2022",
       "color": "Χρυσό",
       "weight": "30",
+      "ownerAFM": "123456789",
       "microchipId": "123456789012345",
       "registeredByVetId": 2,
       "createdAt": "2025-01-05T00:00:00Z"

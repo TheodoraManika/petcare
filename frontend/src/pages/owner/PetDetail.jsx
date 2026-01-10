@@ -29,6 +29,13 @@ const PetDetail = () => {
         
         const pet = await petResponse.json();
         
+        console.log('Pet data from API:', pet);
+        console.log('ownerAFM value:', pet.ownerAFM);
+        
+        // Fetch owner data to get AFM
+        const ownerResponse = await fetch(`http://localhost:5000/users/${pet.ownerId}`);
+        const owner = await ownerResponse.json();
+        
         // Fetch medical procedures for this pet
         const medicalResponse = await fetch('http://localhost:5000/medicalProcedures');
         const allProcedures = await medicalResponse.json();
@@ -80,6 +87,7 @@ const PetDetail = () => {
           microchip: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
+          afm: pet.ownerAFM || owner?.afm || '-',
           icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
           stats: stats
         };
@@ -180,8 +188,16 @@ return (
                                 <span className="owner-pet-detail__info-value">{pet.microchip}</span>
                             </div>
                             <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Χρώμα</span>
+                                <span className="owner-pet-detail__info-value">{pet.color}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Βάρος (σε κιλά)</span>
+                                <span className="owner-pet-detail__info-value">{pet.weight}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
                                 <span className="owner-pet-detail__info-label">ΑΦΜ Ιδιοκτήτη</span>
-                                <span className="owner-pet-detail__info-value">{pet.afm}</span>
+                                <span className="owner-pet-detail__info-value">{pet.ownerAFM}</span>
                             </div>
                         </div>
 
