@@ -16,6 +16,7 @@ const LostPet = () => {
   const [formData, setFormData] = useState({
     microchipNumber: '',
     petName: '',
+    petColor: '',
     lostDate: '',
     contactPhone: '',
     location: '',
@@ -73,6 +74,15 @@ const LostPet = () => {
     }
     // Special handling for pet name - only Greek and English letters
     else if (name === 'petName') {
+      const lettersValue = filterLettersOnly(value);
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: lettersValue
+      }));
+    }
+    // Special handling for pet color - only Greek and English letters
+    else if (name === 'petColor') {
       const lettersValue = filterLettersOnly(value);
       
       setFormData(prev => ({
@@ -231,6 +241,7 @@ const LostPet = () => {
     setFormData({
       microchipNumber: '',
       petName: '',
+      petColor: '',
       lostDate: '',
       contactPhone: '',
       location: '',
@@ -265,6 +276,7 @@ const LostPet = () => {
   const confirmFields = [
     { label: 'Μικροτσίπ', value: formData.microchipNumber },
     { label: 'Όνομα Κατοικιδίου', value: formData.petName },
+    { label: 'Χρώμα', value: formData.petColor },
     { label: 'Ημερομηνία Εξαφάνισης', value: formData.lostDate },
     { label: 'Τοποθεσία', value: formData.location },
     { label: 'Περιγραφή', value: formData.description || '-' },
@@ -340,6 +352,23 @@ const LostPet = () => {
                 className="lost-pet__input"
                 placeholder="Γράψτε το όνομα του κατοικιδίου"
                 value={formData.petName}
+                onChange={handleInputChange}
+                required
+              />
+              <span className="lost-pet__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+            </div>
+
+            {/* Χρώμα Κατοικιδίου */}
+            <div className="lost-pet__field">
+              <label className="lost-pet__label">
+                Χρώμα <span className="lost-pet__required">*</span>
+              </label>
+              <input
+                type="text"
+                name="petColor"
+                className="lost-pet__input"
+                placeholder="π.χ. Χρυσό, Μαύρο, Άσπρο"
+                value={formData.petColor}
                 onChange={handleInputChange}
                 required
               />
