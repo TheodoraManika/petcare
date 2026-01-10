@@ -127,14 +127,14 @@
 }
 
 .citizen-contents-links a {
-  color: #F9D779;
+  color: #E1B028;
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s ease;
 }
 
 .citizen-contents-links a:hover {
-  color: #E8C43E;
+  color: #d1a11d;
   text-decoration: underline;
 }
 
@@ -270,7 +270,7 @@
 .citizen-back-home-button {
   padding: 12px 32px;
   background: #F9D779;
-  color: white;
+  color: #101828;
   border: none;
   border-radius: 8px;
   font-size: 16px;
@@ -303,6 +303,16 @@
   background: #F9D779;
   color: white;
   transform: translateY(-2px);
+}
+
+.citizen-info-note {
+  background: rgba(249, 215, 121, 0.25);
+  border-left: 4px solid #F9D779;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #101828;
 }
 
 /* Responsive */
