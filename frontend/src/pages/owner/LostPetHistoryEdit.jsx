@@ -7,6 +7,7 @@ import CustomSelect from '../../components/common/forms/CustomSelect';
 import LocationPicker from '../../components/common/forms/LocationPicker';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryEdit.css';
 
@@ -29,6 +30,7 @@ const LostPetHistoryEdit = () => {
   const [phoneError, setPhoneError] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   const locationOptions = [
     { value: 'syntagma', label: 'Κέντρο Αθήνας, Πλατεία Συντάγματος' },
@@ -40,7 +42,6 @@ const LostPetHistoryEdit = () => {
 
   const breadcrumbItems = [
     { label: 'Ιστορικό Δηλώσεων', path: ROUTES.owner.lostHistory },
-    { label: 'Δήλωση Απώλειας', path: `${ROUTES.owner.lostHistory}/${declarationId}` },
   ];
 
   // Helper function to filter phone characters
@@ -85,7 +86,15 @@ const LostPetHistoryEdit = () => {
 
   const handleConfirmCancel = () => {
     setShowCancelModal(false);
-    navigate(`${ROUTES.owner.lostHistory}/${declarationId}`);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds and navigate
+    setTimeout(() => {
+      setNotification(null);
+      navigate(`${ROUTES.owner.lostHistory}/${declarationId}`);
+    }, 5000);
   };
 
   const handleCancelCancel = () => {
@@ -94,7 +103,15 @@ const LostPetHistoryEdit = () => {
 
   const handleDraft = () => {
     console.log('Saving as draft:', formData);
-    navigate(ROUTES.owner.lostHistory);
+    
+    // Show success notification
+    setNotification('draft');
+    
+    // Auto-hide notification after 8 seconds and navigate
+    setTimeout(() => {
+      setNotification(null);
+      navigate(ROUTES.owner.lostHistory);
+    }, 8000);
   };
 
   const handleSubmitClick = () => {
@@ -260,7 +277,6 @@ const LostPetHistoryEdit = () => {
                 className="lost-pet-edit__btn lost-pet-edit__btn--submit"
                 onClick={handleSubmitClick}
               >
-                <FileCheck size={18} />
                 Οριστική Υποβολή
               </button>
             </div>
@@ -288,6 +304,17 @@ const LostPetHistoryEdit = () => {
           confirmText="Οριστική Υποβολή"
           onCancel={handleCancelSubmit}
           onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message={
+            notification === 'draft' 
+              ? "Η δήλωση αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων"
+              : "Η επεξεργασία της δήλωσης ακυρώθηκε με επιτυχία!"
+          }
+          type={notification === 'draft' ? 'success' : 'error'}
         />
       </div>
     </PageLayout>
