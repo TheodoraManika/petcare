@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, FileCheck } from 'lucide-react';
+import { Save, FileCheck, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import LocationPicker from '../../components/common/forms/LocationPicker';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryEdit.css';
 
@@ -24,6 +26,10 @@ const LostPetHistoryEdit = () => {
     description: 'Ακούει στο όνομα του και είναι πολύ φιλικός',
   });
 
+  const [phoneError, setPhoneError] = useState('');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+
   const locationOptions = [
     { value: 'syntagma', label: 'Κέντρο Αθήνας, Πλατεία Συντάγματος' },
     { value: 'park', label: 'Πάρκο Εργηνης' },
@@ -37,11 +43,32 @@ const LostPetHistoryEdit = () => {
     { label: 'Δήλωση Απώλειας', path: `${ROUTES.owner.lostHistory}/${declarationId}` },
   ];
 
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, '');
+
+  // Validation function for phone
+  const validatePhone = (phone) => {
+    const cleanPhone = phone.replace(/[\s+]/g, '');
+    return cleanPhone.length >= 10;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    let filteredValue = value;
+    
+    // Apply phone character filtering
+    if (name === 'phone') {
+      filteredValue = allowedPhoneChars(value);
+      // Clear error when user starts typing
+      if (phoneError) {
+        setPhoneError('');
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: filteredValue
     }));
   };
 
@@ -53,7 +80,16 @@ const LostPetHistoryEdit = () => {
   };
 
   const handleCancel = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelModal(false);
     navigate(`${ROUTES.owner.lostHistory}/${declarationId}`);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
   };
 
   const handleDraft = () => {
@@ -61,9 +97,46 @@ const LostPetHistoryEdit = () => {
     navigate(ROUTES.owner.lostHistory);
   };
 
-  const handleSubmit = () => {
-    console.log('Submitting:', formData);
+  const handleSubmitClick = () => {
+    // Validate phone before showing modal
+    if (!validatePhone(formData.phone)) {
+      setPhoneError('Το τηλέφωνο πρέπει να έχει τουλάχιστον 10 ψηφία');
+      return;
+    }
+    setShowSubmitModal(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    // Update status to 'submitted' when final submission is made
+    const updatedData = {
+      ...formData,
+      status: 'submitted',
+      statusLabel: 'Υποβλήθηκε'
+    };
+    
+    console.log('Submitting with status updated:', updatedData);
+    // ADD API CALL HERE
+    
+    setShowSubmitModal(false);
     navigate(ROUTES.owner.lostHistory);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowSubmitModal(false);
+  };
+
+  // Function to get fields for the detail modal
+  const getSubmitFields = () => {
+    return [
+      { label: 'Όνομα Κατοικιδίου', value: formData.petName },
+      { label: 'Είδος', value: formData.petType },
+      { label: 'Ράτσα', value: formData.breed },
+      { label: 'Αριθμός Μικροτσίπ', value: formData.microchip },
+      { label: 'Ημερομηνία Εξαφάνισης', value: formData.date },
+      { label: 'Τηλέφωνο Επικοινωνίας', value: formData.phone },
+      { label: 'Τοποθεσία Εξαφάνισης', value: formData.location },
+      { label: 'Περιγραφή', value: formData.description || 'Δεν έχει συμπληρωθεί' },
+    ];
   };
 
   return (
@@ -112,6 +185,7 @@ const LostPetHistoryEdit = () => {
                   value={formData.date}
                   onChange={handleInputChange}
                   variant="owner"
+                  maxDate={new Date()}
                 />
               </div>
 
@@ -122,11 +196,18 @@ const LostPetHistoryEdit = () => {
                 <input
                   type="tel"
                   name="phone"
-                  className="lost-pet-edit__input"
+                  className={`lost-pet-edit__input ${phoneError ? 'lost-pet-edit__input--error' : ''}`}
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="lost-pet-edit__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
+                {phoneError && (
+                  <div className="lost-pet-edit__error-message">
+                    <AlertCircle size={16} />
+                    <span>{phoneError}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -177,7 +258,7 @@ const LostPetHistoryEdit = () => {
               <button
                 type="button"
                 className="lost-pet-edit__btn lost-pet-edit__btn--submit"
-                onClick={handleSubmit}
+                onClick={handleSubmitClick}
               >
                 <FileCheck size={18} />
                 Οριστική Υποβολή
@@ -185,6 +266,29 @@ const LostPetHistoryEdit = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την επεξεργασία;"
+          description="Όλες οι αλλαγές που έχετε κάνει θα χαθούν."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal with Details */}
+        <ConfirmDetailModal
+          isOpen={showSubmitModal}
+          title="Επιβεβαίωση Οριστικής Υποβολής"
+          fields={getSubmitFields()}
+          cancelText="Επιστροφή"
+          confirmText="Οριστική Υποβολή"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
     </PageLayout>
   );

@@ -4,6 +4,27 @@
   margin: 0 auto;
 }
 
+.lost-pet-detail__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  margin-bottom: 20px;
+  border: none;
+  background: none;
+  color: #23CED9;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.lost-pet-detail__back-btn:hover {
+  color: #1eb8c1;
+  text-decoration: underline;
+}
+
 .lost-pet-detail__header {
   display: flex;
   justify-content: flex-end;

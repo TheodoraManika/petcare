@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Eye, Edit2, Trash2, AlertCircle, Printer, Download, CheckCircle } from 'lucide-react';
+import { Eye, Edit2, Trash2, AlertCircle, Printer, Download, CheckCircle, ChevronLeft } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './LostPetHistoryDetail.css';
@@ -61,9 +61,21 @@ const LostPetHistoryDetail = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(ROUTES.owner.lostHistory);
+  };
+
   return (
     <PageLayout variant="owner" title="Μπάμπης" breadcrumbs={breadcrumbItems}>
       <div className="lost-pet-detail">
+        <button 
+          className="lost-pet-detail__back-btn"
+          onClick={handleBack}
+        >
+          <ChevronLeft size={20} />
+          Πίσω
+        </button>
+
         <div className="lost-pet-detail__header">
           <div className="lost-pet-detail__header-actions">
             {declaration.status === 'found' && (

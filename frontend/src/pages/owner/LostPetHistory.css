@@ -396,12 +396,12 @@
 }
 
 .lost-pet-history__modal-btn--cancel:hover {
-  background: #f9fafb;
+  background: #d2d3d4;
 }
 
 .lost-pet-history__modal-btn--delete {
   background: #dc2626;
-  color: white;
+  color: #101828;
 }
 
 .lost-pet-history__modal-btn--delete:hover {
