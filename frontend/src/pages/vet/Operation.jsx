@@ -99,6 +99,7 @@ const Operation = () => {
       operationDate: '',
       description: ''
     });
+    setFoundPetDetails(null);
     setShowCancelModal(false);
 
     // Show notification

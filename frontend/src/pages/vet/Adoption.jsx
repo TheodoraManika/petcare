@@ -326,7 +326,6 @@ const Adoption = () => {
                   setFormData(prev => ({
                     ...prev,
                     microchipNumber: '',
-                    microchipNumber: '',
                   }));
                 }}
                 variant="vet"

@@ -5,7 +5,7 @@ import Avatar from '../common/Avatar';
 import { ROUTES } from '../../utils/constants';
 import './VetProfile.css';
 
-const VetProfileModal = ({ vet, isOpen, onClose }) => {
+const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
   const navigate = useNavigate();
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [visibleReviews, setVisibleReviews] = useState(2);
@@ -50,7 +50,7 @@ const VetProfileModal = ({ vet, isOpen, onClose }) => {
               <h1 className="vet-name">{vet.name} {vet.lastName}</h1>
               <p className="vet-specialty">{vet.specialty}</p> {/* change to specialties */}
               <div className="rating-section">
-                <Star className="star-icon"/>
+                <Star className="star-icon" />
                 <span className="rating-text">
                   {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || 0} αξιολογήσεις)
                 </span>
@@ -61,7 +61,11 @@ const VetProfileModal = ({ vet, isOpen, onClose }) => {
                 className="book-appointment-btn"
                 onClick={() => {
                   onClose();
-                  navigate(ROUTES.owner.appointments, { state: { vet } });
+                  if (onBook) {
+                    onBook(vet);
+                  } else {
+                    navigate(ROUTES.owner.appointments, { state: { vet } });
+                  }
                 }}
               >
                 Κλείστε Ραντεβού

@@ -1,17 +1,24 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Dog, Cat, Bird, PawPrint } from 'lucide-react';
 import './PetDetailsCard.css';
 
 const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
     if (!petData) return null;
 
-    const isVet = variant === 'vet';
     const hasPetName = !!petData.petName;
-
     const isNotFound = !hasPetName;
 
+    const getPetIcon = (species) => {
+        const type = species?.toLowerCase();
+        if (type?.includes('dog') || type?.includes('σκύλος')) return <Dog size={50} color="#23CED9" />;
+        if (type?.includes('cat') || type?.includes('γάτα')) return <Cat size={50} color="#23CED9" />;
+        if (type?.includes('bird') || type?.includes('πτηνό')) return <Bird size={50} color="#23CED9" />;
+        // Snake/Reptile fallback to PawPrint as specific icon might not exist
+        return <PawPrint size={50} color="#23CED9" />;
+    };
+
     return (
-        <div className={`pet-details-card ${isNotFound ? 'pet-details-card--not-found' : `pet-details-card--${variant}`}`}>
+        <div className={`pet-details-card ${isNotFound ? 'pet-details-card--not-found' : ''}`}>
             <button
                 type="button"
                 className="pet-card__remove-btn"
@@ -23,7 +30,7 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
 
             <div className="pet-card__container">
                 <div className="pet-card__image">
-                    {hasPetName ? (petData.species === 'cat' ? '🐈' : '🐕') : '🐕'}
+                    {hasPetName ? getPetIcon(petData.species) : <PawPrint size={50} color="#23CED9" />}
                 </div>
 
                 <div className="pet-card__content">
