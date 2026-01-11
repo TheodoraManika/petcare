@@ -271,7 +271,6 @@ const LostPet = () => {
       ownerEmail: ''
     });
     setPhotoPreview(null);
-    setMicrochipError('');
     setAfmError('');
     setShowCancelModal(false);
 
