@@ -62,7 +62,7 @@ const MapWithMarkers = ({
           <Stethoscope size={24} color="#FCA47C" />
         </div>
         <div className="popup-info">
-          <h4 className="popup-name">{marker.name} {marker.surname}</h4>
+          <h4 className="popup-name">{marker.name} {marker.lastName || marker.surname}</h4>
           {marker.specialty && <p className="popup-specialty">{marker.specialty}</p>}
           {marker.area && (
             <p className="popup-location">

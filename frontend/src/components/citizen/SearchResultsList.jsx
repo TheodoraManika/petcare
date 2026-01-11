@@ -41,13 +41,26 @@ const SearchResultsList = ({
   // Items are already paginated when passed in, so use them directly
   const displayItems = items;
 
-  const defaultRenderItem = (item) => (
-    <div key={item.id} className="result-item">
-      <div className="result-avatar">
-        <span className="avatar-initials">{item.avatarText || 'Δρ'}</span>
-      </div>
-      <div className="result-details">
-        <h3 className="result-name">{item.name}</h3>
+  const defaultRenderItem = (item) => {
+    // Generate initials from name
+    const getInitials = (name, lastName) => {
+      if (!name) return 'Δρ';
+      const parts = `${name} ${lastName || ''}`.trim().split(' ');
+      if (parts.length >= 2 && parts[1]) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return name.substring(0, 2).toUpperCase();
+    };
+
+    return (
+      <div key={item.id} className="result-item">
+        <div className="result-avatar">
+          <span className="avatar-initials">
+            {getInitials(item.name, item.lastName || item.surname)}
+          </span>
+        </div>
+        <div className="result-details">
+          <h3 className="result-name">{item.name} {item.lastName || item.surname}</h3>
         {item.specialty && <p className="result-specialty">{item.specialty}</p>}
         {item.rating && (
           <div className="result-rating-info">
@@ -78,7 +91,8 @@ const SearchResultsList = ({
         )}
       </div>
     </div>
-  );
+    );
+  };
 
   const render = renderItem || defaultRenderItem;
 
