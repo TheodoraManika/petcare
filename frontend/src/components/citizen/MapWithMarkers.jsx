@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, MapPin } from 'lucide-react';
+import { Star, MapPin, Stethoscope } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import './MapWithMarkers.css';
@@ -59,10 +59,10 @@ const MapWithMarkers = ({
     <div className="popup-content">
       <div className="popup-container">
         <div className="popup-avatar">
-          <MapPin size={24} color="#FCA47C" />
+          <Stethoscope size={24} color="#FCA47C" />
         </div>
         <div className="popup-info">
-          <h4 className="popup-name">Δρ. {marker.name}</h4>
+          <h4 className="popup-name">{marker.name} {marker.lastName || marker.surname}</h4>
           {marker.specialty && <p className="popup-specialty">{marker.specialty}</p>}
           {marker.area && (
             <p className="popup-location">

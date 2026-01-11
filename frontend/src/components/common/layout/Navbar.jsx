@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../Avatar';
+import NotificationPage from '../NotificationPage';
 import './Navbar.css';
 
 /**
@@ -55,6 +56,8 @@ const Navbar = ({ variant = 'vet' }) => {
   const isCitizen = actualVariant === 'citizen';
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
   const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
   const infoRef = useRef(null);
@@ -65,6 +68,30 @@ const Navbar = ({ variant = 'vet' }) => {
 
   const handleMenuClick = () => {
     navigate(isOwner ? ROUTES.owner.dashboard : ROUTES.vet.dashboard);
+  };
+
+  // Fetch unread notifications count
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUnreadCount();
+      // Poll for updates every 30 seconds
+      const interval = setInterval(fetchUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [isLoggedIn]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      // TODO: Replace with real API call
+      // const response = await fetch(`http://localhost:5000/notifications/unread-count?userId=${userId}`);
+      // const data = await response.json();
+      // setUnreadNotificationsCount(data.count);
+      
+      // Mock data for now
+      setUnreadNotificationsCount(2);
+    } catch (error) {
+      console.error('Error fetching unread notifications:', error);
+    }
   };
 
   // Close dropdowns when clicking outside
@@ -279,11 +306,18 @@ const Navbar = ({ variant = 'vet' }) => {
               aria-expanded={isProfileOpen}
               aria-haspopup="true"
             >
-              <Avatar
-                src={user.avatar}
-                name={user.name}
-                size="sm"
-              />
+              <div className="navbar__avatar-wrapper">
+                <Avatar
+                  src={user.avatar}
+                  name={user.name}
+                  size="sm"
+                />
+                {unreadNotificationsCount > 0 && (
+                  <span className="navbar__avatar-badge">
+                    {unreadNotificationsCount}
+                  </span>
+                )}
+              </div>
               <span className="navbar__profile-name">{user.name}</span>
               <ChevronDown className={`navbar__profile-chevron ${isProfileOpen ? 'navbar__profile-chevron--open' : ''}`} />
             </button>
@@ -304,6 +338,23 @@ const Navbar = ({ variant = 'vet' }) => {
                   <span>Προφίλ</span>
                 </Link>
                 <button
+                  className="navbar__profile-menu-item"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    setIsNotificationOpen(true);
+                  }}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <Bell size={16} />
+                  </span>
+                  <span>Ειδοποιήσεις</span>
+                  {unreadNotificationsCount > 0 && (
+                    <span className="navbar__notification-badge">
+                      {unreadNotificationsCount}
+                    </span>
+                  )}
+                </button>
+                <button
                   className="navbar__profile-menu-item navbar__profile-menu-item--logout"
                   onClick={() => {
                     setIsProfileOpen(false);
@@ -322,6 +373,15 @@ const Navbar = ({ variant = 'vet' }) => {
           </div>
         )}
       </div>
+      
+      {/* Notification Page Modal */}
+      {isLoggedIn && (
+        <NotificationPage
+          isOpen={isNotificationOpen}
+          onClose={() => setIsNotificationOpen(false)}
+          userType={actualVariant}
+        />
+      )}
     </nav>
   );
 };

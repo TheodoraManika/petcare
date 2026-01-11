@@ -58,7 +58,7 @@ const LoginPage = () => {
         if (user.userType === 'vet') {
           navigate(ROUTES.vet.dashboard);
         } else {
-          navigate(ROUTES.home);
+          navigate(ROUTES.owner.dashboard);
         }
       } else {
         setError('Λάθος email ή κωδικός πρόσβασης');
