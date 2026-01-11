@@ -12,6 +12,7 @@ import './HomePage.css';
 const HomePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchName, setSearchName] = useState('');
   const [selectedArea, setSelectedArea] = useState('');
   const [locationData, setLocationData] = useState(null);
   const [selectedAvailability, setSelectedAvailability] = useState('');
@@ -459,6 +460,8 @@ const HomePage = () => {
                     type="text"
                     placeholder="π.χ. Παπαδόπουλος"
                     className="search-input search-text-input"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
                   />
                 </div>
               </div>
@@ -515,7 +518,17 @@ const HomePage = () => {
             </div>
             <button
               className="search-button"
-              onClick={() => navigate(ROUTES.citizen.searchMap)}
+              onClick={() => navigate(ROUTES.citizen.searchMap, {
+                state: {
+                  filters: {
+                    searchName: searchName,
+                    selectedArea: selectedArea,
+                    locationData: locationData,
+                    selectedAvailability: selectedAvailability,
+                    selectedSpecialty: selectedSpecialty
+                  }
+                }
+              })}
             >
               Αναζήτηση
             </button>
