@@ -255,6 +255,7 @@ const LostPet = () => {
 
   const handleConfirmCancel = () => {
     // Reset all form fields
+    setFoundPet(null);
     setFormData({
       microchipNumber: '',
       lostDate: '',
