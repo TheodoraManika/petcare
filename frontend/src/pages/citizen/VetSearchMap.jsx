@@ -321,10 +321,12 @@ const VetSearchMap = () => {
   // Options for CustomSelect components
   const specialtyOptions = [
     { value: '', label: 'Επιλέξτε ειδικότητα...' },
-    { value: 'general', label: 'Γενικός Κτηνίατρος' },
+    { value: 'general', label: 'Γενική Κτηνιατρική' },
     { value: 'surgery', label: 'Χειρουργική' },
+    { value: 'dermatology', label: 'Δερματολογία' },
+    { value: 'cardiology', label: 'Καρδιολογία' },
     { value: 'dentistry', label: 'Οδοντιατρική' },
-    { value: 'orthopedics', label: 'Ορθοπεδική' }
+    { value: 'ophthalmology', label: 'Οφθαλμολογία' }
   ];
 
   const availabilityOptions = [
