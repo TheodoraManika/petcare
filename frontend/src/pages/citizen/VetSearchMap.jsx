@@ -525,6 +525,7 @@ const VetSearchMap = () => {
           isOpen={showProfileModal}
           onClose={() => setShowProfileModal(false)}
           vet={selectedProfileVet}
+          onBook={() => handleCloseAppointment(selectedProfileVet)}
         />
       </div>
     </PageLayout>
