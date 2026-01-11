@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, List, Dog, Cat, X, Phone, Palette, AlertCircle, Search as SearchIcon, FileText, User, Mail } from 'lucide-react';
+import { MapPin, List, Dog, Cat, X, Phone, Palette, AlertCircle, Search as SearchIcon, FileText, User, Mail, Bird, PawPrint } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -15,7 +15,7 @@ import FoundPetForm from './FoundPetForm';
 const LostPets = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [filters, setFilters] = useState({
     animal: '',
     area: '',
@@ -46,18 +46,18 @@ const LostPets = () => {
           fetch('http://localhost:5000/lostPets'),
           fetch('http://localhost:5000/users')
         ]);
-        
+
         if (!lostPetsResponse.ok || !usersResponse.ok) {
           throw new Error('Failed to fetch data');
         }
-        
+
         const lostPetsData = await lostPetsResponse.json();
         const usersData = await usersResponse.json();
-        
+
         // Transform data for display (add owner info and default coordinates if missing)
         const transformedPets = lostPetsData.map((pet, index) => {
           const owner = usersData.find(user => user.id === pet.ownerId?.toString());
-          
+
           return {
             ...pet,
             name: pet.petName || 'Άγνωστο',
@@ -73,7 +73,7 @@ const LostPets = () => {
             lon: pet.locationLon || 23.7275,
           };
         });
-        
+
         setLostPets(transformedPets);
         setLoading(false);
       } catch (error) {
@@ -143,15 +143,17 @@ const LostPets = () => {
   };
 
   const handleFoundPet = (pet) => {
-    setFoundFormPrefill({ petDetails: {
-      petName: pet.name,
-      species: pet.type,
-      breed: pet.breed,
-      foundLocation: pet.area,
-      description: pet.description,
-      dateReported: pet.dateLost,
-      microchip: pet.microchip
-    }});
+    setFoundFormPrefill({
+      petDetails: {
+        petName: pet.name,
+        species: pet.type,
+        breed: pet.breed,
+        foundLocation: pet.area,
+        description: pet.description,
+        dateReported: pet.dateLost,
+        microchip: pet.microchip
+      }
+    });
     setShowFoundForm(true);
   };
 
@@ -224,10 +226,18 @@ const LostPets = () => {
   const animalOptions = [
     { value: 'dog', label: 'Σκύλος', icon: <Dog size={16} /> },
     { value: 'cat', label: 'Γάτα', icon: <Cat size={16} /> },
-    { value: 'bird', label: 'Πτηνό'},
-    { value: 'reptile', label: 'Ερπετό'},
+    { value: 'bird', label: 'Πτηνό' },
+    { value: 'reptile', label: 'Ερπετό' },
     { value: 'other', label: 'Άλλο' }
   ];
+
+  const getPetIcon = (type, size = 48) => {
+    const species = type?.toLowerCase();
+    if (species?.includes('dog') || species?.includes('σκύλος')) return <Dog size={size} color="#23CED9" />;
+    if (species?.includes('cat') || species?.includes('γάτα')) return <Cat size={size} color="#23CED9" />;
+    if (species?.includes('bird') || species?.includes('πτηνό')) return <Bird size={size} color="#23CED9" />;
+    return <PawPrint size={size} color="#23CED9" />;
+  };
 
   const breadcrumbItems = [
   ];
@@ -251,7 +261,7 @@ const LostPets = () => {
         {/* Sidebar with filters */}
         <SearchSidebar
           title="Φίλτρα Αναζήτησης"
-          onSearch={() => {}}
+          onSearch={() => { }}
           onClear={handleClear}
           resultsCount={filteredPets.length}
         >
@@ -352,24 +362,24 @@ const LostPets = () => {
 
           <div className="lost-pets-header">
             <h2 className="lost-pets-title">Αποτελέσματα ({filteredPets.length})</h2>
-            
+
             <div className="view-toggles">
-              <button 
-                className={`toggle-btn ${!showMap ? 'active' : ''}`} 
+              <button
+                className={`toggle-btn ${!showMap ? 'active' : ''}`}
                 onClick={() => setShowMap(false)}
               >
                 <List size={18} />
                 Λίστα
               </button>
-              <button 
-                className={`toggle-btn ${showMap ? 'active' : ''}`} 
+              <button
+                className={`toggle-btn ${showMap ? 'active' : ''}`}
                 onClick={() => setShowMap(true)}
               >
                 <MapPin size={18} />
                 Χάρτης
               </button>
             </div>
-            
+
           </div>
 
           {showFoundForm ? (
@@ -410,7 +420,7 @@ const LostPets = () => {
                   <p className="popup-date">Χάθηκε: {pet.dateLost}</p>
                   <div className="popup-actions">
                     <button className="popup-details-btn" onClick={() => handleViewDetails(pet)}>
-                      Προβολή 
+                      Προβολή
                     </button>
                     <button className="popup-found-btn" onClick={() => handleFoundPet(pet)}>
                       Το Βρήκα!
@@ -432,7 +442,7 @@ const LostPets = () => {
                   <p className="empty-state-desc">
                     Δεν υπάρχει καταχωρημένο κατοικίδιο με αυτό το microchip.
                   </p>
-                  <button 
+                  <button
                     className="empty-state-btn"
                     onClick={handleReportQuick}
                   >
@@ -441,57 +451,57 @@ const LostPets = () => {
                   </button>
                 </div>
               ) : (
-              <>
-              <div className="pets-grid">
-                {currentPets.map((pet) => (
-                  <div key={pet.id} className="pet-card">
-                    <div 
-                      className="pet-card-image clickable"
-                      onClick={() => handleProfileClick(pet)}
-                      title="Κλικ για πλήρες προφίλ"
-                    >
-                      <Dog size={48} color="#23CED9" />
-                    </div>
-                    <div className="pet-card-content">
-                      <h3 
-                        className="pet-card-name clickable"
-                        onClick={() => handleProfileClick(pet)}
-                        title="Κλικ για πλήρες προφίλ"
-                      >
-                        {pet.name}
-                      </h3>
-                      <p className="pet-card-breed">{pet.type} - {pet.breed}</p>
-                      <div className="pet-card-info">
-                        <MapPin size={14} />
-                        <span>{pet.area}</span>
+                <>
+                  <div className="pets-grid">
+                    {currentPets.map((pet) => (
+                      <div key={pet.id} className="pet-card">
+                        <div
+                          className="pet-card-image clickable"
+                          onClick={() => handleViewDetails(pet)}
+                          title="Προβολή λεπτομερειών"
+                        >
+                          {getPetIcon(pet.type)}
+                        </div>
+                        <div className="pet-card-content">
+                          <h3
+                            className="pet-card-name clickable"
+                            onClick={() => handleViewDetails(pet)}
+                            title="Προβολή λεπτομερειών"
+                          >
+                            {pet.name}
+                          </h3>
+                          <p className="pet-card-breed">{pet.type} - {pet.breed}</p>
+                          <div className="pet-card-info">
+                            <MapPin size={14} />
+                            <span>{pet.area}</span>
+                          </div>
+                          <p className="pet-card-date">Χάθηκε: {pet.dateLost}</p>
+                        </div>
+                        <div className="pet-card-actions">
+                          <button
+                            className="pet-card-button pet-card-button--details"
+                            onClick={() => handleViewDetails(pet)}
+                          >
+                            Προβολή
+                          </button>
+                          <button
+                            className="pet-card-button pet-card-button--found"
+                            onClick={() => handleFoundPet(pet)}
+                          >
+                            Το Βρήκα!
+                          </button>
+                        </div>
                       </div>
-                      <p className="pet-card-date">Χάθηκε: {pet.dateLost}</p>
-                    </div>
-                    <div className="pet-card-actions">
-                      <button 
-                        className="pet-card-button pet-card-button--details"
-                        onClick={() => handleViewDetails(pet)}
-                      >
-                        Προβολή 
-                      </button>
-                      <button 
-                        className="pet-card-button pet-card-button--found"
-                        onClick={() => handleFoundPet(pet)}
-                      >
-                        Το Βρήκα!
-                      </button>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-                variant="citizen"
-              />
-              </>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    variant="citizen"
+                  />
+                </>
               )}
             </>
           )}
@@ -506,10 +516,10 @@ const LostPets = () => {
               <button className="modal-close" onClick={() => setShowDetailModal(false)}>
                 <X size={24} />
               </button>
-              
+
               <div className="modal-header">
                 <div className="modal-pet-image">
-                  <Dog size={80} color="#23CED9" />
+                  {getPetIcon(detailPet.type, 50)}
                 </div>
                 <div className="modal-pet-identity">
                   <h2 className="modal-pet-name">{detailPet.name}</h2>
@@ -576,7 +586,7 @@ const LostPets = () => {
 
               </div>
 
-              <button 
+              <button
                 className="modal-found-btn"
                 onClick={() => {
                   setShowDetailModal(false);
@@ -588,7 +598,7 @@ const LostPets = () => {
             </div>
           </div>
         )}
-        
+
       </div>
     </PageLayout>
   );

@@ -62,8 +62,10 @@
 .found-actions-section {
   width: 100%;
   max-width: 1235px;
-  margin: 24px auto 18px; /* center and add top spacing to match other sections */
-  padding: 0 16px; /* align horizontal padding with other sections */
+  margin: 24px auto 18px;
+  /* center and add top spacing to match other sections */
+  padding: 0 16px;
+  /* align horizontal padding with other sections */
   box-sizing: border-box;
 }
 
@@ -129,7 +131,7 @@
 
 .found-action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
 .report-sidebar-title {
@@ -155,17 +157,17 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-   padding: 32px 28px;
+  padding: 32px 28px;
   border: 2px solid #D1D5DB;
   border-radius: 12px;
   background-color: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-   min-height: 180px;
-   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-   position: relative;
-   overflow: hidden;
+  min-height: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
 }
 
 .report-card--compact {
@@ -191,16 +193,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-   width: 55px;
-   height: 55px;
+  width: 55px;
+  height: 55px;
   border-radius: 8px;
   margin-bottom: 16px;
   border: 2px solid #23CED9;
   background-color: rgba(35, 206, 217, 0.1);
   transition: all 0.2s ease;
-   box-shadow: 0 4px 12px rgba(35, 206, 217, 0.2);
-   position: relative;
-   z-index: 1;
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.2);
+  position: relative;
+  z-index: 1;
 }
 
 .report-card:hover .report-card__icon {
@@ -219,21 +221,21 @@
 }
 
 .report-card__title {
-   font-size: 18px;
+  font-size: 18px;
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 8px 0;
-   position: relative;
-   z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .report-card__description {
-   font-size: 15px;
+  font-size: 15px;
   color: #6b7280;
   margin: 0;
   line-height: 1.5;
-   position: relative;
-   z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .lost-pets-header {
@@ -276,25 +278,25 @@
 .microchip-search-icon {
   position: absolute;
   left: 12px;
-   color: #23CED9;
+  color: #23CED9;
   pointer-events: none;
 }
 
 .microchip-input {
   width: 100%;
   padding: 10px 12px 10px 38px;
-   border: 2px solid #23CED9;
+  border: 2px solid #23CED9;
   border-radius: 8px;
   font-size: 14px;
   color: #1f2937;
   transition: all 0.2s ease;
-   background-color: #ffffff;
+  background-color: #ffffff;
 }
 
 .microchip-input:focus {
   outline: none;
   border-color: #23CED9;
-   box-shadow: 0 0 0 4px rgba(35, 206, 217, 0.15);
+  box-shadow: 0 0 0 4px rgba(35, 206, 217, 0.15);
 }
 
 .microchip-input::placeholder {
@@ -521,6 +523,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -529,8 +532,8 @@
 .modal-content {
   background: white;
   border-radius: 14px;
-  max-width: 860px;
-  width: 100%;
+  max-width: 1200px;
+  width: 95%;
   max-height: 72vh;
   overflow-y: auto;
   position: relative;
@@ -543,6 +546,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -632,6 +636,10 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-bottom: 20px;
+}
+
+.modal-detail-item:last-child {
+  grid-column: span 2;
 }
 
 .modal-detail-item {
@@ -896,6 +904,7 @@
     grid-template-columns: 350px 1fr;
     column-gap: 16px;
   }
+
   .report-sidebar {
     grid-column: 1 / -1;
     position: static;
@@ -909,7 +918,7 @@
 
   .lost-pets-container {
     padding: 20px;
-  
+
   }
 
   .report-cards {
@@ -917,64 +926,64 @@
     gap: 16px;
   }
 
-   .report-card {
-     padding: 24px 20px;
-     min-height: 150px;
-   }
+  .report-card {
+    padding: 24px 20px;
+    min-height: 150px;
+  }
 
-   .report-card__icon {
-     width: 56px;
-     height: 56px;
-   }
+  .report-card__icon {
+    width: 56px;
+    height: 56px;
+  }
 
-   .report-card__title {
-     font-size: 16px;
-   }
+  .report-card__title {
+    font-size: 16px;
+  }
 
-   .lost-pets-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1f2937;
-      margin: 0;
-    }
+  .lost-pets-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
 
-   .results-count {
-     font-size: 24px;
-   }
+  .results-count {
+    font-size: 24px;
+  }
 
-   .filter-group--primary {
-     padding: 16px;
-   }
+  .filter-group--primary {
+    padding: 16px;
+  }
 
-   .filter-label--emphasis {
-     font-size: 14px;
-   }
+  .filter-label--emphasis {
+    font-size: 14px;
+  }
 
-   .filter-note {
-     font-size: 11px;
-   }
+  .filter-note {
+    font-size: 11px;
+  }
 
-   .empty-state {
-     padding: 40px 20px;
-   }
+  .empty-state {
+    padding: 40px 20px;
+  }
 
-   .empty-state-icon {
-     width: 100px;
-     height: 100px;
-   }
+  .empty-state-icon {
+    width: 100px;
+    height: 100px;
+  }
 
-   .empty-state-title {
-     font-size: 20px;
-   }
+  .empty-state-title {
+    font-size: 20px;
+  }
 
-   .empty-state-desc {
-     font-size: 15px;
-   }
+  .empty-state-desc {
+    font-size: 15px;
+  }
 
-   .empty-state-btn {
-     padding: 12px 24px;
-     font-size: 15px;
-   }
+  .empty-state-btn {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
 
   .lost-pets-header {
     flex-direction: column;
@@ -1044,4 +1053,3 @@
     grid-template-columns: 1fr;
   }
 }
-

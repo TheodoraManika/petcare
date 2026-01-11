@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope } from 'lucide-react';
+import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope, Bird } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import LocationPicker from '../../components/common/forms/LocationPicker';
 import Notification from '../../components/common/modals/Notification';
+import VetProfileModal from '../../components/citizen/VetProfile';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -16,6 +17,10 @@ const HomePage = () => {
   const [selectedAvailability, setSelectedAvailability] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
   const [notification, setNotification] = useState(null);
+
+  // Vet Profile Modal State
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedProfileVet, setSelectedProfileVet] = useState(null);
 
   // Check for notification from navigation state
   useEffect(() => {
@@ -142,6 +147,15 @@ const HomePage = () => {
     },
   ];
 
+  // Helper to get pet icon
+  const getPetIcon = (type, size = 56) => {
+    const species = type?.toLowerCase();
+    if (species?.includes('dog') || species?.includes('σκύλος')) return <Dog size={size} color="#23CED9" />;
+    if (species?.includes('cat') || species?.includes('γάτα')) return <Cat size={size} color="#23CED9" />;
+    if (species?.includes('bird') || species?.includes('πτηνό')) return <Bird size={size} color="#23CED9" />;
+    return <PawPrint size={size} color="#23CED9" />;
+  };
+
   // Auto-advance carousel
   useEffect(() => {
     const timer = setInterval(() => {
@@ -189,11 +203,10 @@ const HomePage = () => {
     setCurrentSlide(index);
   };
 
-  // vets displayed as cards; no carousel handlers required
-
-  // Handle vet click
+  // Handle vet click - Open Modal
   const handleVetClick = (vet) => {
-    navigate(`/citizen/vet/${vet.id}`);
+    setSelectedProfileVet(vet);
+    setShowProfileModal(true);
   };
 
   // Handle hero "Δήλωση Εύρεσης" button
@@ -319,11 +332,7 @@ const HomePage = () => {
                     >
                       <div className="carousel-card" onClick={() => handlePetClick(pet)}>
                         <div className="carousel-card__image">
-                          {pet.type === 'Σκύλος' ? (
-                            <Dog size={56} color="#23CED9" />
-                          ) : (
-                            <Cat size={56} color="#23CED9" />
-                          )}
+                          {getPetIcon(pet.type)}
                         </div>
                         <div className="carousel-card__info">
                           <h3 className="carousel-card__name">{pet.name}</h3>
@@ -575,6 +584,13 @@ const HomePage = () => {
           type={notification.type}
         />
       )}
+
+      {/* Vet Profile Modal */}
+      <VetProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        vet={selectedProfileVet}
+      />
     </PageLayout>
   );
 };
