@@ -158,6 +158,14 @@ const HomePage = () => {
     vetSlides.push(topVets.slice(i, i + vetsPerSlide));
   }
 
+  // Auto-advance vet carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentVetSlide((prev) => (prev + 1) % vetSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [vetSlides.length]);
+
   const nextVetSlide = useCallback(() => {
     setCurrentVetSlide((prev) => (prev + 1) % Math.max(1, vetSlides.length));
   }, [vetSlides.length]);
@@ -505,10 +513,14 @@ const HomePage = () => {
 
               <div className="vet-carousel-track">
                 {vetSlides.map((slide, sIdx) => (
-                  <div key={sIdx} className={`vet-carousel-slide ${sIdx === currentVetSlide ? 'active' : ''}`}>
+                  <div
+                    key={sIdx}
+                    className={`vet-carousel-slide ${sIdx === currentVetSlide ? 'active' : ''}`}
+                    style={{ transform: `translateX(${(sIdx - currentVetSlide) * 100}%)` }}
+                  >
                     <div className="vet-carousel-slide-inner">
                       {slide.map((vet) => (
-                        <div key={vet.id} className="vet-carousel-card">
+                        <div key={vet.id} className="vet-carousel-card" onClick={() => handleVetClick(vet)}>
                           <div className="vet-card__avatar-circle orange-icon">{vet.initials}</div>
                           <h3 className="card-title">{vet.name}</h3>
                           <p className="vet-card__specialty-text">{vet.specialty}</p>
@@ -542,7 +554,7 @@ const HomePage = () => {
             </div>
 
             <div className="vet-carousel-indicators">
-              {topVets.map((_, idx) => (
+              {vetSlides.map((_, idx) => (
                 <button
                   key={idx}
                   className={`vet-carousel-indicator ${idx === currentVetSlide ? 'active' : ''}`}
