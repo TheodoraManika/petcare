@@ -91,10 +91,8 @@ const Adoption = () => {
       // Pet not found - just set microchip
       setFormData(prev => ({
         ...prev,
-        microchipNumber: microchip,
-        microchipNumber: microchip,
+        microchipNumber: microchip
       }));
-      setFoundPet({ microchip });
       setFoundPet({ microchip });
       // Removed error handling for microchip as field is hidden
     }
