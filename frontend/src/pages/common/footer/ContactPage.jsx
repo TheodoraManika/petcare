@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './ContactPage.css';
 import PageLayout from '../../../components/common/layout/PageLayout';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../../../utils/constants';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -147,9 +149,9 @@ const ContactPage = () => {
 
             {/* Contact Info */}
             <div className="contact-info-section">
-              <h2 className="section-title">Στοιχεία Επικοινωνίας</h2>
 
               <div className="contact-info-card">
+                <h2 className="section-title">Στοιχεία Επικοινωνίας</h2>
                 <div className="info-item">
                   <div className="info-icon email-icon">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -208,16 +210,16 @@ const ContactPage = () => {
 
               <div className="social-links">
                 <h3 className="social-title">Χρήσιμοι Σύνδεσμοι</h3>
-                <div className="social-buttons">
-                  <a href="#" className="social-btn facebook-btn">
-                    Σελίδα Facebook
-                  </a>
-                  <a href="#" className="social-btn instagram-btn">
-                    Σελίδα Instagram
-                  </a>
-                  <a href="#" className="social-btn twitter-btn">
-                    Σελίδα Twitter
-                  </a>
+                <div className="useful-links-list">
+                  <Link to={ROUTES.about} className="useful-link-item">
+                    Σχετικά με Εμάς
+                  </Link>
+                  <Link to={ROUTES.privacy} className="useful-link-item">
+                    Πολιτική Απορρήτου
+                  </Link>
+                  <Link to={ROUTES.terms} className="useful-link-item">
+                    Όροι Χρήσης
+                  </Link>
                 </div>
               </div>
             </div>

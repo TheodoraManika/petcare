@@ -104,7 +104,7 @@
 
 .story-card,
 .vision-card {
-  background: #f9f9f9;
+  background: white;
   padding: 25px;
   border-radius: 12px;
   border-top: 4px solid #23cfd9;
@@ -445,7 +445,7 @@
 }
 
 .btn-primary {
-  background: #FCA47C;
+  background: #23cfd9;
   color: black;
 }
 
