@@ -858,13 +858,37 @@
   background-color: rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
+  /* Align to bottom so inputs align if labels wrap, though single line labels prefer center or flex-end of container? No, align-items stretch is better, but button height is fixed. */
   align-items: center;
-  padding: 16px;
-  border-radius: 10px;
+  padding: 24px;
+  border-radius: 16px;
   z-index: 3;
-  gap: 16px;
+  gap: 24px;
   flex-wrap: nowrap;
   overflow: visible;
+}
+
+.search-container {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  width: 100%;
+}
+
+.search-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.search-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-left: 4px;
 }
 
 .search-field {
@@ -872,12 +896,15 @@
   display: flex;
   align-items: center;
   height: 48px;
-  flex-shrink: 0;
-  flex: 1.5;
-  min-width: 180px;
+  width: 100%;
   border-radius: 12px;
-  gap: 8px;
   background-color: transparent;
+}
+
+.search-field.no-icon .search-input,
+.search-field.no-icon .location-picker__input,
+.search-field.no-icon .custom-select__trigger {
+  padding-left: 16px !important;
 }
 
 .search-field .field-icon {
@@ -894,12 +921,7 @@
   padding-left: 44px;
 }
 
-.search-field:nth-child(2),
-.search-field:nth-child(3),
-.search-field:nth-child(4) {
-  flex: 1;
-  min-width: 150px;
-}
+/* Removed specific child flex sizing as it is handled by search-column now */
 
 .search-input {
   width: 100%;
@@ -998,6 +1020,8 @@ select.search-input option {
 }
 
 .search-button {
+  margin-top: 24px;
+  /* Align with inputs, accounting for label height approx */
   background-color: #FCA47C;
   /* orange */
   padding: 0 40px;

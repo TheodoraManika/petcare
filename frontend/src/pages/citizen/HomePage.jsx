@@ -451,60 +451,67 @@ const HomePage = () => {
         {/* Top Rated Vets Section */}
         <section className="vet-section">
           <div className="hero-search-box">
-            <div className="search-field">
-              <input
-                type="text"
-                placeholder="Αναζήτηση κτηνιάτρων..."
-                className="search-input search-text-input"
-              />
-              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="0" y="0" width="20" height="20" fill="white" />
-                <path d="M17.5 17.5L13.8833 13.8834" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <div className="search-field">
-              <LocationPicker
-                value={selectedArea}
-                onChange={setSelectedArea}
-                onSelect={handleLocationSelect}
-                placeholder="Περιοχή..."
-                variant="citizen"
-              />
-            </div>
-            <div className="search-field">
-              <Calendar className="field-icon" size={20} />
-              <CustomSelect
-                value={selectedAvailability}
-                onChange={setSelectedAvailability}
-                placeholder="Διαθεσιμότητα..."
-                options={[
-                  { value: 'today', label: 'Σήμερα' },
-                  { value: 'tomorrow', label: 'Αύριο' },
-                  { value: 'week', label: 'Αυτή την εβδομάδα' },
-                  { value: 'month', label: 'Αυτό το μήνα' },
-                ]}
-              />
-            </div>
-            <div className="search-field">
-              <Stethoscope className="field-icon" size={20} />
-              <CustomSelect
-                value={selectedSpecialty}
-                onChange={setSelectedSpecialty}
-                placeholder="Ειδικότητα..."
-                options={[
-                  { value: 'general', label: 'Γενικός Ιατρός' },
-                  { value: 'surgery', label: 'Χειρουργός' },
-                  { value: 'dentistry', label: 'Οδοντολόγος' },
-                  { value: 'dermatology', label: 'Δερματολόγος' },
-                ]}
-              />
+            <div className="search-container">
+              <div className="search-column">
+                <label className="search-label">Αναζήτηση</label>
+                <div className="search-field no-icon">
+                  <input
+                    type="text"
+                    placeholder="π.χ. Παπαδόπουλος"
+                    className="search-input search-text-input"
+                  />
+                </div>
+              </div>
+              <div className="search-column">
+                <label className="search-label">Περιοχή</label>
+                <div className="search-field">
+                  <LocationPicker
+                    value={selectedArea}
+                    onChange={setSelectedArea}
+                    onSelect={handleLocationSelect}
+                    placeholder="Επιλέξτε περιοχή"
+                    variant="citizen"
+                  />
+                </div>
+              </div>
+              <div className="search-column">
+                <label className="search-label">Διαθεσιμότητα</label>
+                <div className="search-field no-icon">
+                  <CustomSelect
+                    value={selectedAvailability}
+                    onChange={setSelectedAvailability}
+                    placeholder="Επιλέξτε..."
+                    options={[
+                      { value: 'today', label: 'Σήμερα' },
+                      { value: 'tomorrow', label: 'Αύριο' },
+                      { value: 'week', label: 'Αυτή την εβδομάδα' },
+                      { value: 'month', label: 'Αυτό το μήνα' },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="search-column">
+                <label className="search-label">Ειδικότητα</label>
+                <div className="search-field no-icon">
+                  <CustomSelect
+                    value={selectedSpecialty}
+                    onChange={setSelectedSpecialty}
+                    placeholder="Επιλέξτε..."
+                    options={[
+                      { value: 'general', label: 'Γενικός Ιατρός' },
+                      { value: 'surgery', label: 'Χειρουργός' },
+                      { value: 'dentistry', label: 'Οδοντολόγος' },
+                      { value: 'dermatology', label: 'Δερματολόγος' },
+                    ]}
+                  />
+                </div>
+              </div>
             </div>
             <button
               className="search-button"
               onClick={() => navigate(ROUTES.citizen.searchMap)}
             >
-              Αναζήτηση Κτηνιάτρων
+              Αναζήτηση
             </button>
           </div>
           <div className="vets-section__title">
