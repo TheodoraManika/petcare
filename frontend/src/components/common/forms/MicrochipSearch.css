@@ -1,0 +1,145 @@
+/* Shared container styles */
+.microchip-search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 20px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+/* Label */
+.microchip-search__label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Input Wrapper */
+.microchip-search__input-wrapper {
+    display: flex;
+    gap: 12px;
+}
+
+/* Input Field */
+.microchip-search__input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    /* Slightly different generic radius */
+    font-size: 14px;
+    color: #1f2937;
+    background-color: white;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.microchip-search__input:focus {
+    outline: none;
+}
+
+/* Search Button */
+.microchip-search__btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.microchip-search__btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.microchip-search__btn:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Hint Text */
+.microchip-search__hint {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 4px 0 0 0;
+    font-style: italic;
+}
+
+/* Error Message */
+.microchip-search__error {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #ef4444;
+    margin-top: 4px;
+}
+
+/* --- VARIANTS --- */
+
+/* CITIZEN (Blue Theme) */
+.microchip-search--citizen {
+    background-color: #F0FDFA;
+    border: 1px solid #CCFBF1;
+}
+
+.microchip-search--citizen .microchip-search__label {
+    color: #115E59;
+}
+
+.microchip-search--citizen .microchip-search__input {
+    border-color: #99F6E4;
+}
+
+.microchip-search--citizen .microchip-search__input:focus {
+    border-color: #2DD4BF;
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+}
+
+.microchip-search--citizen .microchip-search__btn {
+    background-color: #23CED9;
+    /* Cyan from designs */
+    color: white;
+}
+
+.microchip-search--citizen .microchip-search__btn:hover:not(:disabled) {
+    background-color: #1dbdc7;
+    box-shadow: 0 4px 8px rgba(35, 206, 217, 0.2);
+}
+
+/* VET (Orange Theme) */
+.microchip-search--vet {
+    background: linear-gradient(135deg, rgba(252, 164, 124, 0.05) 0%, rgba(252, 164, 124, 0.02) 100%);
+    border: 2px dashed rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search--vet .microchip-search__label {
+    color: #374151;
+    /* Keep standard label color or use dark orange if preferred */
+}
+
+.microchip-search--vet .microchip-search__input:focus {
+    border-color: #FCA47C;
+    box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.microchip-search--vet .microchip-search__btn {
+    background-color: #FCA47C;
+    color: #000;
+}
+
+.microchip-search--vet .microchip-search__btn:hover:not(:disabled) {
+    background-color: #f89a5c;
+    box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}

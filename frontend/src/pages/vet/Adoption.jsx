@@ -10,8 +10,13 @@ import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
+
+// Mock lost pets database
+
 
 const Adoption = () => {
   const navigate = useNavigate();
@@ -20,16 +25,17 @@ const Adoption = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [microchipError, setMicrochipError] = useState('');
+
   const [ownerAfmError, setOwnerAfmError] = useState('');
+  const [foundPet, setFoundPet] = useState(null);
+
+
+
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
-    petName: '',
-    species: '',
-    age: '',
-    gender: '',
-    
+
+
     // Step 2: Owner Data
     ownerAfm: '',
     ownerName: '',
@@ -39,7 +45,7 @@ const Adoption = () => {
     ownerAddress: '',
     ownerCity: '',
     ownerPostalCode: '',
-    
+
     // Step 3: Adoption Data
     adoptionDate: '',
     adoptionReason: '',
@@ -69,30 +75,40 @@ const Adoption = () => {
   // Helper function to filter email characters - no Greek letters
   const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
 
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: pet.microchip,
+        petName: pet.name,
+        species: pet.type,
+      }));
+      setFoundPet(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: microchip,
+        microchipNumber: microchip,
+      }));
+      setFoundPet({ microchip });
+      setFoundPet({ microchip });
+      // Removed error handling for microchip as field is hidden
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Special handling for microchip number
-    if (name === 'microchipNumber') {
-      const numericValue = value.replace(/[^0-9]/g, '');
-      setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
-      if (numericValue.length > 0 && numericValue.length !== 15) {
-        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
-      } else {
-        setMicrochipError('');
-      }
-    }
-    // Special handling for pet name
-    else if (name === 'petName') {
-      const filteredValue = filterLettersOnly(value);
-      setFormData(prev => ({ ...prev, [name]: filteredValue }));
-    }
+
+
     // Special handling for owner AFM
-    else if (name === 'ownerAfm') {
+    if (name === 'ownerAfm') {
       const numericValue = allowedAFMChars(value);
       setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
+
       if (numericValue.length > 0 && numericValue.length !== 9) {
         setOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
       } else {
@@ -129,11 +145,7 @@ const Adoption = () => {
       const numericValue = value.replace(/[^0-9]/g, '');
       setFormData(prev => ({ ...prev, [name]: numericValue }));
     }
-    // Special handling for age (only numbers)
-    else if (name === 'age') {
-      const numericValue = value.replace(/[^0-9]/g, '');
-      setFormData(prev => ({ ...prev, [name]: numericValue }));
-    }
+
     else {
       setFormData(prev => ({
         ...prev,
@@ -154,11 +166,7 @@ const Adoption = () => {
       case 1:
         return (
           formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15 &&
-          formData.petName.trim() !== '' &&
-          formData.species.trim() !== '' &&
-          formData.age.trim() !== '' &&
-          formData.gender.trim() !== ''
+          formData.microchipNumber.length === 15
         );
       case 2:
         return (
@@ -219,13 +227,12 @@ const Adoption = () => {
   };
 
   const handleConfirmCancel = () => {
+    // Reset found pet
+    setFoundPet(null);
     // Reset form data to initial empty state
     setFormData({
       microchipNumber: '',
-      petName: '',
-      species: '',
-      age: '',
-      gender: '',
+
       ownerAfm: '',
       ownerName: '',
       ownerSurname: '',
@@ -242,15 +249,14 @@ const Adoption = () => {
       notes: ''
     });
     // Reset error states
-    setMicrochipError('');
     setOwnerAfmError('');
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -288,10 +294,7 @@ const Adoption = () => {
   // Prepare fields for confirmation modal
   const confirmFields = [
     { label: 'Μικροτσίπ', value: formData.microchipNumber },
-    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
-    { label: 'Είδος Ζώου', value: getSpeciesLabel(formData.species) },
-    { label: 'Ηλικία (έτη)', value: formData.age },
-    { label: 'Φύλο', value: getGenderLabel(formData.gender) },
+
     { label: 'Ιδιοκτήτης - Α.Φ.Μ.', value: formData.ownerAfm },
     { label: 'Ιδιοκτήτης - Όνομα', value: formData.ownerName },
     { label: 'Ιδιοκτήτης - Επώνυμο', value: formData.ownerSurname },
@@ -314,100 +317,30 @@ const Adoption = () => {
         return (
           <div className="adoption__step-content">
             <h2 className="adoption__step-title">Στοιχεία Κατοικιδίου</h2>
-            
-            <div className="adoption__field">
-              <label className="adoption__label">
-                Κωδικός Μικροτσίπ<span className="adoption__required"> *</span>
-              </label>
-              <input
-                type="text"
-                name="microchipNumber"
-                className={`adoption__input ${microchipError ? 'adoption__input--error' : ''}`}
-                placeholder="123456789012345 (15 ψηφία)"
-                value={formData.microchipNumber}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
+
+            {foundPet ? (
+              <PetDetailsCard
+                petData={foundPet}
+                onClear={() => {
+                  setFoundPet(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    microchipNumber: '',
+                    microchipNumber: '',
+                  }));
+                }}
+                variant="vet"
               />
-              <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              {microchipError && (
-                <span className="adoption__error-message">
-                  <AlertCircle size={14} />
-                  {microchipError}
-                </span>
-              )}
-            </div>
-
-            <div className="adoption__row">
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Είδος Ζώου<span className="adoption__required"> *</span>
-                </label>
-                <CustomSelect
-                  name="species"
-                  value={formData.species}
-                  onChange={(value) => handleSelectChange('species', value)}
-                  options={[
-                    { value: 'dog', label: 'Σκύλος' },
-                    { value: 'cat', label: 'Γάτα' },
-                    { value: 'bird', label: 'Πτηνό' },
-                    { value: 'reptile', label: 'Ερπετό' },
-                    { value: 'other', label: 'Άλλο' }
-                  ]}
-                  placeholder="Επιλέξτε είδος"
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
                 />
-              </div>
 
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Ηλικία (σε έτη) <span className="adoption__required">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="age"
-                  className="adoption__input"
-                  placeholder="π.χ. 2"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  required
-                />
-                <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              </div>
-            </div>
 
-            <div className="adoption__row">
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Φύλο <span className="adoption__required">*</span>
-                </label>
-                <CustomSelect
-                  name="gender"
-                  value={formData.gender}
-                  onChange={(value) => handleSelectChange('gender', value)}
-                  options={[
-                    { value: 'male', label: 'Αρσενικό' },
-                    { value: 'female', label: 'Θηλυκό' }
-                  ]}
-                  placeholder="Επιλέξτε φύλο"
-                />
-              </div>
-
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Όνομα Κατοικιδίου <span className="adoption__required">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="petName"
-                  className="adoption__input"
-                  placeholder="Γράψτε το όνομα του κατοικιδίου"
-                  value={formData.petName}
-                  onChange={handleInputChange}
-                  required
-                />
-                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         );
 
@@ -415,7 +348,7 @@ const Adoption = () => {
         return (
           <div className="adoption__step-content">
             <h2 className="adoption__step-title">Στοιχεία Ιδιοκτήτη</h2>
-            
+
             <div className="adoption__row">
               <div className="adoption__field">
                 <label className="adoption__label">
@@ -564,7 +497,7 @@ const Adoption = () => {
         return (
           <div className="adoption__step-content">
             <h2 className="adoption__step-title">Στοιχεία Υιοθεσίας</h2>
-            
+
             <div className="adoption__field">
               <label className="adoption__label">
                 Ημερομηνία Υιοθεσίας <span className="adoption__required">*</span>
@@ -749,7 +682,7 @@ const Adoption = () => {
                   Προηγούμενη
                 </button>
               )}
-              
+
               <button
                 type="button"
                 className="adoption__btn adoption__btn--cancel"

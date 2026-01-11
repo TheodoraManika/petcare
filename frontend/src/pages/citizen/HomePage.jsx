@@ -21,7 +21,7 @@ const HomePage = () => {
   useEffect(() => {
     if (location.state?.notification) {
       setNotification(location.state.notification);
-      
+
       // Clear the notification after 5 seconds
       const timer = setTimeout(() => {
         setNotification(null);
@@ -39,44 +39,44 @@ const HomePage = () => {
 
   // Mock lost pets data for carousel
   const lostPets = [
-    { 
-      id: 1, 
-      name: 'Μπάμπης', 
+    {
+      id: 1,
+      name: 'Μπάμπης',
       type: 'Σκύλος',
-      breed: 'Golden Retriever', 
-      area: 'Κέντρο Αθήνας', 
+      breed: 'Golden Retriever',
+      area: 'Κέντρο Αθήνας',
       dateLost: '05/01/2026',
     },
-    { 
-      id: 2, 
-      name: 'Φιφή', 
+    {
+      id: 2,
+      name: 'Φιφή',
       type: 'Γάτα',
-      breed: 'Περσική', 
-      area: 'Θεσσαλονίκη', 
+      breed: 'Περσική',
+      area: 'Θεσσαλονίκη',
       dateLost: '03/01/2026',
     },
-    { 
-      id: 3, 
-      name: 'Ρεξ', 
+    {
+      id: 3,
+      name: 'Ρεξ',
       type: 'Σκύλος',
-      breed: 'Λαμπραντόρ', 
-      area: 'Πάτρα', 
+      breed: 'Λαμπραντόρ',
+      area: 'Πάτρα',
       dateLost: '01/01/2026',
     },
-    { 
-      id: 4, 
-      name: 'Λούλου', 
+    {
+      id: 4,
+      name: 'Λούλου',
       type: 'Γάτα',
-      breed: 'Σιαμέζα', 
-      area: 'Ηράκλειο', 
+      breed: 'Σιαμέζα',
+      area: 'Ηράκλειο',
       dateLost: '28/12/2025',
     },
-    { 
-      id: 5, 
-      name: 'Μάικι', 
+    {
+      id: 5,
+      name: 'Μάικι',
       type: 'Σκύλος',
-      breed: 'Μπίγκλ', 
-      area: 'Λάρισα', 
+      breed: 'Μπίγκλ',
+      area: 'Λάρισα',
       dateLost: '25/12/2025',
     },
   ];
@@ -86,60 +86,60 @@ const HomePage = () => {
     { id: 1, name: 'Δρ. Παπαδόπουλος', specialty: 'Γενικός Κτηνίατρος', initials: 'ΔΠ', area: 'Αθήνα, Ψυχικό', rating: 5.0, reviews: 127 },
     { id: 2, name: 'Δρ. Κωνσταντίνου', specialty: 'Ειδικός Γατών', initials: 'ΜΚ', area: 'Θεσσαλονίκη, Πανόραμα', rating: 4.9, reviews: 98 },
     { id: 3, name: 'Δρ. Σωτηρίου', specialty: 'Χειρουργός', initials: 'ΑΣ', area: 'Πάτρα, Κέντρο', rating: 4.8, reviews: 156 },
-      {
-        id: 4,
-        name: 'Δρ. Νικολάου',
-        specialty: 'Οδοντίατρος Ζώων',
-        initials: 'ΝΚ',
-        area: 'Αθήνα, Κολωνάκι',
-        rating: 4.7,
-        reviews: 64,
-      },
-      {
-        id: 5,
-        name: 'Δρ. Μαρίνα',
-        specialty: 'Δερματολόγος',
-        initials: 'ΜΡ',
-        area: 'Θεσσαλονίκη',
-        rating: 4.6,
-        reviews: 88,
-      },
-      {
-        id: 6,
-        name: 'Δρ. Ηλίας',
-        specialty: 'Ειδικός Μικρών Ζώων',
-        initials: 'ΗΛ',
-        area: 'Πάτρα',
-        rating: 4.5,
-        reviews: 42,
-      },
-      {
-        id: 7,
-        name: 'Δρ. Στέλλα',
-        specialty: 'Γενικός Κτηνίατρος',
-        initials: 'ΣΤ',
-        area: 'Ηράκλειο',
-        rating: 4.4,
-        reviews: 51,
-      },
-      {
-        id: 8,
-        name: 'Δρ. Γιώργος',
-        specialty: 'Χειρουργός',
-        initials: 'ΓΡ',
-        area: 'Λάρισα',
-        rating: 4.3,
-        reviews: 37,
-      },
-      {
-        id: 9,
-        name: 'Δρ. Ελένη',
-        specialty: 'Ειδικός Γατών',
-        initials: 'ΕΛ',
-        area: 'Ρέθυμνο',
-        rating: 4.2,
-        reviews: 22,
-      },
+    {
+      id: 4,
+      name: 'Δρ. Νικολάου',
+      specialty: 'Οδοντίατρος Ζώων',
+      initials: 'ΝΚ',
+      area: 'Αθήνα, Κολωνάκι',
+      rating: 4.7,
+      reviews: 64,
+    },
+    {
+      id: 5,
+      name: 'Δρ. Μαρίνα',
+      specialty: 'Δερματολόγος',
+      initials: 'ΜΡ',
+      area: 'Θεσσαλονίκη',
+      rating: 4.6,
+      reviews: 88,
+    },
+    {
+      id: 6,
+      name: 'Δρ. Ηλίας',
+      specialty: 'Ειδικός Μικρών Ζώων',
+      initials: 'ΗΛ',
+      area: 'Πάτρα',
+      rating: 4.5,
+      reviews: 42,
+    },
+    {
+      id: 7,
+      name: 'Δρ. Στέλλα',
+      specialty: 'Γενικός Κτηνίατρος',
+      initials: 'ΣΤ',
+      area: 'Ηράκλειο',
+      rating: 4.4,
+      reviews: 51,
+    },
+    {
+      id: 8,
+      name: 'Δρ. Γιώργος',
+      specialty: 'Χειρουργός',
+      initials: 'ΓΡ',
+      area: 'Λάρισα',
+      rating: 4.3,
+      reviews: 37,
+    },
+    {
+      id: 9,
+      name: 'Δρ. Ελένη',
+      specialty: 'Ειδικός Γατών',
+      initials: 'ΕΛ',
+      area: 'Ρέθυμνο',
+      rating: 4.2,
+      reviews: 22,
+    },
   ];
 
   // Auto-advance carousel
@@ -206,6 +206,23 @@ const HomePage = () => {
   // Navigate to lost pets page with pet details
   const handlePetClick = (pet) => {
     navigate(ROUTES.citizen.lostPets);
+  };
+
+  // Handle "Found It" click from carousel
+  const handleFoundPetClick = (pet) => {
+    navigate(ROUTES.citizen.lostPets, {
+      state: {
+        openFoundForm: true,
+        petDetails: {
+          petName: pet.name,
+          species: pet.type,
+          breed: pet.breed,
+          foundLocation: pet.area,
+          dateReported: pet.dateLost,
+          description: `Βρέθηκε στην περιοχή ${pet.area}`, // Optional description
+        }
+      }
+    });
   };
 
   const handleLocationSelect = (location) => {
@@ -275,19 +292,19 @@ const HomePage = () => {
               <div className="carousel-header">
                 <span>Πρόσφατα Χαμένα Κατοικίδια</span>
               </div>
-              
+
               <div className="carousel-wrapper">
-                <button 
-                  className="carousel-nav carousel-nav--prev" 
+                <button
+                  className="carousel-nav carousel-nav--prev"
                   onClick={prevSlide}
                   aria-label="Προηγούμενο"
                 >
                   <ChevronLeft size={24} />
                 </button>
-                
+
                 <div className="carousel-track">
                   {lostPets.map((pet, index) => (
-                    <div 
+                    <div
                       key={pet.id}
                       className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
                       style={{ transform: `translateX(${(index - currentSlide) * 100}%)` }}
@@ -308,22 +325,30 @@ const HomePage = () => {
                             <span>{pet.area}</span>
                           </div>
                           <span className="carousel-card__date">Χάθηκε: {pet.dateLost}</span>
-                          <span className="carousel-card__cta">Πατήστε για περισσότερα ζώα</span>
+                          <span
+                            className="carousel-card__cta"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleFoundPetClick(pet);
+                            }}
+                          >
+                            Το βρήκα
+                          </span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                
-                <button 
-                  className="carousel-nav carousel-nav--next" 
+
+                <button
+                  className="carousel-nav carousel-nav--next"
                   onClick={nextSlide}
                   aria-label="Επόμενο"
                 >
                   <ChevronRight size={24} />
                 </button>
               </div>
-              
+
               {/* Carousel Indicators */}
               <div className="carousel-indicators">
                 {lostPets.map((_, index) => (
@@ -367,7 +392,7 @@ const HomePage = () => {
           <div className="user-types-container">
             {userTypes.map((userType) => (
               <div key={userType.id} className={`user-type-card ${userType.color}-card`}>
-                <button 
+                <button
                   className="card-info-btn"
                   onClick={() => navigate(userType.id === 'pet-owners' ? '/owner/information' : '/vet/information')}
                   aria-label="Πληροφορίες"
@@ -375,7 +400,7 @@ const HomePage = () => {
                   <Info size={18} />
                 </button>
                 <div className={`card-icon ${userType.color}-icon`}>
-                    {userType.icon}
+                  {userType.icon}
                 </div>
                 <h3 className="card-title">{userType.title}</h3>
                 <ul className="card-features">
@@ -416,9 +441,9 @@ const HomePage = () => {
                 className="search-input search-text-input"
               />
               <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="0" y="0" width="20" height="20" fill="white"/>
-                <path d="M17.5 17.5L13.8833 13.8834" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+                <rect x="0" y="0" width="20" height="20" fill="white" />
+                <path d="M17.5 17.5L13.8833 13.8834" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#99A1AF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className="search-field">
@@ -458,7 +483,7 @@ const HomePage = () => {
                 ]}
               />
             </div>
-            <button 
+            <button
               className="search-button"
               onClick={() => navigate(ROUTES.citizen.searchMap)}
             >
@@ -470,7 +495,7 @@ const HomePage = () => {
           </div>
           <div className="vet-section__carousel">
             <div className="vet-carousel-wrapper">
-              <button 
+              <button
                 className="vet-carousel-nav vet-carousel-nav--prev"
                 onClick={prevVetSlide}
                 aria-label="Προηγούμενος"
@@ -507,7 +532,7 @@ const HomePage = () => {
                 ))}
               </div>
 
-              <button 
+              <button
                 className="vet-carousel-nav vet-carousel-nav--next"
                 onClick={nextVetSlide}
                 aria-label="Επόμενος"

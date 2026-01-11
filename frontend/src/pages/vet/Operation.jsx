@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText, AlertCircle } from 'lucide-react';
+import { Plus, FileText, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
 import CustomSelect from '../../components/common/forms/CustomSelect';
@@ -8,8 +8,13 @@ import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Operation.css';
+
+// Mock lost pets database
+
 
 const Operation = () => {
   const navigate = useNavigate();
@@ -17,7 +22,7 @@ const Operation = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [microchipError, setMicrochipError] = useState('');
+  const [foundPetDetails, setFoundPetDetails] = useState(null);
   const [formData, setFormData] = useState({
     petSearch: '',
     operationType: '',
@@ -25,25 +30,48 @@ const Operation = () => {
     description: ''
   });
 
+
+
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        petSearch: pet.microchip,
+      }));
+      setFoundPetDetails(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        petSearch: microchip
+      }));
+      setFoundPetDetails({ microchip });
+      setFoundPetDetails({ microchip });
+      // Removed error handling
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Special handling for microchip number (petSearch)
     if (name === 'petSearch') {
       // Allow only numbers
       const numericValue = value.replace(/[^0-9]/g, '');
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: numericValue
       }));
-      
-      // Validate length
-      if (numericValue.length > 0 && numericValue.length < 15) {
-        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
-      } else {
-        setMicrochipError('');
-      }
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+      // Removed error handling
     } else {
       setFormData(prev => ({
         ...prev,
@@ -71,12 +99,11 @@ const Operation = () => {
       operationDate: '',
       description: ''
     });
-    setMicrochipError('');
     setShowCancelModal(false);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -89,13 +116,13 @@ const Operation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
+    // Validate microchip before submission
     // Validate microchip before submission
     if (formData.petSearch.length !== 15) {
-      setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
       return;
     }
-    
+
     // Show confirmation modal instead of submitting directly
     setShowConfirmModal(true);
   };
@@ -169,28 +196,26 @@ const Operation = () => {
 
         <div className="operation__form-wrapper">
           <form className="operation__form" onSubmit={handleSubmit}>
-            <div className="operation__field">
-              <label className="operation__label">
-                Αναζήτηση Κατοικιδίου (Μικροτσίπ) <span className="operation__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="petSearch"
-                className={`operation__input ${microchipError ? 'operation__input--error' : ''}`}
-                placeholder="123456789012345 (15 ψηφία)"
-                value={formData.petSearch}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
+            {foundPetDetails ? (
+              <PetDetailsCard
+                petData={foundPetDetails}
+                onClear={() => {
+                  setFoundPetDetails(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    petSearch: ''
+                  }));
+                }}
+                variant="vet"
               />
-              <span className="operation__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              {microchipError && (
-                <span className="operation__error-message">
-                  <AlertCircle size={14} />
-                  {microchipError}
-                </span>
-              )}
-            </div>
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
+                />
+              </>
+            )}
 
             <div className="operation__field">
               <label className="operation__label">

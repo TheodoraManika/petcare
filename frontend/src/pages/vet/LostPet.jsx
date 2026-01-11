@@ -8,6 +8,8 @@ import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './LostPet.css';
 
@@ -35,12 +37,46 @@ const LostPet = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [microchipError, setMicrochipError] = useState('');
+
+  const [foundPet, setFoundPet] = useState(null);
   const [afmError, setAfmError] = useState('');
+
+
 
   // Helper function to filter only Greek and English letters and spaces
   const filterLettersOnly = (value) => {
     return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: pet.microchip,
+        petName: pet.name,
+        petColor: pet.color,
+        description: pet.description,
+      }));
+      setFoundPet(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: microchip,
+        petName: '',
+        petColor: '',
+        description: ''
+      }));
+      setFoundPet({ microchip });
+      if (microchip.length !== 15) {
+        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
+      } else {
+        setMicrochipError('');
+      }
+    }
   };
 
   // Helper function to filter only numbers
@@ -54,17 +90,17 @@ const LostPet = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Special handling for microchip number
     if (name === 'microchipNumber') {
       // Allow only numbers
       const numericValue = value.replace(/[^0-9]/g, '');
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: numericValue
       }));
-      
+
       // Validate length
       if (numericValue.length > 0 && numericValue.length < 15) {
         setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
@@ -73,27 +109,9 @@ const LostPet = () => {
       }
     }
     // Special handling for pet name - only Greek and English letters
-    else if (name === 'petName') {
+    if (name === 'ownerName') {
       const lettersValue = filterLettersOnly(value);
-      
-      setFormData(prev => ({
-        ...prev,
-        [name]: lettersValue
-      }));
-    }
-    // Special handling for pet color - only Greek and English letters
-    else if (name === 'petColor') {
-      const lettersValue = filterLettersOnly(value);
-      
-      setFormData(prev => ({
-        ...prev,
-        [name]: lettersValue
-      }));
-    }
-    // Special handling for owner name - only Greek and English letters
-    else if (name === 'ownerName') {
-      const lettersValue = filterLettersOnly(value);
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: lettersValue
@@ -102,7 +120,7 @@ const LostPet = () => {
     // Special handling for owner surname - only Greek and English letters
     else if (name === 'ownerSurname') {
       const lettersValue = filterLettersOnly(value);
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: lettersValue
@@ -111,12 +129,12 @@ const LostPet = () => {
     // Special handling for AFM - only numbers
     else if (name === 'ownerAfm') {
       const numericValue = allowedAFMChars(value);
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: numericValue
       }));
-      
+
       // Validate length
       if (numericValue.length > 0 && numericValue.length < 9) {
         setAfmError('Το ΑΦΜ πρέπει να είναι 9 ψηφία');
@@ -127,7 +145,7 @@ const LostPet = () => {
     // Special handling for phone - only numbers, spaces and +
     else if (name === 'contactPhone') {
       const phoneValue = allowedPhoneChars(value);
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: phoneValue
@@ -136,7 +154,7 @@ const LostPet = () => {
     // Special handling for email - no Greek characters
     else if (name === 'ownerEmail') {
       const emailValue = allowedEmailChars(value);
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: emailValue
@@ -166,7 +184,7 @@ const LostPet = () => {
         ...prev,
         photo: file
       }));
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -188,7 +206,6 @@ const LostPet = () => {
     return (
       formData.microchipNumber.trim() !== '' &&
       formData.microchipNumber.length === 15 &&
-      formData.petName.trim() !== '' &&
       formData.lostDate.trim() !== '' &&
       formData.contactPhone.trim() !== '' &&
       formData.location.trim() !== '' &&
@@ -206,13 +223,13 @@ const LostPet = () => {
       setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να είναι 15 ψηφία');
       return;
     }
-    
+
     // Validate AFM before submission
     if (formData.ownerAfm.length !== 9) {
       setAfmError('Το ΑΦΜ πρέπει να είναι 9 ψηφία');
       return;
     }
-    
+
     if (isFormValid()) {
       setShowConfirmModal(true);
     }
@@ -240,8 +257,6 @@ const LostPet = () => {
     // Reset all form fields
     setFormData({
       microchipNumber: '',
-      petName: '',
-      petColor: '',
       lostDate: '',
       contactPhone: '',
       location: '',
@@ -258,10 +273,10 @@ const LostPet = () => {
     setMicrochipError('');
     setAfmError('');
     setShowCancelModal(false);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -275,8 +290,6 @@ const LostPet = () => {
   // Prepare fields for confirmation modal
   const confirmFields = [
     { label: 'Μικροτσίπ', value: formData.microchipNumber },
-    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
-    { label: 'Χρώμα', value: formData.petColor },
     { label: 'Ημερομηνία Εξαφάνισης', value: formData.lostDate },
     { label: 'Τοποθεσία', value: formData.location },
     { label: 'Περιγραφή', value: formData.description || '-' },
@@ -317,64 +330,28 @@ const LostPet = () => {
         <div className="lost-pet__content">
 
           <form className="lost-pet__form">
-            {/* Κωδικός Μικροτσίπ */}
-            <div className="lost-pet__field">
-              <label className="lost-pet__label">
-                Κωδικός Μικροτσίπ <span className="lost-pet__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="microchipNumber"
-                className={`lost-pet__input ${microchipError ? 'lost-pet__input--error' : ''}`}
-                placeholder="123456789012345 (15 ψηφία)"
-                value={formData.microchipNumber}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
-              />
-              <span className="lost-pet__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              {microchipError && (
-                <span className="lost-pet__error-message">
-                  <AlertCircle size={14} />
-                  {microchipError}
-                </span>
-              )}
-            </div>
 
-            {/* Όνομα Κατοικιδίου */}
-            <div className="lost-pet__field">
-              <label className="lost-pet__label">
-                Όνομα Κατοικιδίου <span className="lost-pet__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="petName"
-                className="lost-pet__input"
-                placeholder="Γράψτε το όνομα του κατοικιδίου"
-                value={formData.petName}
-                onChange={handleInputChange}
-                required
+            {foundPet ? (
+              <PetDetailsCard
+                petData={foundPet}
+                onClear={() => {
+                  setFoundPet(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    microchipNumber: '',
+                    petName: '',
+                    petColor: '',
+                    description: ''
+                  }));
+                }}
+                variant="vet"
               />
-              <span className="lost-pet__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
-            </div>
-
-            {/* Χρώμα Κατοικιδίου */}
-            <div className="lost-pet__field">
-              <label className="lost-pet__label">
-                Χρώμα <span className="lost-pet__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="petColor"
-                className="lost-pet__input"
-                placeholder="π.χ. Χρυσό, Μαύρο, Άσπρο"
-                value={formData.petColor}
-                onChange={handleInputChange}
-                required
+            ) : (
+              <MicrochipSearch
+                onSearchComplete={handleSearchComplete}
+                variant="vet"
               />
-              <span className="lost-pet__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
-            </div>
-
+            )}
             {/* Ημερομηνία Εξαφάνισης */}
             <div className="lost-pet__field">
               <label className="lost-pet__label">
@@ -417,12 +394,13 @@ const LostPet = () => {
               />
             </div>
 
+
             {/* Φωτογραφία */}
             <div className="lost-pet__field">
               <label className="lost-pet__label">
                 Φωτογραφία
               </label>
-              
+
               {!photoPreview ? (
                 <div className="lost-pet__file-upload">
                   <input
@@ -570,10 +548,10 @@ const LostPet = () => {
             </div>
           </form>
         </div>
-      </div>
+      </div >
 
       {/* Cancel Confirmation Modal */}
-      <ConfirmModal
+      < ConfirmModal
         isOpen={showCancelModal}
         title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση απώλειας κατοικιδίου;"
         description="Αυτή η ενέργεια δεν αναιρείται."
@@ -585,7 +563,7 @@ const LostPet = () => {
       />
 
       {/* Submit Confirmation Modal */}
-      <ConfirmDetailModal
+      < ConfirmDetailModal
         isOpen={showConfirmModal}
         title="Επιβεβαίωση Δήλωσης Απώλειας"
         subtitle="Παρακαλώ ελέγξτε τα στοιχεία της δήλωσης απώλειας κατοικιδίου:"
@@ -597,12 +575,12 @@ const LostPet = () => {
       />
 
       {/* Notification */}
-      <Notification
+      < Notification
         isVisible={notification !== null}
         message="Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
         type="error"
       />
-    </PageLayout>
+    </PageLayout >
   );
 };
 

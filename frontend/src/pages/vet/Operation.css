@@ -4,6 +4,63 @@
   padding: 40px 24px;
 }
 
+/* Microchip Search Section */
+.microchip-search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(252, 164, 124, 0.05) 0%, rgba(252, 164, 124, 0.02) 100%);
+  border: 2px dashed rgba(252, 164, 124, 0.3);
+  border-radius: 12px;
+}
+
+.microchip-search-input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.microchip-search-input {
+  flex: 1;
+}
+
+.microchip-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #FCA47C;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.microchip-search-btn:hover:not(:disabled) {
+  background-color: #f89a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.microchip-search-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
 .operation__header {
   margin-bottom: 32px;
 }

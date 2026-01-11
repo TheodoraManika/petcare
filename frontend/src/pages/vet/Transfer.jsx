@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight, AlertCircle } from 'lucide-react';
+import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -8,8 +8,13 @@ import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Transfer.css';
+
+// Mock lost pets database
+
 
 const Transfer = () => {
   const navigate = useNavigate();
@@ -18,21 +23,24 @@ const Transfer = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [microchipError, setMicrochipError] = useState('');
+
   const [currentOwnerAfmError, setCurrentOwnerAfmError] = useState('');
   const [newOwnerAfmError, setNewOwnerAfmError] = useState('');
+  const [foundPet, setFoundPet] = useState(null);
+
+
+
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
-    petName: '',
-    
+
     // Step 2: Current Owner Data
     currentOwnerAfm: '',
     currentOwnerName: '',
     currentOwnerSurname: '',
     currentOwnerPhone: '',
     currentOwnerEmail: '',
-    
+
     // Step 3: New Owner Data
     newOwnerAfm: '',
     newOwnerName: '',
@@ -42,7 +50,7 @@ const Transfer = () => {
     newOwnerAddress: '',
     newOwnerCity: '',
     newOwnerPostalCode: '',
-    
+
     // Step 4: Transfer Data
     transferDate: '',
     transferReason: '',
@@ -70,30 +78,35 @@ const Transfer = () => {
   // Helper function to filter email characters - no Greek letters
   const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
 
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: pet.microchip,
+      }));
+      setFoundPet(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: microchip,
+      }));
+      setFoundPet({ microchip });
+      // Removed error handling
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Special handling for microchip number
-    if (name === 'microchipNumber') {
-      const numericValue = value.replace(/[^0-9]/g, '');
-      setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
-      if (numericValue.length > 0 && numericValue.length !== 15) {
-        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
-      } else {
-        setMicrochipError('');
-      }
-    } 
-    // Special handling for pet name
-    else if (name === 'petName') {
-      const filteredValue = filterLettersOnly(value);
-      setFormData(prev => ({ ...prev, [name]: filteredValue }));
-    }
+
     // Special handling for current owner AFM
-    else if (name === 'currentOwnerAfm') {
+    if (name === 'currentOwnerAfm') {
       const numericValue = allowedAFMChars(value);
       setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
+
       if (numericValue.length > 0 && numericValue.length !== 9) {
         setCurrentOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
       } else {
@@ -124,7 +137,7 @@ const Transfer = () => {
     else if (name === 'newOwnerAfm') {
       const numericValue = allowedAFMChars(value);
       setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
+
       if (numericValue.length > 0 && numericValue.length !== 9) {
         setNewOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
       } else {
@@ -173,9 +186,8 @@ const Transfer = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' && 
-          formData.microchipNumber.length === 15 && 
-          formData.petName.trim() !== ''
+          formData.microchipNumber.trim() !== '' &&
+          formData.microchipNumber.length === 15
         );
       case 2:
         return (
@@ -242,10 +254,11 @@ const Transfer = () => {
   };
 
   const handleConfirmCancel = () => {
+    // Reset found pet
+    setFoundPet(null);
     // Reset form data to initial empty state
     setFormData({
       microchipNumber: '',
-      petName: '',
       currentOwnerAfm: '',
       currentOwnerName: '',
       currentOwnerSurname: '',
@@ -264,16 +277,15 @@ const Transfer = () => {
       notes: ''
     });
     // Reset error states
-    setMicrochipError('');
     setCurrentOwnerAfmError('');
     setNewOwnerAfmError('');
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -287,7 +299,6 @@ const Transfer = () => {
   // Prepare fields for confirmation modal
   const confirmFields = [
     { label: 'Μικροτσίπ', value: formData.microchipNumber },
-    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
     { label: 'Τρέχων Ιδιοκτήτης - Α.Φ.Μ.', value: formData.currentOwnerAfm },
     { label: 'Τρέχων Ιδιοκτήτης - Όνομα', value: formData.currentOwnerName },
     { label: 'Τρέχων Ιδιοκτήτης - Επώνυμο', value: formData.currentOwnerSurname },
@@ -312,45 +323,27 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Κατοικιδίου</h2>
-            
-            <div className="transfer__field">
-              <label className="transfer__label">
-                Κωδικός Μικροτσίπ <span className="transfer__required"> *</span>
-              </label>
-              <input
-                type="text"
-                name="microchipNumber"
-                className={`transfer__input ${microchipError ? 'transfer__input--error' : ''}`}
-                placeholder="123456789012345 (15 ψηφία)"
-                value={formData.microchipNumber}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
-              />
-              <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              {microchipError && (
-                <span className="transfer__error-message">
-                  <AlertCircle size={14} />
-                  {microchipError}
-                </span>
-              )}
-            </div>
 
-            <div className="transfer__field">
-              <label className="transfer__label">
-                Όνομα Κατοικιδίου <span className="transfer__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="petName"
-                className="transfer__input"
-                placeholder="Γράψτε το όνομα του κατοικιδίου"
-                value={formData.petName}
-                onChange={handleInputChange}
-                required
+            {foundPet ? (
+              <PetDetailsCard
+                petData={foundPet}
+                onClear={() => {
+                  setFoundPet(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    microchipNumber: '',
+                  }));
+                }}
+                variant="vet"
               />
-              <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
-            </div>
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
+                />
+              </>
+            )}
           </div>
         );
 
@@ -358,7 +351,7 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Τρέχοντος Ιδιοκτήτη</h2>
-            
+
             <div className="transfer__row">
               <div className="transfer__field">
                 <label className="transfer__label">
@@ -456,7 +449,7 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Νέου Ιδιοκτήτη</h2>
-            
+
             <div className="transfer__row">
               <div className="transfer__field">
                 <label className="transfer__label">
@@ -605,7 +598,7 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Μεταβίβασης</h2>
-            
+
             <div className="transfer__field">
               <label className="transfer__label">
                 Ημερομηνία Μεταβίβασης <span className="transfer__required">*</span>
@@ -698,7 +691,7 @@ const Transfer = () => {
                   Προηγούμενη
                 </button>
               )}
-              
+
               <button
                 type="button"
                 className="transfer__btn transfer__btn--cancel"

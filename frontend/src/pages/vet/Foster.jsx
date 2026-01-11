@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, HandHeart, AlertCircle } from 'lucide-react';
+import { PawPrint, UserRound, HandHeart, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -10,6 +10,8 @@ import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Foster.css';
 
@@ -20,16 +22,17 @@ const Foster = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [notification, setNotification] = useState(null);
-  const [microchipError, setMicrochipError] = useState('');
+
+  const [foundPet, setFoundPet] = useState(null);
   const [fosterParentAfmError, setFosterParentAfmError] = useState('');
+
+
+
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
-    petName: '',
-    species: '',
-    age: '',
-    gender: '',
-    
+
+
     // Step 2: Foster Parent Data
     fosterParentAfm: '',
     fosterParentName: '',
@@ -71,30 +74,41 @@ const Foster = () => {
   // Helper function to filter email characters - no Greek letters
   const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
 
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: pet.microchip,
+        petName: pet.name,
+        species: pet.type,
+        age: pet.age || '',
+        gender: pet.gender || '',
+      }));
+      setFoundPet(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: microchip
+      }));
+      setFoundPet({ microchip });
+      setFoundPet({ microchip });
+      // Removed error handling
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Special handling for microchip number
-    if (name === 'microchipNumber') {
-      const numericValue = value.replace(/[^0-9]/g, '');
-      setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
-      if (numericValue.length > 0 && numericValue.length !== 15) {
-        setMicrochipError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
-      } else {
-        setMicrochipError('');
-      }
-    }
-    // Special handling for pet name
-    else if (name === 'petName') {
-      const filteredValue = filterLettersOnly(value);
-      setFormData(prev => ({ ...prev, [name]: filteredValue }));
-    }
+
+
     // Special handling for foster parent AFM
-    else if (name === 'fosterParentAfm') {
+    if (name === 'fosterParentAfm') {
       const numericValue = allowedAFMChars(value);
       setFormData(prev => ({ ...prev, [name]: numericValue }));
-      
+
       if (numericValue.length > 0 && numericValue.length !== 9) {
         setFosterParentAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
       } else {
@@ -131,11 +145,7 @@ const Foster = () => {
       const numericValue = value.replace(/[^0-9]/g, '');
       setFormData(prev => ({ ...prev, [name]: numericValue }));
     }
-    // Special handling for age
-    else if (name === 'age') {
-      const numericValue = value.replace(/[^0-9]/g, '');
-      setFormData(prev => ({ ...prev, [name]: numericValue }));
-    }
+
     // All other fields
     else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -155,10 +165,7 @@ const Foster = () => {
         return (
           formData.microchipNumber.trim() !== '' &&
           formData.microchipNumber.length === 15 &&
-          formData.petName.trim() !== '' &&
-          formData.species.trim() !== '' &&
-          formData.age.trim() !== '' &&
-          formData.gender.trim() !== ''
+          formData.microchipNumber.length === 15
         );
       case 2:
         return (
@@ -219,13 +226,12 @@ const Foster = () => {
   };
 
   const handleConfirmCancel = () => {
+    // Reset found pet
+    setFoundPet(null);
     // Reset form data to initial empty state
     setFormData({
       microchipNumber: '',
-      petName: '',
-      species: '',
-      age: '',
-      gender: '',
+
       fosterParentAfm: '',
       fosterParentName: '',
       fosterParentSurname: '',
@@ -244,15 +250,14 @@ const Foster = () => {
       notes: ''
     });
     // Reset error states
-    setMicrochipError('');
     setFosterParentAfmError('');
     // Reset to step 1
     setCurrentStep(1);
     setShowCancelModal(false);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -290,10 +295,7 @@ const Foster = () => {
   // Prepare fields for confirmation modal
   const confirmFields = [
     { label: 'Μικροτσίπ', value: formData.microchipNumber },
-    { label: 'Όνομα Κατοικιδίου', value: formData.petName },
-    { label: 'Είδος Ζώου', value: getSpeciesLabel(formData.species) },
-    { label: 'Ηλικία (έτη)', value: formData.age },
-    { label: 'Φύλο', value: getGenderLabel(formData.gender) },
+
     { label: 'Ανάδοχος - Α.Φ.Μ.', value: formData.fosterParentAfm },
     { label: 'Ανάδοχος - Όνομα', value: formData.fosterParentName },
     { label: 'Ανάδοχος - Επώνυμο', value: formData.fosterParentSurname },
@@ -316,100 +318,30 @@ const Foster = () => {
         return (
           <div className="foster__step-content">
             <h2 className="foster__step-title">Στοιχεία Κατοικιδίου</h2>
-            
-            <div className="foster__field">
-              <label className="foster__label">
-                Κωδικός Μικροτσίπ<span className="foster__required"> *</span>
-              </label>
-              <input
-                type="text"
-                name="microchipNumber"
-                className={`foster__input ${microchipError ? 'foster__input--error' : ''}`}
-                placeholder="123456789012345 (15 ψηφία)"
-                value={formData.microchipNumber}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
+
+            {foundPet ? (
+              <PetDetailsCard
+                petData={foundPet}
+                onClear={() => {
+                  setFoundPet(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    microchipNumber: '',
+                    microchipNumber: '',
+                  }));
+                }}
+                variant="vet"
               />
-              <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              {microchipError && (
-                <div className="foster__error-message">
-                  <AlertCircle size={16} />
-                  <span>{microchipError}</span>
-                </div>
-              )}
-            </div>
-
-            <div className="foster__row">
-              <div className="foster__field">
-                <label className="foster__label">
-                  Είδος Ζώου<span className="foster__required"> *</span>
-                </label>
-                <CustomSelect
-                  name="species"
-                  value={formData.species}
-                  onChange={(value) => handleSelectChange('species', value)}
-                  options={[
-                    { value: 'dog', label: 'Σκύλος' },
-                    { value: 'cat', label: 'Γάτα' },
-                    { value: 'bird', label: 'Πτηνό' },
-                    { value: 'reptile', label: 'Ερπετό' },
-                    { value: 'other', label: 'Άλλο' }
-                  ]}
-                  placeholder="Επιλέξτε είδος"
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
                 />
-              </div>
 
-              <div className="foster__field">
-                <label className="foster__label">
-                  Ηλικία (σε έτη) <span className="foster__required">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="age"
-                  className="foster__input"
-                  placeholder="π.χ. 2"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  required
-                />
-                <span className="foster__field-note">Επιτρέπονται μόνο αριθμοί.</span>
-              </div>
-            </div>
 
-            <div className="foster__row">
-              <div className="foster__field">
-                <label className="foster__label">
-                  Φύλο <span className="foster__required">*</span>
-                </label>
-                <CustomSelect
-                  name="gender"
-                  value={formData.gender}
-                  onChange={(value) => handleSelectChange('gender', value)}
-                  options={[
-                    { value: 'male', label: 'Αρσενικό' },
-                    { value: 'female', label: 'Θηλυκό' }
-                  ]}
-                  placeholder="Επιλέξτε φύλο"
-                />
-              </div>
-
-              <div className="foster__field">
-                <label className="foster__label">
-                  Όνομα Κατοικιδίου <span className="foster__required">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="petName"
-                  className="foster__input"
-                  placeholder="Γράψτε το όνομα του κατοικιδίου"
-                  value={formData.petName}
-                  onChange={handleInputChange}
-                  required
-                />
-                <span className="foster__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         );
 
@@ -417,7 +349,7 @@ const Foster = () => {
         return (
           <div className="foster__step-content">
             <h2 className="foster__step-title">Στοιχεία Ανάδοχου Γονέα</h2>
-            
+
             <div className="foster__row">
               <div className="foster__field">
                 <label className="foster__label">
@@ -566,7 +498,7 @@ const Foster = () => {
         return (
           <div className="foster__step-content">
             <h2 className="foster__step-title">Στοιχεία Αναδοχής</h2>
-            
+
             <div className="foster__field">
               <label className="foster__label">
                 Ημερομηνία Αναδοχής <span className="foster__required">*</span>
@@ -751,7 +683,7 @@ const Foster = () => {
                   Προηγούμενη
                 </button>
               )}
-              
+
               <button
                 type="button"
                 className="foster__btn foster__btn--cancel"

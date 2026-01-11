@@ -8,12 +8,13 @@ import LocationPicker from '../../components/common/forms/LocationPicker';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
 import Notification from '../../components/common/modals/Notification';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './OwnerLostPet.css';
 
 const OwnerLostPet = () => {
   const navigate = useNavigate();
-  
+
   // Mock pet data - in real app, this would come from API/database
   const userPets = [
     { value: 'pet1', label: 'Μαξ - GR123456789012345', microchip: 'GR123456789012345', name: 'Μαξ', type: 'Σκύλος', breed: 'Golden Retriever', image: '🐕' },
@@ -55,7 +56,7 @@ const OwnerLostPet = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Special handling for phone
     if (name === 'contactPhone') {
       const filteredValue = allowedPhoneChars(value);
@@ -102,7 +103,7 @@ const OwnerLostPet = () => {
         ...prev,
         photo: file
       }));
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -166,10 +167,10 @@ const OwnerLostPet = () => {
     setPhotoPreview(null);
     setPhoneError('');
     setShowCancelModal(false);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -183,9 +184,9 @@ const OwnerLostPet = () => {
   const handleDraft = () => {
     // TODO: Save form data to backend with status 'draft'
     // API call example: await saveLostPetDraft(formData);
-    
+
     console.log('Draft saved:', formData);
-    
+
     // Reset all form fields
     setFormData({
       selectedPet: '',
@@ -201,10 +202,10 @@ const OwnerLostPet = () => {
     });
     setPhotoPreview(null);
     setPhoneError('');
-    
+
     // Show success notification
     setNotification('draft');
-    
+
     // Auto-hide notification after 8 seconds
     setTimeout(() => {
       setNotification(null);
@@ -257,28 +258,23 @@ const OwnerLostPet = () => {
 
             {/* Pet Info Card - Shows when a pet is selected */}
             {formData.selectedPet && (
-              <div className="owner-lost-pet__pet-card">
-                <div className="owner-lost-pet__pet-image">
-                  {userPets.find(p => p.value === formData.selectedPet)?.image}
-                </div>
-                <div className="owner-lost-pet__pet-details">
-                  <h3 className="owner-lost-pet__pet-name">{formData.petName}</h3>
-                  <div className="owner-lost-pet__pet-info">
-                    <div className="owner-lost-pet__pet-row">
-                      <span className="owner-lost-pet__pet-label">Είδος</span>
-                      <span className="owner-lost-pet__pet-value">{userPets.find(p => p.value === formData.selectedPet)?.type}</span>
-                    </div>
-                    <div className="owner-lost-pet__pet-row">
-                      <span className="owner-lost-pet__pet-label">Ράτσα</span>
-                      <span className="owner-lost-pet__pet-value">{userPets.find(p => p.value === formData.selectedPet)?.breed}</span>
-                    </div>
-                    <div className="owner-lost-pet__pet-row">
-                      <span className="owner-lost-pet__pet-label">Αριθμός Μικροτσίπ</span>
-                      <span className="owner-lost-pet__pet-value">{formData.microchipNumber}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <PetDetailsCard
+                petData={{
+                  petName: userPets.find(p => p.value === formData.selectedPet)?.name,
+                  species: userPets.find(p => p.value === formData.selectedPet)?.type,
+                  breed: userPets.find(p => p.value === formData.selectedPet)?.breed,
+                  microchip: formData.microchipNumber
+                }}
+                onClear={() => {
+                  setFormData(prev => ({
+                    ...prev,
+                    selectedPet: '',
+                    microchipNumber: '',
+                    petName: ''
+                  }));
+                }}
+                variant="owner"
+              />
             )}
 
             {/* Ημερομηνία Εξαφάνισης & Τηλέφωνο */}
@@ -442,7 +438,7 @@ const OwnerLostPet = () => {
       <Notification
         isVisible={notification !== null}
         message={
-          notification === 'draft' 
+          notification === 'draft'
             ? "Η δήλωση απώλειας αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων"
             : "Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
         }
