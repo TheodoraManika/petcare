@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, List, Dog, Cat, X, AlertCircle, Search as SearchIcon, FileText } from 'lucide-react';
+import { MapPin, List, Dog, Cat, X, Phone, Palette, AlertCircle, Search as SearchIcon, FileText, User, Mail } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -42,25 +42,37 @@ const LostPets = () => {
   useEffect(() => {
     const fetchLostPets = async () => {
       try {
-        const response = await fetch('http://localhost:5000/lostPets');
-        if (!response.ok) {
-          throw new Error('Failed to fetch lost pets');
-        }
-        const data = await response.json();
+        const [lostPetsResponse, usersResponse] = await Promise.all([
+          fetch('http://localhost:5000/lostPets'),
+          fetch('http://localhost:5000/users')
+        ]);
         
-        // Transform data for display (add default coordinates if missing)
-        const transformedPets = data.map((pet, index) => ({
-          ...pet,
-          name: pet.petName || 'Άγνωστο',
-          type: pet.species || 'Άγνωστο',
-          breed: pet.breed || 'Άγνωστο',
-          area: pet.lostLocation || 'Άγνωστη τοποθεσία',
-          dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
-          color: pet.description?.split(',')[0] || 'Άγνωστο χρώμα',
-          // Default coordinates for Athens if not specified
-          lat: pet.locationLat || 37.9838,
-          lon: pet.locationLon || 23.7275,
-        }));
+        if (!lostPetsResponse.ok || !usersResponse.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        
+        const lostPetsData = await lostPetsResponse.json();
+        const usersData = await usersResponse.json();
+        
+        // Transform data for display (add owner info and default coordinates if missing)
+        const transformedPets = lostPetsData.map((pet, index) => {
+          const owner = usersData.find(user => user.id === pet.ownerId?.toString());
+          
+          return {
+            ...pet,
+            name: pet.petName || 'Άγνωστο',
+            type: pet.species || 'Άγνωστο',
+            breed: pet.breed || 'Άγνωστο',
+            area: pet.lostLocation || 'Άγνωστη τοποθεσία',
+            dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
+            color: pet.description?.split(',')[0] || 'Άγνωστο χρώμα',
+            ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Άγνωστο',
+            contactEmail: owner?.email || '',
+            // Default coordinates for Athens if not specified
+            lat: pet.locationLat || 37.9838,
+            lon: pet.locationLon || 23.7275,
+          };
+        });
         
         setLostPets(transformedPets);
         setLoading(false);
@@ -529,18 +541,31 @@ const LostPets = () => {
 
                   <div className="modal-detail-item">
                     <div className="modal-detail-header">
-                      <Dog size={18} className="modal-detail-icon" />
+                      <Palette size={18} className="modal-detail-icon" />
                       <h4>Χρώμα</h4>
                     </div>
                     <p className="modal-detail-content">{detailPet.color}</p>
                   </div>
+                </div>
 
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-header">
-                      <AlertCircle size={18} className="modal-detail-icon" />
-                      <h4>Επικοινωνία</h4>
+                {/* Owner Information - Larger Section */}
+                <div className="modal-owner-section">
+                  <div className="modal-owner-header">
+                    <User size={20} className="modal-owner-icon" />
+                    <h3>Ιδιοκτήτης</h3>
+                  </div>
+                  <div className="modal-owner-content">
+                    <p className="modal-owner-name">{detailPet.ownerName}</p>
+                    <div className="modal-owner-contact">
+                      <div className="modal-owner-contact-item">
+                        <Phone size={16} />
+                        <span>{detailPet.contactPhone}</span>
+                      </div>
+                      <div className="modal-owner-contact-item">
+                        <Mail size={16} />
+                        <span>{detailPet.contactEmail}</span>
+                      </div>
                     </div>
-                    <p className="modal-detail-content">{detailPet.contactPhone}</p>
                   </div>
                 </div>
 
@@ -549,14 +574,6 @@ const LostPets = () => {
                   <p className="modal-biography-content">{detailPet.description}</p>
                 </div>
 
-                <div className="modal-traits">
-                  <h3 className="modal-section-title">Χαρακτηριστικά</h3>
-                  <div className="modal-traits-list">
-                    {(detailPet.traits || []).map((trait, index) => (
-                      <span key={index} className="modal-trait-tag">{trait}</span>
-                    ))}
-                  </div>
-                </div>
               </div>
 
               <button 
@@ -566,8 +583,7 @@ const LostPets = () => {
                   handleFoundPet(detailPet);
                 }}
               >
-                <AlertCircle size={18} />
-                Το Βρήκα Αυτό το Κατοικίδιο!
+                Το Βρήκα!
               </button>
             </div>
           </div>
