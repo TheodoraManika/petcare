@@ -21,6 +21,37 @@
   margin-bottom: 24px;
 }
 
+/* Tabs */
+.lost-pet-history__tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.lost-pet-history__tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.lost-pet-history__tab:hover {
+  color: #374151;
+}
+
+.lost-pet-history__tab--active {
+  color: #23CED9;
+  border-bottom-color: #23CED9;
+}
+
 .lost-pet-history__content {
   display: flex;
   flex-direction: column;
@@ -108,6 +139,12 @@
   gap: 24px;
   padding-top: 16px;
   border-top: 1px solid #f3f4f6;
+  flex-wrap: wrap;
+}
+
+.lost-pet-history__card-details--full {
+  flex-basis: 100%;
+  width: 100%;
 }
 
 .lost-pet-history__label {
@@ -161,6 +198,21 @@
 .lost-pet-history__status--draft {
   background: #fef3c7;
   color: #d97706;
+}
+
+.lost-pet-history__status--pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.lost-pet-history__status--contacted {
+  background: rgba(35, 206, 217, 0.1);
+  color: #23CED9;
+}
+
+.lost-pet-history__status--resolved {
+  background: rgba(1, 102, 48, 0.1);
+  color: #016630;
 }
 
 .lost-pet-history__btn {
@@ -241,6 +293,18 @@
   background: rgba(1, 102, 48, 0.2);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(1, 102, 48, 0.15);
+}
+
+.lost-pet-history__btn--contact {
+  background: #23CED9;
+  color: #1f2937;
+  border: none;
+}
+
+.lost-pet-history__btn--contact:hover {
+  background: #1ab5bf;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
 
 .lost-pet-history__found-message {

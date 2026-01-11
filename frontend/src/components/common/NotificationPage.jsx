@@ -128,7 +128,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
       
       case 'found_pet':
         return data.finderName 
-          ? `${data.finderName} έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}.`
+          ? `Ο/η ${data.finderName} έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}.`
           : `Κάποιος έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}.`;
       
       // VET NOTIFICATION TEMPLATES
