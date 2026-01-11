@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../Avatar';
+import NotificationPage from '../NotificationPage';
 import './Navbar.css';
 
 /**
@@ -55,6 +56,7 @@ const Navbar = ({ variant = 'vet' }) => {
   const isCitizen = actualVariant === 'citizen';
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
   const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
   const infoRef = useRef(null);
@@ -304,6 +306,18 @@ const Navbar = ({ variant = 'vet' }) => {
                   <span>Προφίλ</span>
                 </Link>
                 <button
+                  className="navbar__profile-menu-item"
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    setIsNotificationOpen(true);
+                  }}
+                >
+                  <span className="navbar__profile-menu-icon">
+                    <Bell size={16} />
+                  </span>
+                  <span>Ειδοποιήσεις</span>
+                </button>
+                <button
                   className="navbar__profile-menu-item navbar__profile-menu-item--logout"
                   onClick={() => {
                     setIsProfileOpen(false);
@@ -322,6 +336,15 @@ const Navbar = ({ variant = 'vet' }) => {
           </div>
         )}
       </div>
+      
+      {/* Notification Page Modal */}
+      {isLoggedIn && (
+        <NotificationPage
+          isOpen={isNotificationOpen}
+          onClose={() => setIsNotificationOpen(false)}
+          userType={actualVariant}
+        />
+      )}
     </nav>
   );
 };
