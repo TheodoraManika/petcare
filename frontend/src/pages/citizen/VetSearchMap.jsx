@@ -129,6 +129,16 @@ const VetSearchMap = () => {
     fetchVets();
   }, []);
 
+  // Check for navigation state to open profile
+  useEffect(() => {
+    if (location.state?.openProfile && location.state?.vet) {
+      setSelectedProfileVet(location.state.vet);
+      setShowProfileModal(true);
+      // Clear navigation state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({

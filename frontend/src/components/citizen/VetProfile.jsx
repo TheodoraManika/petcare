@@ -23,11 +23,14 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
   };
 
   const handleLoadMore = () => {
-    if (!vet || !vet.reviews) return;
+    if (!vet || !Array.isArray(vet.reviews)) return;
     setVisibleReviews(prev => Math.min(prev + 2, vet.reviews.length));
   };
 
-  const displayedReviews = showAllReviews ? (vet.reviews || []) : (vet.reviews || []).slice(0, visibleReviews);
+  const reviewsList = Array.isArray(vet.reviews) ? vet.reviews : [];
+  const displayedReviews = showAllReviews ? reviewsList : reviewsList.slice(0, visibleReviews);
+
+  const displayName = vet.lastName ? `${vet.name} ${vet.lastName}` : vet.name;
 
   return (
     <div className="vet-profile-overlay" onClick={onClose}>
@@ -42,17 +45,17 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
             <div className="profile-avatar-wrapper">
               <Avatar
                 src={vet.avatar}
-                name={vet.name}
+                name={displayName}
                 size="xl"
               />
             </div>
             <div className="profile-identity">
-              <h1 className="vet-name">{vet.name} {vet.lastName}</h1>
+              <h1 className="vet-name">{displayName}</h1>
               <p className="vet-specialty">{vet.specialty}</p> {/* change to specialties */}
               <div className="rating-section">
                 <Star className="star-icon" />
                 <span className="rating-text">
-                  {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || 0} αξιολογήσεις)
+                  {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || reviewsList.length || 0} αξιολογήσεις)
                 </span>
               </div>
             </div>
