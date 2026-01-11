@@ -38,7 +38,7 @@
   width: 64px;
   height: 64px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #FCA47C 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #23CED9 0%, #FCA47C 50%, #F9D779 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +102,7 @@
 .result-action-btn {
   padding: 10px 20px;
   background-color: #FCA47C;
-  color: #000000;
+  color: #101828;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -114,7 +114,7 @@
 }
 
 .result-action-btn:hover {
-  background-color: #fb923c;
+  background-color: #f6976b;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(252, 164, 124, 0.4);
 }
@@ -135,7 +135,7 @@
   background-color: transparent;
   border: 2px solid #FCA47C;
   border-radius: 8px;
-  color: #000000;
+  color: #101828;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
@@ -145,8 +145,8 @@
 
 .result-close-appointment-btn:hover {
   background-color: rgba(252, 164, 124, 0.1);
-  border-color: #fb923c;
-  color: #fb923c;
+  border-color: #f6976b;
+  color: #f6976b;
 }
 
 .no-results {

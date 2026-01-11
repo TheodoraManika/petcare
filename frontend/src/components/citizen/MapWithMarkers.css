@@ -173,7 +173,7 @@
 }
 
 .map-popup .popup-profile-btn:hover {
-  background-color: #fb923c;
+  background-color: #f6976b;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(252, 164, 124, 0.4);
 }
@@ -186,8 +186,8 @@
 
 .map-popup .popup-close-appointment-btn:hover {
   background-color: rgba(252, 164, 124, 0.1);
-  border-color: #fb923c;
-  color: #fb923c;
+  border-color: #f6976b;
+  color: #f6976b;
 }
 
 @media (max-width: 768px) {

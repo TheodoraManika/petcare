@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, MapPin, Phone, Clock, Briefcase, GraduationCap, X } from 'lucide-react';
-import Avatar from '../../components/common/Avatar';
+import { Star, MapPin, Phone, IdCard, Briefcase, GraduationCap, X, Hospital } from 'lucide-react';
+import Avatar from '../common/Avatar';
 import { ROUTES } from '../../utils/constants';
 import './VetProfile.css';
 
@@ -47,12 +47,10 @@ const VetProfileModal = ({ vet, isOpen, onClose }) => {
               />
             </div>
             <div className="profile-identity">
-              <h1 className="vet-name">{vet.name}</h1>
-              <p className="vet-specialty">{vet.specialty}</p>
+              <h1 className="vet-name">{vet.name} {vet.lastName}</h1>
+              <p className="vet-specialty">{vet.specialty}</p> {/* change to specialties */}
               <div className="rating-section">
-                <div className="stars">
-                  {renderStars(Math.floor(vet.rating || 0))}
-                </div>
+                <Star className="star-icon"/>
                 <span className="rating-text">
                   {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || 0} αξιολογήσεις)
                 </span>
@@ -76,21 +74,32 @@ const VetProfileModal = ({ vet, isOpen, onClose }) => {
           {/* Professional Details Section */}
           <div className="professional-details">
             <div className="details-grid">
+
+              <div className="detail-item">
+                <div className="detail-header">
+                  <Hospital className="detail-icon" size={20} />
+                  <h3>Όνομα Κλινικής/Ιατρείου</h3>
+                </div>
+                <p className="detail-content">{vet.clinicName}</p>
+              </div>
+
               <div className="detail-item">
                 <div className="detail-header">
                   <MapPin className="detail-icon" size={20} />
                   <h3>Διεύθυνση Ιατρείου</h3>
                 </div>
-                <p className="detail-content">{vet.address}</p>
-                <p className="detail-content">{vet.phone}</p>
+                <p className="detail-content">{vet.clinicAddress}</p>
+                <p className="detail-content">{vet.clinicCity}</p>
+                <p className="detail-content">{vet.clinicPostalCode}</p>
               </div>
 
               <div className="detail-item">
                 <div className="detail-header">
-                  <Briefcase className="detail-icon" size={20} />
-                  <h3>Εμπειρία</h3>
+                  <Phone className="detail-icon" size={20} />
+                  <h3>Στοιχεία Επικοινωνίας</h3>
                 </div>
-                <p className="detail-content">{vet.experience || 'Δεν διατίθεται'}</p>
+                <p className="detail-content">{vet.phone}</p>
+                <p className="detail-content">{vet.email}</p>
               </div>
 
               <div className="detail-item">
@@ -103,11 +112,20 @@ const VetProfileModal = ({ vet, isOpen, onClose }) => {
 
               <div className="detail-item">
                 <div className="detail-header">
-                  <Clock className="detail-icon" size={20} />
-                  <h3>Ωράριο</h3>
+                  <Briefcase className="detail-icon" size={20} />
+                  <h3>Έτη Εμπειρίας</h3>
                 </div>
-                <p className="detail-content">{vet.workingHours || 'Ελέγξτε τη διαθεσιμότητα'}</p>
+                <p className="detail-content">{vet.experience || 'Δεν διατίθεται'}</p>
               </div>
+
+              <div className="detail-item">
+                <div className="detail-header">
+                  <IdCard className="detail-icon" size={30} />
+                  <h3>Αριθμός Άδειας Άσκησης Επαγγέλματος</h3>
+                </div>
+                <p className="detail-content">{vet.licenseNumber}</p>
+              </div>
+
             </div>
           </div>
 

@@ -341,7 +341,7 @@
   width: 64px;
   height: 64px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #FCA47C 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #23CED9 0%, #FCA47C 50%, #F9D779 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -417,7 +417,7 @@
 }
 
 .vet-profile-btn:hover {
-  background-color: #fb923c;
+  background-color: #ea9067;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(252, 164, 124, 0.4);
 }

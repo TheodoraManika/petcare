@@ -329,9 +329,14 @@ const VetSearchMap = () => {
 
   const availabilityOptions = [
     { value: '', label: 'Επιλέξτε ημέρα...' },
-    { value: 'today', label: 'Σήμερα' },
-    { value: 'tomorrow', label: 'Αύριο' },
-    { value: 'week', label: 'Αυτή την εβδομάδα' }
+    { value: 'all', label: 'Όλες οι ημέρες' },
+    { value: 'monday', label: 'Δευτέρα' },
+    { value: 'tuesday', label: 'Τρίτη' },
+    { value: 'wednesday', label: 'Τετάρτη' },
+    { value: 'thursday', label: 'Πέμπτη' },
+    { value: 'friday', label: 'Παρασκευή' },
+    { value: 'saturday', label: 'Σάββατο' },
+    { value: 'sunday', label: 'Κυριακή' }
   ];
 
   const timeOptions = [
@@ -345,7 +350,7 @@ const VetSearchMap = () => {
     { value: '', label: 'Επιλέξτε αξιολόγηση...' },
     { value: '4', label: '4+ ⭐' },
     { value: '4.5', label: '4.5+ ⭐' },
-    { value: '4.8', label: '4.8+ ⭐' }
+    { value: '5', label: '5 ⭐' }
   ];
 
   return (
