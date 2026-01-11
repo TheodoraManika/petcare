@@ -453,7 +453,7 @@ const HomePage = () => {
           <div className="hero-search-box">
             <div className="search-container">
               <div className="search-column">
-                <label className="search-label">Αναζήτηση</label>
+                <label className="search-label">Ονοματεπώνυμο</label>
                 <div className="search-field no-icon">
                   <input
                     type="text"
@@ -475,17 +475,21 @@ const HomePage = () => {
                 </div>
               </div>
               <div className="search-column">
-                <label className="search-label">Διαθεσιμότητα</label>
+                <label className="search-label">Ημέρα</label>
                 <div className="search-field no-icon">
                   <CustomSelect
                     value={selectedAvailability}
                     onChange={setSelectedAvailability}
                     placeholder="Επιλέξτε..."
                     options={[
-                      { value: 'today', label: 'Σήμερα' },
-                      { value: 'tomorrow', label: 'Αύριο' },
-                      { value: 'week', label: 'Αυτή την εβδομάδα' },
-                      { value: 'month', label: 'Αυτό το μήνα' },
+                      { value: 'all', label: 'Όλες οι ημέρες' },
+                      { value: 'monday', label: 'Δευτέρα' },
+                      { value: 'tuesday', label: 'Τρίτη' },
+                      { value: 'wednesday', label: 'Τετάρτη' },
+                      { value: 'thursday', label: 'Πέμπτη' },
+                      { value: 'friday', label: 'Παρασκευή' },
+                      { value: 'saturday', label: 'Σάββατο' },
+                      { value: 'sunday', label: 'Κυριακή' }
                     ]}
                   />
                 </div>
@@ -498,10 +502,12 @@ const HomePage = () => {
                     onChange={setSelectedSpecialty}
                     placeholder="Επιλέξτε..."
                     options={[
-                      { value: 'general', label: 'Γενικός Ιατρός' },
-                      { value: 'surgery', label: 'Χειρουργός' },
-                      { value: 'dentistry', label: 'Οδοντολόγος' },
-                      { value: 'dermatology', label: 'Δερματολόγος' },
+                      { value: 'general', label: 'Γενική Κτηνιατρική' },
+                      { value: 'surgery', label: 'Χειρουργική' },
+                      { value: 'dermatology', label: 'Δερματολογία' },
+                      { value: 'cardiology', label: 'Καρδιολογία' },
+                      { value: 'dentistry', label: 'Οδοντιατρική' },
+                      { value: 'ophthalmology', label: 'Οφθαλμολογία' }
                     ]}
                   />
                 </div>
