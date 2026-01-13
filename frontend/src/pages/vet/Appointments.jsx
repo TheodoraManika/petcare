@@ -20,164 +20,83 @@ const Appointments = () => {
   const [appointmentToReject, setAppointmentToReject] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      petName: 'Μπάμπης',
-      ownerName: 'Έλενα Γεωργίου',
-      phone: '6912345678',
-      species: 'Σκύλος',
-      breed: 'Golden Retriever',
-      date: '05/01/2026',
-      time: '10:00 - 11:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'pending',
-      notes: 'Πρώτος εμβολιασμός'
-    },
-    {
-      id: 2,
-      petName: 'Λούνα',
-      ownerName: 'Μαρία Παπαδοπούλου',
-      phone: '6983696023',
-      species: 'Γάτα',
-      breed: 'Bombay',
-      date: '06/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Εξέταση',
-      status: 'confirmed',
-      notes: '-'
-    },
-    {
-      id: 3,
-      petName: 'Ρόκκι',
-      ownerName: 'Μαρία Αντωνίου',
-      phone: '6910559295',
-      species: 'Σκύλος',
-      breed: 'Golden Retriever',
-      date: '06/01/2026',
-      time: '14:00 - 15:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 4,
-      petName: 'Ρεξ',
-      ownerName: 'Γιώργος Νικολόπουλος',
-      phone: '6927406934',
-      species: 'Σκύλος',
-      breed: 'Τσοπανόσκυλο',
-      date: '07/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Στείρωση',
-      status: 'cancelled',
-      notes: '-'
-    },
-    {
-      id: 5,
-      petName: 'Cookie',
-      ownerName: 'Νικόλας Ανδρέου',
-      phone: '6928503684',
-      species: 'Γάτα',
-      breed: 'Ασίας',
-      date: '07/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Στείρωση',
-      status: 'pending',
-      notes: '-'
-    },
-    {
-      id: 6,
-      petName: 'Μάντοξ',
-      ownerName: 'Παντελής Ιωάννου',
-      phone: '6947505623',
-      species: 'Σκύλος',
-      breed: 'Μπουλντόγκ',
-      date: '08/01/2026',
-      time: '11:00 - 12:00',
-      serviceType: 'Χειρουργείο',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 7,
-      petName: 'Λούις',
-      ownerName: 'Άγγελος Κωνσταντίνου',
-      phone: '6910396110',
-      species: 'Σκύλος',
-      breed: 'Μεγάλος Δανός',
-      date: '09/01/2026',
-      time: '09:30 - 10:30',
-      serviceType: 'Γενική Εξέταση',
-      status: 'confirmed',
-      notes: ''
-    },
-    {
-      id: 8,
-      petName: 'Μαξίν',
-      ownerName: 'Νικόλας Ανδρέου',
-      phone: '6928503684',
-      species: 'Γάτα',
-      breed: 'Σιαμέζα',
-      date: '10/01/2026',
-      time: '10:30 - 11:30',
-      serviceType: 'Θεραπεία',
-      status: 'confirmed',
-      notes: '3ο μέρος της θεραπείας'
-    },
-    {
-      id: 9,
-      petName: 'Μίνι',
-      ownerName: 'Βασιλική Παναγιωτοπούλου',
-      phone: '6950774027',
-      species: 'Σκύλος',
-      breed: 'Τσιουάουα',
-      date: '11/01/2026',
-      time: '13:00 - 14:00',
-      serviceType: 'Οδοντιατρική',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 10,
-      petName: 'Φίφη',
-      ownerName: 'Κατερίνα Εμμανουήλ',
-      phone: '6947505623',
-      species: 'Σκύλος',
-      breed: 'Λαμπραντόρ',
-      date: '10/01/2026',
-      time: '15:00 - 16:00',
-      serviceType: 'Γενική Εξέταση',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 11,
-      petName: 'Τσάρλυ',
-      ownerName: 'Παναγίωτης Κωνσταντίνου',
-      phone: '6947503957',
-      species: 'Σκύλος',
-      breed: 'Ροτβάιλερ',
-      date: '05/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'confirmed',
-      notes: 'Εμβόλιο κατά της λύσσας'
-    },
-    {
-      id: 12,
-      petName: 'Μάγια',
-      ownerName: 'Κάτια Σωτηρίου',
-      phone: '6947229947',
-      species: 'Σκύλος',
-      breed: 'Poodle',
-      date: '05/01/2026',
-      time: '12:00 - 13:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'confirmed',
-      notes: 'Εμβόλιο κατά της λύσσας'
+  const [appointments, setAppointments] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Fetch appointments for this vet
+  useEffect(() => {
+    const fetchVetAppointments = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          setCurrentUser(user);
+
+          // Fetch appointments for this vet
+          const response = await fetch(`http://localhost:5000/appointments?vetId=${user.id}&_expand=pet&_expand=user`); // user here is owner (if we had relation)
+          // Actually Appointments have ownerId? No, they have petId.
+          // We need to fetch owners? Or maybe just rely on extended info if we put it there?
+          // The mock data had ownerName, phone.
+          // Our db.json appointments have petId.
+          // We'd better fetch users too to lookup owner details OR rely on expand if setup
+
+          if (response.ok) {
+            const data = await response.json();
+
+            // We need to get owner details. 
+            // Efficient way: get all users once or get all pets with owner info?
+            // Let's fetch all users for lookup
+            const usersResp = await fetch('http://localhost:5000/users');
+            const users = await usersResp.json();
+
+            const mapped = data.map(apt => {
+              const pet = apt.pet;
+              const owner = pet && users.find(u => u.id == pet.ownerId);
+
+              return {
+                id: apt.id,
+                petName: pet ? pet.name : 'Άγνωστο',
+                ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Άγνωστο',
+                phone: owner ? owner.phone : '',
+                species: pet ? pet.species : '',
+                breed: pet ? pet.breed : '',
+                date: apt.date,
+                time: apt.time,
+                serviceType: apt.service || apt.reason,
+                status: apt.status,
+                notes: apt.notes || ''
+              };
+            });
+            setAppointments(mapped);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchVetAppointments();
+  }, []);
+
+  const updateAppointmentStatus = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5000/appointments/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (response.ok) {
+        setAppointments(prev => prev.map(apt =>
+          apt.id === id ? { ...apt, status: newStatus } : apt
+        ));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
-  ]);
+  };
 
   // Auto-update confirmed appointments to completed if their time has passed
   useEffect(() => {
@@ -239,25 +158,25 @@ const Appointments = () => {
 
   const filterAppointments = () => {
     let filtered = filterStatus === 'all' ? appointments : appointments.filter(apt => apt.status === filterStatus);
-    
+
     // Sort by date and time (earliest first)
     return filtered.sort((a, b) => {
       // Parse dates (format: DD/MM/YYYY)
       const [dayA, monthA, yearA] = a.date.split('/').map(Number);
       const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-      
+
       const dateA = new Date(yearA, monthA - 1, dayA);
       const dateB = new Date(yearB, monthB - 1, dayB);
-      
+
       // Compare dates
       if (dateA.getTime() !== dateB.getTime()) {
         return dateA - dateB;
       }
-      
+
       // If dates are the same, compare by start time
       const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
       const timeB = b.time.split(' - ')[0];
-      
+
       return timeA.localeCompare(timeB);
     });
   };
@@ -288,7 +207,7 @@ const Appointments = () => {
   const getAppointmentsForDate = (date) => {
     const dateStr = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
     const filteredAppointments = appointments.filter(apt => apt.date === dateStr);
-    
+
     // Sort by time (earliest first)
     return filteredAppointments.sort((a, b) => {
       const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
@@ -311,18 +230,16 @@ const Appointments = () => {
     setSelectedDate(newDate);
   };
 
-  const handleConfirm = (appointmentId) => {
-    setAppointments(prevAppointments =>
-      prevAppointments.map(apt =>
-        apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
-      )
-    );
-    
-    // Show confirmation notification
-    setNotification('confirmed');
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000); // Hide after 5 seconds
+  const handleConfirm = async (appointmentId) => {
+    const success = await updateAppointmentStatus(appointmentId, 'confirmed');
+
+    if (success) {
+      // Show confirmation notification
+      setNotification('confirmed');
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000); // Hide after 5 seconds
+    }
   };
 
   const handleReject = (appointmentId) => {
@@ -331,18 +248,18 @@ const Appointments = () => {
     setShowRejectModal(true);
   };
 
-  const handleConfirmReject = () => {
-    setAppointments(prevAppointments =>
-      prevAppointments.map(apt =>
-        apt.id === appointmentToReject ? { ...apt, status: 'cancelled' } : apt
-      )
-    );
-    
-    // Show cancellation notification
-    setNotification('cancelled');
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000); // Hide after 5 seconds
+  const handleConfirmReject = async () => {
+    if (appointmentToReject) {
+      const success = await updateAppointmentStatus(appointmentToReject, 'cancelled');
+
+      if (success) {
+        // Show cancellation notification
+        setNotification('cancelled');
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000); // Hide after 5 seconds
+      }
+    }
 
     // Close modals and reset
     setShowRejectModal(false);
@@ -361,7 +278,7 @@ const Appointments = () => {
       // Show only the selected date in day view
       return `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
     }
-    
+
     // Show week range in week view
     const weekDays = getWeekDays();
     const firstDay = weekDays[0];
@@ -375,8 +292,8 @@ const Appointments = () => {
   };
 
   const getMonthName = (date) => {
-    const months = ['Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος', 
-                    'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος'];
+    const months = ['Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
+      'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος'];
     return months[date.getMonth()];
   };
 
@@ -388,7 +305,7 @@ const Appointments = () => {
         {/* Notification Banner */}
         <Notification
           isVisible={notification !== null}
-          message={notification === 'confirmed' 
+          message={notification === 'confirmed'
             ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
             : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
           }
@@ -458,10 +375,10 @@ const Appointments = () => {
                   today.setHours(0, 0, 0, 0);
                   const currentDay = new Date(day);
                   currentDay.setHours(0, 0, 0, 0);
-                  
+
                   const isToday = currentDay.getTime() === today.getTime();
                   const isPast = currentDay < today;
-                  
+
                   return (
                     <div key={index} className="appointments__day-column">
                       <div className={`appointments__day-header ${isToday ? 'appointments__day-header--today' : ''} ${isPast ? 'appointments__day-header--past' : ''}`}>

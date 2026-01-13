@@ -67,7 +67,7 @@ const VetRegisterPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Special handling for first name
     if (name === 'firstName') {
       const filteredValue = filterLettersOnly(value);
@@ -91,7 +91,7 @@ const VetRegisterPage = () => {
         ...prev,
         [name]: numericValue,
       }));
-      
+
       if (numericValue.length > 0 && numericValue.length !== 9) {
         setAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
       } else {
@@ -169,7 +169,7 @@ const VetRegisterPage = () => {
         [name]: value,
       }));
     }
-    
+
     setError('');
   };
 
@@ -286,16 +286,6 @@ const VetRegisterPage = () => {
   const handleSubmit = async () => {
     // Handle registration submission
     try {
-      // Check if email already exists
-      const checkEmailResponse = await fetch(`http://localhost:5000/users?email=${encodeURIComponent(formData.email)}`);
-      const existingUsers = await checkEmailResponse.json();
-      
-      if (existingUsers && existingUsers.length > 0) {
-        // Email already exists, show modal
-        setShowEmailExistsModal(true);
-        return;
-      }
-
       const newVet = {
         email: formData.email,
         password: formData.password,
@@ -318,8 +308,8 @@ const VetRegisterPage = () => {
         createdAt: new Date().toISOString(),
       };
 
-      // POST to JSON Server
-      const response = await fetch('http://localhost:5000/users', {
+      // POST to Custom Auth Register Endpoint
+      const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -328,19 +318,30 @@ const VetRegisterPage = () => {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+
+        // Handle "User already exists" from backend
+        if (response.status === 400 && (errorData.message === 'User already exists' || errorData.message?.includes('exists'))) {
+          setShowEmailExistsModal(true);
+          return;
+        }
+
         throw new Error('Failed to register user');
       }
 
-      const registeredVet = await response.json();
+      const data = await response.json();
+      const registeredVet = data.user;
 
       // Save to localStorage and redirect
       localStorage.setItem('currentUser', JSON.stringify({
         id: registeredVet.id,
         email: registeredVet.email,
         name: registeredVet.name,
+        lastName: registeredVet.lastName, // Ensure lastName is stored if avail
         username: registeredVet.name,
         userType: registeredVet.userType,
         avatar: registeredVet.avatar,
+        token: data.token
       }));
 
       // Dispatch custom event to notify auth change
@@ -374,7 +375,7 @@ const VetRegisterPage = () => {
 
   const handleConfirmCancel = () => {
     setShowCancelModal(false);
-    
+
     // Navigate to home with notification state
     navigate(ROUTES.home, {
       state: {
@@ -464,7 +465,7 @@ const VetRegisterPage = () => {
           {currentStep === 1 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Προσωπικά Στοιχεία</h2>
-              
+
               <div className="vet-register-form-row">
                 <div className="vet-register-form-group">
                   <label htmlFor="firstName" className="vet-register-label">
@@ -530,14 +531,14 @@ const VetRegisterPage = () => {
           {currentStep === 2 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Επαγγελματικά Στοιχεία</h2>
-              
+
               <div className="vet-register-form-group">
                 <label htmlFor="specialization" className="vet-register-label">
                   Ειδικότητα/ες<span className="vet-register__required"> *</span>
                 </label>
                 <MultiSelect
                   value={formData.specialization}
-                  onChange={(value) => setFormData({...formData, specialization: value})}
+                  onChange={(value) => setFormData({ ...formData, specialization: value })}
                   placeholder="Επιλέξτε ειδικότητες"
                   options={specializations.map((spec) => ({ value: spec, label: spec }))}
                   variant="vet"
@@ -616,7 +617,7 @@ const VetRegisterPage = () => {
           {currentStep === 3 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Στοιχεία Κλινικής/Ιατρείου</h2>
-              
+
               <div className="vet-register-form-group">
                 <label htmlFor="clinicName" className="vet-register-label">
                   Όνομα Κλινικής/Ιατρείου<span className="vet-register__required"> *</span>
@@ -693,7 +694,7 @@ const VetRegisterPage = () => {
           {currentStep === 4 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Στοιχεία Επικοινωνίας</h2>
-              
+
               <div className="vet-register-form-group">
                 <label htmlFor="email" className="vet-register-label">
                   Email<span className="vet-register__required"> *</span>
@@ -734,7 +735,7 @@ const VetRegisterPage = () => {
           {currentStep === 5 && (
             <div className="vet-register-step-content">
               <h2 className="vet-register-step-title">Κωδικός Πρόσβασης</h2>
-              
+
               <div className="vet-register-form-group">
                 <label htmlFor="password" className="vet-register-label">
                   Κωδικός<span className="vet-register__required"> *</span>

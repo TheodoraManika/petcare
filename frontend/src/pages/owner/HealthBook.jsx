@@ -52,8 +52,8 @@ const HealthBook = () => {
           color: pet.color || '-',
           weight: pet.weight || '-',
           icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
-          // MOCK: Set pet with ID 1 as 'lost' for demonstration
-          status: pet.id === 1 ? 'lost' : 'safe'
+          // Use backend status or default to 'safe'
+          status: pet.status || 'safe'
         }));
 
         setUserPets(transformedPets);
@@ -72,12 +72,26 @@ const HealthBook = () => {
     navigate(`${ROUTES.owner.pets}/${petId}`);
   };
 
-  const handleFound = (petId) => {
-    setUserPets(currentPets =>
-      currentPets.map(pet =>
-        pet.id === petId ? { ...pet, status: 'safe' } : pet
-      )
-    );
+  const handleFound = async (petId) => {
+    try {
+      // Update backend
+      await fetch(`http://localhost:5000/pets/${petId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'safe' })
+      });
+
+      // Update local state
+      setUserPets(currentPets =>
+        currentPets.map(pet =>
+          pet.id === petId ? { ...pet, status: 'safe' } : pet
+        )
+      );
+    } catch (error) {
+      console.error('Error marking pet as found:', error);
+    }
   };
 
   const breadcrumbItems = [

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SquarePen, X, Save, UserRound, UserRoundCheck, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -24,21 +24,67 @@ const Profile = () => {
     postalCode: '',
   });
   const navigate = useNavigate();
-  
-  // Original data that won't change unless saved
+
+  // Original data
   const [originalData, setOriginalData] = useState({
-    firstName: 'Μαρία',
-    lastName: 'Παπαδοπούλου',
-    email: 'maria.p@example.com',
-    phone: '6912345678',
-    afm: '123456789',
-    address: 'Πανεπιστημίου 45',
-    city: 'Αθήνα',
-    postalCode: '10679',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    afm: '',
+    address: '',
+    city: '',
+    postalCode: '',
   });
-  
+
   // Working copy for editing
-  const [formData, setFormData] = useState({...originalData});
+  const [formData, setFormData] = useState({ ...originalData });
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Fetch user data on mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) {
+          navigate(ROUTES.login);
+          return;
+        }
+
+        const parsedUser = JSON.parse(storedUser);
+        setCurrentUser(parsedUser);
+
+        const response = await fetch(`http://localhost:5000/users/${parsedUser.id}`);
+        if (response.ok) {
+          const userData = await response.json();
+          // Debug log
+          console.log('Fetched Owner Data:', userData);
+
+          const mappedData = {
+            firstName: userData.name || '',
+            lastName: userData.lastName || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            afm: userData.afm || '',
+            address: userData.address || '',
+            // If address is split in DB, maybe concatenate?
+            // db.json has address and addressNumber.
+            // Let's check if we should combine them or just use address.
+            // Default to address.
+            city: userData.city || '',
+            postalCode: userData.postalCode || userData.clinicPostalCode || ''
+          };
+          setOriginalData(mappedData);
+          setFormData(mappedData);
+        } else {
+          console.error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchUserData();
+  }, [navigate]);
 
   // Helper function to filter only Greek and English letters and spaces
   const filterLettersOnly = (value) => {
@@ -75,7 +121,7 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     let filteredValue = value;
 
     // Apply character filters based on field type
@@ -83,7 +129,7 @@ const Profile = () => {
       filteredValue = filterLettersOnly(value);
     } else if (name === 'afm' || name === 'postalCode') {
       filteredValue = allowedAFMChars(value);
-      
+
       // Apply max length
       if (name === 'afm' && filteredValue.length > 9) {
         filteredValue = filteredValue.slice(0, 9);
@@ -123,7 +169,7 @@ const Profile = () => {
     setIsEditing(false);
     setShowCancelModal(false);
     // Reset form data to original values
-    setFormData({...originalData});
+    setFormData({ ...originalData });
     // Clear all errors
     setErrors({
       firstName: '',
@@ -145,15 +191,26 @@ const Profile = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    console.log('Account deleted');
-    setShowDeleteModal(false);
-    setShowSuccessModal(true);
-    
-    // Redirect to home after 5 seconds
-    setTimeout(() => {
-      navigate(ROUTES.home);
-    }, 5000);
+  const handleConfirmDelete = async () => {
+    try {
+      if (currentUser?.id) {
+        await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+          method: 'DELETE'
+        });
+        localStorage.removeItem('currentUser');
+        // Also clear token if stored separately
+        console.log('Account deleted');
+        setShowDeleteModal(false);
+        setShowSuccessModal(true);
+
+        // Redirect to home after 3 seconds
+        setTimeout(() => {
+          navigate(ROUTES.home);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -162,7 +219,7 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate all fields
     const newErrors = {};
 
@@ -205,11 +262,56 @@ const Profile = () => {
     }
 
     // If validation passes, save the changes
-    console.log('Form submitted:', formData);
-    // Save the changes to originalData
-    setOriginalData({...formData});
-    setIsEditing(false);
-    setShowSaveSuccessModal(true);
+    const updateProfile = async () => {
+      if (!currentUser || !currentUser.id) {
+        console.error("No user ID found");
+        return;
+      }
+      try {
+        const updatedUser = {
+          name: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          afm: formData.afm,
+          address: formData.address,
+          city: formData.city,
+          postalCode: formData.postalCode
+        };
+
+        console.log('Sending PATCH request to:', `http://localhost:5000/users/${currentUser.id}`);
+        console.log('Payload:', updatedUser);
+
+        const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+          method: 'PATCH', // Use PATCH to update only changed fields
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedUser)
+        });
+
+        console.log('Response status:', response.status);
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Profile updated:', data);
+          // Update local storage if needed
+          const storedUser = JSON.parse(localStorage.getItem('currentUser'));
+          localStorage.setItem('currentUser', JSON.stringify({ ...storedUser, ...data }));
+
+          setOriginalData({ ...formData });
+          setIsEditing(false);
+          setShowSaveSuccessModal(true);
+        } else {
+          console.error('Failed to update profile. Status:', response.status);
+          const errText = await response.text();
+          console.error('Error response:', errText);
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
+    };
+    updateProfile();
   };
 
   const handleBackToProfile = () => {
@@ -245,14 +347,14 @@ const Profile = () => {
           <div className="owner-profile__actions">
             {isEditing ? (
               <>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--cancel"
                   onClick={handleCancel}
                   type="button"
                 >
                   Ακύρωση
                 </button>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--save"
                   onClick={handleSubmit}
                   type="button"
@@ -263,7 +365,7 @@ const Profile = () => {
               </>
             ) : (
               <>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--delete"
                   onClick={handleDelete}
                   type="button"
@@ -271,12 +373,12 @@ const Profile = () => {
                   <X size={18} />
                   Διαγραφή Λογαριασμού
                 </button>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--edit"
                   onClick={handleEditToggle}
                   type="button"
                 >
-                  <SquarePen size={18} /> 
+                  <SquarePen size={18} />
                   Επεξεργασία
                 </button>
               </>

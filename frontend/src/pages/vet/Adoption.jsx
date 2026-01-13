@@ -200,10 +200,33 @@ const Adoption = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/lifeEvents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          type: 'adoption',
+          status: 'submitted',
+          submittedAt: new Date().toISOString()
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit adoption declaration');
+      }
+
+      console.log('Form submitted successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Optional: Show error notification
+      setNotification('start_error');
+    }
   };
 
   const handleCancelSubmit = () => {

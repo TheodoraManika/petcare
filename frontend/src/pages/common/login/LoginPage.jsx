@@ -29,39 +29,47 @@ const LoginPage = () => {
     }
 
     try {
-      // Fetch users from JSON Server
-      const response = await fetch('http://localhost:5000/users');
+      // Login via custom Auth endpoint
+      const response = await fetch('http://localhost:5000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
       if (!response.ok) {
-        throw new Error('Failed to connect to server');
+        if (response.status === 401) {
+          setError('Λάθος email ή κωδικός πρόσβασης');
+        } else {
+          throw new Error('Server error');
+        }
+        return;
       }
 
-      const users = await response.json();
+      const data = await response.json();
+      const user = data.user;
 
-      // Find user with matching email and password
-      const user = users.find(u => u.email === email && u.password === password);
+      // Successful login
+      localStorage.setItem('currentUser', JSON.stringify({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        lastName: user.lastName,
+        userType: user.userType,
+        avatar: user.avatar,
+        // Add token if needed for future authenticated requests
+        token: data.token
+      }));
 
-      if (user) {
-        // Successful login
-        localStorage.setItem('currentUser', JSON.stringify({
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          username: user.name,
-          userType: user.userType,
-          avatar: user.avatar,
-        }));
+      // Dispatch custom event to notify auth change
+      window.dispatchEvent(new Event('loginStatusChanged'));
 
-        // Dispatch custom event to notify auth change
-        window.dispatchEvent(new Event('loginStatusChanged'));
-
-        // Redirect based on user type
-        if (user.userType === 'vet') {
-          navigate(ROUTES.vet.dashboard);
-        } else {
-          navigate(ROUTES.owner.dashboard);
-        }
+      // Redirect based on user type
+      if (user.userType === 'vet') {
+        navigate(ROUTES.vet.dashboard);
       } else {
-        setError('Λάθος email ή κωδικός πρόσβασης');
+        navigate(ROUTES.owner.dashboard);
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -76,7 +84,7 @@ const LoginPage = () => {
           <ArrowLeft size={20} />
           <span>Πίσω</span>
         </Link>
-        
+
         <div className="login-container">
           {/* Logo and Title Section */}
           <div className="login-header">

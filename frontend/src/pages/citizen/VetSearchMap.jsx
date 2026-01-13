@@ -75,7 +75,7 @@ const VetSearchMap = () => {
   useEffect(() => {
     if (location.state?.filters) {
       const { searchName, selectedArea, locationData: locData, selectedAvailability, selectedSpecialty } = location.state.filters;
-      
+
       setFilters(prev => ({
         ...prev,
         searchName: searchName || '',
@@ -83,11 +83,11 @@ const VetSearchMap = () => {
         specialty: selectedSpecialty || '',
         availability: selectedAvailability || '',
       }));
-      
+
       if (locData) {
         setLocationData(locData);
       }
-      
+
       // Clear the navigation state after loading
       window.history.replaceState({}, document.title);
     }
@@ -99,48 +99,74 @@ const VetSearchMap = () => {
       try {
         setLoading(true);
         setError(null);
-        console.log('Fetching vets from backend...');
+        console.log('Fetching vets from backend with filters:', filters);
 
-        const response = await fetch('http://localhost:5000/users');
+        // Construct query parameters
+        const params = new URLSearchParams();
+
+        // City/Area
+        if (filters.area) {
+          // Backend searches for partial match in clinicCity or city
+          params.append('city', filters.area);
+        }
+
+        // Specialty
+        if (filters.specialty) {
+          const specialtyMap = {
+            'general': 'Γενική Κτηνιατρική',
+            'surgery': 'Χειρουργική',
+            'dermatology': 'Δερματολογία',
+            'cardiology': 'Καρδιολογία',
+            'dentistry': 'Οδοντιατρική',
+            'ophthalmology': 'Οφθαλμολογία'
+          };
+          const backendSpecialty = specialtyMap[filters.specialty];
+          if (backendSpecialty) {
+            params.append('specialty', backendSpecialty);
+          }
+        }
+
+        // Day (Availability)
+        if (filters.availability && filters.availability !== 'all' && filters.availability !== 'week') {
+          let dayParam = filters.availability;
+          if (dayParam === 'today') {
+            dayParam = getTodayDay();
+          } else if (dayParam === 'tomorrow') {
+            dayParam = getTomorrowDay();
+          }
+          if (dayParam) {
+            params.append('day', dayParam);
+          }
+        }
+
+        const response = await fetch(`http://localhost:5000/vets/search?${params.toString()}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const users = await response.json();
-        console.log('Fetched users:', users);
+        const vetUsers = await response.json();
+        console.log('Fetched vets:', vetUsers);
 
-        // Fetch availability data
-        const availabilityResponse = await fetch('http://localhost:5000/availability');
-        const availabilityRecords = await availabilityResponse.json();
-        console.log('Fetched availability records:', availabilityRecords);
+        // Transform data for frontend
+        const transformedVets = vetUsers.map((vet, index) => {
+          // availability and availableDays are now returned by backend
+          return {
+            ...vet,
+            name: vet.name || 'Άγνωστος',
+            specialty: vet.specialization || 'Γενικός Κτηνιατρική',
+            area: `${vet.clinicCity || 'Αθήνα'}, ${vet.clinicAddress || 'Άγνωστη διεύθυνση'}`,
+            rating: vet.rating || 4.5 + (Math.random() * 0.4), // Use backend rating if available, else mock
+            lat: vet.lat ? Number(vet.lat) : 37.9838 + (Math.random() * 0.3 - 0.15),
+            lon: vet.lon ? Number(vet.lon) : 23.7275 + (Math.random() * 0.3 - 0.15),
+            position: { top: `${30 + (index * 10)}%`, left: `${40 + (index * 8)}%` },
+            availableDays: vet.availableDays || [],
+            availabilitySlots: vet.availability || []
+          };
+        });
 
-        // Filter only vet users and add default coordinates and availability
-        const vetUsers = users
-          .filter(user => user.userType === 'vet')
-          .map((vet, index) => {
-            // Get availability for this vet (compare as numbers to handle string/number mismatch)
-            const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vet.id));
-            const availableDays = [...new Set(vetAvailability.map(a => a.day))];
-
-            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays);
-
-            return {
-              ...vet,
-              name: vet.name || 'Άγνωστος',
-              specialty: vet.specialization || 'Γενικός Κτηνίατρος',
-              area: `${vet.clinicCity || 'Αθήνα'}, ${vet.clinicAddress || 'Άγνωστη διεύθυνση'}`,
-              rating: 4.5 + (Math.random() * 0.4), // Random rating between 4.5-4.9
-              lat: 37.9838 + (Math.random() * 0.3 - 0.15), // Random latitude around Athens
-              lon: 23.7275 + (Math.random() * 0.3 - 0.15), // Random longitude around Athens
-              position: { top: `${30 + (index * 10)}%`, left: `${40 + (index * 8)}%` },
-              availableDays: availableDays,
-              availabilitySlots: vetAvailability
-            };
-          });
-
-        console.log('Filtered vet users:', vetUsers);
-        setAllVets(vetUsers);
+        console.log('Transformed vets:', transformedVets);
+        setAllVets(transformedVets);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching vets:', error);
@@ -150,8 +176,13 @@ const VetSearchMap = () => {
       }
     };
 
-    fetchVets();
-  }, []);
+    // Debounce the search to avoid too many requests
+    const timeoutId = setTimeout(() => {
+      fetchVets();
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [filters]); // Re-fetch when filters change
 
   // Check for navigation state to open profile
   useEffect(() => {
@@ -207,7 +238,9 @@ const VetSearchMap = () => {
         }
       }
 
-      // Filter by specialty
+      // Filter by specialty - ALREADY HANDLED BY BACKEND, but keeping for safety if backend misses
+      // Actually backend handles stricter mapping, frontend handles selection.
+      // If backend filtered it, this shouldn't hurt.
       if (filters.specialty) {
         const specialtyMap = {
           'general': 'Γενική Κτηνιατρική',
@@ -221,12 +254,20 @@ const VetSearchMap = () => {
         }
       }
 
-      // Filter by area/location
+      // Filter by area/location - ALREADY HANDLED BY BACKEND partial match
       if (filters.area && !vet.area.toLowerCase().includes(filters.area.toLowerCase())) {
-        return false;
+        // Backend matches city/clinicCity. Frontend matches constructed 'area' string.
+        // This might filter out result if backend match is looser than frontend match.
+        // Let's rely on backend for area filtering primarily, but check if local 'area' string contains it?
+        // Actually, let's REMOVE strict client side area filtering if backend did it.
+        // But wait, 'area' filter in frontend comes from LocationPicker which might be specific.
+        // If `allVets` is already filtered by backend, we should trust it mostly.
+        // However, `filters.area` is the text input.
+        // If backend returns a vet in "Athens", and input was "Athens", good.
+        // If backend returns vet, we keep it.
       }
 
-      // Filter by rating
+      // Filter by rating - CLIENT SIDE only (backend doesn't do it yet)
       if (filters.rating) {
         const minRating = parseFloat(filters.rating);
         if (vet.rating < minRating) {
@@ -234,7 +275,8 @@ const VetSearchMap = () => {
         }
       }
 
-      // Filter by availability (day) - only if explicitly selected
+      // Filter by availability (day) - ALREADY HANDLED BY BACKEND unless 'week'
+      // If 'week' is selected, backend returns all. Client needs to check if *any* availability exists.
       if (filters.availability) {
         const availabilityMap = {
           'today': getTodayDay(),
@@ -254,18 +296,11 @@ const VetSearchMap = () => {
           if (vet.availableDays.length === 0) {
             return false;
           }
-        } else if (targetDay) {
-          // Check if vet has availability on specific day - case insensitive comparison
-          const hasDay = vet.availableDays.some(day =>
-            day.toLowerCase() === targetDay.toLowerCase()
-          );
-          if (!hasDay) {
-            return false;
-          }
         }
+        // For specific days, backend handles it.
       }
 
-      // Filter by time - works independently from day filter
+      // Filter by time - CLIENT SIDE only (backend doesn't do it)
       if (filters.time && vet.availabilitySlots && vet.availabilitySlots.length > 0) {
         const timeRanges = {
           'morning': { start: 8 * 60, end: 12 * 60 },      // 08:00-12:00 in minutes
@@ -283,10 +318,15 @@ const VetSearchMap = () => {
               'today': getTodayDay(),
               'tomorrow': getTomorrowDay()
             };
-            const targetDay = availabilityMap[filters.availability];
-            slotsToCheck = vet.availabilitySlots.filter(slot => slot.day === targetDay);
+            // dayParam handling for other cases like 'monday'
+            let targetDay = availabilityMap[filters.availability];
+            if (!targetDay && filters.availability !== 'all') targetDay = filters.availability; // 'monday', etc.
+
+            if (targetDay) {
+              slotsToCheck = vet.availabilitySlots.filter(slot => slot.day === targetDay || slot.dayOfWeek === targetDay);
+            }
           } else if (filters.availability === 'week') {
-            // For week filter, include all slots (which should already be limited to this week in backend)
+            // For week filter, include all slots
             slotsToCheck = vet.availabilitySlots;
           }
 

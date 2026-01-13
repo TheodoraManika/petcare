@@ -1293,9 +1293,81 @@
       "postalCode": "16010",
       "avatar": null,
       "createdAt": "2026-01-07T15:30:30.737Z"
+    },
+    {
+      "id": "1768335422656",
+      "email": "theodoramnk@gmail.com",
+      "password": "thea228812mnk",
+      "name": "Θεοδώρα",
+      "lastName": "Μανίκα",
+      "userType": "owner",
+      "phone": "6946150324",
+      "afm": "123456789",
+      "address": "Στρατηγού μακρυγιάννη",
+      "addressNumber": "",
+      "city": "Καισαριανή",
+      "postalCode": "16122",
+      "avatar": null,
+      "createdAt": "2026-01-13T20:17:02.656Z"
     }
   ],
   "pets": [
+    {
+      "id": "1768336000001",
+      "ownerId": "1768335422656",
+      "name": "Bruno",
+      "species": "dog",
+      "breed": "Labrador",
+      "gender": "male",
+      "birthDate": "2020-05-10",
+      "color": "Μαύρο",
+      "weight": "32",
+      "microchipId": "900123000182741",
+      "status": "safe",
+      "createdAt": "2026-01-13T21:40:00Z"
+    },
+    {
+      "id": "1768336000002",
+      "ownerId": "1768335422656",
+      "name": "Luna",
+      "species": "cat",
+      "breed": "European Shorthair",
+      "gender": "female",
+      "birthDate": "2021-08-15",
+      "color": "Γκρι",
+      "weight": "4",
+      "microchipId": "900123000182742",
+      "status": "safe",
+      "createdAt": "2026-01-13T21:40:00Z"
+    },
+    {
+      "id": "1768336000003",
+      "ownerId": "1768335422656",
+      "name": "Charlie",
+      "species": "dog",
+      "breed": "Beagle",
+      "gender": "male",
+      "birthDate": "2022-11-20",
+      "color": "Τρίχρωμο",
+      "weight": "12",
+      "microchipId": "900123000182743",
+      "status": "safe",
+      "createdAt": "2026-01-13T21:40:00Z"
+    },
+    {
+      "id": "1768336000004",
+      "ownerId": "1768335422656",
+      "name": "Coco",
+      "species": "bird",
+      "breed": "Parrot",
+      "gender": "female",
+      "birthDate": "2023-01-05",
+      "color": "Πράσινο",
+      "weight": "0.5",
+      "microchipId": "900123000182744",
+      "status": "safe",
+      "createdAt": "2026-01-13T21:40:00Z"
+    },
     {
       "id": "1",
       "ownerId": 1,
@@ -1309,6 +1381,7 @@
       "ownerAFM": "123456789",
       "microchipId": "123456789012345",
       "registeredByVetId": 2,
+      "status": "safe",
       "createdAt": "2025-01-05T00:00:00Z"
     },
     {
@@ -1323,6 +1396,7 @@
       "weight": "4.5",
       "microchipId": "987654321098765",
       "registeredByVetId": 2,
+      "status": "safe",
       "createdAt": "2025-01-05T00:00:00Z"
     },
     {

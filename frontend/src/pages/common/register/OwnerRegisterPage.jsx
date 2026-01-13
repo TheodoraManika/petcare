@@ -51,7 +51,7 @@ const OwnerRegisterPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Special handling for first name
     if (name === 'firstName') {
       const filteredValue = filterLettersOnly(value);
@@ -75,7 +75,7 @@ const OwnerRegisterPage = () => {
         ...prev,
         [name]: numericValue,
       }));
-      
+
       if (numericValue.length > 0 && numericValue.length !== 9) {
         setAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
       } else {
@@ -137,7 +137,7 @@ const OwnerRegisterPage = () => {
         [name]: value,
       }));
     }
-    
+
     setError('');
   };
 
@@ -204,16 +204,6 @@ const OwnerRegisterPage = () => {
   const handleSubmit = async () => {
     // Handle registration submission
     try {
-      // Check if email already exists
-      const checkEmailResponse = await fetch(`http://localhost:5000/users?email=${encodeURIComponent(formData.email)}`);
-      const existingUsers = await checkEmailResponse.json();
-      
-      if (existingUsers && existingUsers.length > 0) {
-        // Email already exists, show modal
-        setShowEmailExistsModal(true);
-        return;
-      }
-
       const newUser = {
         email: formData.email,
         password: formData.password,
@@ -230,8 +220,8 @@ const OwnerRegisterPage = () => {
         createdAt: new Date().toISOString(),
       };
 
-      // POST to JSON Server
-      const response = await fetch('http://localhost:5000/users', {
+      // POST to Custom Auth Register Endpoint
+      const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -240,19 +230,30 @@ const OwnerRegisterPage = () => {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+
+        // Handle "User already exists" from backend
+        if (response.status === 400 && (errorData.message === 'User already exists' || errorData.message?.includes('exists'))) {
+          setShowEmailExistsModal(true);
+          return;
+        }
+
         throw new Error('Failed to register user');
       }
 
-      const registeredUser = await response.json();
+      const data = await response.json();
+      const registeredUser = data.user;
 
       // Save to localStorage and redirect
       localStorage.setItem('currentUser', JSON.stringify({
         id: registeredUser.id,
         email: registeredUser.email,
         name: registeredUser.name,
+        lastName: registeredUser.lastName,
         username: registeredUser.name,
         userType: registeredUser.userType,
         avatar: registeredUser.avatar,
+        token: data.token
       }));
 
       // Dispatch custom event to notify auth change
@@ -286,7 +287,7 @@ const OwnerRegisterPage = () => {
 
   const handleConfirmCancel = () => {
     setShowCancelModal(false);
-    
+
     // Navigate to home with notification state
     navigate(ROUTES.home, {
       state: {
@@ -373,12 +374,12 @@ const OwnerRegisterPage = () => {
           {currentStep === 1 && (
             <div className="register-step-content">
               <h2 className="register-step-title">Προσωπικά Στοιχεία</h2>
-              
+
               <div className="register-form-row">
                 <div className="register-form-group">
                   <label htmlFor="firstName" className="register-label">
                     Όνομα<span className="register__required"> *</span>
-                    </label>
+                  </label>
                   <input
                     type="text"
                     id="firstName"
@@ -394,7 +395,7 @@ const OwnerRegisterPage = () => {
                 <div className="register-form-group">
                   <label htmlFor="lastName" className="register-label">
                     Επώνυμο<span className="register__required"> *</span>
-                    </label>
+                  </label>
                   <input
                     type="text"
                     id="lastName"
@@ -439,11 +440,11 @@ const OwnerRegisterPage = () => {
           {currentStep === 2 && (
             <div className="register-step-content">
               <h2 className="register-step-title">Στοιχεία Επικοινωνίας</h2>
-              
+
               <div className="register-form-group">
                 <label htmlFor="email" className="register-label">
                   Email<span className="register__required"> *</span>
-                  </label>
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -480,11 +481,11 @@ const OwnerRegisterPage = () => {
           {currentStep === 3 && (
             <div className="register-step-content">
               <h2 className="register-step-title">Διεύθυνση</h2>
-              
+
               <div className="register-form-group">
                 <label htmlFor="address" className="register-label">
                   Διεύθυνση<span className="register__required"> *</span>
-                  </label>
+                </label>
                 <input
                   type="text"
                   id="address"
@@ -540,7 +541,7 @@ const OwnerRegisterPage = () => {
           {currentStep === 4 && (
             <div className="register-step-content">
               <h2 className="register-step-title">Κωδικός Πρόσβασης</h2>
-              
+
               <div className="register-form-group">
                 <label htmlFor="password" className="register-label">
                   Κωδικός<span className="register__required"> *</span>

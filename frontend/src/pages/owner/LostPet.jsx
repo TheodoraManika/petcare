@@ -16,11 +16,39 @@ const OwnerLostPet = () => {
   const navigate = useNavigate();
 
   // Mock pet data - in real app, this would come from API/database
-  const userPets = [
-    { value: 'pet1', label: 'Μαξ - GR123456789012345', microchip: 'GR123456789012345', name: 'Μαξ', type: 'Σκύλος', breed: 'Golden Retriever', image: '🐕' },
-    { value: 'pet2', label: 'Λούνα - GR987654321098765', microchip: 'GR987654321098765', name: 'Λούνα', type: 'Γάτα', breed: 'Persian', image: '🐱' },
-    { value: 'pet3', label: 'Τσάρλι - GR456789123456789', microchip: 'GR456789123456789', name: 'Τσάρλι', type: 'Σκύλος', breed: 'Labrador Retriever', image: '🐶' },
-  ];
+  // State for user pets
+  const [userPets, setUserPets] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Fetch user pets
+  React.useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setCurrentUser(parsedUser);
+
+          const response = await fetch(`http://localhost:5000/pets?ownerId=${parsedUser.id}`);
+          if (response.ok) {
+            const data = await response.json();
+            const formattedPets = data.map(pet => ({
+              value: pet.id.toString(),
+              label: `${pet.name} - ${pet.microchipId || '-'}`,
+              microchip: pet.microchipId || '',
+              name: pet.name,
+              type: pet.species,
+              breed: pet.breed
+            }));
+            setUserPets(formattedPets);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching pets:', error);
+      }
+    };
+    fetchPets();
+  }, []);
 
   // Location options (now will be used by LocationPicker)
   const locationOptions = [
@@ -136,10 +164,66 @@ const OwnerLostPet = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowSubmitModal(false);
-    navigate(ROUTES.owner.dashboard);
+  const handleConfirmSubmit = async () => {
+    try {
+      const selectedPetId = formData.selectedPet;
+
+      // 1. Create the Life Event (Lost Declaration)
+      const lifeEventResponse = await fetch('http://localhost:5000/lifeEvents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData, // includes selectedPet (id)
+          petId: selectedPetId, // explicit field for backend consistency
+          ownerId: currentUser?.id,
+          type: 'lost',
+          status: 'submitted',
+          submittedAt: new Date().toISOString()
+        }),
+      });
+
+      if (!lifeEventResponse.ok) {
+        throw new Error('Failed to submit lost pet declaration');
+      }
+
+      // 2. Update the Pet status to 'lost' and update location
+      const petUpdateResponse = await fetch(`http://localhost:5000/pets/${selectedPetId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: 'lost',
+          lastKnownLocation: {
+            lat: formData.locationLat,
+            lon: formData.locationLon,
+            address: formData.location
+          }
+        })
+      });
+
+      if (!petUpdateResponse.ok) {
+        console.warn('Failed to update pet status, but declaration was submitted.');
+      }
+
+      console.log('Form submitted successfully');
+      setShowSubmitModal(false);
+      navigate(ROUTES.owner.dashboard, {
+        state: {
+          notification: {
+            message: 'Η δήλωση απώλειας υποβλήθηκε επιτυχώς! Η κατάσταση του κατοικιδίου ενημερώθηκε.',
+            type: 'success'
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Optional: Show error notification
+      setNotification('error');
+      setTimeout(() => setNotification(null), 5000);
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -181,35 +265,54 @@ const OwnerLostPet = () => {
     setShowCancelModal(false);
   };
 
-  const handleDraft = () => {
-    // TODO: Save form data to backend with status 'draft'
-    // API call example: await saveLostPetDraft(formData);
+  const handleDraft = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/lifeEvents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          ownerId: currentUser?.id,
+          type: 'lost',
+          status: 'draft',
+          lastModified: new Date().toISOString()
+        }),
+      });
 
-    console.log('Draft saved:', formData);
+      if (!response.ok) {
+        throw new Error('Failed to save draft');
+      }
 
-    // Reset all form fields
-    setFormData({
-      selectedPet: '',
-      microchipNumber: '',
-      petName: '',
-      lostDate: '',
-      contactPhone: '',
-      location: '',
-      locationLat: '',
-      locationLon: '',
-      description: '',
-      photo: ''
-    });
-    setPhotoPreview(null);
-    setPhoneError('');
+      console.log('Draft saved successfully');
 
-    // Show success notification
-    setNotification('draft');
+      // Reset all form fields
+      setFormData({
+        selectedPet: '',
+        microchipNumber: '',
+        petName: '',
+        lostDate: '',
+        contactPhone: '',
+        location: '',
+        locationLat: '',
+        locationLon: '',
+        description: '',
+        photo: ''
+      });
+      setPhotoPreview(null);
+      setPhoneError('');
 
-    // Auto-hide notification after 8 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 8000);
+      // Show success notification
+      setNotification('draft');
+
+      // Auto-hide notification after 8 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 8000);
+    } catch (error) {
+      console.error('Error saving draft:', error);
+    }
   };
 
   // Prepare fields for ConfirmDetailModal

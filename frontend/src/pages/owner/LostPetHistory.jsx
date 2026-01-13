@@ -13,70 +13,75 @@ const LostPetHistory = () => {
   const [selectedDeclaration, setSelectedDeclaration] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5;
-  const [declarations, setDeclarations] = useState([
-    {
-      id: 1,
-      type: 'loss',
-      petName: 'Μπάμπης',
-      petType: 'Σκύλος',
-      date: '05/11/2025',
-      location: 'Κέντρο Αθήνας, Πλατεία Συντάγματος',
-      status: 'submitted',
-    },
-    {
-      id: 2,
-      type: 'found',
-      petName: 'Μίνι',
-      petType: 'Γάτα',
-      date: '01/11/2025',
-      location: 'Πάρκο Εργηνης',
-      status: 'submitted',
-    },
-    {
-      id: 3,
-      type: 'loss',
-      petName: 'Ρέξ',
-      petType: 'Σκύλος',
-      date: '28/10/2025',
-      location: 'Θεσσαλονίκη',
-      status: 'draft',
-    },
-  ]);
+  const [declarations, setDeclarations] = useState([]);
+  const [foundByOthers, setFoundByOthers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for "Από άλλους" - Found pet declarations from other users
-  // These should match the structure of found pet declarations
-  const [foundByOthers, setFoundByOthers] = useState([
-    {
-      id: 4,
-      type: 'found_by_other',
-      petName: 'Μπάμπης',
-      petSpecies: 'Σκύλος',
-      petBreed: 'Λαμπραντόρ',
-      petColor: 'Καφέ',
-      petGender: 'Αρσενικό',
-      date: '10/11/2025',
-      location: 'Πλατεία Βικτωρίας, Αθήνα',
-      description: 'Βρήκα έναν σκύλο που ταιριάζει με τη δήλωσή σας. Είναι φιλικός και φοράει κόκκινο περιλαίμιο.',
-      contactName: 'Μαρία Παπαδοπούλου',
-      contactPhone: '6912345678',
-      contactEmail: 'maria.p@email.com',
-    },
-    {
-      id: 5,
-      type: 'found_by_other',
-      petName: 'Ρέξ',
-      petSpecies: 'Σκύλος',
-      petBreed: 'Γερμανικός Ποιμενικός',
-      petColor: 'Μαύρος με καφέ',
-      petGender: 'Αρσενικό',
-      date: '02/11/2025',
-      location: 'Καλαμαριά, Θεσσαλονίκη',
-      description: 'Είδα σκύλο που μοιάζει με την περιγραφή σας στην περιοχή. Περπατούσε μόνος του.',
-      contactName: 'Γιώργος Κωνσταντίνου',
-      contactPhone: '6987654321',
-      contactEmail: 'g.konstantinou@email.com',
-    },
-  ]);
+  // Fetch declarations
+  React.useEffect(() => {
+    const fetchDeclarations = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) return;
+
+        const currentUser = JSON.parse(storedUser);
+
+        // Fetch all life events
+        // In a real app we'd filter by userId on the server
+        // For json-server, we might need to fetch all or filter multiple times
+        // Attempting to fetch events where ownerId creates a match, OR reporter matches
+        const response = await fetch('http://localhost:5000/lifeEvents');
+        if (response.ok) {
+          const allEvents = await response.json();
+
+          // Filter for "Mine"
+          const myEvents = allEvents.filter(event =>
+            event.ownerId === currentUser.id ||
+            event.reporter?.id === currentUser.id ||
+            (event.reporterEmail && event.reporterEmail === currentUser.email)
+          );
+
+          setDeclarations(myEvents.map(event => ({
+            id: event.id,
+            type: event.type === 'found' ? 'found' : 'loss',
+            petName: event.petName || 'Άγνωστο',
+            petType: event.species || 'Άγνωστο',
+            date: event.date, //|| event.lostDate || event.foundDate
+            location: event.location, //|| event.lostLocation || event.foundLocation
+            status: event.status || 'submitted',
+            petSpecies: event.species
+          })));
+
+          // Filter for "Found by others" (simple logic: all found events NOT by me)
+          const othersFound = allEvents.filter(event =>
+            event.type === 'found' &&
+            event.ownerId !== currentUser.id &&
+            event.reporter?.id !== currentUser.id &&
+            (!event.reporterEmail || event.reporterEmail !== currentUser.email)
+          );
+
+          setFoundByOthers(othersFound.map(event => ({
+            id: event.id,
+            type: 'found_by_other',
+            petName: event.petName,
+            petSpecies: event.species,
+            petBreed: event.breed,
+            date: event.date,
+            location: event.location,
+            description: event.description,
+            contactName: event.reporterFirstName ? `${event.reporterFirstName} ${event.reporterLastName}` : 'Άγνωστο',
+            contactPhone: event.reporterPhone,
+            contactEmail: event.reporterEmail
+          })));
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching declarations:', error);
+        setLoading(false);
+      }
+    };
+    fetchDeclarations();
+  }, []);
 
   const breadcrumbItems = [
   ];
@@ -174,11 +179,11 @@ const LostPetHistory = () => {
               <div className="lost-pet-history__card-info">
                 <div className="lost-pet-history__card-header">
                   <h3 className="lost-pet-history__card-title">
-                    {declaration.type === 'found_by_other' 
-                      ? 'Δήλωση Εύρεσης από Χρήστη' 
-                      : declaration.type === 'loss' 
-                      ? 'Δήλωση Απώλειας' 
-                      : 'Δήλωση Εύρεσης'}
+                    {declaration.type === 'found_by_other'
+                      ? 'Δήλωση Εύρεσης από Χρήστη'
+                      : declaration.type === 'loss'
+                        ? 'Δήλωση Απώλειας'
+                        : 'Δήλωση Εύρεσης'}
                   </h3>
                   <span className="lost-pet-history__card-subtitle">
                     {declaration.petType || declaration.petSpecies}

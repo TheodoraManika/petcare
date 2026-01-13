@@ -13,31 +13,74 @@ const Review = () => {
   const [comment, setComment] = useState('');
 
   // Mock appointment data - in real app, this would come from API
-  const appointment = {
-    id: appointmentId,
-    vet: 'Ελένη Γεωργίου',
-    pet: 'Μπάμπης',
-    date: '05/11/2025',
-    service: 'Εμβολιασμός',
-  };
+  const [appointment, setAppointment] = useState(null);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchAppointment = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/appointments/${appointmentId}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Transform to match local state needs if necessary, or use directly
+          setAppointment({
+            id: data.id,
+            vet: data.vetName,
+            vetId: data.vetId,
+            pet: data.petName,
+            date: data.date,
+            service: data.serviceType
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching appointment:", err);
+      }
+    };
+    if (appointmentId) fetchAppointment();
+  }, [appointmentId]);
+
+  if (!appointment) return <div style={{ padding: '2rem' }}>Φόρτωση...</div>;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (rating === 0) {
       alert('Παρακαλώ επιλέξτε βαθμολογία');
       return;
     }
 
-    // In real app, this would send data to API
-    console.log({
-      appointmentId,
-      rating,
-      comment,
-    });
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const reviewData = {
+        appointmentId,
+        vetId: appointment?.vetId || 1, // Fallback if mock
+        vetName: appointment.vet,
+        ownerId: currentUser.id,
+        ownerName: currentUser.name || currentUser.username,
+        rating,
+        comment,
+        date: new Date().toLocaleDateString('el-GR'), // Format DD/MM/YYYY locally or ISO
+        createdAt: new Date().toISOString()
+      };
 
-    // Redirect back to appointments
-    navigate(ROUTES.owner.appointments);
+      const response = await fetch('http://localhost:5000/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+
+      console.log('Review submitted successfully');
+      // Redirect back to appointments
+      navigate(ROUTES.owner.appointments);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('Σφάλμα κατά την υποβολή της αξιολόγησης.');
+    }
   };
 
   const handleCancel = () => {

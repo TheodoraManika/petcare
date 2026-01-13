@@ -128,10 +128,38 @@ const Operation = () => {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      const currentUser = storedUser ? JSON.parse(storedUser) : null;
+
+      const response = await fetch('http://localhost:5000/medicalActs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          vetId: currentUser?.id,
+          petId: foundPetDetails?.id,
+          date: new Date(formData.operationDate).toISOString(), // Ensure ISO format
+          type: formData.operationType,
+          description: formData.description,
+          cost: 0 // Default cost as not in form
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit medical act');
+      }
+
+      console.log('Medical act submitted successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Optional: Show error notification
+      setNotification('start_error');
+    }
   };
 
   const handleCancelSubmit = () => {

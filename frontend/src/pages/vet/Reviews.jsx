@@ -12,43 +12,26 @@ const Reviews = () => {
   const reviewsPerPage = 4;
 
   // Mock data - Replace with actual data from backend
-  const reviews = [
-    {
-      id: 1,
-      name: 'Μαρία Κ.',
-      date: '05/11/2025',
-      rating: 5,
-      comment: 'Εξαιρετική επαγγελματίας! Έδωσε μεγάλη προσοχή στο κατοικίδιό μου.'
-    },
-    {
-      id: 2,
-      name: 'Γεώργιος Π.',
-      date: '01/11/2025',
-      rating: 4,
-      comment: 'Πολύ καλή κτηνίατρος, με μεγάλη εμπειρία. Συνιστώ ανεπιφύλακτα!'
-    },
-    {
-      id: 3,
-      name: 'Ελένη Λ.',
-      date: '28/10/2025',
-      rating: 5,
-      comment: 'Άριστη εξυπηρέτηση και πολύ προσεγμένη δουλειά. Ευχαριστώ!'
-    },
-    {
-      id: 4,
-      name: 'Νίκος Α.',
-      date: '20/10/2025',
-      rating: 5,
-      comment: 'Πολύ καλή συνεργασία, η γάτα μου έγινε καλά χάρη στη βοήθεια σας!'
-    },
-    {
-      id: 5,
-      name: 'Αλέξανδρος Β.',
-      date: '15/10/2025',
-      rating: 5,
-      comment: 'Απλά απίθανη!'
-    },
-  ];
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const response = await fetch(`http://localhost:5000/reviews?vetId=${currentUser.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setReviews(data);
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   // Calculate average rating
   const averageRating = reviews.length > 0
@@ -60,10 +43,10 @@ const Reviews = () => {
     // Parse dates (format: DD/MM/YYYY)
     const [dayA, monthA, yearA] = a.date.split('/').map(Number);
     const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-    
+
     const dateA = new Date(yearA, monthA - 1, dayA);
     const dateB = new Date(yearB, monthB - 1, dayB);
-    
+
     // Sort descending (most recent first)
     return dateB - dateA;
   });

@@ -45,87 +45,75 @@ const Appointments = () => {
     setIsBookingExpanded(false);
   };
 
-  // Mock data - in real app, this would come from API/database
-  const [activeAppointments, setActiveAppointments] = useState([
-    {
-      id: 1,
-      vet: 'Δρ. Μαρία Παπαδοπούλου',
-      pet: 'Μπάμπης',
-      date: '15/11/2025',
-      time: '10:00 - 11:00',
-      service: 'Εμβολιασμός',
-      status: 'confirmed',
-      vetInfo: {
-        id: 1,
-        name: 'Μαρία',
-        lastName: 'Παπαδοπούλου',
-        specialization: 'Γενικός Κτηνίατρος',
-        avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Αθήνα',
-        rating: 4.8
-      }
-    },
-    {
-      id: 2,
-      vet: 'Δρ. Γιώργος Ιωάννου',
-      pet: 'Μίνι',
-      date: '20/11/2025',
-      time: '14:00 - 15:00',
-      service: 'Γενική εξέταση',
-      status: 'pending',
-      vetInfo: {
-        id: 2,
-        name: 'Γιώργος',
-        lastName: 'Ιωάννου',
-        specialization: 'Παθολόγος',
-        avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Θεσσαλονίκη',
-        rating: 4.9
-      }
-    },
-  ]);
+  // State
+  const [activeAppointments, setActiveAppointments] = useState([]);
+  const [historyAppointments, setHistoryAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [historyAppointments, setHistoryAppointments] = useState([
-    {
-      id: 3,
-      vet: 'Δρ. Ελένη Γεωργίου',
-      pet: 'Μπάμπης',
-      date: '05/11/2025',
-      time: '11:00 - 12:00',
-      service: 'Εμβολιασμός',
-      status: 'completed',
-      canReview: true,
-      vetInfo: {
-        id: 3,
-        name: 'Ελένη',
-        lastName: 'Γεωργίου',
-        specialization: 'Χειρούργος',
-        avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Πάτρα',
-        rating: 4.7
+  // Fetch appointments
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) return;
+        const currentUser = JSON.parse(storedUser);
+
+        // Fetch appointments with expanded pet and vet info
+        // We fetching all and filtering clientside because json-server relationship filtering is limited
+        const response = await fetch('http://localhost:5000/appointments?_expand=pet&_expand=vet');
+
+        if (response.ok) {
+          const allAppointments = await response.json();
+
+          // Filter for appointments belonging to this owner's pets
+          const ownerAppointments = allAppointments.filter(apt =>
+            apt.pet && apt.pet.ownerId === currentUser.id
+          );
+
+          const active = [];
+          const history = [];
+          const now = new Date();
+
+          ownerAppointments.forEach(apt => {
+            const aptDate = new Date(apt.date); // Assuming ISO or parseable format. If DD/MM/YYYY, needs parsing
+            // Parse DD/MM/YYYY
+            const [day, month, year] = apt.date.includes('/') ? apt.date.split('/') : [0, 0, 0];
+            const isPast = apt.date.includes('/')
+              ? new Date(year, month - 1, day) < new Date(now.getFullYear(), now.getMonth(), now.getDate())
+              : new Date(apt.date) < now;
+
+            const formattedApt = {
+              id: apt.id,
+              vet: `Δρ. ${apt.vet?.name || ''} ${apt.vet?.lastName || ''}`,
+              pet: apt.pet?.name || 'Άγνωστο',
+              date: apt.date,
+              time: apt.time,
+              service: apt.reason || apt.service || 'Επίσκεψη', // 'reason' is in db.json, 'service' in mock
+              status: apt.status,
+              vetInfo: apt.vet,
+              canReview: apt.status === 'completed',
+              cancellationMessage: apt.cancellationMessage
+            };
+
+            if (apt.status === 'completed' || apt.status === 'cancelled' || isPast) {
+              if (isPast && apt.status === 'confirmed') formattedApt.status = 'completed'; // Auto-complete
+              history.push(formattedApt);
+            } else {
+              active.push(formattedApt);
+            }
+          });
+
+          setActiveAppointments(active);
+          setHistoryAppointments(history);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+        setLoading(false);
       }
-    },
-    {
-      id: 4,
-      vet: 'Δρ. Μαρία Παπαδοπούλου',
-      pet: 'Μίνι',
-      date: '01/11/2025',
-      time: '16:00 - 17:00',
-      service: 'Στείρωση',
-      status: 'cancelled',
-      canReview: false,
-      cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.',
-      vetInfo: {
-        id: 1,
-        name: 'Μαρία',
-        lastName: 'Παπαδοπούλου',
-        specialization: 'Γενικός Κτηνίατρος',
-        avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Αθήνα',
-        rating: 4.8
-      }
-    },
-  ]);
+    };
+    fetchAppointments();
+  }, [successMessage]); // Refetch when booking success message appears
 
   const appointments = activeTab === 'active' ? activeAppointments : historyAppointments;
 
@@ -169,7 +157,7 @@ const Appointments = () => {
   const handleConfirmCancel = () => {
     // Find the appointment to cancel
     const appointmentToMove = activeAppointments.find(app => app.id === appointmentToCancel);
-    
+
     if (appointmentToMove) {
       // Update the appointment status and add cancellation message
       const cancelledAppointment = {
@@ -178,20 +166,20 @@ const Appointments = () => {
         canReview: false,
         cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.'
       };
-      
+
       // Remove from active appointments
       setActiveAppointments(prev => prev.filter(app => app.id !== appointmentToCancel));
-      
+
       // Add to history appointments
       setHistoryAppointments(prev => [cancelledAppointment, ...prev]);
     }
-    
+
     setShowCancelModal(false);
     setAppointmentToCancel(null);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);

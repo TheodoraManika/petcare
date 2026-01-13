@@ -43,7 +43,7 @@ const LostPets = () => {
     const fetchLostPets = async () => {
       try {
         const [lostPetsResponse, usersResponse] = await Promise.all([
-          fetch('http://localhost:5000/lostPets'),
+          fetch('http://localhost:5000/lifeEvents?type=lost'),
           fetch('http://localhost:5000/users')
         ]);
 
@@ -56,18 +56,19 @@ const LostPets = () => {
 
         // Transform data for display (add owner info and default coordinates if missing)
         const transformedPets = lostPetsData.map((pet, index) => {
-          const owner = usersData.find(user => user.id === pet.ownerId?.toString());
+          const owner = usersData.find(user => user.id === (pet.ownerId?.toString() || pet.reporter?.id?.toString()));
 
           return {
             ...pet,
             name: pet.petName || 'Άγνωστο',
-            type: pet.species || 'Άγνωστο',
+            type: pet.species || (pet.petType || 'Άγνωστο'),
             breed: pet.breed || 'Άγνωστο',
-            area: pet.lostLocation || 'Άγνωστη τοποθεσία',
-            dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
-            color: pet.description?.split(',')[0] || 'Άγνωστο χρώμα',
-            ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Άγνωστο',
-            contactEmail: owner?.email || '',
+            area: pet.location || pet.lostLocation || 'Άγνωστη τοποθεσία',
+            dateLost: pet.date || pet.lostDate || new Date().toLocaleDateString('el-GR'),
+            color: pet.description?.split(' ')[0] || 'Άγνωστο χρώμα',
+            ownerName: owner ? `${owner.name} ${owner.lastName}` : (pet.reporterFirstName ? `${pet.reporterFirstName} ${pet.reporterLastName}` : 'Άγνωστο'),
+            contactEmail: owner?.email || pet.reporterEmail || '',
+            contactPhone: owner?.phone || pet.contactPhone || '',
             // Default coordinates for Athens if not specified
             lat: pet.locationLat || 37.9838,
             lon: pet.locationLon || 23.7275,
@@ -120,15 +121,71 @@ const LostPets = () => {
     setLocationData(null);
   };
 
-  // Filter pets based on microchip
+  // Filter pets based on all criteria
   const filteredPets = useMemo(() => {
-    const needle = (filters.microchip || '').toString().toLowerCase();
-    if (!needle) return lostPets;
     return lostPets.filter(pet => {
+      // Microchip filter
+      const needle = (filters.microchip || '').toString().toLowerCase();
       const chip = (pet.microchip || '').toString().toLowerCase();
-      return chip.includes(needle);
+      if (needle && !chip.includes(needle)) return false;
+
+      // Animal Type filter
+      if (filters.animal && filters.animal !== 'other') {
+        // Map filter value to english/greek terms if needed, or simple partial match
+        // Our transform logic sets type to Greek or English depending on source
+        // Let's do a loose match
+        const type = (pet.type || '').toLowerCase();
+        // filters.animal is 'dog', 'cat', 'bird' etc.
+        if (filters.animal === 'dog' && !type.includes('σκύλος') && !type.includes('dog')) return false;
+        if (filters.animal === 'cat' && !type.includes('γάτα') && !type.includes('cat')) return false;
+        if (filters.animal === 'bird' && !type.includes('πτηνό') && !type.includes('bird')) return false;
+        if (filters.animal === 'reptile' && !type.includes('ερπετό') && !type.includes('reptile')) return false;
+      }
+
+      // Area filter (LocationPicker sets locationData, but basic text filter on 'filters.area'?)
+      // The LocationPicker in sidebar might update locationData OR directly filters.area if modified.
+      // Line 297: LocationPicker calls handleLocationSelect. 
+      // But we also have filters.area? Wait, LocationPicker in sidebar sets locationData state (line 109).
+      // But does it filter?
+      // Actually, let's look at how SearchSidebar uses LocationPicker.
+      // It seems it passes `onLocationSelect`.
+      // The implementation in SearchSidebar seems to be just visual if we don't use locationData or filters.area.
+      // Let's assume filters.area is manually typed or we use locationData.display_name if populated?
+      // Wait, locationData is updated by handleLocationSelect.
+      // filters.area is updated manually? No input for filters.area shown in sidebar except LocationPicker?
+      // Let's use locationData if available, otherwise ignore?
+      // Actually, let's look at `locationData` state usage.
+
+      // Breed filter
+      if (filters.breed) {
+        const breed = (pet.breed || '').toLowerCase();
+        if (!breed.includes(filters.breed.toLowerCase())) return false;
+      }
+
+      // Color filter
+      if (filters.color) {
+        const color = (pet.color || '').toLowerCase();
+        const desc = (pet.description || '').toLowerCase();
+        // Check color field or description
+        if (!color.includes(filters.color.toLowerCase()) && !desc.includes(filters.color.toLowerCase())) return false;
+      }
+
+      // Date filter
+      if (filters.lostDate) {
+        // Compare dates? Format might be DD/MM/YYYY
+        // filters.lostDate usually comes from input type="date" (YYYY-MM-DD)
+        // pet.dateLost is localized string DD/MM/YYYY
+        // Need normalized comparison
+        if (pet.dateLost) {
+          const [d, m, y] = pet.dateLost.split('/');
+          const petDate = `${y}-${m}-${d}`;
+          if (petDate !== filters.lostDate) return false;
+        }
+      }
+
+      return true;
     });
-  }, [filters.microchip, lostPets]);
+  }, [filters, lostPets]); // removed locationData dependency for now unless we correlate it
 
   const hasSearched = filters.microchip.length > 0;
   const hasNoResults = hasSearched && filteredPets.length === 0;

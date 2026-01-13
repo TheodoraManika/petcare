@@ -201,10 +201,32 @@ const Foster = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/fosters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          status: 'submitted',
+          submittedAt: new Date().toISOString()
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit foster declaration');
+      }
+
+      console.log('Form submitted successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Optional: Show error notification
+      setNotification('start_error'); // Assuming you had a way to trigger error state
+    }
   };
 
   const handleCancelSubmit = () => {

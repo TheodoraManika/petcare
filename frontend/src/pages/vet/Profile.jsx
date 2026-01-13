@@ -27,26 +27,56 @@ const Profile = () => {
     city: '',
   });
   const navigate = useNavigate();
-  
-  // Original data that won't change unless saved
-  const [originalData, setOriginalData] = useState({
-    firstName: 'Γιάννης',
-    lastName: 'Πετρίδης',
-    email: 'john@example.com',
-    phone: '6912345678',
-    afm: '123456789',
-    vetLicense: 'VET12345',
-    specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'],
-    yearsOfExperience: '5',
-    clinicName: 'Κτηνιατρικό Κέντρο Γέρακα',
-    address: 'Ερμού 8, 15344',
-    city: 'Γέρακας',
-    university: 'Γεωπονικό Πανεπιστήμιο Αθηνών',
-    bio: '',
-  });
-  
+
   // Working copy for editing
-  const [formData, setFormData] = useState({...originalData});
+  const [formData, setFormData] = useState({ ...originalData });
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Fetch user data on mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setCurrentUser(parsedUser);
+
+          const response = await fetch(`http://localhost:5000/users/${parsedUser.id}`);
+          if (response.ok) {
+            const userData = await response.json();
+            const mappedData = {
+              firstName: userData.name || '',
+              lastName: userData.lastName || '',
+              email: userData.email || '',
+              phone: userData.phone || '',
+              afm: userData.afm || '',
+              vetLicense: userData.licenseNumber || '',
+              specialties: userData.specialization ? [userData.specialization] : [], // backend has single specialization? or array? db.json usually had string. Profile expects array.
+              yearsOfExperience: userData.experienceYears ? userData.experienceYears.toString() : '',
+              clinicName: userData.clinicName || '',
+              address: userData.address || '',
+              city: userData.city || '',
+              university: userData.education || '',
+              bio: userData.bio || '',
+            };
+
+            // Handle specialization if it's a string in DB but array in UI
+            if (typeof userData.specialization === 'string') {
+              mappedData.specialties = [userData.specialization];
+            } else if (Array.isArray(userData.specialization)) {
+              mappedData.specialties = userData.specialization;
+            }
+
+            setOriginalData(mappedData);
+            setFormData(mappedData);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // Helper function to filter only Greek and English letters and spaces
   const filterLettersOnly = (value) => {
@@ -88,7 +118,7 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     let filteredValue = value;
 
     // Apply character filters based on field type
@@ -131,7 +161,7 @@ const Profile = () => {
       ...prev,
       specialties: selectedSpecialties
     }));
-    
+
     // Clear error when specialties are selected
     if (errors.specialties && selectedSpecialties.length > 0) {
       setErrors(prev => ({
@@ -153,7 +183,7 @@ const Profile = () => {
     setIsEditing(false);
     setShowCancelModal(false);
     // Reset form data to original values
-    setFormData({...originalData});
+    setFormData({ ...originalData });
     // Clear all errors
     setErrors({
       firstName: '',
@@ -177,25 +207,36 @@ const Profile = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     // Handle account deletion logic here
-    console.log('Account deleted');
-    setShowDeleteModal(false);
-    setShowSuccessModal(true);
-    
-    // Redirect to home after 5 seconds
-    setTimeout(() => {
-      navigate(ROUTES.home);
-    }, 5000);
+    try {
+      if (currentUser?.id) {
+        await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+          method: 'DELETE'
+        });
+
+        localStorage.removeItem('currentUser');
+        console.log('Account deleted');
+        setShowDeleteModal(false);
+        setShowSuccessModal(true);
+
+        // Redirect to home after 3 seconds
+        setTimeout(() => {
+          navigate(ROUTES.home);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    }
   };
 
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate all fields
     const newErrors = {};
 
@@ -247,10 +288,56 @@ const Profile = () => {
 
     // If validation passes, save the changes
     console.log('Form submitted:', formData);
-    // Save the changes to originalData
-    setOriginalData({...formData});
-    setIsEditing(false);
-    setShowSaveSuccessModal(true);
+
+    // Convert array specialization to string or first element if backend expects that
+    const specializationToSend = formData.specialties.length > 0 ? formData.specialties[0] : '';
+    // Or send array if backend supports it? 
+    // db.json schema for vets used: "specialization": "Γενική Κτηνιατρική" (string).
+    // So we pick the first one or join them?
+    // Let's stick with first picked for now to match schema or change schema.
+
+    const updatedUser = {
+      name: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      afm: formData.afm,
+      licenseNumber: formData.vetLicense,
+      specialization: specializationToSend, // Map back to DB field
+      experienceYears: parseInt(formData.yearsOfExperience) || 0,
+      clinicName: formData.clinicName,
+      address: formData.address,
+      city: formData.city,
+      education: formData.university,
+      bio: formData.bio
+    };
+
+    try {
+      const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedUser)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Update local storage
+        const storedUser = JSON.parse(localStorage.getItem('currentUser'));
+        localStorage.setItem('currentUser', JSON.stringify({ ...storedUser, ...data }));
+
+        // Save the changes to originalData
+        setOriginalData({ ...formData });
+        setIsEditing(false);
+        setShowSaveSuccessModal(true);
+      } else {
+        console.error('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
 
   const handleBackToProfile = () => {
@@ -285,14 +372,14 @@ const Profile = () => {
           <div className="profile__actions">
             {isEditing ? (
               <>
-                <button 
+                <button
                   className="profile__btn profile__btn--cancel"
                   onClick={handleCancel}
                   type="button"
                 >
                   Ακύρωση
                 </button>
-                <button 
+                <button
                   className="profile__btn profile__btn--save"
                   onClick={handleSubmit}
                   type="button"
@@ -303,7 +390,7 @@ const Profile = () => {
               </>
             ) : (
               <>
-                <button 
+                <button
                   className="profile__btn profile__btn--delete"
                   onClick={handleDelete}
                   type="button"
@@ -311,12 +398,12 @@ const Profile = () => {
                   <X size={18} />
                   Διαγραφή Λογαριασμού
                 </button>
-                <button 
+                <button
                   className="profile__btn profile__btn--edit"
                   onClick={handleEditToggle}
                   type="button"
                 >
-                  <SquarePen size={18} /> 
+                  <SquarePen size={18} />
                   Επεξεργασία
                 </button>
               </>

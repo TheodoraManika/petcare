@@ -379,6 +379,19 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
   };
 
 
+  // Autofill user details
+  useEffect(() => {
+    if (currentUser) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: currentUser.name || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || ''
+      }));
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -388,31 +401,36 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
     }
 
     try {
-      // Create the found pet declaration object
+      // Create the found pet declaration object (mapped to LifeEvent)
       const newFoundPet = {
+        type: 'found',
         petName: formData.petName || 'Άγνωστο',
         species: formData.species || '',
         breed: formData.breed || '',
         description: formData.description || '',
-        foundDate: formData.foundDate,
-        foundLocation: formData.foundLocation,
-        reporterFirstName: formData.firstName,
-        reporterLastName: formData.lastName,
-        reporterEmail: formData.email,
-        reporterPhone: formData.phone,
-        status: 'active',
+        date: formData.foundDate, // Mapped to 'date' for generic handling
+        location: formData.foundLocation, // Mapped to 'location'
+        reporter: {
+          id: currentUser?.id,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone
+        },
+        status: 'submitted', // Found declarations are submitted immediately usually
         imageUrl: null, // TODO: Implement file upload
         createdAt: new Date().toISOString()
       };
 
-      // Submit to backend
-      const response = await fetch('http://localhost:5000/foundPets', {
+      // Submit to backend - using lifeEvents for consistency
+      const response = await fetch('http://localhost:5000/lifeEvents', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(newFoundPet)
       });
+
 
       if (!response.ok) {
         throw new Error('Failed to submit found pet declaration');

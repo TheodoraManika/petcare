@@ -67,7 +67,47 @@ const Availability = () => {
     other: '#FCA47C'
   };
 
-  const handleAddSlot = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Fetch availability
+  React.useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          setCurrentUser(user);
+
+          const response = await fetch(`http://localhost:5000/availability?vetId=${user.id}`);
+          if (response.ok) {
+            const data = await response.json();
+
+            const newAvailability = {
+              monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []
+            };
+
+            data.forEach(item => {
+              if (newAvailability[item.day]) {
+                newAvailability[item.day].push({
+                  id: item.id,
+                  start: item.startTime, // Backend uses startTime ? Check db.json
+                  end: item.endTime,
+                  status: item.status
+                });
+              }
+            });
+
+            setAvailabilityData(newAvailability);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching availability:', error);
+      }
+    };
+    fetchAvailability();
+  }, []);
+
+  const handleAddSlot = async () => {
     if (!newSlot.day || !newSlot.startTime || !newSlot.endTime || !newSlot.status) {
       setErrorMessage('Παρακαλώ συμπληρώστε όλα τα πεδία');
       return;
@@ -86,25 +126,49 @@ const Availability = () => {
     // Clear error message
     setErrorMessage('');
 
-    setAvailabilityData(prev => ({
-      ...prev,
-      [newSlot.day]: [
-        ...(prev[newSlot.day] || []),
-        {
-          start: newSlot.startTime,
-          end: newSlot.endTime,
-          status: newSlot.status
-        }
-      ]
-    }));
+    try {
+      const payload = {
+        vetId: currentUser.id,
+        day: newSlot.day,
+        startTime: newSlot.startTime, // Ensure consistency with db.json
+        endTime: newSlot.endTime,
+        status: newSlot.status
+      };
 
-    // Reset form
-    setNewSlot({
-      day: '',
-      startTime: '',
-      endTime: '',
-      status: ''
-    });
+      const response = await fetch('http://localhost:5000/availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const savedSlot = await response.json();
+
+        setAvailabilityData(prev => ({
+          ...prev,
+          [newSlot.day]: [
+            ...(prev[newSlot.day] || []),
+            {
+              id: savedSlot.id,
+              start: savedSlot.startTime,
+              end: savedSlot.endTime,
+              status: savedSlot.status
+            }
+          ]
+        }));
+
+        // Reset form
+        setNewSlot({
+          day: '',
+          startTime: '',
+          endTime: '',
+          status: ''
+        });
+      }
+    } catch (error) {
+      console.error('Error adding slot:', error);
+      setErrorMessage('Σφάλμα κατά την αποθήκευση');
+    }
   };
 
   const handleDeleteSlot = (day, index) => {
@@ -113,23 +177,45 @@ const Availability = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    setAvailabilityData(prev => ({
-      ...prev,
-      [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
-    }));
-    
-    // Close modal and reset
-    setShowDeleteModal(false);
-    setSlotToDelete({ day: '', index: -1 });
-    
-    // Show notification
-    setNotification('deleted');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+  const handleConfirmDelete = async () => {
+    const daySlots = availabilityData[slotToDelete.day];
+    const slot = daySlots[slotToDelete.index];
+
+    if (slot && slot.id) {
+      try {
+        const response = await fetch(`http://localhost:5000/availability/${slot.id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          setAvailabilityData(prev => ({
+            ...prev,
+            [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
+          }));
+
+          // Close modal and reset
+          setShowDeleteModal(false);
+          setSlotToDelete({ day: '', index: -1 });
+
+          // Show notification
+          setNotification('deleted');
+
+          // Auto-hide notification after 5 seconds
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        }
+      } catch (error) {
+        console.error('Error deleting slot:', error);
+      }
+    } else {
+      // Fallback for local-only slots (if any)
+      setAvailabilityData(prev => ({
+        ...prev,
+        [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
+      }));
+      setShowDeleteModal(false);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -166,7 +252,7 @@ const Availability = () => {
         {/* Add New Slot Form */}
         <div className="availability__add-form">
           <h2 className="availability__form-title">Προσθήκη Διαθεσιμότητας Ραντεβού</h2>
-          
+
           <div className="availability__form-row">
             <div className="availability__form-field">
               <label className="availability__form-label">Ημέρα</label>
@@ -267,7 +353,7 @@ const Availability = () => {
             </div>
           )}
 
-          <button 
+          <button
             className="availability__add-btn"
             onClick={handleAddSlot}
             disabled={!newSlot.day || !newSlot.startTime || !newSlot.endTime || !newSlot.status}
@@ -280,7 +366,7 @@ const Availability = () => {
         {/* Weekly Schedule */}
         <div className="availability__schedule">
           <h2 className="availability__schedule-title">Εβδομαδιαίο Πρόγραμμα</h2>
-          
+
           <div className="availability__grid">
             {Object.keys(dayLabels).map(day => {
               const slots = availabilityData[day];
@@ -289,7 +375,7 @@ const Availability = () => {
                 return a.start.localeCompare(b.start);
               });
               const count = getSlotCount(day);
-              
+
               return (
                 <div key={day} className="availability__day-card">
                   <div className="availability__day-header">
@@ -317,7 +403,7 @@ const Availability = () => {
                             <span>{slot.start} - {slot.end}</span>
                           </div>
                           <div className="availability__slot-actions">
-                            <span 
+                            <span
                               className="availability__slot-status"
                               style={{ backgroundColor: statusColors[slot.status] }}
                             >
