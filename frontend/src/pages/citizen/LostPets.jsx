@@ -526,7 +526,7 @@ const LostPets = () => {
                   <p className="modal-pet-breed">{detailPet.type} - {detailPet.breed}</p>
                   <div className="modal-pet-status">
                     <AlertCircle size={16} />
-                    <span>Χάθηκε στις {detailPet.dateLost}</span>
+                    <span>Χάθηκε: {detailPet.dateLost}</span>
                   </div>
                 </div>
               </div>

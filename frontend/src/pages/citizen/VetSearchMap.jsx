@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, Star } from 'lucide-react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Search, MapPin, CircleAlert } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import CustomSelect from '../../components/common/forms/CustomSelect';
@@ -15,6 +15,7 @@ import './VetSearchMap.css';
 
 const VetSearchMap = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Get current user from localStorage
   const getCurrentUser = () => {
@@ -44,6 +45,7 @@ const VetSearchMap = () => {
   const currentUser = getCurrentUser();
 
   const [filters, setFilters] = useState({
+    searchName: '',
     area: '',
     specialty: '',
     availability: '',
@@ -68,6 +70,28 @@ const VetSearchMap = () => {
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedProfileVet, setSelectedProfileVet] = useState(null);
+
+  // Load filters from navigation state
+  useEffect(() => {
+    if (location.state?.filters) {
+      const { searchName, selectedArea, locationData: locData, selectedAvailability, selectedSpecialty } = location.state.filters;
+      
+      setFilters(prev => ({
+        ...prev,
+        searchName: searchName || '',
+        area: selectedArea || '',
+        specialty: selectedSpecialty || '',
+        availability: selectedAvailability || '',
+      }));
+      
+      if (locData) {
+        setLocationData(locData);
+      }
+      
+      // Clear the navigation state after loading
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   // Fetch vets from backend
   useEffect(() => {
@@ -160,6 +184,7 @@ const VetSearchMap = () => {
 
   const handleClear = () => {
     setFilters({
+      searchName: '',
       area: '',
       specialty: '',
       availability: '',
@@ -173,6 +198,15 @@ const VetSearchMap = () => {
   // Filter vets based on selected filters
   const filteredVets = useMemo(() => {
     return allVets.filter(vet => {
+      // Filter by name (search in both name and lastName)
+      if (filters.searchName) {
+        const searchTerm = filters.searchName.toLowerCase();
+        const fullName = `${vet.name || ''} ${vet.lastName || ''}`.toLowerCase();
+        if (!fullName.includes(searchTerm)) {
+          return false;
+        }
+      }
+
       // Filter by specialty
       if (filters.specialty) {
         const specialtyMap = {
@@ -381,6 +415,19 @@ const VetSearchMap = () => {
           onClear={handleClear}
           resultsCount={filteredVets.length}
         >
+          {/* Name Search Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Ονοματεπώνυμο</label>
+            <input
+              type="text"
+              name="searchName"
+              className="filter-input"
+              placeholder="π.χ. Παπαδόπουλος"
+              value={filters.searchName}
+              onChange={handleFilterChange}
+            />
+          </div>
+
           {/* Area Filter with LocationPicker */}
           <div className="filter-group">
             <label className="filter-label">Περιοχή</label>
@@ -497,7 +544,7 @@ const VetSearchMap = () => {
                 </div>
               ) : filteredVets.length === 0 ? (
                 <div className="no-results-message">
-                  <Star size={48} color="#FCA47C" />
+                  <CircleAlert size={48} color="#FCA47C" />
                   <p>Δεν βρέθηκαν κτηνίατροι με τα επιλεγμένα κριτήρια</p>
                 </div>
               ) : showMap ? (
