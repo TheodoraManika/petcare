@@ -327,7 +327,6 @@ const Foster = () => {
                   setFormData(prev => ({
                     ...prev,
                     microchipNumber: '',
-                    microchipNumber: '',
                   }));
                 }}
                 variant="vet"
