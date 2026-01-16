@@ -25,10 +25,6 @@
   margin-top: 32px;
 }
 
-.adoption__step-content {
-  min-height: 400px;
-}
-
 .adoption__step-title {
   font-size: 20px;
   font-weight: 600;
@@ -207,6 +203,7 @@
     opacity: 0;
     transform: translateY(5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -232,4 +229,27 @@
 .adoption__btn--cancel:hover {
   background-color: #f9fafb;
   border-color: #9ca3af;
+}
+
+/* Error States */
+.adoption__input--error {
+  border-color: #ef4444 !important;
+}
+
+.adoption__input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.adoption__error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: -4px;
+}
+
+.adoption__error-message svg {
+  flex-shrink: 0;
 }

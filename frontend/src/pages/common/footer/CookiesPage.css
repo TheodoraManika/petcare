@@ -1,0 +1,171 @@
+.cookies-page {
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cookies-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cookies-header {
+  margin-bottom: 50px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.cookies-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.cookies-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin: 0;
+}
+
+.cookies-content {
+  line-height: 1.8;
+  color: #333;
+}
+
+.cookies-section {
+  margin-bottom: 40px;
+}
+
+.section-heading {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.section-text {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 15px;
+}
+
+.section-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+}
+
+.section-list li {
+  font-size: 0.95rem;
+  color: #555;
+  padding-left: 25px;
+  margin-bottom: 12px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.section-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #23cfd9;
+  font-weight: bold;
+}
+
+/* Cookie Types */
+.cookie-type {
+  margin-bottom: 25px;
+  padding-left: 20px;
+  border-left: 4px solid #23cfd9;
+}
+
+.cookie-type:nth-child(2) {
+  border-left-color: #F9D779;
+}
+
+.cookie-type:nth-child(3) {
+  border-left-color: #FCA47C;
+}
+
+.cookie-type-title {
+  font-size: 1.05rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+/* Cookie Management */
+.cookie-management {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.management-title {
+  font-size: 1.05rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.cookie-note {
+  background: #FFF4E0;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid #F9D779;
+  margin-top: 15px;
+}
+
+.last-updated {
+  font-size: 0.9rem;
+  color: #999;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cookies-page {
+    padding: 20px 15px;
+  }
+
+  .cookies-title {
+    font-size: 1.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.1rem;
+  }
+
+  .section-text,
+  .section-list li {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cookies-page {
+    padding: 15px 10px;
+  }
+
+  .cookies-container {
+    padding: 0;
+  }
+
+  .cookies-title {
+    font-size: 1.3rem;
+  }
+
+  .section-heading {
+    font-size: 1rem;
+  }
+}

@@ -4,6 +4,63 @@
   padding: 40px 24px;
 }
 
+/* Microchip Search Section */
+.microchip-search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(252, 164, 124, 0.05) 0%, rgba(252, 164, 124, 0.02) 100%);
+  border: 2px dashed rgba(252, 164, 124, 0.3);
+  border-radius: 12px;
+}
+
+.microchip-search-input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.microchip-search-input {
+  flex: 1;
+}
+
+.microchip-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #FCA47C;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.microchip-search-btn:hover:not(:disabled) {
+  background-color: #f89a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.microchip-search-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
 .operation__header {
   margin-bottom: 32px;
 }
@@ -65,6 +122,33 @@
   color: #9ca3af;
 }
 
+/* Error State */
+.operation__input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.operation__input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.operation__error-message {
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: -4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.operation__field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: -4px;
+}
+
 .operation__textarea {
   resize: vertical;
   min-height: 120px;
@@ -105,6 +189,7 @@
 .operation__btn--submit {
   background-color: #FCA47C;
   color: #101828;
+  position: relative;
 }
 
 .operation__btn--submit:hover {
@@ -113,67 +198,50 @@
   box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
 }
 
-/* Success Page */
-.operation-success {
-  min-height: calc(100vh - 200px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 24px;
+.operation__btn--submit:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
 }
 
-.operation-success__content {
-  background: white;
-  border-radius: 12px;
-  padding: 48px 40px;
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.operation-success__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 24px;
-  background-color: #ffd8c6;
-  border-radius: 50%;
-  border: 4px solid #FCA47C;
-  color: #FCA47C;
-}
-
-.operation-success__title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0 0 16px 0;
-}
-
-.operation-success__description {
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.6;
-  margin: 0 0 32px 0;
-}
-
-.operation-success__btn {
-  width: 100%;
-  padding: 12px 24px;
-  background-color: #FCA47C;
+.operation__btn--submit:disabled:hover::before {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background-color: #1f2937;
   color: white;
-  border: none;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
   border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  opacity: 0;
+  animation: tooltipFadeIn 0.2s ease forwards;
+  pointer-events: none;
+  z-index: 1000;
 }
 
-.operation-success__btn:hover {
-  background-color: #fb8a5c;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+.operation__btn--submit:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1f2937;
+  opacity: 0;
+  animation: tooltipFadeIn 0.2s ease forwards;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+@keyframes tooltipFadeIn {
+  to {
+    opacity: 1;
+  }
 }

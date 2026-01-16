@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, UserRound, PawPrint, Stethoscope } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import Pagination from '../../components/common/Pagination';
+import PageLayout from '../../components/common/layout/PageLayout';
+import Pagination from '../../components/common/layout/Pagination';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
@@ -14,6 +16,8 @@ const Appointments = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [notification, setNotification] = useState(null); // { type: 'confirmed' | 'cancelled' }
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [appointmentToReject, setAppointmentToReject] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const [appointments, setAppointments] = useState([
@@ -322,9 +326,15 @@ const Appointments = () => {
   };
 
   const handleReject = (appointmentId) => {
+    // Show confirmation modal instead of rejecting immediately
+    setAppointmentToReject(appointmentId);
+    setShowRejectModal(true);
+  };
+
+  const handleConfirmReject = () => {
     setAppointments(prevAppointments =>
       prevAppointments.map(apt =>
-        apt.id === appointmentId ? { ...apt, status: 'cancelled' } : apt
+        apt.id === appointmentToReject ? { ...apt, status: 'cancelled' } : apt
       )
     );
     
@@ -333,6 +343,17 @@ const Appointments = () => {
     setTimeout(() => {
       setNotification(null);
     }, 5000); // Hide after 5 seconds
+
+    // Close modals and reset
+    setShowRejectModal(false);
+    setAppointmentToReject(null);
+    setSelectedAppointment(null); // Also close the detail modal
+  };
+
+  const handleCancelReject = () => {
+    setShowRejectModal(false);
+    setAppointmentToReject(null);
+    // Keep selectedAppointment modal open
   };
 
   const formatDateRange = () => {
@@ -359,22 +380,20 @@ const Appointments = () => {
     return months[date.getMonth()];
   };
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   return (
     <PageLayout title="Διαχείριση Ραντεβού" breadcrumbs={breadcrumbItems}>
       <div className="appointments">
         {/* Notification Banner */}
-        {notification && (
-          <div className={`appointments__notification ${notification === 'confirmed' ? 'appointments__notification--confirmed' : 'appointments__notification--cancelled'}`}>
-            {notification === 'confirmed' 
-              ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
-              : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
-            }
-          </div>
-        )}
+        <Notification
+          isVisible={notification !== null}
+          message={notification === 'confirmed' 
+            ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
+            : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
+          }
+          type={notification === 'confirmed' ? 'success' : 'error'}
+        />
 
         <div className="appointments__header">
           <h1 className="appointments__title">Τα Ραντεβού μου</h1>
@@ -786,7 +805,7 @@ const Appointments = () => {
                       className="appointments__modal-btn appointments__modal-btn--reject"
                       onClick={() => {
                         handleReject(selectedAppointment.id);
-                        setSelectedAppointment(null);
+                        // Don't close the modal - let the confirm modal appear on top
                       }}
                     >
                       <X size={18} />
@@ -809,6 +828,18 @@ const Appointments = () => {
           </div>
         )}
       </div>
+
+      {/* Reject Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showRejectModal}
+        title="Είστε σίγουροι ότι θέλετε να απορρίψετε το ραντεβού;"
+        description="Αυτή η ενέργεια δεν αναιρείται. Ο ιδιοκτήτης θα ενημερωθεί για την ακύρωση"
+        cancelText="Όχι, επιστροφή"
+        confirmText="Ναι, απόρριψη"
+        onCancel={handleCancelReject}
+        onConfirm={handleConfirmReject}
+        isDanger={true}
+      />
     </PageLayout>
   );
 };

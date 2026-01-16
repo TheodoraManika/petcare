@@ -1,25 +1,41 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, FileHeart } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import ProgressBar from '../../components/common/ProgressBar';
-import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
-import LocationPicker from '../../components/common/LocationPicker';
+import { PawPrint, UserRound, Heart, AlertCircle } from 'lucide-react';
+import PageLayout from '../../components/common/layout/PageLayout';
+import ProgressBar from '../../components/common/forms/ProgressBar';
+import DatePicker from '../../components/common/forms/DatePicker';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import LocationPicker from '../../components/common/forms/LocationPicker';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
+
+// Mock lost pets database
+
 
 const Adoption = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+  const [ownerAfmError, setOwnerAfmError] = useState('');
+  const [foundPet, setFoundPet] = useState(null);
+
+
+
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
-    petName: '',
-    species: '',
-    age: '',
-    gender: '',
-    
+
+
     // Step 2: Owner Data
     ownerAfm: '',
     ownerName: '',
@@ -29,7 +45,7 @@ const Adoption = () => {
     ownerAddress: '',
     ownerCity: '',
     ownerPostalCode: '',
-    
+
     // Step 3: Adoption Data
     adoptionDate: '',
     adoptionReason: '',
@@ -42,15 +58,98 @@ const Adoption = () => {
   const steps = [
     { icon: <PawPrint size={24} />, label: 'Κατοικίδιο' },
     { icon: <UserRound size={24} />, label: 'Ιδιοκτήτης' },
-    { icon: <FileHeart size={24} />, label: 'Υιοθεσία' }
+    { icon: <Heart size={24} />, label: 'Υιοθεσία' }
   ];
+
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
+
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: pet.microchip,
+        petName: pet.name,
+        species: pet.type,
+      }));
+      setFoundPet(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: microchip
+      }));
+      setFoundPet({ microchip });
+      // Removed error handling for microchip as field is hidden
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+
+    // Special handling for owner AFM
+    if (name === 'ownerAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setOwnerAfmError('');
+      }
+    }
+    // Special handling for owner name
+    else if (name === 'ownerName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner surname
+    else if (name === 'ownerSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner phone
+    else if (name === 'ownerPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner email
+    else if (name === 'ownerEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for owner city
+    else if (name === 'ownerCity') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for postal code
+    else if (name === 'ownerPostalCode') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+
+    else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -65,14 +164,12 @@ const Adoption = () => {
       case 1:
         return (
           formData.microchipNumber.trim() !== '' &&
-          formData.petName.trim() !== '' &&
-          formData.species.trim() !== '' &&
-          formData.age.trim() !== '' &&
-          formData.gender.trim() !== ''
+          formData.microchipNumber.length === 15
         );
       case 2:
         return (
           formData.ownerAfm.trim() !== '' &&
+          formData.ownerAfm.length === 9 &&
           formData.ownerName.trim() !== '' &&
           formData.ownerSurname.trim() !== '' &&
           formData.ownerPhone.trim() !== '' &&
@@ -98,10 +195,23 @@ const Adoption = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Submit form
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.vet.dashboard);
+      // Show confirmation modal instead of submitting directly
+      setShowConfirmModal(true);
     }
+  };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -111,8 +221,93 @@ const Adoption = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.lifeEvents);
+    setShowCancelModal(true);
   };
+
+  const handleConfirmCancel = () => {
+    // Reset found pet
+    setFoundPet(null);
+    // Reset form data to initial empty state
+    setFormData({
+      microchipNumber: '',
+
+      ownerAfm: '',
+      ownerName: '',
+      ownerSurname: '',
+      ownerPhone: '',
+      ownerEmail: '',
+      ownerAddress: '',
+      ownerCity: '',
+      ownerPostalCode: '',
+      adoptionDate: '',
+      adoptionReason: '',
+      shelterOwner: '',
+      liveWithOtherPets: '',
+      existingPets: '',
+      notes: ''
+    });
+    // Reset error states
+    setOwnerAfmError('');
+    // Reset to step 1
+    setCurrentStep(1);
+    setShowCancelModal(false);
+
+    // Show notification
+    setNotification('cancelled');
+
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Helper functions for labels
+  const getSpeciesLabel = (value) => {
+    const options = {
+      'dog': 'Σκύλος',
+      'cat': 'Γάτα',
+      'bird': 'Πτηνό',
+      'reptile': 'Ερπετό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  const getGenderLabel = (value) => {
+    const options = {
+      'male': 'Αρσενικό',
+      'female': 'Θηλυκό'
+    };
+    return options[value] || value;
+  };
+
+  const getYesNoLabel = (value) => {
+    return value === 'yes' ? 'Ναι' : 'Όχι';
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+
+    { label: 'Ιδιοκτήτης - Α.Φ.Μ.', value: formData.ownerAfm },
+    { label: 'Ιδιοκτήτης - Όνομα', value: formData.ownerName },
+    { label: 'Ιδιοκτήτης - Επώνυμο', value: formData.ownerSurname },
+    { label: 'Ιδιοκτήτης - Τηλέφωνο', value: formData.ownerPhone },
+    { label: 'Ιδιοκτήτης - Email', value: formData.ownerEmail },
+    { label: 'Ιδιοκτήτης - Διεύθυνση', value: formData.ownerAddress },
+    { label: 'Ιδιοκτήτης - Πόλη', value: formData.ownerCity },
+    { label: 'Ιδιοκτήτης - Τ.Κ.', value: formData.ownerPostalCode },
+    { label: 'Ημερομηνία Υιοθεσίας', value: formData.adoptionDate },
+    { label: 'Καταφύγιο/Φιλοζωική', value: formData.adoptionReason },
+    { label: 'Διαθέσιμος Κήπος/Αυλή', value: getYesNoLabel(formData.shelterOwner) },
+    { label: 'Υπάρχουν άλλα κατοικίδια', value: getYesNoLabel(formData.liveWithOtherPets) },
+    { label: 'Υπάρχει εμπειρία', value: getYesNoLabel(formData.existingPets) },
+    { label: 'Σημειώσεις', value: formData.notes || '-' },
+  ];
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -120,90 +315,29 @@ const Adoption = () => {
         return (
           <div className="adoption__step-content">
             <h2 className="adoption__step-title">Στοιχεία Κατοικιδίου</h2>
-            
-            <div className="adoption__field">
-              <label className="adoption__label">
-                Κωδικός Μικροτσίπ<span className="adoption__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="microchipNumber"
-                className="adoption__input"
-                placeholder="GR123456789012345"
-                value={formData.microchipNumber}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
+
+            {foundPet ? (
+              <PetDetailsCard
+                petData={foundPet}
+                onClear={() => {
+                  setFoundPet(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    microchipNumber: '',
+                  }));
+                }}
+                variant="vet"
               />
-            </div>
-
-            <div className="adoption__row">
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Είδος Ζώου<span className="adoption__required">*</span>
-                </label>
-                <CustomSelect
-                  name="species"
-                  value={formData.species}
-                  onChange={(value) => handleSelectChange('species', value)}
-                  options={[
-                    { value: 'dog', label: 'Σκύλος' },
-                    { value: 'cat', label: 'Γάτα' },
-                    { value: 'bird', label: 'Πτηνό' },
-                    { value: 'reptile', label: 'Ερπετό' },
-                    { value: 'other', label: 'Άλλο' }
-                  ]}
-                  placeholder="Επιλέξτε είδος"
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
                 />
-              </div>
 
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Ηλικία (σε έτη) <span className="adoption__required">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="age"
-                  className="adoption__input"
-                  placeholder="π.χ. 2"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-            </div>
 
-            <div className="adoption__row">
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Φύλο <span className="adoption__required">*</span>
-                </label>
-                <CustomSelect
-                  name="gender"
-                  value={formData.gender}
-                  onChange={(value) => handleSelectChange('gender', value)}
-                  options={[
-                    { value: 'male', label: 'Αρσενικό' },
-                    { value: 'female', label: 'Θηλυκό' }
-                  ]}
-                  placeholder="Επιλέξτε φύλο"
-                />
-              </div>
-
-              <div className="adoption__field">
-                <label className="adoption__label">
-                  Όνομα Κατοικιδίου <span className="adoption__required">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="petName"
-                  className="adoption__input"
-                  value={formData.petName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-            </div>
+              </>
+            )}
           </div>
         );
 
@@ -211,7 +345,7 @@ const Adoption = () => {
         return (
           <div className="adoption__step-content">
             <h2 className="adoption__step-title">Στοιχεία Ιδιοκτήτη</h2>
-            
+
             <div className="adoption__row">
               <div className="adoption__field">
                 <label className="adoption__label">
@@ -220,13 +354,20 @@ const Adoption = () => {
                 <input
                   type="text"
                   name="ownerAfm"
-                  className="adoption__input"
-                  placeholder="123456789"
+                  className={`adoption__input ${ownerAfmError ? 'adoption__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.ownerAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {ownerAfmError && (
+                  <div className="adoption__error-message">
+                    <AlertCircle size={16} />
+                    <span>{ownerAfmError}</span>
+                  </div>
+                )}
               </div>
 
               <div className="adoption__field">
@@ -242,6 +383,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -259,6 +401,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="adoption__field">
@@ -269,11 +412,12 @@ const Adoption = () => {
                   type="tel"
                   name="ownerPhone"
                   className="adoption__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.ownerPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -290,6 +434,7 @@ const Adoption = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="adoption__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
 
             <div className="adoption__field">
@@ -322,6 +467,7 @@ const Adoption = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="adoption__field">
@@ -338,6 +484,7 @@ const Adoption = () => {
                   maxLength={5}
                   required
                 />
+                <span className="adoption__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
           </div>
@@ -347,7 +494,7 @@ const Adoption = () => {
         return (
           <div className="adoption__step-content">
             <h2 className="adoption__step-title">Στοιχεία Υιοθεσίας</h2>
-            
+
             <div className="adoption__field">
               <label className="adoption__label">
                 Ημερομηνία Υιοθεσίας <span className="adoption__required">*</span>
@@ -356,6 +503,7 @@ const Adoption = () => {
                 name="adoptionDate"
                 value={formData.adoptionDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 
@@ -488,9 +636,25 @@ const Adoption = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard },
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
+
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={Heart}
+        title="Η Δήλωση Υιοθεσίας ολοκληρώθηκε!"
+        description="Η υιοθεσία καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο προστέθηκε στο προφίλ του ιδιοκτήτη."
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Υιοθεσίας"
+      />
+    );
+  }
 
   return (
     <PageLayout title="Δήλωση Υιοθεσίας" breadcrumbs={breadcrumbItems}>
@@ -515,7 +679,7 @@ const Adoption = () => {
                   Προηγούμενη
                 </button>
               )}
-              
+
               <button
                 type="button"
                 className="adoption__btn adoption__btn--cancel"
@@ -535,7 +699,38 @@ const Adoption = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση υιοθεσίας;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Υιοθεσίας"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της υιοθεσίας:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
+
+      {/* Notification */}
+      <Notification
+        isVisible={notification !== null}
+        message="Η δήλωση υιοθεσίας ακυρώθηκε με επιτυχία!"
+        type="error"
+      />
     </PageLayout>
   );
 };

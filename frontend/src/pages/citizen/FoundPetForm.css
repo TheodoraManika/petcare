@@ -1,11 +1,17 @@
 /* Found Pet Form Styles */
 
 .found-pet-form {
-  background-color: #ffffff;
   border-radius: 12px;
   padding: 40px;
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
+}
+
+.form-container {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
 }
 
 .form-header {
@@ -15,17 +21,86 @@
 
 .form-title {
   font-size: 24px;
-  font-weight: 700;
-  color: var(--color-text-primary);
+  font-weight: 600;
+  color: #1f2937;
   margin: 0 0 8px 0;
-  line-height: 1.3;
 }
 
 .form-subtitle {
   font-size: 14px;
-  color: var(--color-text-secondary);
-  margin: 0;
-  line-height: 1.5;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+/* Microchip Search Section */
+.microchip-search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(35, 206, 217, 0.05) 0%, rgba(35, 206, 217, 0.02) 100%);
+  border: 2px dashed rgba(35, 206, 217, 0.3);
+  border-radius: 12px;
+}
+
+.found-pet-form--vet .microchip-search-section {
+  background: linear-gradient(135deg, rgba(252, 164, 124, 0.05) 0%, rgba(252, 164, 124, 0.02) 100%);
+  border-color: rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search-input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.microchip-search-input {
+  flex: 1;
+}
+
+.microchip-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #23CED9;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.microchip-search-btn:hover:not(:disabled) {
+  background-color: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
+}
+
+.microchip-search-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.found-pet-form--vet .microchip-search-btn {
+  background-color: #FCA47C;
+}
+
+.found-pet-form--vet .microchip-search-btn:hover:not(:disabled) {
+  background-color: #f89a5c;
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.microchip-search-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+  font-style: italic;
 }
 
 /* Owner Pet Selection */
@@ -44,6 +119,7 @@
 
 /* Lost Pet Info Card */
 .lost-pet-info-card {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 24px;
@@ -52,6 +128,37 @@
   background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
   border: 2px solid #23CED9;
   border-radius: 12px;
+}
+
+.pet-card-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(239, 68, 68, 0.95);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 25px;
+  line-height: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  padding: 0;
+  padding-bottom: 2px;
+}
+
+.pet-card-remove:hover {
+  background-color: #dc2626;
+  transform: scale(1.1);
+}
+
+.pet-card-remove:active {
+  transform: scale(0.95);
 }
 
 .pet-card-container {
@@ -120,6 +227,14 @@
   font-size: 14px;
 }
 
+.pet-card-note {
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0 0 0;
+  font-style: italic;
+}
+
 /* Form Container */
 .form-container {
   display: flex;
@@ -183,6 +298,13 @@
   box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
 
+/* Vet variant - orange focus */
+.found-pet-form--vet .form-input:focus,
+.found-pet-form--vet .form-textarea:focus {
+  border-color: #FCA47C;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
 .form-textarea {
   resize: vertical;
   min-height: 120px;
@@ -211,7 +333,105 @@
   min-height: 120px;
 }
 
-/* Image Upload Area */
+/* Photo Upload Styles */
+.form-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-file-input {
+  display: none;
+}
+
+.form-file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.form-file-label:hover {
+  border-color: #23CED9;
+  background-color: #f0fcfd;
+  color: #23CED9;
+}
+
+.found-pet-form--vet .form-file-label:hover {
+  border-color: #FCA47C;
+  background-color: #fff7f3;
+  color: #FCA47C;
+}
+
+.form-file-text {
+  font-size: 15px;
+}
+
+.form-field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Photo Preview Styles */
+.form-photo-preview {
+  position: relative;
+  display: inline-block;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  max-width: 300px;
+}
+
+.form-preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.form-remove-photo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(239, 68, 68, 0.95);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 25px;
+  line-height: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  padding: 0;
+  padding-bottom: 2px;
+}
+
+.form-remove-photo:hover {
+  background-color: #dc2626;
+  transform: scale(1.1);
+}
+
+.form-remove-photo:active {
+  transform: scale(0.95);
+}
+
+/* Old Image Upload Area - kept for backwards compatibility */
 .image-upload-area {
   border: 2px dashed #E0E0E0;
   border-radius: 8px;
@@ -228,6 +448,12 @@
 .image-upload-area:hover {
   border-color: #23CED9;
   background-color: rgba(35, 206, 217, 0.05);
+}
+
+/* Vet variant - orange hover */
+.found-pet-form--vet .image-upload-area:hover {
+  border-color: #FCA47C;
+  background-color: rgba(252, 164, 124, 0.05);
 }
 
 .image-upload-label {
@@ -249,6 +475,11 @@
   border-radius: 50%;
   background-color: rgba(35, 206, 217, 0.1);
   margin-bottom: 8px;
+}
+
+/* Vet variant - orange icon background */
+.found-pet-form--vet .upload-icon {
+  background-color: rgba(252, 164, 124, 0.1);
 }
 
 .upload-text {
@@ -297,6 +528,40 @@
   transition: all var(--transition-fast);
 }
 
+/* Inline form top-right close button */
+.inline-form-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.inline-form-close:hover {
+  background: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #ffffff;
+}
+
+.inline-form-close svg {
+  stroke: currentColor;
+}
+
+/* Vet variant - orange button */
+.found-pet-form--vet .change-image-btn {
+  background-color: #FCA47C;
+}
+
+/* 
 .change-image-btn:hover {
   opacity: 0.9;
   transform: translateY(-2px);
@@ -305,35 +570,197 @@
 /* Form Actions */
 .form-actions {
   display: flex;
-  justify-content: center;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 12px;
   margin-top: 16px;
   padding-top: 24px;
-  border-top: 1px solid #E0E0E0;
+  border-top: 1px solid #e5e7eb;
 }
 
 .submit-btn {
-  padding: 14px 48px;
-  background-color: #F9D779;
-  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  min-width: 280px;
+  transition: all 0.2s ease;
 }
 
-.submit-btn:hover {
-  opacity: 0.95;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.submit-btn--primary {
+  background-color: #23CED9;
+  color: #101828;
+  margin-left: auto;
+  position: relative;
 }
 
-.submit-btn:active {
-  transform: translateY(0);
+.submit-btn--primary:hover:not(:disabled) {
+  background-color: #1ab8c2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
+}
+
+.submit-btn--primary:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.submit-btn--primary:disabled:hover::before {
+  content: 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία';
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background-color: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.submit-btn--primary:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submit-btn--cancel {
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.submit-btn--cancel:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.submit-btn--draft {
+  background-color: transparent;
+  color: #23CED9;
+  border: 1px solid #23CED9;
+}
+
+.submit-btn--draft:hover {
+  background-color: rgba(35, 206, 217, 0.05);
+  border-color: #1ab8c2;
+}
+
+/* Wide button for citizen/vet */
+.submit-btn--wide {
+  margin-left: auto;
+  position: relative;
+}
+
+.submit-btn--yellow {
+  background-color: #F9D779;
+  color: #101828;
+}
+
+.submit-btn--yellow:hover:not(:disabled) {
+  background-color: #f5c948;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(249, 215, 121, 0.3);
+}
+
+.submit-btn--yellow:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.submit-btn--yellow:disabled:hover::before {
+  content: 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία';
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background-color: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.submit-btn--yellow:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
+}
+
+.submit-btn--orange {
+  background-color: #FCA47C;
+  color: #101828;
+}
+
+.submit-btn--orange:hover:not(:disabled) {
+  background-color: #f89a5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+}
+
+.submit-btn--orange:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.submit-btn--orange:disabled:hover::before {
+  content: 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία';
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background-color: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.submit-btn--orange:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
 }
 
 /* Responsive Design */
@@ -377,4 +804,27 @@
   .pet-card-section {
     max-width: 100%;
   }
+}
+
+/* Error States */
+.form-input--error {
+  border-color: #ef4444 !important;
+}
+
+.form-input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.form-error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: -4px;
+}
+
+.form-error-message svg {
+  flex-shrink: 0;
 }

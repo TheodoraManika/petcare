@@ -1,27 +1,46 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import ProgressBar from '../../components/common/ProgressBar';
-import DatePicker from '../../components/common/DatePicker';
+import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight, AlertCircle, Search } from 'lucide-react';
+import PageLayout from '../../components/common/layout/PageLayout';
+import ProgressBar from '../../components/common/forms/ProgressBar';
+import DatePicker from '../../components/common/forms/DatePicker';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Transfer.css';
+
+// Mock lost pets database
+
 
 const Transfer = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+  const [currentOwnerAfmError, setCurrentOwnerAfmError] = useState('');
+  const [newOwnerAfmError, setNewOwnerAfmError] = useState('');
+  const [foundPet, setFoundPet] = useState(null);
+
+
+
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
     microchipNumber: '',
-    petName: '',
-    
+
     // Step 2: Current Owner Data
     currentOwnerAfm: '',
     currentOwnerName: '',
     currentOwnerSurname: '',
     currentOwnerPhone: '',
     currentOwnerEmail: '',
-    
+
     // Step 3: New Owner Data
     newOwnerAfm: '',
     newOwnerName: '',
@@ -31,7 +50,7 @@ const Transfer = () => {
     newOwnerAddress: '',
     newOwnerCity: '',
     newOwnerPostalCode: '',
-    
+
     // Step 4: Transfer Data
     transferDate: '',
     transferReason: '',
@@ -45,21 +64,135 @@ const Transfer = () => {
     { icon: <ArrowLeftRight size={24} />, label: 'Μεταβίβαση' }
   ];
 
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, ''); // Αφαιρεί ελληνικούς χαρακτήρες
+
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: pet.microchip,
+      }));
+      setFoundPet(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        microchipNumber: microchip,
+      }));
+      setFoundPet({ microchip });
+      // Removed error handling
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    // Special handling for current owner AFM
+    if (name === 'currentOwnerAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setCurrentOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setCurrentOwnerAfmError('');
+      }
+    }
+    // Special handling for current owner name
+    else if (name === 'currentOwnerName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner surname
+    else if (name === 'currentOwnerSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner phone
+    else if (name === 'currentOwnerPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for current owner email
+    else if (name === 'currentOwnerEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner AFM
+    else if (name === 'newOwnerAfm') {
+      const numericValue = allowedAFMChars(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+
+      if (numericValue.length > 0 && numericValue.length !== 9) {
+        setNewOwnerAfmError('Το Α.Φ.Μ. πρέπει να έχει ακριβώς 9 ψηφία');
+      } else {
+        setNewOwnerAfmError('');
+      }
+    }
+    // Special handling for new owner name
+    else if (name === 'newOwnerName') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner surname
+    else if (name === 'newOwnerSurname') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner phone
+    else if (name === 'newOwnerPhone') {
+      const filteredValue = allowedPhoneChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner email
+    else if (name === 'newOwnerEmail') {
+      const filteredValue = allowedEmailChars(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for new owner city
+    else if (name === 'newOwnerCity') {
+      const filteredValue = filterLettersOnly(value);
+      setFormData(prev => ({ ...prev, [name]: filteredValue }));
+    }
+    // Special handling for postal code
+    else if (name === 'newOwnerPostalCode') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    }
+    else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
-        return formData.microchipNumber.trim() !== '' && formData.petName.trim() !== '';
+        return (
+          formData.microchipNumber.trim() !== '' &&
+          formData.microchipNumber.length === 15
+        );
       case 2:
         return (
           formData.currentOwnerAfm.trim() !== '' &&
+          formData.currentOwnerAfm.length === 9 &&
           formData.currentOwnerName.trim() !== '' &&
           formData.currentOwnerSurname.trim() !== '' &&
           formData.currentOwnerPhone.trim() !== '' &&
@@ -68,6 +201,7 @@ const Transfer = () => {
       case 3:
         return (
           formData.newOwnerAfm.trim() !== '' &&
+          formData.newOwnerAfm.length === 9 &&
           formData.newOwnerName.trim() !== '' &&
           formData.newOwnerSurname.trim() !== '' &&
           formData.newOwnerPhone.trim() !== '' &&
@@ -90,10 +224,23 @@ const Transfer = () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Submit form
-      console.log('Form submitted:', formData);
-      navigate(ROUTES.vet.dashboard);
+      // Show confirmation modal instead of submitting directly
+      setShowConfirmModal(true);
     }
+  };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleSuccessReturn = () => {
+    navigate(ROUTES.vet.dashboard);
   };
 
   const handlePrevious = () => {
@@ -103,8 +250,72 @@ const Transfer = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.dashboard);
+    setShowCancelModal(true);
   };
+
+  const handleConfirmCancel = () => {
+    // Reset found pet
+    setFoundPet(null);
+    // Reset form data to initial empty state
+    setFormData({
+      microchipNumber: '',
+      currentOwnerAfm: '',
+      currentOwnerName: '',
+      currentOwnerSurname: '',
+      currentOwnerPhone: '',
+      currentOwnerEmail: '',
+      newOwnerAfm: '',
+      newOwnerName: '',
+      newOwnerSurname: '',
+      newOwnerPhone: '',
+      newOwnerEmail: '',
+      newOwnerAddress: '',
+      newOwnerCity: '',
+      newOwnerPostalCode: '',
+      transferDate: '',
+      transferReason: '',
+      notes: ''
+    });
+    // Reset error states
+    setCurrentOwnerAfmError('');
+    setNewOwnerAfmError('');
+    // Reset to step 1
+    setCurrentStep(1);
+    setShowCancelModal(false);
+
+    // Show notification
+    setNotification('cancelled');
+
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.microchipNumber },
+    { label: 'Τρέχων Ιδιοκτήτης - Α.Φ.Μ.', value: formData.currentOwnerAfm },
+    { label: 'Τρέχων Ιδιοκτήτης - Όνομα', value: formData.currentOwnerName },
+    { label: 'Τρέχων Ιδιοκτήτης - Επώνυμο', value: formData.currentOwnerSurname },
+    { label: 'Τρέχων Ιδιοκτήτης - Τηλέφωνο', value: formData.currentOwnerPhone },
+    { label: 'Τρέχων Ιδιοκτήτης - Email', value: formData.currentOwnerEmail },
+    { label: 'Νέος Ιδιοκτήτης - Α.Φ.Μ.', value: formData.newOwnerAfm },
+    { label: 'Νέος Ιδιοκτήτης - Όνομα', value: formData.newOwnerName },
+    { label: 'Νέος Ιδιοκτήτης - Επώνυμο', value: formData.newOwnerSurname },
+    { label: 'Νέος Ιδιοκτήτης - Τηλέφωνο', value: formData.newOwnerPhone },
+    { label: 'Νέος Ιδιοκτήτης - Email', value: formData.newOwnerEmail },
+    { label: 'Νέος Ιδιοκτήτης - Διεύθυνση', value: formData.newOwnerAddress },
+    { label: 'Νέος Ιδιοκτήτης - Πόλη', value: formData.newOwnerCity },
+    { label: 'Νέος Ιδιοκτήτης - Τ.Κ.', value: formData.newOwnerPostalCode },
+    { label: 'Ημερομηνία Μεταβίβασης', value: formData.transferDate },
+    { label: 'Λόγος Μεταβίβασης', value: formData.transferReason },
+    { label: 'Σημειώσεις', value: formData.notes || '-' },
+  ];
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -112,36 +323,27 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Κατοικιδίου</h2>
-            
-            <div className="transfer__field">
-              <label className="transfer__label">
-                Κωδικός Μικροτσίπ <span className="transfer__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="microchipNumber"
-                className="transfer__input"
-                placeholder="GR123456789012345"
-                value={formData.microchipNumber}
-                onChange={handleInputChange}
-                maxLength={15}
-                required
-              />
-            </div>
 
-            <div className="transfer__field">
-              <label className="transfer__label">
-                Όνομα Κατοικιδίου <span className="transfer__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="petName"
-                className="transfer__input"
-                value={formData.petName}
-                onChange={handleInputChange}
-                required
+            {foundPet ? (
+              <PetDetailsCard
+                petData={foundPet}
+                onClear={() => {
+                  setFoundPet(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    microchipNumber: '',
+                  }));
+                }}
+                variant="vet"
               />
-            </div>
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
+                />
+              </>
+            )}
           </div>
         );
 
@@ -149,7 +351,7 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Τρέχοντος Ιδιοκτήτη</h2>
-            
+
             <div className="transfer__row">
               <div className="transfer__field">
                 <label className="transfer__label">
@@ -158,13 +360,20 @@ const Transfer = () => {
                 <input
                   type="text"
                   name="currentOwnerAfm"
-                  className="transfer__input"
-                  placeholder="123456789"
+                  className={`transfer__input ${currentOwnerAfmError ? 'transfer__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.currentOwnerAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {currentOwnerAfmError && (
+                  <span className="transfer__error-message">
+                    <AlertCircle size={14} />
+                    {currentOwnerAfmError}
+                  </span>
+                )}
               </div>
 
               <div className="transfer__field">
@@ -180,6 +389,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -197,6 +407,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="transfer__field">
@@ -207,11 +418,12 @@ const Transfer = () => {
                   type="tel"
                   name="currentOwnerPhone"
                   className="transfer__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.currentOwnerPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -228,6 +440,7 @@ const Transfer = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="transfer__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
           </div>
         );
@@ -236,7 +449,7 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Νέου Ιδιοκτήτη</h2>
-            
+
             <div className="transfer__row">
               <div className="transfer__field">
                 <label className="transfer__label">
@@ -245,13 +458,20 @@ const Transfer = () => {
                 <input
                   type="text"
                   name="newOwnerAfm"
-                  className="transfer__input"
-                  placeholder="123456789"
+                  className={`transfer__input ${newOwnerAfmError ? 'transfer__input--error' : ''}`}
+                  placeholder="123456789 (9 ψηφία)"
                   value={formData.newOwnerAfm}
                   onChange={handleInputChange}
                   maxLength={9}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+                {newOwnerAfmError && (
+                  <span className="transfer__error-message">
+                    <AlertCircle size={14} />
+                    {newOwnerAfmError}
+                  </span>
+                )}
               </div>
 
               <div className="transfer__field">
@@ -267,6 +487,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
             </div>
 
@@ -284,6 +505,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="transfer__field">
@@ -294,11 +516,12 @@ const Transfer = () => {
                   type="tel"
                   name="newOwnerPhone"
                   className="transfer__input"
-                  placeholder="6912345678"
+                  placeholder="69XXXXXXXX ή +30 69XXXXXXXX"
                   value={formData.newOwnerPhone}
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
               </div>
             </div>
 
@@ -315,6 +538,7 @@ const Transfer = () => {
                 onChange={handleInputChange}
                 required
               />
+              <span className="transfer__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
             </div>
 
             <div className="transfer__field">
@@ -347,6 +571,7 @@ const Transfer = () => {
                   onChange={handleInputChange}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
               </div>
 
               <div className="transfer__field">
@@ -363,6 +588,7 @@ const Transfer = () => {
                   maxLength={5}
                   required
                 />
+                <span className="transfer__field-note">Επιτρέπονται μόνο αριθμοί.</span>
               </div>
             </div>
           </div>
@@ -372,7 +598,7 @@ const Transfer = () => {
         return (
           <div className="transfer__step-content">
             <h2 className="transfer__step-title">Στοιχεία Μεταβίβασης</h2>
-            
+
             <div className="transfer__field">
               <label className="transfer__label">
                 Ημερομηνία Μεταβίβασης <span className="transfer__required">*</span>
@@ -381,6 +607,7 @@ const Transfer = () => {
                 name="transferDate"
                 value={formData.transferDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 
@@ -392,6 +619,7 @@ const Transfer = () => {
                 type="text"
                 name="transferReason"
                 className="transfer__input"
+                placeholder="Αναφέρετε συνοπτικά το λόγο μεταβίβασης"
                 value={formData.transferReason}
                 onChange={handleInputChange}
                 required
@@ -420,9 +648,25 @@ const Transfer = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard },
     { label: 'Δηλώσεις Συμβάντων Ζωής', path: ROUTES.vet.lifeEvents }
   ];
+
+  // Show success page after successful submission
+  if (showSuccess) {
+    return (
+      <SuccessPage
+        icon={ArrowLeftRight}
+        title="Η Δήλωση Μεταβίβασης ολοκληρώθηκε!"
+        description="Η αλλαγή ιδιοκτήτη καταχωρήθηκε επιτυχώς στο σύστημα. Το κατοικίδιο έχει μεταφερθεί στο προφίλ του νέου ιδιοκτήτη."
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
+        onButtonClick={handleSuccessReturn}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Δήλωση Μεταβίβασης"
+      />
+    );
+  }
 
   return (
     <PageLayout title="Δήλωση Μεταβίβασης" breadcrumbs={breadcrumbItems}>
@@ -447,7 +691,7 @@ const Transfer = () => {
                   Προηγούμενη
                 </button>
               )}
-              
+
               <button
                 type="button"
                 className="transfer__btn transfer__btn--cancel"
@@ -467,7 +711,38 @@ const Transfer = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την δήλωση μεταβίβασης;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Μεταβίβασης"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της μεταβίβασης:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
       </div>
+
+      {/* Notification */}
+      <Notification
+        isVisible={notification !== null}
+        message="Η δήλωση μεταβίβασης ακυρώθηκε με επιτυχία!"
+        type="error"
+      />
     </PageLayout>
   );
 };

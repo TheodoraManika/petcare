@@ -10,3 +10,16 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.dashboard__header {
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 32px;
+}
+
+.dashboard__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}

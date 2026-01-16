@@ -162,13 +162,44 @@
   cursor: not-allowed;
 }
 
+.profile__input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+
+.profile__input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.profile__field-note {
+  display: block;
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.profile__error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.profile__error-message svg {
+  flex-shrink: 0;
+}
+
 .profile__textarea {
   resize: vertical;
   min-height: 100px;
   font-family: inherit;
 }
 
-/* Delete Modal Styles */
+/* Success Modal Styles - for delete account success */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -191,6 +222,10 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+.modal-content--success {
+  text-align: center;
+}
+
 .modal-title {
   font-size: 20px;
   font-weight: 600;
@@ -205,62 +240,6 @@
   margin: 0 0 24px 0;
   text-align: center;
   line-height: 1.5;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.modal-btn {
-  padding: 10px 24px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
-}
-
-.modal-btn--cancel {
-  background-color: #e5e7eb;
-  color: #374151;
-}
-
-.modal-btn--cancel:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-.modal-btn--delete {
-  background-color: #FF5252;
-  color: #101828;
-}
-
-.modal-btn--delete:hover {
-  background-color: #ff3e3e;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 82, 82, 0.3);
-}
-
-.modal-btn--primary {
-  background-color: #FCA47C;
-  color: white;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.modal-btn--primary:hover {
-  background-color: #fb8a5c;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
-}
-
-/* Success Modal Styles */
-.modal-content--success {
-  text-align: center;
 }
 
 .success-icon {
@@ -294,71 +273,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-/* Profile Successful Save Page Styles */
-.profile-success {
-  min-height: calc(100vh - 200px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 24px;
-}
-
-.profile-success__content {
-  background: white;
-  border-radius: 12px;
-  padding: 48px 40px;
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.profile-success__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 24px;
-  background-color: #ffd8c6;
-  border-radius: 50%;
-  border: 2px solid #FCA47C;
-  color: #FCA47C;
-}
-
-.profile-success__title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0 0 16px 0;
-}
-
-.profile-success__description {
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.6;
-  margin: 0 0 32px 0;
-}
-
-.profile-success__btn {
-  width: 100%;
-  padding: 12px 24px;
-  background-color: #FCA47C;
-  color: #101828;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.profile-success__btn:hover {
-  background-color: #fb8a5c;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
 }
 
 

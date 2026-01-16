@@ -1,0 +1,486 @@
+/* Vet Register Page Styles */
+
+.vet-register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.vet-register-container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Header Section */
+.vet-register-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.vet-register-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.vet-register-icon-circle {
+  width: 80px;
+  height: 80px;
+  background: #ffe8d6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vet-register-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 16px 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.vet-register-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Steps Indicator */
+.vet-register-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 8px;
+}
+
+.vet-register-step {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.vet-register-step::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background-color: #e0e0e0;
+  margin-left: 4px;
+}
+
+.vet-register-step:last-child::after {
+  display: none;
+}
+
+.vet-register-step--active::after {
+  background-color: #FCA47C;
+}
+
+.vet-register-step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.vet-register-step--active .vet-register-step-circle {
+  background-color: #FCA47C;
+  color: white;
+}
+
+.vet-register-step-circle--current {
+  background-color: #FCA47C;
+  color: white;
+}
+
+/* Error Message */
+.vet-register-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Step Content */
+.vet-register-step-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vet-register-step-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 32px 0 32px 0;
+}
+
+.vet-register-step-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px 0;
+}
+
+/* Form Styles */
+.vet-register-form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.vet-register-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.vet-register-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.vet-register-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.vet-register-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+}
+
+.vet-register-input:focus {
+  outline: none;
+  border-color: #FCA47C;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
+}
+
+.vet-register-input::placeholder {
+  color: #999;
+}
+
+/* Input Error State */
+.vet-register-input--error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+
+.vet-register-input--error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Field Note */
+.vet-register__field-note {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: -4px;
+}
+
+/* Error Message */
+.vet-register__error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.vet-register__error-message svg {
+  flex-shrink: 0;
+}
+
+/* Required Field Asterisk */
+.vet-register__required {
+  color: #ef4444;
+}
+
+.vet-register-input::-webkit-outer-spin-button,
+.vet-register-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.vet-register-password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.vet-register-password-toggle:hover {
+  color: #FCA47C;
+}
+
+/* Action Buttons */
+.vet-register-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  margin-bottom: 24px;
+  justify-content: flex-start;
+}
+
+.vet-register-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.vet-register-btn--secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.vet-register-btn--secondary:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+.vet-register-btn--cancel {
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.vet-register-btn--cancel:hover {
+  background-color: #f9f9f9;
+  border-color: #ccc;
+  transform: translateY(-1px);
+}
+
+.vet-register-btn--primary {
+  background: #FCA47C;
+  color: #101828;
+  box-shadow: 0 4px 12px rgba(252, 164, 124, 0.3);
+  position: relative;
+  margin-left: auto;
+}
+
+.vet-register-btn--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(252, 164, 124, 0.4);
+}
+
+.vet-register-btn--primary:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.vet-register-btn--primary:disabled:hover::before {
+  content: 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία';
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background-color: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.vet-register-btn--primary:disabled:hover::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  right: 20px;
+  border: 8px solid transparent;
+  border-top-color: #1f2937;
+  z-index: 1000;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vet-register-btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(252, 164, 124, 0.3);
+}
+
+/* Login Link */
+.vet-register-login {
+  text-align: center;
+}
+
+.vet-register-login p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.vet-register-login-link {
+  color: #FCA47C;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.vet-register-login-link:hover {
+  color: #f27f52;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 550px) {
+  .vet-register-container {
+    padding: 40px 24px;
+  }
+
+  .vet-register-title {
+    font-size: 24px;
+  }
+
+  .vet-register-form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .vet-register-steps {
+    margin-bottom: 30px;
+    gap: 4px;
+  }
+
+  .vet-register-step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .vet-register-actions {
+    gap: 10px;
+  }
+
+  .vet-register-btn {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .vet-register-container {
+    padding: 30px 16px;
+  }
+
+  .vet-register-icon-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .vet-register-icon-circle svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .vet-register-title {
+    font-size: 20px;
+  }
+
+  .vet-register-subtitle {
+    font-size: 12px;
+  }
+
+  .vet-register-step-circle {
+    width: 28px;
+    height: 28px;
+  }
+
+  .vet-register-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ProgressBar overrides for Vet Register to match container size and smaller circles */
+.vet-register-container .progress-bar {
+  padding: 16px 0;
+}
+.vet-register-container .progress-bar__container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.vet-register-container .progress-bar__circle {
+  width: 44px;
+  height: 44px;
+}
+.vet-register-container .progress-bar__circle--active {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+.vet-register-container .progress-bar__label {
+  font-size: 13px;
+}
+.vet-register-container .progress-bar__line {
+  margin-top: 20px;
+}

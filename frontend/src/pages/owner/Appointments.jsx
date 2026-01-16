@@ -1,19 +1,52 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { X } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import Pagination from '../../components/common/Pagination';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { X, Calendar, Plus, Minus, Check, RotateCcw } from 'lucide-react';
+import PageLayout from '../../components/common/layout/PageLayout';
+import Pagination from '../../components/common/layout/Pagination';
+import BookingForm from '../../components/owner/BookingForm';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Appointments state
   const [activeTab, setActiveTab] = useState('active');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  // Booking form expanded state
+
+  const locationStateVet = location.state?.vet || null;
+  const [bookingVet, setBookingVet] = useState(locationStateVet);
+  const [isBookingExpanded, setIsBookingExpanded] = useState(!!locationStateVet);
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [appointmentToCancel, setAppointmentToCancel] = useState(null);
+  const [notification, setNotification] = useState(null);
+
+  // Clear success message after 5 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(''), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  const handleBookingSuccess = (message) => {
+    setSuccessMessage(message);
+    setIsBookingExpanded(false);
+  };
+
+  const handleBookingClose = () => {
+    setIsBookingExpanded(false);
+  };
+
   // Mock data - in real app, this would come from API/database
-  const activeAppointments = [
+  const [activeAppointments, setActiveAppointments] = useState([
     {
       id: 1,
       vet: 'Δρ. Μαρία Παπαδοπούλου',
@@ -22,6 +55,15 @@ const Appointments = () => {
       time: '10:00 - 11:00',
       service: 'Εμβολιασμός',
       status: 'confirmed',
+      vetInfo: {
+        id: 1,
+        name: 'Μαρία',
+        lastName: 'Παπαδοπούλου',
+        specialization: 'Γενικός Κτηνίατρος',
+        avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150',
+        clinicCity: 'Αθήνα',
+        rating: 4.8
+      }
     },
     {
       id: 2,
@@ -31,10 +73,19 @@ const Appointments = () => {
       time: '14:00 - 15:00',
       service: 'Γενική εξέταση',
       status: 'pending',
+      vetInfo: {
+        id: 2,
+        name: 'Γιώργος',
+        lastName: 'Ιωάννου',
+        specialization: 'Παθολόγος',
+        avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150',
+        clinicCity: 'Θεσσαλονίκη',
+        rating: 4.9
+      }
     },
-  ];
+  ]);
 
-  const historyAppointments = [
+  const [historyAppointments, setHistoryAppointments] = useState([
     {
       id: 3,
       vet: 'Δρ. Ελένη Γεωργίου',
@@ -44,6 +95,15 @@ const Appointments = () => {
       service: 'Εμβολιασμός',
       status: 'completed',
       canReview: true,
+      vetInfo: {
+        id: 3,
+        name: 'Ελένη',
+        lastName: 'Γεωργίου',
+        specialization: 'Χειρούργος',
+        avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=150&h=150',
+        clinicCity: 'Πάτρα',
+        rating: 4.7
+      }
     },
     {
       id: 4,
@@ -55,11 +115,20 @@ const Appointments = () => {
       status: 'cancelled',
       canReview: false,
       cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.',
+      vetInfo: {
+        id: 1,
+        name: 'Μαρία',
+        lastName: 'Παπαδοπούλου',
+        specialization: 'Γενικός Κτηνίατρος',
+        avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150',
+        clinicCity: 'Αθήνα',
+        rating: 4.8
+      }
     },
-  ];
+  ]);
 
   const appointments = activeTab === 'active' ? activeAppointments : historyAppointments;
-  
+
   // Pagination logic
   const totalPages = Math.ceil(appointments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -70,7 +139,6 @@ const Appointments = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard }
   ];
 
   const getStatusBadge = (status) => {
@@ -80,7 +148,7 @@ const Appointments = () => {
       completed: { label: 'Ολοκληρωμένο', class: 'completed' },
       cancelled: { label: 'Ακυρωμένο', class: 'cancelled' },
     };
-    
+
     const config = statusConfig[status];
     return (
       <span className={`owner-appointments__status owner-appointments__status--${config.class}`}>
@@ -94,8 +162,60 @@ const Appointments = () => {
   };
 
   const handleCancel = (appointmentId) => {
-    console.log('Cancel appointment:', appointmentId);
-    // In real app, this would call an API to cancel the appointment
+    setAppointmentToCancel(appointmentId);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Find the appointment to cancel
+    const appointmentToMove = activeAppointments.find(app => app.id === appointmentToCancel);
+    
+    if (appointmentToMove) {
+      // Update the appointment status and add cancellation message
+      const cancelledAppointment = {
+        ...appointmentToMove,
+        status: 'cancelled',
+        canReview: false,
+        cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.'
+      };
+      
+      // Remove from active appointments
+      setActiveAppointments(prev => prev.filter(app => app.id !== appointmentToCancel));
+      
+      // Add to history appointments
+      setHistoryAppointments(prev => [cancelledAppointment, ...prev]);
+    }
+    
+    setShowCancelModal(false);
+    setAppointmentToCancel(null);
+    
+    // Show notification
+    setNotification('cancelled');
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
+    setAppointmentToCancel(null);
+  };
+
+  const handleRebook = (appointment) => {
+    if (appointment.vetInfo) {
+      setBookingVet(appointment.vetInfo);
+      setIsBookingExpanded(true);
+      // Scroll to booking form
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      console.warn("No vet info available for rebooking");
+      // Fallback: just open the form without vet
+      setBookingVet(null);
+      setIsBookingExpanded(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -106,6 +226,42 @@ const Appointments = () => {
           <p className="owner-appointments__subtitle">Διαχείριση και παρακολούθηση ραντεβού</p>
         </div>
 
+        {successMessage && (
+          <div className="owner-appointments__success">
+            <Check size={18} />
+            {successMessage}
+          </div>
+        )}
+
+        {/* Booking Form Section */}
+        <div className="owner-appointments__booking-section">
+          <div
+            className="owner-appointments__booking-header"
+            onClick={() => setIsBookingExpanded(!isBookingExpanded)}
+          >
+            <div className="owner-appointments__booking-title">
+              <Calendar size={20} />
+              <h2>Κλείσιμο Νέου Ραντεβού</h2>
+            </div>
+            <button className="owner-appointments__expand-btn">
+              {isBookingExpanded ? <Minus size={20} /> : <Plus size={20} />}
+            </button>
+          </div>
+
+          {isBookingExpanded && (
+            <div className="owner-appointments__booking-content">
+              <BookingForm
+                vet={bookingVet}
+                onClose={handleBookingClose}
+                onSuccess={handleBookingSuccess}
+                inline={false}
+                showVetSearch={true}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Appointments List */}
         <div className="owner-appointments__tabs">
           <button
             className={`owner-appointments__tab ${activeTab === 'active' ? 'owner-appointments__tab--active' : ''}`}
@@ -117,7 +273,7 @@ const Appointments = () => {
             className={`owner-appointments__tab ${activeTab === 'history' ? 'owner-appointments__tab--active' : ''}`}
             onClick={() => { setActiveTab('history'); setCurrentPage(1); }}
           >
-            Ιστορικά ({historyAppointments.length})
+            Ιστορικό ({historyAppointments.length})
           </button>
         </div>
 
@@ -126,7 +282,7 @@ const Appointments = () => {
             <div key={appointment.id} className="owner-appointments__card">
               <div className="owner-appointments__card-header">
                 <div className="owner-appointments__card-title">
-                  <h3>Δρ. {appointment.vet}</h3>
+
                   {getStatusBadge(appointment.status)}
                 </div>
                 {activeTab === 'active' && (
@@ -170,11 +326,30 @@ const Appointments = () => {
               )}
 
               {appointment.canReview && (
+                <div className="owner-appointments__actions-row">
+                  <button
+                    className="owner-appointments__review-btn"
+                    onClick={() => handleReview(appointment.id)}
+                  >
+                    Αξιολόγηση
+                  </button>
+                  <button
+                    className="owner-appointments__rebook-btn"
+                    onClick={() => handleRebook(appointment)}
+                  >
+                    <RotateCcw size={16} />
+                    Ξανακλείστε Ραντεβού
+                  </button>
+                </div>
+              )}
+
+              {!appointment.canReview && (activeTab === 'history') && (
                 <button
-                  className="owner-appointments__review-btn"
-                  onClick={() => handleReview(appointment.id)}
+                  className="owner-appointments__rebook-btn owner-appointments__rebook-btn--full"
+                  onClick={() => handleRebook(appointment)}
                 >
-                  Αξιολόγηση
+                  <RotateCcw size={16} />
+                  Ξανακλείστε Ραντεβού
                 </button>
               )}
             </div>
@@ -186,6 +361,25 @@ const Appointments = () => {
           totalPages={totalPages}
           onPageChange={handlePageChange}
           variant="owner"
+        />
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε αυτό το ραντεβού;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message="Το ραντεβού ακυρώθηκε με επιτυχία!"
+          type="error"
         />
       </div>
     </PageLayout>

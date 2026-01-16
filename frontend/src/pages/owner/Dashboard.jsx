@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Calendar, Search, AlertCircle, CheckCircle, History } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import { DashboardCard } from '../../components/owner/dashboard';
 import { ROUTES } from '../../utils/constants';
 import './Dashboard.css';
@@ -15,7 +15,7 @@ const Dashboard = () => {
   const dashboardCards = [
     {
       id: 'health-book',
-      title: 'Βιβλιάριο Υγείας',
+      title: 'Τα Κατοικίδιά μου',
       description: 'Προβολή στοιχείων κατοικιδίων',
       icon: <FileText />,
       iconVariant: 'primary',
@@ -30,28 +30,12 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.owner.appointments),
     },
     {
-      id: 'search-vets',
-      title: 'Αναζήτηση Κτηνιάτρων',
-      description: 'Αναζήτηση επαγγελματιών κτηνιάτρων',
-      icon: <Search />,
-      iconVariant: 'primary',
-      onClick: () => navigate(ROUTES.citizen.searchMap),
-    },
-    {
       id: 'lost-declaration',
       title: 'Δήλωση Απώλειας',
       description: 'Δήλωση απώλειας ενός κατοικιδίου',
       icon: <AlertCircle />,
       iconVariant: 'info',
       onClick: () => navigate(ROUTES.owner.lostPetForm),
-    },
-    {
-      id: 'found-declaration',
-      title: 'Δήλωση Εύρεσης',
-      description: 'Δήλωση εύρεσης ενός κατοικιδίου',
-      icon: <CheckCircle />,
-      iconVariant: 'success',
-      onClick: () => navigate(ROUTES.owner.foundPetForm),
     },
     {
       id: 'history',
@@ -64,7 +48,10 @@ const Dashboard = () => {
   ];
 
   return (
-    <PageLayout variant="owner" title="Μενού">
+    <PageLayout title="Αρχική Ιδιοκτήτη" showBreadcrumbs={false}>
+        <div className="dashboard__header">
+          <h1 className="dashboard__title">Αρχική Ιδιοκτήτη</h1>
+        </div>
       <div className="owner-dashboard">
         <div className="owner-dashboard__cards">
           {dashboardCards.map((card) => (

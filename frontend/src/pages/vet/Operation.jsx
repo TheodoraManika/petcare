@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import DatePicker from '../../components/common/DatePicker';
-import CustomSelect from '../../components/common/CustomSelect';
+import { Plus, FileText, AlertCircle, Search } from 'lucide-react';
+import PageLayout from '../../components/common/layout/PageLayout';
+import DatePicker from '../../components/common/forms/DatePicker';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import ConfirmDetailModal from '../../components/common/modals/ConfirmDetailModal';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import Notification from '../../components/common/modals/Notification';
+import MicrochipSearch from '../../components/common/forms/MicrochipSearch';
+import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Operation.css';
+
+// Mock lost pets database
+
 
 const Operation = () => {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const [foundPetDetails, setFoundPetDetails] = useState(null);
   const [formData, setFormData] = useState({
     petSearch: '',
     operationType: '',
@@ -17,12 +30,54 @@ const Operation = () => {
     description: ''
   });
 
+
+
+  const handleSearchComplete = (result) => {
+    const { found, pet, microchip } = result;
+
+    if (found && pet) {
+      // Pet found - prefill with data
+      setFormData(prev => ({
+        ...prev,
+        petSearch: pet.microchip,
+      }));
+      setFoundPetDetails(pet);
+    } else {
+      // Pet not found - just set microchip
+      setFormData(prev => ({
+        ...prev,
+        petSearch: microchip
+      }));
+      setFoundPetDetails({ microchip });
+      setFoundPetDetails({ microchip });
+      // Removed error handling
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    // Special handling for microchip number (petSearch)
+    if (name === 'petSearch') {
+      // Allow only numbers
+      const numericValue = value.replace(/[^0-9]/g, '');
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+      // Removed error handling
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -33,100 +88,105 @@ const Operation = () => {
   };
 
   const handleCancel = () => {
-    navigate(ROUTES.vet.dashboard);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Reset form data to initial empty state
+    setFormData({
+      petSearch: '',
+      operationType: '',
+      operationDate: '',
+      description: ''
+    });
+    setFoundPetDetails(null);
+    setShowCancelModal(false);
+
+    // Show notification
+    setNotification('cancelled');
+
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleCancelCancel = () => {
+    setShowCancelModal(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Validate required fields
-    if (!formData.petSearch.trim() || !formData.operationType || !formData.operationDate) {
-      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία');
+
+    // Validate microchip before submission
+    // Validate microchip before submission
+    if (formData.petSearch.length !== 15) {
       return;
     }
 
-    // Submit to backend
-    const submitMedicalProcedure = async () => {
-      try {
-        // First, find the pet by microchip number
-        const petsResponse = await fetch('http://localhost:5000/pets');
-        const pets = petsResponse.json();
-        
-        const foundPets = await pets;
-        const pet = foundPets.find(p => p.microchipId === formData.petSearch);
-
-        if (!pet) {
-          alert('Δεν βρέθηκε κατοικίδιο με αυτό το μικροτσίπ');
-          return;
-        }
-
-        // Get current vet from localStorage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser || currentUser.userType !== 'vet') {
-          alert('Παρακαλώ συνδεθείτε ως κτηνίατρος');
-          return;
-        }
-
-        // Create medical procedure object
-        const newProcedure = {
-          petId: pet.id,
-          vetId: currentUser.id,
-          type: formData.operationType,
-          date: formData.operationDate,
-          description: formData.description || '',
-          createdAt: new Date().toISOString(),
-        };
-
-        // POST to medicalProcedures endpoint
-        const response = await fetch('http://localhost:5000/medicalProcedures', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newProcedure),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to record medical procedure');
-        }
-
-        setShowSuccess(true);
-      } catch (err) {
-        console.error('Medical procedure error:', err);
-        alert('Σφάλμα κατά την καταγραφή της ιατρικής πράξης. Βεβαιωθείτε ότι το JSON Server είναι ενεργό.');
-      }
-    };
-
-    submitMedicalProcedure();
+    // Show confirmation modal instead of submitting directly
+    setShowConfirmModal(true);
   };
+
+  const handleConfirmSubmit = () => {
+    console.log('Form submitted:', formData);
+    setShowConfirmModal(false);
+    setShowSuccess(true);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmModal(false);
+  };
+
+  // Check if form is valid (all required fields filled and microchip is 15 digits)
+  const isFormValid = () => {
+    return (
+      formData.petSearch.trim() !== '' &&
+      formData.petSearch.length === 15 &&
+      formData.operationType.trim() !== '' &&
+      formData.operationDate.trim() !== ''
+    );
+  };
+
+  // Helper function to get label for operation type
+  const getOperationTypeLabel = (value) => {
+    const options = {
+      'vaccination': 'Εμβολιασμός',
+      'checkup': 'Γενική Εξέταση',
+      'surgery': 'Χειρουργείο',
+      'treatment': 'Θεραπεία',
+      'dental': 'Οδοντιατρική',
+      'emergency': 'Επείγον Περιστατικό',
+      'other': 'Άλλο'
+    };
+    return options[value] || value;
+  };
+
+  // Prepare fields for confirmation modal
+  const confirmFields = [
+    { label: 'Μικροτσίπ', value: formData.petSearch },
+    { label: 'Τύπος Πράξης', value: getOperationTypeLabel(formData.operationType) },
+    { label: 'Ημερομηνία', value: formData.operationDate },
+    { label: 'Περιγραφή', value: formData.description },
+  ];
+
+  const breadcrumbItems = [];
 
   if (showSuccess) {
     return (
-      <PageLayout>
-        <div className="operation-success">
-          <div className="operation-success__content">
-            <div className="operation-success__icon">
-              <Plus size={64} />
-            </div>
-            <h1 className="operation-success__title">Επιτυχής Καταγραφή!</h1>
-            <p className="operation-success__description">
-              Η ιατρική πράξη καταγράφηκε με επιτυχία στο σύστημα.
-            </p>
-            <button 
-              className="operation-success__btn"
-              onClick={() => navigate(ROUTES.vet.dashboard)}
-            >
-              Επιστροφή στο Μενού
-            </button>
-          </div>
-        </div>
-      </PageLayout>
+      <SuccessPage
+        icon={FileText}
+        title="Η Ιατρική Πράξη Καταχωρήθηκε!"
+        description="Η ιατρική πράξη αποθηκεύτηκε επιτυχώς στο βιβλίο του κατοικιδίου."
+        buttonText="Επιστροφή στην Αρχική Κτηνιάτρου"
+        onButtonClick={() => navigate(ROUTES.vet.dashboard)}
+        iconColor="#FCA47C"
+        iconBgColor="#FFF4ED"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Ιατρικές Πράξεις"
+      />
     );
   }
-
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
 
   return (
     <PageLayout title="Ιατρικές Πράξεις" breadcrumbs={breadcrumbItems}>
@@ -137,20 +197,26 @@ const Operation = () => {
 
         <div className="operation__form-wrapper">
           <form className="operation__form" onSubmit={handleSubmit}>
-            <div className="operation__field">
-              <label className="operation__label">
-                Αναζήτηση Κατοικιδίου (Μικροτσίπ) <span className="operation__required">*</span>
-              </label>
-              <input
-                type="text"
-                name="petSearch"
-                className="operation__input"
-                placeholder="GR123456789012345"
-                value={formData.petSearch}
-                onChange={handleInputChange}
-                required
+            {foundPetDetails ? (
+              <PetDetailsCard
+                petData={foundPetDetails}
+                onClear={() => {
+                  setFoundPetDetails(null);
+                  setFormData(prev => ({
+                    ...prev,
+                    petSearch: ''
+                  }));
+                }}
+                variant="vet"
               />
-            </div>
+            ) : (
+              <>
+                <MicrochipSearch
+                  onSearchComplete={handleSearchComplete}
+                  variant="vet"
+                />
+              </>
+            )}
 
             <div className="operation__field">
               <label className="operation__label">
@@ -182,6 +248,7 @@ const Operation = () => {
                 name="operationDate"
                 value={formData.operationDate}
                 onChange={handleInputChange}
+                maxDate={new Date()}
               />
             </div>
 
@@ -210,6 +277,8 @@ const Operation = () => {
               <button
                 type="submit"
                 className="operation__btn operation__btn--submit"
+                disabled={!isFormValid()}
+                title={!isFormValid() ? 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία' : ''}
               >
                 <Plus size={18} />
                 Καταγραφή
@@ -217,6 +286,37 @@ const Operation = () => {
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε την καταγραφή ιατρικής πράξης του κατοικιδίου;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Submit Confirmation Modal */}
+        <ConfirmDetailModal
+          isOpen={showConfirmModal}
+          title="Επιβεβαίωση Ιατρικής Πράξης"
+          subtitle="Παρακαλώ ελέγξτε τα στοιχεία της ιατρικής πράξης:"
+          fields={confirmFields}
+          cancelText="Επιστροφή"
+          confirmText="Επιβεβαίωση"
+          onCancel={handleCancelSubmit}
+          onConfirm={handleConfirmSubmit}
+        />
+
+        {/* Notification */}
+        <Notification
+          isVisible={notification !== null}
+          message="Η καταγραφή της ιατρικής πράξης ακυρώθηκε με επιτυχία!"
+          type="error"
+        />
       </div>
     </PageLayout>
   );

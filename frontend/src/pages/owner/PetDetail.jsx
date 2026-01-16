@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Download, Dog, Cat } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
 import MedicalEventCard from '../../components/owner/healthcard/MedicalEventCard';
 import StatCard from '../../components/owner/healthcard/StatCard';
 import { ROUTES } from '../../utils/constants';
@@ -28,6 +28,13 @@ const PetDetail = () => {
         }
         
         const pet = await petResponse.json();
+        
+        console.log('Pet data from API:', pet);
+        console.log('ownerAFM value:', pet.ownerAFM);
+        
+        // Fetch owner data to get AFM
+        const ownerResponse = await fetch(`http://localhost:5000/users/${pet.ownerId}`);
+        const owner = await ownerResponse.json();
         
         // Fetch medical procedures for this pet
         const medicalResponse = await fetch('http://localhost:5000/medicalProcedures');
@@ -80,6 +87,7 @@ const PetDetail = () => {
           microchip: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
+          afm: pet.ownerAFM || owner?.afm || '-',
           icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
           stats: stats
         };
@@ -100,8 +108,7 @@ const PetDetail = () => {
   }, [petId]);
 
   const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard },
-    { label: 'Βιβλιάριο Υγείας', path: ROUTES.owner.pets }
+    { label: 'Τα Κατοικίδιά μου', path: ROUTES.owner.pets }
   ];
 
   const handlePrint = () => {
@@ -181,8 +188,16 @@ return (
                                 <span className="owner-pet-detail__info-value">{pet.microchip}</span>
                             </div>
                             <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Χρώμα</span>
+                                <span className="owner-pet-detail__info-value">{pet.color}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
+                                <span className="owner-pet-detail__info-label">Βάρος (σε κιλά)</span>
+                                <span className="owner-pet-detail__info-value">{pet.weight}</span>
+                            </div>
+                            <div className="owner-pet-detail__info-row">
                                 <span className="owner-pet-detail__info-label">ΑΦΜ Ιδιοκτήτη</span>
-                                <span className="owner-pet-detail__info-value">{pet.afm}</span>
+                                <span className="owner-pet-detail__info-value">{pet.ownerAFM}</span>
                             </div>
                         </div>
 

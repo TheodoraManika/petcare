@@ -4,8 +4,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding-top: 64px;
+  align-items: center;
 }
 
 /* Main Content */
@@ -22,6 +21,761 @@
   z-index: 2;
 }
 
+/* ==========================================
+   LOST PETS HERO SECTION
+   ========================================== */
+.lost-pets-hero {
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.lost-pets-hero__container {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 40px;
+  border-radius: 16px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  background-image: url('/Main Page Photo.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 380px;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.lost-pets-hero__container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(139, 228, 254, 0.85) 0%, rgba(139, 228, 254, 0.6) 40%, rgba(139, 228, 254, 0) 100%);
+  z-index: 0;
+  border-radius: 16px;
+}
+
+/* Search Panel - Left Side */
+.lost-pets-hero__search-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  order: 1;
+}
+
+/* Carousel - Right Side */
+.lost-pets-hero__carousel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  order: 2;
+}
+
+.carousel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: 60px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #101727;
+  letter-spacing: 0.5px;
+}
+
+.carousel-header-icon {
+  color: #FCA47C;
+}
+
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.carousel-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-card {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #E5E7EB;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.carousel-card:hover {
+  border-color: #23CED9;
+  box-shadow: 0 8px 24px rgba(35, 206, 217, 0.15);
+  transform: translateY(-2px);
+}
+
+.carousel-card__image {
+  width: 110px;
+  height: 110px;
+  background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
+  border: 3px solid #23CED9;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.carousel-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carousel-card__name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.carousel-card__breed {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.carousel-card__location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #23CED9;
+  font-weight: 500;
+}
+
+.carousel-card__date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.carousel-card__cta {
+  font-size: 12px;
+  color: #23CED9;
+  font-weight: 600;
+  margin-top: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.carousel-card:hover .carousel-card__cta {
+  opacity: 1;
+}
+
+/* Carousel Navigation */
+.carousel-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  color: #6b7280;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel-wrapper:hover .carousel-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-nav:hover {
+  background: #23CED9;
+  border-color: #23CED9;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Carousel Indicators */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #D1D5DB;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.carousel-indicator:hover {
+  background: #9CA3AF;
+}
+
+.carousel-indicator.active {
+  background: #FCA47C;
+  transform: scale(1.3);
+}
+
+/* ==========================================
+   VET SEARCH & TOP RATED SECTION
+   ========================================== */
+.vet-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 40px;
+  background: linear-gradient(90deg, rgba(252, 164, 124, 0.85) 0%, rgba(252, 164, 124, 0.20) 100%), url('/dog_vet_visit.jpg');
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #E5E7EB;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.vet-section__container {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 40px;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFF9F5 0%, #FFF5EE 100%);
+  min-height: 380px;
+  align-items: center;
+}
+
+/* Vet Search Panel */
+.vet-section__search-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.vet-search-content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #F5E6DE;
+  width: 100%;
+  max-width: 340px;
+}
+
+
+/* Hero text block (right column of hero) */
+.lost-pets-hero__text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  color: #101727;
+  padding: 8px 12px;
+  max-width: 480px;
+}
+
+.hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  line-height: 1.05;
+}
+
+.hero-description {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+  max-width: 480px;
+}
+
+/* Ensure carousel keeps visible space */
+.lost-pets-hero__carousel {
+  min-width: 420px;
+}
+
+@media (max-width: 900px) {
+  .lost-pets-hero__container {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .lost-pets-hero__text {
+    order: 2;
+    margin-top: 12px;
+  }
+
+  .hero-title {
+    font-size: 22px;
+  }
+}
+
+.vet-search-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.vet-search-icon {
+  color: #FCA47C;
+}
+
+.vet-search-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.vet-search-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+}
+
+.vet-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vet-search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F9FAFB;
+  border: 2px solid #F5E6DE;
+  border-radius: 10px;
+  padding: 14px 18px;
+  transition: all 0.2s ease;
+}
+
+.vet-search-field:focus-within {
+  border-color: #FCA47C;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(252, 164, 124, 0.1);
+}
+
+.vet-field-icon {
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.vet-search-field:focus-within .vet-field-icon {
+  color: #FCA47C;
+}
+
+.vet-select {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1f2937;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.vet-search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px;
+  background: #FCA47C;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.vet-search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(252, 164, 124, 0.4);
+}
+
+/* Vet Carousel */
+.vet-section__carousel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.vet-carousel-track {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.vet-carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.vet-carousel-slide-inner {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: stretch;
+  padding: 18px 0;
+}
+
+.vet-carousel-card {
+  /* match .vet-card styles so carousel cards look identical to the grid */
+  background-color: #ffffff;
+  padding: 28px;
+  border-radius: 16px;
+  border: 2px solid #E5E7EB;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 calc((100% - 48px) / 3);
+  max-width: 390px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: auto;
+  /* allow the card to grow with content */
+  min-height: 220px;
+}
+
+
+.vet-carousel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.vet-carousel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a6c7d;
+  letter-spacing: 0.5px;
+}
+
+.vet-carousel-header-icon {
+  color: #FCA47C;
+}
+
+.vet-carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vet-carousel-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  /* min-height removed for dynamic sizing via JS */
+  border-radius: 12px;
+  z-index: 5;
+}
+
+.vet-carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
+  z-index: 1;
+}
+
+.vet-carousel-slide.active {
+  opacity: 1;
+  position: relative;
+  z-index: 10;
+}
+
+.vet-carousel-card {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #F5E6DE;
+  height: auto;
+  /* allow content to determine height */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.vet-carousel-card:hover {
+  border-color: #FCA47C;
+  box-shadow: 0 8px 24px rgba(252, 164, 124, 0.15);
+  transform: translateY(-2px);
+}
+
+.vet-card__avatar {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #FFF5EE 0%, #FFE8D9 100%);
+  border: 3px solid #FCA47C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vet-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.vet-card__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.vet-card__specialty {
+  font-size: 14px;
+  color: #FCA47C;
+  font-weight: 600;
+  margin: 0;
+}
+
+.vet-card__location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.vet-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.vet-card__rating-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.vet-card__reviews {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.vet-card__cta {
+  font-size: 12px;
+  color: #FCA47C;
+  font-weight: 600;
+  margin-top: 6px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.vet-carousel-card:hover .vet-card__cta {
+  opacity: 1;
+}
+
+/* Vet Carousel Navigation */
+.vet-carousel-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #F5E6DE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  color: #6b7280;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vet-carousel-wrapper:hover .vet-carousel-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vet-carousel-nav:hover {
+  background: #FCA47C;
+  border-color: #FCA47C;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Vet Carousel Indicators */
+.vet-carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.vet-carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #E5D6CE;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.vet-carousel-indicator:hover {
+  background: #D4C4BA;
+}
+
+.vet-carousel-indicator.active {
+  background: #FCA47C;
+  transform: scale(1.3);
+}
+
+/* Responsive Vet Section */
+@media (max-width: 900px) {
+  .vet-section__container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .vet-search-content {
+    max-width: 100%;
+  }
+}
+
+
+/* Search Panel Content */
+.found-pet-container {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E5E7EB;
+  width: 100%;
+  max-width: 340px;
+  text-align: left;
+}
+
+.found-pet-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.found-pet-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+}
+
+/* CTA Button */
+.found-pet-cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: #FCA47C;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.found-pet-cta-button:hover {
+  transform: translateY(-3px);
+  background: #fca47ce3;
+}
+
+.found-pet-cta-button:active {
+  transform: translateY(0);
+}
+
+.found-pet-note {
+  font-size: 12px;
+  color: #9CA3AF;
+  text-align: center;
+  margin: 16px 0 0 0;
+  line-height: 1.4;
+}
+
+
 /* Hero Section */
 .hero-section {
   background-color: rgba(255, 255, 255, 0);
@@ -33,11 +787,23 @@
   border-radius: 16px;
   position: relative;
   box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
+  overflow: visible;
   margin: 0 auto;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-image: url('/Main Page Photo.png');
   background-size: cover;
   background-position: center;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .hero-section::before {
@@ -48,6 +814,7 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(90deg, rgba(139, 228, 254, 0.8) 0%, rgba(139, 228, 254, 0.5) 40%, rgba(139, 228, 254, 0) 100%);
+  border-radius: 16px;
   z-index: 1;
 }
 
@@ -83,22 +850,45 @@
 }
 
 .hero-search-box {
-  position: absolute;
-  bottom: 50px;
-  left: 64px;
-  width: 1100px;
+  position: relative;
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto 8px;
   height: auto;
   background-color: rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
+  /* Align to bottom so inputs align if labels wrap, though single line labels prefer center or flex-end of container? No, align-items stretch is better, but button height is fixed. */
   align-items: center;
-  padding: 16px;
-  border-radius: 20px;
-  box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  border-radius: 16px;
   z-index: 3;
-  gap: 16px;
+  gap: 24px;
   flex-wrap: nowrap;
   overflow: visible;
+}
+
+.search-container {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  width: 100%;
+}
+
+.search-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.search-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-left: 4px;
 }
 
 .search-field {
@@ -106,18 +896,22 @@
   display: flex;
   align-items: center;
   height: 48px;
-  flex-shrink: 0;
-  flex: 1.5;
-  min-width: 180px;
-  border-radius: 20px;
-  gap: 8px;
+  width: 100%;
+  border-radius: 12px;
   background-color: transparent;
+}
+
+.search-field.no-icon .search-input,
+.search-field.no-icon .location-picker__input,
+.search-field.no-icon .custom-select__trigger {
+  padding-left: 16px !important;
 }
 
 .search-field .field-icon {
   position: absolute;
   left: 16px;
-  color: #99A1AF;
+  color: #FCA47C;
+  /* orange accent */
   z-index: 10;
   pointer-events: none;
 }
@@ -127,19 +921,14 @@
   padding-left: 44px;
 }
 
-.search-field:nth-child(2),
-.search-field:nth-child(3),
-.search-field:nth-child(4) {
-  flex: 1;
-  min-width: 150px;
-}
+/* Removed specific child flex sizing as it is handled by search-column now */
 
 .search-input {
   width: 100%;
   height: 48px;
   padding: 0 16px 0 40px;
   border: 1px solid #e5e7eb;
-  border-radius: 20px;
+  border-radius: 12px;
   font-family: inherit;
   font-size: 14px;
   color: #2d3647;
@@ -156,8 +945,9 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #23CED9;
-  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+  border-color: #FCA47C;
+  /* orange */
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.08);
 }
 
 select.search-input {
@@ -230,12 +1020,15 @@ select.search-input option {
 }
 
 .search-button {
-  background-color: #23CED9;
+  margin-top: 24px;
+  /* Align with inputs, accounting for label height approx */
+  background-color: #FCA47C;
+  /* orange */
   padding: 0 40px;
   height: 48px;
   border: none;
-  border-radius: 20px;
-  color: #ffffff;
+  border-radius: 12px;
+  color: #000000;
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -251,7 +1044,7 @@ select.search-input option {
 }
 
 .search-button:hover {
-  opacity: 0.9;
+  opacity: 0.95;
   transform: translateY(-2px);
   box-shadow: 0px 6px 12px -2px rgba(0, 0, 0, 0.15);
 }
@@ -260,7 +1053,7 @@ select.search-input option {
 .hero-search-box .custom-select__trigger,
 .hero-search-box .location-picker__input {
   height: 48px;
-  border-radius: 20px;
+  border-radius: 12px;
   font-size: 14px;
   padding: 0 36px 0 40px;
   border: 1px solid #e5e7eb;
@@ -284,8 +1077,9 @@ select.search-input option {
 .hero-search-box .custom-select__trigger:focus,
 .hero-search-box .custom-select__trigger--open,
 .hero-search-box .location-picker__input:focus {
-  border-color: #23CED9;
-  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+  border-color: #FCA47C;
+  /* orange */
+  box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.08);
 }
 
 .hero-search-box .custom-select {
@@ -313,120 +1107,85 @@ select.search-input option {
   z-index: 1000;
 }
 
-/* Hero Actions */
-.hero-actions {
-  position: absolute;
-  bottom: 160px;
-  left: 64px;
-  width: 742px;
-  height: 56px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  z-index: 3;
-}
-
-.action-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px 32px;
-  border: none;
-  border-radius: 10px;
-  color: #101727;
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-  height: 48px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.owner-btn {
-  background-color: #23CED9;
-  width: auto;
-  padding: 12px 28px;
-}
-
-.vet-btn {
-  background-color: #FCA47C;
-  width: auto;
-  padding: 12px 28px;
-  color: #101828;
-}
-
-.lost-btn {
-  background-color: #F9D779;
-  width: auto;
-  padding: 12px 28px;
-  color: #101828;
-}
-
-.action-button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-  box-shadow: 0px 12px 20px -3px rgba(0, 0, 0, 0.15);
-}
-
 /* User Types Section */
 .user-types-section {
-  width: 1235px;
-  height: 352px;
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto 32px auto;
+  padding: 16px 16px;
+}
+
+.user-types-container {
   display: flex;
-  align-items: flex-start;
-  align-self: stretch;
-  position: relative;
-  margin: 50px auto 0 auto;
+  gap: 24px;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .user-type-card {
-  background-color: rgba(255, 255, 255, 1);
-  width: 390px;
-  height: 340px;
+  background-color: #ffffff;
+  flex: 1 1 48%;
+  max-width: 580px;
   display: flex;
-  align-items: flex-start;
-  padding: 2px;
-  flex-shrink: 0;
-  border-radius: 10px;
+  flex-direction: column;
+  padding: 28px;
+  border-radius: 16px;
   border-width: 2px;
   border-style: solid;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.user-type-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Info button in top right corner of card */
+.card-info-btn {
   position: absolute;
-  top: 0;
-  flex-direction: column;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #9CA3AF;
+}
+
+.card-info-btn:hover {
+  background: #E5E7EB;
+  color: #6b7280;
 }
 
 .cyan-card {
   border-color: rgba(35, 206, 217, 1);
-  left: 0;
 }
 
 .orange-card {
   border-color: rgba(252, 164, 124, 1);
-  left: 422px;
 }
 
 .yellow-card {
   border-color: rgba(249, 215, 121, 1);
-  left: 845px;
 }
 
 .card-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 12px;
   border-width: 2px;
   border-style: solid;
-  position: absolute;
-  top: 26px;
-  left: 26px;
+  margin-bottom: 20px;
   font-size: 24px;
 }
 
@@ -449,42 +1208,33 @@ select.search-input option {
 }
 
 .card-title {
-  position: absolute;
-  top: 90px;
-  left: 26px;
-  width: 338px;
-  height: 24px;
   color: #1d2838;
   font-family: inherit;
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0;
-  line-height: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
 }
 
 .card-features {
-  position: absolute;
-  top: 126px;
-  left: 26px;
-  width: 338px;
-  height: auto;
   list-style: none;
-  margin: 0;
+  margin: 0 0 24px 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  flex: 1;
 }
 
 .card-features li {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 24px;
+  gap: 10px;
   color: #495565;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
+  line-height: 1.4;
 }
 
 .feature-dot {
@@ -506,38 +1256,94 @@ select.search-input option {
   background-color: rgba(249, 215, 121, 1);
 }
 
-.card-button {
-  position: absolute;
-  bottom: 26px;
-  left: 26px;
-  width: 338px;
-  height: 40px;
-  border: none;
-  border-radius: 4px;
-  color: #101727;
+/* Card Auth Buttons */
+.card-auth-buttons {
+  padding-top: 40px;
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.card-auth-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border-radius: 10px;
   font-family: inherit;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.cyan-button {
-  background-color: rgba(35, 206, 217, 1);
+.card-auth-btn--signin {
+  background: #ffffff;
+  border: 2px solid;
 }
 
-.orange-button {
-  background-color: rgba(252, 164, 124, 1);
-  color: #101828;
+.card-auth-btn--signup {
+  border: none;
+  color: #ffffff;
 }
 
-.yellow-button {
-  background-color: rgba(249, 215, 121, 1);
-  color: #101828;
+/* Cyan card buttons */
+.cyan-signin {
+  border-color: #23CED9;
+  color: #23CED9;
 }
 
-.card-button:hover {
-  opacity: 0.9;
+.cyan-signin:hover {
+  background: rgba(35, 206, 217, 0.1);
+}
+
+.cyan-signup {
+  background: #23CED9;
+  color: #000000;
+}
+
+.cyan-signup:hover {
+  background: #1AB8C3;
+}
+
+/* Orange card buttons */
+.orange-signin {
+  border-color: #FCA47C;
+  color: #FCA47C;
+}
+
+.orange-signin:hover {
+  background: rgba(252, 164, 124, 0.1);
+}
+
+.orange-signup {
+  background: #FCA47C;
+  color: #000000;
+}
+
+.orange-signup:hover {
+  background: #F97316;
+}
+
+/* Yellow card buttons */
+.yellow-signin {
+  border-color: #EAB308;
+  color: #EAB308;
+}
+
+.yellow-signin:hover {
+  background: rgba(234, 179, 8, 0.1);
+}
+
+.yellow-signup {
+  background: #F9D779;
+  color: #000000;
+}
+
+.yellow-signup:hover {
+  background: #EAB308;
 }
 
 /* Features Section */
@@ -702,6 +1508,525 @@ select.search-input option {
 }
 
 /* Responsive */
+
+/* User Types Responsive */
+@media (max-width: 768px) {
+  .user-types-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-type-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .card-auth-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Lost Pets Hero Responsive */
+@media (max-width: 1280px) {
+  .lost-pets-hero__container {
+    padding: 32px;
+    gap: 24px;
+  }
+
+  .hero-search-content {
+    padding: 28px;
+  }
+
+  .hero-search-title {
+    font-size: 26px;
+  }
+
+  .carousel-card__image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .carousel-card__name {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .lost-pets-hero__container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .lost-pets-hero__carousel {
+    order: 2;
+  }
+
+  .lost-pets-hero__search-panel {
+    order: 1;
+  }
+
+  .hero-search-content {
+    max-width: 100%;
+  }
+
+  .carousel-track {
+    height: 180px;
+  }
+
+  .carousel-card__image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .carousel-card__name {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lost-pets-hero {
+    padding: 0 12px;
+  }
+
+  .lost-pets-hero__container {
+    padding: 24px;
+    border-radius: 12px;
+  }
+
+  .carousel-header {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .carousel-track {
+    height: 160px;
+  }
+
+  .carousel-card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .carousel-card__image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .carousel-card__image svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .carousel-card__name {
+    font-size: 16px;
+  }
+
+  .carousel-card__breed {
+    font-size: 13px;
+  }
+
+  .carousel-card__location {
+    font-size: 12px;
+  }
+
+  .carousel-nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .carousel-nav svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .carousel-indicators {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .carousel-indicator {
+    width: 8px;
+    height: 8px;
+  }
+
+  .hero-search-content {
+    padding: 24px;
+    border-radius: 12px;
+  }
+
+  .hero-search-title {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .hero-search-subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .hero-field {
+    padding: 12px 14px;
+  }
+
+  .hero-input,
+  .hero-select {
+    font-size: 14px;
+  }
+
+  .hero-cta-button {
+    padding: 16px 24px;
+    font-size: 16px;
+  }
+
+  .hero-search-note {
+    font-size: 12px;
+    margin-top: 14px;
+  }
+
+  .view-all-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lost-pets-hero__container {
+    padding: 20px;
+  }
+
+  .carousel-wrapper {
+    gap: 8px;
+  }
+
+  .carousel-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .carousel-card__location {
+    justify-content: center;
+  }
+
+  .carousel-track {
+    height: 200px;
+  }
+
+  .hero-search-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .hero-search-content {
+    padding: 20px;
+  }
+}
+
+/* ==========================================
+   VETS SECTION (NEW CARD LAYOUT)
+   ========================================== */
+.vets-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.vets-section__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  margin-left: 60px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101727;
+  letter-spacing: 0.5px;
+  justify-content: space-between;
+}
+
+.vets-section__icon {
+  color: #FCA47C;
+}
+
+.vets-section__title h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #101727;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.vets-section__search-btn {
+  background: #FCA47C;
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.vets-section__search-btn:hover {
+  transform: translateY(-2px);
+  background: #F97316;
+}
+
+.vets-container {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.vet-card {
+  background-color: #ffffff;
+  flex: 1;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border-radius: 16px;
+  border-width: 2px;
+  border-style: solid;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.vet-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.vet-card__avatar-circle {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #FCA47C;
+}
+
+.vet-card__specialty-text {
+  font-size: 14px;
+  color: #FCA47C;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.vet-card__location-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.vet-card__rating-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 20px 0;
+  flex-wrap: wrap;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.rating-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.reviews-count {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.vet-card__view-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  color: #ffffff;
+  margin-top: auto;
+}
+
+/* Found Actions Section */
+.found-actions-section {
+  width: 100%;
+  max-width: 1235px;
+  margin: 64px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.found-actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.found-actions-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.found-actions-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.found-actions-text {
+  flex: 1 1 60%;
+}
+
+.found-actions-buttons {
+  display: flex;
+  gap: 12px;
+  flex: 1 1 40%;
+  justify-content: flex-end;
+}
+
+
+
+.found-action-btn.ghost-btn {
+  background: #ffffff;
+  border: 2px solid #E5E7EB;
+  color: #1f2937;
+}
+
+
+/* Ensure homepage instance of found-action button overrides other page styles */
+.home-page .found-actions-container .found-action-btn.primary-btn {
+  background: #23CED9;
+  color: #101727;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.found-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 900px) {
+  .found-actions-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .found-actions-buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Reuse LostPets report-card compact styles for buttons */
+.report-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 32px 28px;
+  border: 2px solid #D1D5DB;
+  border-radius: 12px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  min-height: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.report-card--compact {
+  padding: 16px;
+  min-height: unset;
+}
+
+.report-card:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.report-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 2px solid #23CED9;
+  background-color: rgba(35, 206, 217, 0.1);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.report-card:hover .report-card__icon {
+  border-color: #7DD3DC;
+  background-color: rgba(35, 206, 217, 0.25);
+  box-shadow: none;
+}
+
+.report-card__icon svg {
+  color: #23CED9;
+  transition: color 0.2s ease;
+}
+
+.report-card:hover .report-card__icon svg {
+  color: #7DD3DC;
+}
+
+.report-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.report-card__description {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+/* Legacy Hero Responsive */
 @media (max-width: 1280px) {
   .home-main {
     padding: 32px 16px 0;

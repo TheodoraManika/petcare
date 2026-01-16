@@ -10,11 +10,13 @@ export const ROUTES = {
   cookies: '/cookies',
   information: '/information',
   confirmation: '/confirmation',
+  success: '/success',
+  confirm: '/confirm',
   citizen: {
     lostPets: '/citizen/lost-pets',
-    lostPetDetails: '/citizen/lost-pets/:petId',
     foundPetForm: '/citizen/found-pet',
     searchMap: '/vet/search-map',
+    information: '/citizen/information',
   },
   owner: {
     dashboard: '/owner/dashboard',
@@ -25,6 +27,7 @@ export const ROUTES = {
     lostPetForm: '/owner/lost-pet',
     foundPetForm: '/owner/found-pet',
     lostHistory: '/owner/history',
+    information: '/owner/information',
   },
   vet: {
     dashboard: '/vet/dashboard',
@@ -43,5 +46,7 @@ export const ROUTES = {
     lifeEvents: '/vet/life-events',
     lostPetForm: '/vet/lost-pet',
     foundPetForm: '/vet/found-pet',
+    healthBook: '/vet/health-book',
+    information: '/vet/information',
   },
 };

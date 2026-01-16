@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { SquarePen, X, Save, UserRound } from 'lucide-react';
+import { SquarePen, X, Save, UserRound, UserRoundCheck, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import PageLayout from '../../components/global/layout/PageLayout';
+import PageLayout from '../../components/common/layout/PageLayout';
+import SuccessPage from '../../components/common/modals/SuccessPage';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -9,9 +11,22 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    afm: '',
+    address: '',
+    city: '',
+    postalCode: '',
+  });
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  
+  // Original data that won't change unless saved
+  const [originalData, setOriginalData] = useState({
     firstName: 'Μαρία',
     lastName: 'Παπαδοπούλου',
     email: 'maria.p@example.com',
@@ -21,13 +36,79 @@ const Profile = () => {
     city: 'Αθήνα',
     postalCode: '10679',
   });
+  
+  // Working copy for editing
+  const [formData, setFormData] = useState({...originalData});
+
+  // Helper function to filter only Greek and English letters and spaces
+  const filterLettersOnly = (value) => {
+    return value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, '');
+  };
+
+  // Helper function to filter only numbers
+  const allowedAFMChars = (value) => value.replace(/[^0-9]/g, '');
+
+  // Helper function to filter phone characters
+  const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, '');
+
+  // Helper function to filter email characters - no Greek letters
+  const allowedEmailChars = (value) => value.replace(/[\u0370-\u03FF\u1F00-\u1FFF]/g, '');
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const cleanPhone = phone.replace(/[\s+]/g, '');
+    return cleanPhone.length >= 10;
+  };
+
+  const validateAFM = (afm) => {
+    return afm.length === 9;
+  };
+
+  const validatePostalCode = (postalCode) => {
+    return postalCode.length === 5;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    let filteredValue = value;
+
+    // Apply character filters based on field type
+    if (name === 'firstName' || name === 'lastName' || name === 'city') {
+      filteredValue = filterLettersOnly(value);
+    } else if (name === 'afm' || name === 'postalCode') {
+      filteredValue = allowedAFMChars(value);
+      
+      // Apply max length
+      if (name === 'afm' && filteredValue.length > 9) {
+        filteredValue = filteredValue.slice(0, 9);
+      }
+      if (name === 'postalCode' && filteredValue.length > 5) {
+        filteredValue = filteredValue.slice(0, 5);
+      }
+    } else if (name === 'phone') {
+      filteredValue = allowedPhoneChars(value);
+    } else if (name === 'email') {
+      filteredValue = allowedEmailChars(value);
+    }
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: filteredValue
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const handleEditToggle = () => {
@@ -41,6 +122,19 @@ const Profile = () => {
   const handleConfirmCancel = () => {
     setIsEditing(false);
     setShowCancelModal(false);
+    // Reset form data to original values
+    setFormData({...originalData});
+    // Clear all errors
+    setErrors({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      afm: '',
+      address: '',
+      city: '',
+      postalCode: '',
+    });
   };
 
   const handleCancelCancel = () => {
@@ -54,7 +148,12 @@ const Profile = () => {
   const handleConfirmDelete = () => {
     console.log('Account deleted');
     setShowDeleteModal(false);
-    navigate(ROUTES.owner.dashboard);
+    setShowSuccessModal(true);
+    
+    // Redirect to home after 5 seconds
+    setTimeout(() => {
+      navigate(ROUTES.home);
+    }, 5000);
   };
 
   const handleCancelDelete = () => {
@@ -63,42 +162,80 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate all fields
+    const newErrors = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!validateEmail(formData.email)) {
+      newErrors.email = 'Μη έγκυρη διεύθυνση email';
+    }
+
+    if (!validatePhone(formData.phone)) {
+      newErrors.phone = 'Το τηλέφωνο πρέπει να έχει τουλάχιστον 10 ψηφία';
+    }
+
+    if (!validateAFM(formData.afm)) {
+      newErrors.afm = 'Το ΑΦΜ πρέπει να έχει ακριβώς 9 ψηφία';
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = 'Το πεδίο είναι υποχρεωτικό';
+    }
+
+    if (!validatePostalCode(formData.postalCode)) {
+      newErrors.postalCode = 'Ο ταχυδρομικός κώδικας πρέπει να έχει ακριβώς 5 ψηφία';
+    }
+
+    // If there are errors, set them and stop submission
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // If validation passes, save the changes
     console.log('Form submitted:', formData);
+    // Save the changes to originalData
+    setOriginalData({...formData});
     setIsEditing(false);
     setShowSaveSuccessModal(true);
   };
 
-  const handleBackToDashboard = () => {
-    navigate(ROUTES.owner.dashboard);
+  const handleBackToProfile = () => {
+    setShowSaveSuccessModal(false);
   };
 
+  const breadcrumbItems = [
+  ];
+
+  // If showing save success, render only the success page
   if (showSaveSuccessModal) {
     return (
-      <PageLayout variant="owner">
-        <div className="owner-profile-success">
-          <div className="owner-profile-success__content">
-            <div className="owner-profile-success__icon">
-              <UserRound size={64} />
-            </div>
-            <h1 className="owner-profile-success__title">Το προφίλ ανανεώθηκε!</h1>
-            <p className="owner-profile-success__description">
-              Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας.
-            </p>
-            <button 
-              className="owner-profile-success__btn"
-              onClick={handleBackToDashboard}
-            >
-              Επιστροφή στο Μενού
-            </button>
-          </div>
-        </div>
-      </PageLayout>
+      <SuccessPage
+        icon={UserRound}
+        title="Το προφίλ ανανεώθηκε!"
+        description="Το προφίλ σας επεξεργάστηκε με επιτυχία. Οι αλλαγές που κάνατε καταχωρήθηκαν επιτυχώς και φαίνονται στο προφίλ σας."
+        buttonText="Επιστροφή στο Προφίλ μου"
+        onButtonClick={handleBackToProfile}
+        iconColor="#23CDD9"
+        iconBgColor="#E8F8FA"
+        breadcrumbs={breadcrumbItems}
+        pageTitle="Προφίλ"
+        variant="owner"
+      />
     );
   }
-
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.owner.dashboard }
-  ];
 
   return (
     <PageLayout variant="owner" title="Προφίλ" breadcrumbs={breadcrumbItems}>
@@ -157,12 +294,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="firstName"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.firstName ? 'owner-profile__input--error' : ''}`}
                 value={formData.firstName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+              )}
+              {errors.firstName && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.firstName}</span>
+                </div>
+              )}
             </div>
 
             {/* Last Name */}
@@ -173,12 +319,21 @@ const Profile = () => {
               <input
                 type="text"
                 name="lastName"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.lastName ? 'owner-profile__input--error' : ''}`}
                 value={formData.lastName}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+              )}
+              {errors.lastName && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.lastName}</span>
+                </div>
+              )}
             </div>
 
             {/* Email */}
@@ -189,12 +344,21 @@ const Profile = () => {
               <input
                 type="email"
                 name="email"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.email ? 'owner-profile__input--error' : ''}`}
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται λατινικά γράμματα, αριθμοί και σύμβολα.</span>
+              )}
+              {errors.email && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.email}</span>
+                </div>
+              )}
             </div>
 
             {/* Phone */}
@@ -205,12 +369,21 @@ const Profile = () => {
               <input
                 type="tel"
                 name="phone"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.phone ? 'owner-profile__input--error' : ''}`}
                 value={formData.phone}
                 onChange={handleInputChange}
                 disabled={!isEditing}
                 required
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται αριθμοί, κενά και το σύμβολο +</span>
+              )}
+              {errors.phone && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.phone}</span>
+                </div>
+              )}
             </div>
 
             {/* Tax ID (AFM) */}
@@ -221,108 +394,140 @@ const Profile = () => {
               <input
                 type="text"
                 name="afm"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.afm ? 'owner-profile__input--error' : ''}`}
                 value={formData.afm}
                 onChange={handleInputChange}
                 disabled={!isEditing}
+                maxLength={9}
                 required
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται μόνο αριθμοί, ακριβώς 9 ψηφία.</span>
+              )}
+              {errors.afm && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.afm}</span>
+                </div>
+              )}
             </div>
 
             {/* Address */}
             <div className="owner-profile__field">
               <label className="owner-profile__label">
-                Διεύθυνση
+                Διεύθυνση<span className="owner-profile__required"> *</span>
               </label>
               <input
                 type="text"
                 name="address"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.address ? 'owner-profile__input--error' : ''}`}
                 value={formData.address}
                 onChange={handleInputChange}
                 disabled={!isEditing}
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Οδός, Αριθμός</span>
+              )}
+              {errors.address && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.address}</span>
+                </div>
+              )}
             </div>
 
             {/* City */}
             <div className="owner-profile__field">
               <label className="owner-profile__label">
-                Πόλη
+                Πόλη<span className="owner-profile__required"> *</span>
               </label>
               <input
                 type="text"
                 name="city"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.city ? 'owner-profile__input--error' : ''}`}
                 value={formData.city}
                 onChange={handleInputChange}
                 disabled={!isEditing}
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+              )}
+              {errors.city && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.city}</span>
+                </div>
+              )}
             </div>
 
             {/* Postal Code */}
             <div className="owner-profile__field">
               <label className="owner-profile__label">
-                Τ.Κ.
+                Τ.Κ.<span className="owner-profile__required"> *</span>
               </label>
               <input
                 type="text"
                 name="postalCode"
-                className="owner-profile__input"
+                className={`owner-profile__input ${errors.postalCode ? 'owner-profile__input--error' : ''}`}
                 value={formData.postalCode}
                 onChange={handleInputChange}
                 disabled={!isEditing}
+                maxLength={5}
               />
+              {isEditing && (
+                <span className="owner-profile__field-note">Επιτρέπονται μόνο αριθμοί.</span>
+              )}
+              {errors.postalCode && (
+                <div className="owner-profile__error-message">
+                  <AlertCircle size={16} />
+                  <span>{errors.postalCode}</span>
+                </div>
+              )}
             </div>
           </div>
         </form>
 
         {/* Delete Confirmation Modal */}
-        {showDeleteModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;</h2>
-              <p className="modal-description">
-                Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν.
-              </p>
-              <div className="modal-actions">
-                <button 
-                  className="modal-btn modal-btn--cancel"
-                  onClick={handleCancelDelete}
-                >
-                  Ακύρωση
-                </button>
-                <button 
-                  className="modal-btn modal-btn--delete"
-                  onClick={handleConfirmDelete}
-                >
-                  Διαγραφή
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmModal
+          isOpen={showDeleteModal}
+          title="Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό σας;"
+          description="Αυτή η ενέργεια δεν αναιρείται. Όλα σας τα δεδομένα θα χαθούν."
+          cancelText="Ακύρωση"
+          confirmText="Διαγραφή"
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          isDanger={true}
+        />
 
         {/* Cancel Edit Confirmation Modal */}
-        {showCancelModal && (
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;"
+          description="Αυτή η ενέργεια δεν αναιρείται."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelCancel}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Success Modal */}
+        {showSuccessModal && (
           <div className="modal-overlay">
-            <div className="modal-content">
-              <h2 className="modal-title">Είστε σίγουροι ότι θέλετε να ακυρώσετε τις αλλαγές στο προφίλ σας;</h2>
+            <div className="modal-content modal-content--success">
+              <div className="success-icon">
+                <UserRoundCheck size={48} />
+              </div>
+              <h2 className="modal-title">Επιτυχής Διαγραφή!</h2>
               <p className="modal-description">
-                Αυτή η ενέργεια δεν αναιρείται.
+                Ο λογαριασμός σας διαγράφηκε με επιτυχία.
+                <br />
+                Επιστροφή στην αρχική.
+                <br />
+                Παρακαλώ περιμένετε...
               </p>
-              <div className="modal-actions">
-                <button 
-                  className="modal-btn modal-btn--cancel"
-                  onClick={handleCancelCancel}
-                >
-                  Όχι, επιστροφή
-                </button>
-                <button 
-                  className="modal-btn modal-btn--delete"
-                  onClick={handleConfirmCancel}
-                >
-                  Ναι, ακύρωση
-                </button>
+              <div className="loading-spinner">
+                <Loader2 size={32} className="spinner" />
               </div>
             </div>
           </div>

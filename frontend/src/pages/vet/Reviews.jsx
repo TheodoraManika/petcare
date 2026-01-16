@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, ArrowLeft } from 'lucide-react';
-import PageLayout from '../../components/global/layout/PageLayout';
-import Pagination from '../../components/common/Pagination';
+import PageLayout from '../../components/common/layout/PageLayout';
+import Pagination from '../../components/common/layout/Pagination';
 import { ROUTES } from '../../utils/constants';
 import './Reviews.css';
 
@@ -90,9 +90,7 @@ const Reviews = () => {
     ));
   };
 
-  const breadcrumbItems = [
-    { label: 'Μενού', path: ROUTES.vet.dashboard }
-  ];
+  const breadcrumbItems = [];
 
   return (
     <PageLayout title="Αξιολογήσεις" breadcrumbs={breadcrumbItems}>

@@ -1,0 +1,332 @@
+/* Citizen Information Page Styles */
+.citizen-information-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.citizen-information-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.citizen-information-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 16px;
+}
+
+.citizen-information-header p {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* Cards Grid */
+.citizen-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+.citizen-info-card:nth-child(3) {
+  grid-column: 1 / 3;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.citizen-info-card {
+  border: 2px solid #F9D779;
+  border-radius: 12px;
+  padding: 32px 24px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.citizen-info-card:hover {
+  box-shadow: 0 8px 24px rgba(249, 215, 121, 0.15);
+  transform: translateY(-2px);
+}
+
+.citizen-info-card-icon {
+  width: 56px;
+  height: 56px;
+  background: #FEF3C7;
+  border: 2px solid #F9D779;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F9D779;
+  margin-bottom: 20px;
+}
+
+.citizen-info-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 12px;
+}
+
+.citizen-info-card-description {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.citizen-card-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.citizen-card-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.citizen-card-feature .checkmark-icon {
+  color: #F9D779;
+  flex-shrink: 0;
+}
+
+/* Contents Box */
+.citizen-contents-box {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 40px;
+  background: white;
+}
+
+.citizen-contents-box h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.citizen-contents-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.citizen-contents-links li {
+  margin: 0;
+}
+
+.citizen-contents-links a {
+  color: #E1B028;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.citizen-contents-links a:hover {
+  color: #d1a11d;
+  text-decoration: underline;
+}
+
+/* FAQ Container */
+.citizen-faq-container {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 40px;
+  background: white;
+}
+
+.citizen-faq-section {
+  margin-bottom: 40px;
+}
+
+.citizen-faq-section:last-child {
+  margin-bottom: 0;
+}
+
+.citizen-faq-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.citizen-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.citizen-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.citizen-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  background: #F9D779;
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.citizen-step-content h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0 0 6px 0;
+}
+
+.citizen-step-content p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Related Information Section */
+.citizen-related-info {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 40px;
+  background: #FEF3C7;
+}
+
+.citizen-related-info h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #101828;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.citizen-related-info p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.citizen-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.citizen-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+}
+
+.citizen-checklist-icon {
+  color: #F9D779;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.citizen-checklist li span {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Button Container */
+.citizen-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.citizen-back-home-button {
+  padding: 12px 32px;
+  background: #F9D779;
+  color: #101828;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.citizen-back-home-button:hover {
+  background: #E8C43E;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 215, 121, 0.4);
+}
+
+.citizen-scroll-to-top-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  border: 2px solid #F9D779;
+  color: #F9D779;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.citizen-scroll-to-top-button:hover {
+  background: #F9D779;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.citizen-info-note {
+  background: rgba(249, 215, 121, 0.25);
+  border-left: 4px solid #F9D779;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #101828;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .citizen-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .citizen-information-header h1 {
+    font-size: 24px;
+  }
+
+  .citizen-button-container {
+    flex-direction: column;
+  }
+}
