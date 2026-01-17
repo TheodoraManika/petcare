@@ -284,7 +284,8 @@ const BookingForm = ({
 
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const pet = userPets.find(p => p.id === Number(selectedPet));
+      // Compare both as strings to handle both numeric and string IDs
+      const pet = userPets.find(p => String(p.id) === String(selectedPet));
 
       const appointmentData = {
         vetId: selectedVet.id,
