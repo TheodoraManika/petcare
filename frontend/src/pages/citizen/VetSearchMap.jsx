@@ -163,6 +163,57 @@ const VetSearchMap = () => {
     }
   }, [location]);
 
+  // Helper function to normalize text for fuzzy matching (remove accents, normalize spacing)
+  const normalizeText = (text) => {
+    if (!text) return '';
+    try {
+      const str = String(text);
+      const normalized = str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+        .toLowerCase()
+        .trim();
+      return normalized;
+    } catch (e) {
+      console.error('Error normalizing text:', e, 'text:', text);
+      return String(text).toLowerCase().trim();
+    }
+  };
+
+  // Smart matching function for vet names
+  const nameMatch = (vetName, filterValue) => {
+    if (!filterValue || !vetName) return false;
+    
+    const vetNorm = normalizeText(String(vetName || ''));
+    const filterNorm = normalizeText(String(filterValue || ''));
+    
+    // Exact match after normalization
+    if (vetNorm === filterNorm) return true;
+    
+    // Partial match (one contains the other)
+    if (vetNorm.includes(filterNorm) || filterNorm.includes(vetNorm)) return true;
+    
+    return false;
+  };
+
+  // Smart matching for area filter
+  const areaMatch = (vetArea, filterArea) => {
+    if (!filterArea || !vetArea) return false;
+    
+    const vetNorm = normalizeText(String(vetArea || ''));
+    const filterNorm = normalizeText(String(filterArea || ''));
+    
+    // Check if vet area contains any part of the filter area
+    const filterParts = filterNorm.split(',').map(p => p.trim());
+    const vetParts = vetNorm.split(',').map(p => p.trim());
+    
+    const hasMatch = filterParts.some(filterPart => 
+      vetParts.some(vetPart => vetPart.includes(filterPart) || filterPart.includes(vetPart))
+    );
+    
+    return hasMatch;
+  };
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({
@@ -198,11 +249,15 @@ const VetSearchMap = () => {
   // Filter vets based on selected filters
   const filteredVets = useMemo(() => {
     return allVets.filter(vet => {
-      // Filter by name (search in both name and lastName)
+      // Filter by name (search in both name and lastName) - using smart matching
       if (filters.searchName) {
-        const searchTerm = filters.searchName.toLowerCase();
-        const fullName = `${vet.name || ''} ${vet.lastName || ''}`.toLowerCase();
-        if (!fullName.includes(searchTerm)) {
+        try {
+          const fullName = `${vet.name || ''} ${vet.lastName || ''}`;
+          if (!nameMatch(fullName, filters.searchName)) {
+            return false;
+          }
+        } catch (e) {
+          console.error('Error in name filter:', e);
           return false;
         }
       }
@@ -212,8 +267,10 @@ const VetSearchMap = () => {
         const specialtyMap = {
           'general': 'Γενική Κτηνιατρική',
           'surgery': 'Χειρουργική',
+          'dermatology': 'Δερματολογία',
+          'cardiology': 'Καρδιολογία',
           'dentistry': 'Οδοντιατρική',
-          'orthopedics': 'Ορθοπεδική'
+          'ophthalmology': 'Οφθαλμολογία'
         };
         const targetSpecialty = specialtyMap[filters.specialty];
         if (targetSpecialty && vet.specialty !== targetSpecialty) {
@@ -221,9 +278,11 @@ const VetSearchMap = () => {
         }
       }
 
-      // Filter by area/location
-      if (filters.area && !vet.area.toLowerCase().includes(filters.area.toLowerCase())) {
-        return false;
+      // Filter by area/location - using smart matching
+      if (filters.area) {
+        if (!areaMatch(vet.area, filters.area)) {
+          return false;
+        }
       }
 
       // Filter by rating
@@ -411,7 +470,7 @@ const VetSearchMap = () => {
         <SearchSidebar
           title="Φίλτρα Αναζήτησης"
           filters={filters}
-          onSearch={() => { }}
+          onSearch={() => setCurrentPage(1)}
           onClear={handleClear}
           resultsCount={filteredVets.length}
         >

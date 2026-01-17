@@ -27,6 +27,9 @@ const Appointments = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Clear success message after 5 seconds
   useEffect(() => {
@@ -36,103 +39,72 @@ const Appointments = () => {
     }
   }, [successMessage]);
 
+  // Fetch appointments from database
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        setLoading(true);
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const response = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
+        if (!response.ok) throw new Error('Failed to fetch appointments');
+        const data = await response.json();
+        setAppointments(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
   const handleBookingSuccess = (message) => {
     setSuccessMessage(message);
     setIsBookingExpanded(false);
+    // Refetch appointments after booking
+    const fetchAppointments = async () => {
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const response = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
+        if (!response.ok) throw new Error('Failed to fetch appointments');
+        const data = await response.json();
+        setAppointments(data);
+      } catch (err) {
+        console.error('Error refetching appointments:', err);
+      }
+    };
+    fetchAppointments();
   };
 
   const handleBookingClose = () => {
     setIsBookingExpanded(false);
   };
 
-  // Mock data - in real app, this would come from API/database
-  const [activeAppointments, setActiveAppointments] = useState([
-    {
-      id: 1,
-      vet: 'Δρ. Μαρία Παπαδοπούλου',
-      pet: 'Μπάμπης',
-      date: '15/11/2025',
-      time: '10:00 - 11:00',
-      service: 'Εμβολιασμός',
-      status: 'confirmed',
-      vetInfo: {
-        id: 1,
-        name: 'Μαρία',
-        lastName: 'Παπαδοπούλου',
-        specialization: 'Γενικός Κτηνίατρος',
-        avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Αθήνα',
-        rating: 4.8
-      }
-    },
-    {
-      id: 2,
-      vet: 'Δρ. Γιώργος Ιωάννου',
-      pet: 'Μίνι',
-      date: '20/11/2025',
-      time: '14:00 - 15:00',
-      service: 'Γενική εξέταση',
-      status: 'pending',
-      vetInfo: {
-        id: 2,
-        name: 'Γιώργος',
-        lastName: 'Ιωάννου',
-        specialization: 'Παθολόγος',
-        avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Θεσσαλονίκη',
-        rating: 4.9
-      }
-    },
-  ]);
+  // Separate appointments into active and history based on date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const activeAppointmentsData = appointments.filter(apt => {
+    const aptDate = new Date(apt.date);
+    aptDate.setHours(0, 0, 0, 0);
+    return aptDate >= today;
+  });
 
-  const [historyAppointments, setHistoryAppointments] = useState([
-    {
-      id: 3,
-      vet: 'Δρ. Ελένη Γεωργίου',
-      pet: 'Μπάμπης',
-      date: '05/11/2025',
-      time: '11:00 - 12:00',
-      service: 'Εμβολιασμός',
-      status: 'completed',
-      canReview: true,
-      vetInfo: {
-        id: 3,
-        name: 'Ελένη',
-        lastName: 'Γεωργίου',
-        specialization: 'Χειρούργος',
-        avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Πάτρα',
-        rating: 4.7
-      }
-    },
-    {
-      id: 4,
-      vet: 'Δρ. Μαρία Παπαδοπούλου',
-      pet: 'Μίνι',
-      date: '01/11/2025',
-      time: '16:00 - 17:00',
-      service: 'Στείρωση',
-      status: 'cancelled',
-      canReview: false,
-      cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.',
-      vetInfo: {
-        id: 1,
-        name: 'Μαρία',
-        lastName: 'Παπαδοπούλου',
-        specialization: 'Γενικός Κτηνίατρος',
-        avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150&h=150',
-        clinicCity: 'Αθήνα',
-        rating: 4.8
-      }
-    },
-  ]);
+  const historyAppointmentsData = appointments.filter(apt => {
+    const aptDate = new Date(apt.date);
+    aptDate.setHours(0, 0, 0, 0);
+    return aptDate < today;
+  });
 
-  const appointments = activeTab === 'active' ? activeAppointments : historyAppointments;
+  const displayAppointments = activeTab === 'active' ? activeAppointmentsData : historyAppointmentsData;
 
   // Pagination logic
-  const totalPages = Math.ceil(appointments.length / itemsPerPage);
+  const totalPages = Math.ceil(displayAppointments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedAppointments = appointments.slice(startIndex, startIndex + itemsPerPage);
+  const displayedAppointments = displayAppointments.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -166,24 +138,55 @@ const Appointments = () => {
     setShowCancelModal(true);
   };
 
-  const handleConfirmCancel = () => {
-    // Find the appointment to cancel
-    const appointmentToMove = activeAppointments.find(app => app.id === appointmentToCancel);
-    
-    if (appointmentToMove) {
-      // Update the appointment status and add cancellation message
-      const cancelledAppointment = {
-        ...appointmentToMove,
-        status: 'cancelled',
-        canReview: false,
-        cancellationMessage: 'Το ραντεβού ακυρώθηκε και δεν μπορεί να τροποποιηθεί.'
-      };
+  const handleConfirmCancel = async () => {
+    try {
+      // Get appointment data to get vet info
+      const appointment = appointments.find(apt => apt.id === appointmentToCancel);
       
-      // Remove from active appointments
-      setActiveAppointments(prev => prev.filter(app => app.id !== appointmentToCancel));
-      
-      // Add to history appointments
-      setHistoryAppointments(prev => [cancelledAppointment, ...prev]);
+      // Update appointment status in database
+      const response = await fetch(`http://localhost:5000/appointments/${appointmentToCancel}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'cancelled' })
+      });
+
+      if (response.ok) {
+        // Create notification for vet
+        if (appointment) {
+          const vetNotificationData = {
+            userId: appointment.vetId,
+            userType: 'vet',
+            type: 'appointment_cancelled_by_owner',
+            title: 'Ακύρωση ραντεβού',
+            data: {
+              ownerName: appointment.ownerName || 'Ο ιδιοκτήτης',
+              appointmentDate: appointment.date,
+              appointmentTime: appointment.time,
+              petName: appointment.petName,
+              appointmentId: appointmentToCancel
+            },
+            date: new Date().toISOString(),
+            read: false,
+            createdAt: new Date().toISOString()
+          };
+
+          await fetch('http://localhost:5000/notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(vetNotificationData)
+          }).catch(err => console.error('Error creating vet notification:', err));
+        }
+
+        // Refetch appointments
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const appointmentsResponse = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
+        const data = await appointmentsResponse.json();
+        setAppointments(data);
+        setNotification('cancel_success');
+        setTimeout(() => setNotification(null), 5000);
+      }
+    } catch (err) {
+      console.error('Error cancelling appointment:', err);
     }
     
     setShowCancelModal(false);
@@ -217,6 +220,26 @@ const Appointments = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  if (loading) {
+    return (
+      <PageLayout variant="owner" title="Ραντεβού" breadcrumbs={breadcrumbItems}>
+        <div className="owner-appointments">
+          <p>Φόρτωση ραντεβού...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageLayout variant="owner" title="Ραντεβού" breadcrumbs={breadcrumbItems}>
+        <div className="owner-appointments">
+          <p>Σφάλμα κατά τη φόρτωση: {error}</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout variant="owner" title="Ραντεβού" breadcrumbs={breadcrumbItems}>
@@ -267,13 +290,13 @@ const Appointments = () => {
             className={`owner-appointments__tab ${activeTab === 'active' ? 'owner-appointments__tab--active' : ''}`}
             onClick={() => { setActiveTab('active'); setCurrentPage(1); }}
           >
-            Ενεργά ({activeAppointments.length})
+            Ενεργά ({activeAppointmentsData.length})
           </button>
           <button
             className={`owner-appointments__tab ${activeTab === 'history' ? 'owner-appointments__tab--active' : ''}`}
             onClick={() => { setActiveTab('history'); setCurrentPage(1); }}
           >
-            Ιστορικό ({historyAppointments.length})
+            Ιστορικό ({historyAppointmentsData.length})
           </button>
         </div>
 

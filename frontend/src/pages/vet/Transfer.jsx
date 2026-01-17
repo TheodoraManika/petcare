@@ -229,10 +229,83 @@ const Transfer = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current vet from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // Find the pet by microchip
+      const petsResponse = await fetch(`http://localhost:5000/pets?microchipId=${formData.microchipNumber}`);
+      if (!petsResponse.ok) throw new Error('Failed to fetch pets');
+      const pets = await petsResponse.json();
+      const pet = pets[0];
+
+      if (!pet) {
+        setNotification({
+          type: 'error',
+          title: 'Κατοικίδιο Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε κατοικίδιο με μικροτσίπ ${formData.microchipNumber}`
+        });
+        return;
+      }
+
+      // Prepare transfer data
+      const transferData = {
+        id: Date.now().toString(),
+        petId: pet.id,
+        petName: pet.name,
+        microchip: pet.microchipId,
+        vetId: currentUser.id,
+        vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
+        currentOwnerId: pet.ownerId,
+        currentOwnerName: formData.currentOwnerName,
+        currentOwnerAfm: formData.currentOwnerAfm,
+        newOwnerName: formData.newOwnerName,
+        newOwnerAfm: formData.newOwnerAfm,
+        newOwnerPhone: formData.newOwnerPhone,
+        newOwnerEmail: formData.newOwnerEmail,
+        newOwnerAddress: formData.newOwnerAddress,
+        newOwnerCity: formData.newOwnerCity,
+        newOwnerPostalCode: formData.newOwnerPostalCode,
+        transferDate: formData.transferDate,
+        transferReason: formData.transferReason,
+        notes: formData.notes,
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/transfers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transferData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Transfer recorded successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error('Error recording transfer:', err);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα',
+        message: 'Παρουσιάστηκε σφάλμα κατά την καταγραφή της μεταβίβασης.'
+      });
+    }
   };
 
   const handleCancelSubmit = () => {

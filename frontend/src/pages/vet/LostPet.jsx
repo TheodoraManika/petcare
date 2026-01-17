@@ -235,10 +235,53 @@ const LostPet = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      // Create lost pet declaration
+      const lostPetData = {
+        reportedByVetId: currentUser.id,
+        microchipNumber: formData.microchipNumber,
+        petName: formData.petName,
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        contactPhone: formData.contactPhone,
+        contactEmail: formData.ownerEmail,
+        ownerName: `${formData.ownerName} ${formData.ownerSurname}`.trim(),
+        color: formData.petColor,
+        description: formData.description,
+        status: 'active',
+        imageUrl: formData.photo || null
+      };
+
+      const response = await fetch('http://localhost:5000/lostPets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(lostPetData)
+      });
+
+      if (response.ok) {
+        setShowConfirmModal(false);
+        setShowSuccess(true);
+      } else {
+        setNotification({
+          type: 'error',
+          message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
+        });
+      }
+    } catch (err) {
+      console.error('Error submitting lost pet declaration:', err);
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
+      });
+    }
   };
 
   const handleCancelSubmit = () => {

@@ -128,10 +128,109 @@ const Operation = () => {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current user (vet) from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // First, find the pet by microchip
+      const petsResponse = await fetch('http://localhost:5000/pets');
+      if (!petsResponse.ok) {
+        throw new Error('Failed to fetch pets');
+      }
+      const pets = await petsResponse.json();
+      const pet = pets.find(p => p.microchip === formData.petSearch || p.microchipNumber === formData.petSearch);
+
+      if (!pet) {
+        setNotification({
+          type: 'error',
+          title: 'Κατοικίδιο Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε κατοικίδιο με microchip ${formData.petSearch}.`
+        });
+        setShowConfirmModal(false);
+        return;
+      }
+
+      // Prepare medical operation data
+      const operationData = {
+        petId: pet.id,
+        petName: pet.petName || pet.name,
+        microchip: formData.petSearch,
+        vetId: currentUser.id,
+        vetName: `${currentUser.name} ${currentUser.lastName || ''}`,
+        operationType: formData.operationType,
+        operationDate: formData.operationDate,
+        description: formData.description,
+        createdAt: new Date().toISOString(),
+        status: 'completed'
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/medicalOperations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(operationData),
+      });
+
+      if (!response.ok) {
+        // If medicalOperations endpoint doesn't exist, try adding to pet's history
+        if (response.status === 404) {
+          // Try alternative: update pet with operation history
+          const updateResponse = await fetch(`http://localhost:5000/pets/${pet.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              lastOperation: operationData.operationDate,
+              lastOperationType: operationData.operationType,
+            }),
+          });
+          
+          if (!updateResponse.ok) {
+            throw new Error('Failed to save medical operation');
+          }
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      }
+
+      console.log('Medical operation recorded successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+
+      // Reset form after successful submission
+      setTimeout(() => {
+        setShowSuccess(false);
+        setFormData({
+          petSearch: '',
+          operationType: '',
+          operationDate: '',
+          description: ''
+        });
+        setFoundPetDetails(null);
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error recording medical operation:', error);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα Καταγραφής',
+        message: 'Δεν ήταν δυνατή η καταγραφή της ιατρικής πράξης. Παρακαλώ προσπαθήστε ξανά.'
+      });
+      setShowConfirmModal(false);
+    }
   };
 
   const handleCancelSubmit = () => {

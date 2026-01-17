@@ -13,107 +13,16 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
   }, [isOpen]);
 
   const fetchNotifications = async () => {
-    // TODO: Replace with real API call
-    // const response = await fetch(`http://localhost:5000/notifications?userId=${userId}&userType=${userType}`);
-    // const data = await response.json();
-    // setNotifications(data);
-    
-    // Mock notifications with proper template structure
-    // Each notification should come from backend with this structure:
-    const mockNotifications = userType === 'owner' ? [
-      {
-        id: 1,
-        type: 'appointment_approved',
-        title: 'Το ραντεβού σας εγκρίθηκε',
-        // Backend should send: vetName, appointmentDate, appointmentTime, petName
-        data: {
-          vetName: 'Δρ. Πετρίδης',
-          appointmentDate: '15/01/2026',
-          appointmentTime: '10:00',
-          petName: 'Μάξ'
-        },
-        date: '2026-01-10T14:30:00',
-        read: false,
-        icon: 'check'
-      },
-      {
-        id: 2,
-        type: 'appointment_cancelled',
-        title: 'Το ραντεβού σας ακυρώθηκε',
-        // Backend should send: vetName, appointmentDate, appointmentTime, petName
-        data: {
-          vetName: 'Δρ. Κωνσταντίνου',
-          appointmentDate: '12/01/2026',
-          appointmentTime: '14:00',
-          petName: 'Λούκυ'
-        },
-        date: '2026-01-09T16:20:00',
-        read: false,
-        icon: 'cancel'
-      },
-      {
-        id: 3,
-        type: 'found_pet',
-        title: 'Δήλωση εύρεσης κατοικιδίου',
-        // Backend should send: petName, finderName (optional), location (optional)
-        data: {
-          petName: 'Μάξ',
-          finderName: 'Μαρία Παπαδοπούλου',
-          location: 'Κέντρο Αθήνας'
-        },
-        date: '2026-01-08T11:15:00',
-        read: true,
-        icon: 'pet'
-      },
-    ] : [
-      {
-        id: 1,
-        type: 'new_appointment',
-        title: 'Νέο αίτημα ραντεβού',
-        // Backend should send: ownerName, appointmentDate, appointmentTime, petName
-        data: {
-          ownerName: 'Μαρία Παπαδοπούλου',
-          appointmentDate: '15/01/2026',
-          appointmentTime: '10:00',
-          petName: 'Μάξ'
-        },
-        date: '2026-01-10T09:30:00',
-        read: false,
-        icon: 'calendar'
-      },
-      {
-        id: 2,
-        type: 'appointment_cancelled_by_owner',
-        title: 'Ακύρωση ραντεβού',
-        // Backend should send: ownerName, appointmentDate, appointmentTime, petName
-        data: {
-          ownerName: 'Νίκος Γεωργίου',
-          appointmentDate: '14/01/2026',
-          appointmentTime: '14:00',
-          petName: 'Ρεξ'
-        },
-        date: '2026-01-09T18:45:00',
-        read: false,
-        icon: 'cancel'
-      },
-      {
-        id: 3,
-        type: 'new_appointment',
-        title: 'Νέο αίτημα ραντεβού',
-        // Backend should send: ownerName, appointmentDate, appointmentTime, petName
-        data: {
-          ownerName: 'Ελένη Νικολάου',
-          appointmentDate: '16/01/2026',
-          appointmentTime: '15:30',
-          petName: 'Μπέλα'
-        },
-        date: '2026-01-08T12:20:00',
-        read: true,
-        icon: 'calendar'
-      },
-    ];
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) return;
 
-    setNotifications(mockNotifications);
+      const response = await fetch(`http://localhost:5000/notifications?userId=${currentUser.id}&userType=${currentUser.userType}`);
+      const data = await response.json();
+      setNotifications(data || []);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
   };
 
   // Generate message from template based on notification type and data
@@ -182,24 +91,64 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
   };
 
   const markAsRead = async (id) => {
-    setNotifications(prev =>
-      prev.map(notif =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
-    );
-    // In real app, make API call to mark as read
+    try {
+      // Update in database
+      const response = await fetch(`http://localhost:5000/notifications/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ read: true })
+      });
+
+      if (response.ok) {
+        // Update local state
+        setNotifications(prev =>
+          prev.map(notif =>
+            notif.id === id ? { ...notif, read: true } : notif
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   };
 
   const markAllAsRead = async () => {
-    setNotifications(prev =>
-      prev.map(notif => ({ ...notif, read: true }))
-    );
-    // In real app, make API call to mark all as read
+    try {
+      // Update all unread notifications
+      const unreadNotifications = notifications.filter(n => !n.read);
+      
+      for (const notif of unreadNotifications) {
+        await fetch(`http://localhost:5000/notifications/${notif.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ read: true })
+        });
+      }
+
+      // Update local state
+      setNotifications(prev =>
+        prev.map(notif => ({ ...notif, read: true }))
+      );
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
   };
 
   const deleteNotification = async (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
-    // In real app, make API call to delete notification
+    try {
+      // Delete from database
+      const response = await fetch(`http://localhost:5000/notifications/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        // Update local state
+        setNotifications(prev => prev.filter(notif => notif.id !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
   };
 
   const filteredNotifications = notifications.filter(notif => {

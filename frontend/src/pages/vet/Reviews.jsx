@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, ArrowLeft } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -9,60 +9,45 @@ import './Reviews.css';
 const Reviews = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const reviewsPerPage = 4;
 
-  // Mock data - Replace with actual data from backend
-  const reviews = [
-    {
-      id: 1,
-      name: 'Μαρία Κ.',
-      date: '05/11/2025',
-      rating: 5,
-      comment: 'Εξαιρετική επαγγελματίας! Έδωσε μεγάλη προσοχή στο κατοικίδιό μου.'
-    },
-    {
-      id: 2,
-      name: 'Γεώργιος Π.',
-      date: '01/11/2025',
-      rating: 4,
-      comment: 'Πολύ καλή κτηνίατρος, με μεγάλη εμπειρία. Συνιστώ ανεπιφύλακτα!'
-    },
-    {
-      id: 3,
-      name: 'Ελένη Λ.',
-      date: '28/10/2025',
-      rating: 5,
-      comment: 'Άριστη εξυπηρέτηση και πολύ προσεγμένη δουλειά. Ευχαριστώ!'
-    },
-    {
-      id: 4,
-      name: 'Νίκος Α.',
-      date: '20/10/2025',
-      rating: 5,
-      comment: 'Πολύ καλή συνεργασία, η γάτα μου έγινε καλά χάρη στη βοήθεια σας!'
-    },
-    {
-      id: 5,
-      name: 'Αλέξανδρος Β.',
-      date: '15/10/2025',
-      rating: 5,
-      comment: 'Απλά απίθανη!'
-    },
-  ];
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
-  // Calculate average rating
+  const fetchReviews = async () => {
+    setLoading(true);
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || currentUser.id === undefined) {
+        setLoading(false);
+        return;
+      }
+
+      const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${currentUser.id}`);
+      if (reviewsResponse.ok) {
+        const data = await reviewsResponse.json();
+        setReviews(data);
+      }
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate average rating with 2 decimal precision
   const averageRating = reviews.length > 0
-    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(2)
     : 0;
 
   // Sort reviews by date (most recent first)
   const sortedReviews = [...reviews].sort((a, b) => {
-    // Parse dates (format: DD/MM/YYYY)
-    const [dayA, monthA, yearA] = a.date.split('/').map(Number);
-    const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-    
-    const dateA = new Date(yearA, monthA - 1, dayA);
-    const dateB = new Date(yearB, monthB - 1, dayB);
+    // Parse dates (format: YYYY-MM-DD)
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
     
     // Sort descending (most recent first)
     return dateB - dateA;
@@ -90,7 +75,27 @@ const Reviews = () => {
     ));
   };
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    // Handle YYYY-MM-DD format
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+    return dateStr;
+  };
+
   const breadcrumbItems = [];
+
+  if (loading) {
+    return (
+      <PageLayout title="Αξιολογήσεις" breadcrumbs={breadcrumbItems}>
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <p>Φόρτωση αξιολογήσεων...</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="Αξιολογήσεις" breadcrumbs={breadcrumbItems}>
@@ -112,12 +117,12 @@ const Reviews = () => {
           {currentReviews.map((review) => (
             <div key={review.id} className="review-card">
               <div className="review-card__header">
-                <span className="review-card__name">{review.name}</span>
+                <span className="review-card__name">{review.ownerName}</span>
                 <div className="review-card__stars">
                   {renderStars(review.rating)}
                 </div>
               </div>
-              <div className="review-card__date">{review.date}</div>
+              <div className="review-card__date">{formatDate(review.date)}</div>
               <p className="review-card__comment">{review.comment}</p>
             </div>
           ))}

@@ -51,7 +51,7 @@ const HealthBook = () => {
           microchipId: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
-          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
+          icon: pet.species === 'Σκύλος' ? 'dog' : pet.species === 'Γάτα' ? 'cat' : 'pet',
           // MOCK: Set pet with ID 1 as 'lost' for demonstration
           status: pet.id === 1 ? 'lost' : 'safe'
         }));

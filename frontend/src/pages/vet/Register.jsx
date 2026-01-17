@@ -217,11 +217,104 @@ const Register = () => {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmSubmit = () => {
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current user (vet) from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // First, find the owner by ΑΦΜ
+      const usersResponse = await fetch('http://localhost:5000/users');
+      if (!usersResponse.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const users = await usersResponse.json();
+      const owner = users.find(user => user.afm === formData.afm);
+
+      if (!owner) {
+        setNotification({
+          type: 'error',
+          title: 'Ιδιοκτήτης Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε ιδιοκτήτης με ΑΦΜ ${formData.afm}. Παρακαλώ ελέγξτε το ΑΦΜ.`
+        });
+        setShowConfirmModal(false);
+        return;
+      }
+
+      // Prepare pet data for submission
+      const petData = {
+        name: formData.ownerName,
+        species: formData.species,
+        breed: formData.breed,
+        microchipId: formData.microchipNumber,
+        gender: formData.gender,
+        birthDate: formData.birthDate,
+        color: formData.color,
+        weight: formData.weight || null,
+        ownerId: owner.id,
+        ownerAFM: formData.afm,
+        registeredByVetId: currentUser.id,
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/pets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(petData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Pet registered successfully:', result);
+      
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setShowSuccess(false);
+        setFormData({
+          microchipNumber: '',
+          species: '',
+          breed: '',
+          ownerName: '',
+          gender: '',
+          birthDate: '',
+          color: '',
+          weight: '',
+          ownerLastName: '',
+          ownerPhone: '',
+          ownerEmail: '',
+          ownerAddress: '',
+          ownerAddressLat: '',
+          ownerAddressLon: '',
+          afm: '',
+        });
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error registering pet:', error);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα Εγγραφής',
+        message: 'Δεν ήταν δυνατή η εγγραφή του κατοικιδίου. Παρακαλώ προσπαθήστε ξανά.'
+      });
+      setShowConfirmModal(false);
+    }
   };
 
   const handleCancelSubmit = () => {

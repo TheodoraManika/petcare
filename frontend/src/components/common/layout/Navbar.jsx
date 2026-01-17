@@ -82,13 +82,14 @@ const Navbar = ({ variant = 'vet' }) => {
 
   const fetchUnreadCount = async () => {
     try {
-      // TODO: Replace with real API call
-      // const response = await fetch(`http://localhost:5000/notifications/unread-count?userId=${userId}`);
-      // const data = await response.json();
-      // setUnreadNotificationsCount(data.count);
-      
-      // Mock data for now
-      setUnreadNotificationsCount(2);
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) return;
+
+      const response = await fetch(
+        `http://localhost:5000/notifications?userId=${currentUser.id}&userType=${currentUser.userType}&read=false`
+      );
+      const data = await response.json();
+      setUnreadNotificationsCount(data.length || 0);
     } catch (error) {
       console.error('Error fetching unread notifications:', error);
     }

@@ -26,6 +26,7 @@ const Availability = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [slotToDelete, setSlotToDelete] = useState({ day: '', index: -1 });
   const [notification, setNotification] = useState(null);
@@ -63,6 +64,66 @@ const Availability = () => {
     dermatology: '#FCA47C',
     other: '#FCA47C'
   };
+
+  // Get current user from localStorage
+  const getCurrentUser = () => {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error('Error getting current user:', error);
+      return null;
+    }
+  };
+
+  // Load availability from database on component mount
+  useEffect(() => {
+    const loadAvailability = async () => {
+      try {
+        const user = getCurrentUser();
+        if (!user) {
+          setErrorMessage('Παρακαλώ συνδεθείτε πρώτα');
+          return;
+        }
+
+        const response = await fetch(`http://localhost:5000/availability?vetId=${user.id}`);
+        if (!response.ok) {
+          console.warn('Failed to load availability');
+          return;
+        }
+
+        const data = await response.json();
+        
+        // Transform flat array to nested structure by day
+        const groupedByDay = {
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+          saturday: [],
+          sunday: []
+        };
+
+        data.forEach(slot => {
+          if (groupedByDay[slot.day]) {
+            groupedByDay[slot.day].push({
+              start: slot.startTime,
+              end: slot.endTime,
+              status: slot.serviceType || 'other',
+              id: slot.id // Store the ID for deletion
+            });
+          }
+        });
+
+        setAvailabilityData(groupedByDay);
+      } catch (error) {
+        console.error('Error loading availability:', error);
+      }
+    };
+
+    loadAvailability();
+  }, []);
 
   const handleAddSlot = async () => {
     const user = getCurrentUser();
@@ -149,23 +210,49 @@ const Availability = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    setAvailabilityData(prev => ({
-      ...prev,
-      [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
-    }));
-    
-    // Close modal and reset
-    setShowDeleteModal(false);
-    setSlotToDelete({ day: '', index: -1 });
-    
-    // Show notification
-    setNotification('deleted');
-    
-    // Auto-hide notification after 5 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+  const handleConfirmDelete = async () => {
+    try {
+      const user = getCurrentUser();
+      if (!user) {
+        setErrorMessage('Παρακαλώ συνδεθείτε πρώτα');
+        return;
+      }
+
+      const slot = availabilityData[slotToDelete.day][slotToDelete.index];
+      
+      // If slot has an ID, delete from database
+      if (slot.id) {
+        const response = await fetch(`http://localhost:5000/availability/${slot.id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete availability from database');
+        }
+      }
+
+      // Update local state
+      setAvailabilityData(prev => ({
+        ...prev,
+        [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
+      }));
+      
+      // Close modal and reset
+      setShowDeleteModal(false);
+      setSlotToDelete({ day: '', index: -1 });
+      
+      // Show notification
+      setNotification('deleted');
+      
+      // Auto-hide notification after 5 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } catch (error) {
+      console.error('Error deleting availability:', error);
+      setErrorMessage(`Σφάλμα κατά τη διαγραφή: ${error.message}`);
+    }
   };
 
   const handleCancelDelete = () => {

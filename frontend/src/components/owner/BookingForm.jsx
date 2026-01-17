@@ -208,27 +208,33 @@ const BookingForm = ({
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const dayName = dayNames[dayOfWeek];
 
-    const dayAvailability = vetAvailability.find(a => a.day?.toLowerCase() === dayName);
+    // Find all availability slots for this day of the week
+    const dayAvailabilitySlots = vetAvailability.filter(a => a.day?.toLowerCase() === dayName);
 
-    if (!dayAvailability || !dayAvailability.isAvailable) {
+    if (dayAvailabilitySlots.length === 0) {
       return [];
     }
 
     const slots = [];
-    const [startHour] = (dayAvailability.startTime || '09:00').split(':').map(Number);
-    const [endHour] = (dayAvailability.endTime || '17:00').split(':').map(Number);
+    
+    // For each availability slot on this day, generate hourly time slots
+    dayAvailabilitySlots.forEach(availability => {
+      const [startHour] = (availability.startTime || '09:00').split(':').map(Number);
+      const [endHour] = (availability.endTime || '17:00').split(':').map(Number);
 
-    for (let hour = startHour; hour < endHour; hour++) {
-      const startTime = `${String(hour).padStart(2, '0')}:00`;
-      const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
-      slots.push({
-        id: `${date.toISOString().split('T')[0]}-${startTime}`,
-        date: date.toISOString().split('T')[0],
-        startTime,
-        endTime,
-        displayTime: `${startTime} - ${endTime}`,
-      });
-    }
+      for (let hour = startHour; hour < endHour; hour++) {
+        const startTime = `${String(hour).padStart(2, '0')}:00`;
+        const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
+        slots.push({
+          id: `${date.toISOString().split('T')[0]}-${startTime}`,
+          date: date.toISOString().split('T')[0],
+          startTime,
+          endTime,
+          displayTime: `${startTime} - ${endTime}`,
+          serviceType: availability.serviceType
+        });
+      }
+    });
 
     return slots;
   };
@@ -307,6 +313,32 @@ const BookingForm = ({
       if (!response.ok) {
         throw new Error('Failed to create appointment');
       }
+
+      const createdAppointment = await response.json();
+
+      // Create notification for vet
+      const vetNotificationData = {
+        userId: selectedVet.id,
+        userType: 'vet',
+        type: 'new_appointment',
+        title: 'Νέο αίτημα ραντεβού',
+        data: {
+          ownerName: currentUser.name || currentUser.username,
+          appointmentDate: selectedSlot.date,
+          appointmentTime: selectedSlot.displayTime,
+          petName: pet?.name || '',
+          appointmentId: createdAppointment.id
+        },
+        date: new Date().toISOString(),
+        read: false,
+        createdAt: new Date().toISOString()
+      };
+
+      await fetch('http://localhost:5000/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(vetNotificationData)
+      }).catch(err => console.error('Error creating vet notification:', err));
 
       resetForm();
 

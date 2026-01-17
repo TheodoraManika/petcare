@@ -60,12 +60,13 @@ const LostPets = () => {
 
           return {
             ...pet,
-            name: pet.petName || 'Άγνωστο',
-            type: pet.species || 'Άγνωστο',
+            id: pet.id,
+            name: pet.petName || pet.name || 'Άγνωστο',
+            type: pet.type || pet.species || 'Άγνωστο',
             breed: pet.breed || 'Άγνωστο',
             area: pet.lostLocation || 'Άγνωστη τοποθεσία',
             dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
-            color: pet.description?.split(',')[0] || 'Άγνωστο χρώμα',
+            color: pet.color || 'Άγνωστο χρώμα',
             ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Άγνωστο',
             contactEmail: owner?.email || '',
             // Default coordinates for Athens if not specified
@@ -106,6 +107,11 @@ const LostPets = () => {
 
   const handleLocationSelect = (location) => {
     setLocationData(location);
+    // Also update the area filter with the selected location label
+    setFilters(prev => ({
+      ...prev,
+      area: location.label || ''
+    }));
   };
 
   const handleClear = () => {
@@ -120,17 +126,141 @@ const LostPets = () => {
     setLocationData(null);
   };
 
-  // Filter pets based on microchip
-  const filteredPets = useMemo(() => {
-    const needle = (filters.microchip || '').toString().toLowerCase();
-    if (!needle) return lostPets;
-    return lostPets.filter(pet => {
-      const chip = (pet.microchip || '').toString().toLowerCase();
-      return chip.includes(needle);
-    });
-  }, [filters.microchip, lostPets]);
+  // Helper function to normalize date for comparison (DD/MM/YYYY or YYYY-MM-DD to YYYY-MM-DD)
+  const normalizeDateForComparison = (dateStr) => {
+    if (!dateStr) return '';
+    // If format is DD/MM/YYYY, convert to YYYY-MM-DD
+    if (dateStr.includes('/')) {
+      const [day, month, year] = dateStr.split('/');
+      return `${year}-${month}-${day}`;
+    }
+    // If already in YYYY-MM-DD format, return as is
+    return dateStr;
+  };
 
-  const hasSearched = filters.microchip.length > 0;
+  // Helper function to normalize text for fuzzy matching (remove accents, normalize spacing)
+  const normalizeText = (text) => {
+    if (!text) return '';
+    // Remove diacritics/accents
+    const normalized = text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+      .toLowerCase()
+      .trim();
+    return normalized;
+  };
+
+  // Synonym mappings for colors and breeds
+  const colorSynonyms = {
+    'μαυρο': ['black', 'σκουρο', 'dark'],
+    'λευκο': ['white', 'ασπρο'],
+    'καφε': ['brown', 'σκουρο'],
+    'κοκκινο': ['red', 'ρουφ'],
+    'γκρι': ['grey', 'gray', 'σταχτι'],
+    'κιτρινο': ['yellow', 'χρυσαφι'],
+    'μαυρο λευκο': ['black white', 'μαυρο λευκο'],
+    'λευκο γκρι': ['white grey', 'λευκο γκρι'],
+  };
+
+  const breedSynonyms = {
+    'λαμπραντορ': ['labrador', 'lab'],
+    'γερμανικος ποιμενας': ['german shepherd', 'shepherd'],
+    'περσικη': ['persian', 'persia'],
+    'σιαμεζα': ['siamese', 'siam'],
+  };
+
+  // Smart matching function for color and breed
+  const smartMatch = (petValue, filterValue, synonymMap) => {
+    if (!filterValue || !petValue) return false;
+    
+    const petNorm = normalizeText(petValue);
+    const filterNorm = normalizeText(filterValue);
+    
+    // Exact match after normalization
+    if (petNorm === filterNorm) return true;
+    
+    // Partial match (one contains the other)
+    if (petNorm.includes(filterNorm) || filterNorm.includes(petNorm)) return true;
+    
+    // Check for synonyms
+    const petSynonyms = Object.entries(synonymMap)
+      .filter(([_, syns]) => syns.some(syn => syn === petNorm || petNorm.includes(syn)))
+      .map(([key, _]) => key);
+    
+    const filterSynonyms = Object.entries(synonymMap)
+      .filter(([_, syns]) => syns.some(syn => syn === filterNorm || filterNorm.includes(syn)))
+      .map(([key, _]) => key);
+    
+    // If either value matches any synonym of the other
+    if (petSynonyms.some(syn => filterNorm === syn || filterNorm.includes(syn))) return true;
+    if (filterSynonyms.some(syn => petNorm === syn || petNorm.includes(syn))) return true;
+    
+    return false;
+  };
+
+  // Filter pets based on all active filters
+  const filteredPets = useMemo(() => {
+    return lostPets.filter(pet => {
+      // Microchip filter
+      if (filters.microchip) {
+        const chip = (pet.microchip || '').toString().toLowerCase();
+        const needle = filters.microchip.toString().toLowerCase();
+        if (!chip.includes(needle)) return false;
+      }
+
+      // Animal type filter (match against the dropdown values: dog, cat, bird, reptile, other)
+      if (filters.animal) {
+        const petType = (pet.type || '').toLowerCase();
+        // Map Greek names to English values
+        const typeMatches = 
+          (filters.animal === 'dog' && (petType.includes('dog') || petType.includes('σκύλος'))) ||
+          (filters.animal === 'cat' && (petType.includes('cat') || petType.includes('γάτα'))) ||
+          (filters.animal === 'bird' && (petType.includes('bird') || petType.includes('πτηνό'))) ||
+          (filters.animal === 'reptile' && petType.includes('reptile')) ||
+          (filters.animal === 'other' && !['dog', 'cat', 'bird', 'reptile'].some(t => petType.includes(t)));
+        
+        if (!typeMatches) return false;
+      }
+
+      // Color filter - using smart matching
+      if (filters.color) {
+        if (!smartMatch(pet.color, filters.color, colorSynonyms)) return false;
+      }
+
+      // Breed filter - using smart matching
+      if (filters.breed) {
+        if (!smartMatch(pet.breed, filters.breed, breedSynonyms)) return false;
+      }
+
+      // Lost date filter - normalize both dates for comparison
+      if (filters.lostDate) {
+        const normalizedPetDate = normalizeDateForComparison(pet.dateLost);
+        const normalizedFilterDate = normalizeDateForComparison(filters.lostDate);
+        if (normalizedPetDate !== normalizedFilterDate) return false;
+      }
+
+      // Area/Location filter - using smart matching and normalized text
+      if (filters.area) {
+        const petArea = normalizeText(pet.area || '');
+        const filterArea = normalizeText(filters.area);
+        
+        // Check if pet area contains any part of the filter area
+        // This handles cases like "Αθήνα, Ελλάδα" matching "Μαρούσι, Αθήνα"
+        const filterParts = filterArea.split(',').map(p => p.trim());
+        const petParts = petArea.split(',').map(p => p.trim());
+        
+        const hasMatch = filterParts.some(filterPart => 
+          petParts.some(petPart => petPart.includes(filterPart) || filterPart.includes(petPart))
+        );
+        
+        if (!hasMatch) return false;
+      }
+
+      return true;
+    });
+  }, [filters, lostPets]);
+
+  const hasSearched = Object.values(filters).some(filter => filter.length > 0);
   const hasNoResults = hasSearched && filteredPets.length === 0;
 
   const handleMarkerClick = (pet) => {
@@ -261,7 +391,7 @@ const LostPets = () => {
         {/* Sidebar with filters */}
         <SearchSidebar
           title="Φίλτρα Αναζήτησης"
-          onSearch={() => { }}
+          onSearch={() => setCurrentPage(1)}
           onClear={handleClear}
           resultsCount={filteredPets.length}
         >
@@ -293,7 +423,7 @@ const LostPets = () => {
               Τοποθεσία
             </label>
             <LocationPicker
-              onLocationSelect={handleLocationSelect}
+              onSelect={handleLocationSelect}
               placeholder="Αναζήτηση περιοχής..."
               variant="citizen"
             />

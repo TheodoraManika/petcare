@@ -11,114 +11,138 @@ const HealthBook = () => {
   const [petData, setPetData] = useState(null);
   const [searchAttempted, setSearchAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Mock data - in real app, this would come from API/database
-  const mockPetsDatabase = {
-    '123456789012345': {
-      name: 'Μπάμπης',
-      type: 'Σκύλος',
-      breed: 'Golden Retriever',
-      gender: 'Αρσενικό',
-      birthDate: '15/4/2020',
-      microchip: '123456789012345',
-      afm: '123456789',
-      ownerName: 'Γιώργος Παπαδόπουλος',
-      ownerPhone: '6912345678',
-      icon: 'dog',
-      medicalHistory: [
-        {
-          id: 1,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Πενταπλός εμβολιασμός',
-          date: '10/11/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 2,
-          type: 'surgery',
-          title: 'Χειρουργείο',
-          description: 'Στείρωση',
-          date: '5/6/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 3,
-          type: 'examination',
-          title: 'Εξέταση',
-          description: 'Γενική εξέταση',
-          date: '20/7/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 4,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Εμβόλιο λύσσας',
-          date: '12/5/2024',
-          vet: 'Δρ. Ελένη Νικολάου',
-          status: 'Ολοκληρώθηκε',
-        },
-      ],
-      stats: {
-        vaccinations: 2,
-        surgeries: 1,
-        examinations: 1,
-      },
-    },
-    '987654321098765': {
-      name: 'Μίνι',
-      type: 'Γάτα',
-      breed: 'Περσική',
-      gender: 'Θηλυκό',
-      birthDate: '22/6/2021',
-      microchip: '987654321098765',
-      afm: '123456788',
-      ownerName: 'Άννα Παπαδάκη',
-      ownerPhone: '6987654321',
-      icon: 'cat',
-      medicalHistory: [
-        {
-          id: 1,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Τριπλός εμβολιασμός',
-          date: '10/10/2024',
-          vet: 'Δρ. Άννα Παπαδάκη',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 2,
-          type: 'examination',
-          title: 'Εξέταση',
-          description: 'Οδοντιατρικός έλεγχος',
-          date: '3/9/2024',
-          vet: 'Δρ. Νίκος Ιωάννου',
-          status: 'Ολοκληρώθηκε',
-        },
-      ],
-      stats: {
-        vaccinations: 1,
-        surgeries: 0,
-        examinations: 1,
-      },
-    },
+  // Helper function to get operation type in Greek
+  const getOperationTypeLabel = (operationType) => {
+    const typeMap = {
+      'vaccination': 'Εμβολιασμός',
+      'surgery': 'Χειρουργείο',
+      'examination': 'Εξέταση',
+      'checkup': 'Τακτική Εξέταση',
+      'dental': 'Οδοντιατρική Εξέταση',
+      'grooming': 'Περιποίηση',
+      'emergency': 'Έκτακτη Περίπτωση'
+    };
+    return typeMap[operationType] || operationType;
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setSearchAttempted(true);
+    setSearchAttempted(false); // Reset to hide old results
+    setError('');
+    setPetData(null); // Clear previous pet data
 
-    // Simulate API call
-    setTimeout(() => {
-      const foundPet = mockPetsDatabase[microchipNumber];
-      setPetData(foundPet || null);
+    try {
+      // Fetch pet data by microchip ID
+      const petResponse = await fetch(`http://localhost:5000/pets?microchipId=${microchipNumber}`);
+      if (!petResponse.ok) throw new Error('Failed to fetch pet');
+      
+      const pets = await petResponse.json();
+      const pet = pets[0];
+      
+      setIsLoading(false); // Stop loading first
+      
+      if (!pet) {
+        setSearchAttempted(true); // Now show "not found"
+        return;
+      }
+
+      // Fetch owner data
+      let owner = null;
+      if (pet.ownerId) {
+        const ownerResponse = await fetch(`http://localhost:5000/users/${pet.ownerId}`);
+        if (ownerResponse.ok) {
+          owner = await ownerResponse.json();
+        }
+      }
+
+      // Fetch all users to get vet names
+      let allUsers = [];
+      const usersResponse = await fetch(`http://localhost:5000/users`);
+      if (usersResponse.ok) {
+        allUsers = await usersResponse.json();
+      }
+
+      // Fetch medical procedures for this pet
+      const proceduresResponse = await fetch(`http://localhost:5000/medicalProcedures?petId=${pet.id}`);
+      let procedures = [];
+      if (proceduresResponse.ok) {
+        procedures = await proceduresResponse.json();
+      }
+
+      // Transform procedures to medical history format
+      const medicalHistory = procedures.map((proc) => {
+        const vet = allUsers.find(u => u.id === proc.vetId || u.id == proc.vetId);
+        const vetName = vet ? `${vet.name} ${vet.lastName || ''}`.trim() : 'Άγνωστος';
+        return {
+          id: proc.id,
+          type: proc.type || 'examination',
+          title: getOperationTypeLabel(proc.type),
+          description: proc.description || '-',
+          date: formatDateForDisplay(proc.date),
+          vet: vetName,
+          status: 'Ολοκληρώθηκε'
+        };
+      });
+
+      // Calculate statistics
+      const stats = {
+        vaccinations: procedures.filter(p => p.type === 'vaccination').length,
+        surgeries: procedures.filter(p => p.type === 'surgery').length,
+        examinations: procedures.filter(p => ['checkup', 'examination', 'dental'].includes(p.type)).length
+      };
+
+      // Get pet type icon
+      const petSpecies = pet.species || 'dog';
+      const icon = petSpecies.toLowerCase().includes('cat') ? 'cat' : 'dog';
+
+      // Build pet data object
+      const transformedPetData = {
+        name: pet.name,
+        type: petSpecies === 'cat' ? 'Γάτα' : 'Σκύλος',
+        breed: pet.breed,
+        gender: pet.gender === 'male' ? 'Αρσενικό' : 'Θηλυκό',
+        birthDate: formatDateForDisplay(pet.birthDate),
+        microchip: pet.microchipId,
+        afm: owner?.afm || pet.ownerAFM || '-',
+        ownerName: owner ? `${owner.name} ${owner.lastName || ''}`.trim() : 'Άγνωστος',
+        ownerPhone: owner?.phone || '-',
+        icon: icon,
+        medicalHistory: medicalHistory,
+        stats: stats
+      };
+
+      setPetData(transformedPetData);
+      setSearchAttempted(true);
+
+      // Scroll to results
+      setTimeout(() => {
+        const resultsSection = document.querySelector('.health-book__results');
+        if (resultsSection) {
+          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } catch (err) {
+      console.error('Error searching for pet:', err);
+      setError('Σφάλμα κατά την αναζήτηση. Παρακαλώ δοκιμάστε ξανά.');
+      setPetData(null);
       setIsLoading(false);
-    }, 500);
+      setSearchAttempted(true);
+    }
+  };
+
+  // Helper function to format dates
+  const formatDateForDisplay = (dateStr) => {
+    if (!dateStr) return '-';
+    // Handle YYYY-MM-DD format
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+    // Already in DD/MM/YYYY format
+    return dateStr;
   };
 
   const handlePrint = () => {
@@ -169,10 +193,29 @@ const HealthBook = () => {
               {isLoading ? 'Αναζήτηση...' : 'Αναζήτηση'}
             </button>
           </form>
+
+          {error && (
+            <div className="health-book__error" style={{ 
+              marginTop: '12px', 
+              padding: '12px', 
+              backgroundColor: '#fee', 
+              color: '#c00', 
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}>
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Results Section */}
-        {searchAttempted && !isLoading && (
+        {isLoading && (
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: '#666' }}>
+            <p>Αναζήτηση κατοικιδίου...</p>
+          </div>
+        )}
+
+        {!isLoading && searchAttempted && (
           <>
             {petData ? (
               <div className="health-book__results">
@@ -225,13 +268,23 @@ const HealthBook = () => {
                   </div>
 
                   <div className="health-book__main">
-                    <h2 className="health-book__section-title">Ιατρικό Ιστορικό</h2>
+                    {petData.medicalHistory.length > 0 && (
+                      <>
+                        <h2 className="health-book__section-title">Ιατρικό Ιστορικό</h2>
 
-                    <div className="health-book__events">
-                      {petData.medicalHistory.map((event) => (
-                        <MedicalEventCard key={event.id} event={event} />
-                      ))}
-                    </div>
+                        <div className="health-book__events">
+                          {petData.medicalHistory.map((event) => (
+                            <MedicalEventCard key={event.id} event={event} />
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {petData.medicalHistory.length === 0 && (
+                      <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                        <p>Δεν υπάρχει ιατρικό ιστορικό για αυτό το κατοικίδιο.</p>
+                      </div>
+                    )}
 
                     <h2 className="health-book__section-title">Στατιστικά</h2>
                     <div className="health-book__stats">

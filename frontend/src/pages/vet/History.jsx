@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -10,90 +10,114 @@ const History = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('visits');
   const [currentPage, setCurrentPage] = useState(1);
+  const [visitsData, setVisitsData] = useState([]);
+  const [declarationsData, setDeclarationsData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const itemsPerPage = 5;
 
-  // Mock data for visits and medical procedures
-  const visitsData = [
-    {
-      id: 1,
-      petName: 'Μπάμπης',
-      microchip: 'GR123456789012345',
-      date: '05/11/2025',
-      type: 'Εμβολιασμός',
-      description: 'Εμβόλιο Λύσσας'
-    },
-    {
-      id: 2,
-      petName: 'Μίνι',
-      microchip: 'GR987654321098765',
-      date: '01/11/2025',
-      type: 'Χειρουργείο',
-      description: 'Χειρουργείο στείρωσης'
-    },
-    {
-      id: 3,
-      petName: 'Ρεξ',
-      microchip: 'GR555666777888999',
-      date: '28/10/2025',
-      type: 'Γενική Εξέταση',
-      description: 'Ετήσιος Έλεγχος'
-    },
-    {
-      id: 4,
-      petName: 'Λούνα',
-      microchip: 'GR111222333444555',
-      date: '15/10/2025',
-      type: 'Εμβολιασμός',
-      description: 'Τετραπλό εμβόλιο'
-    },
-    {
-      id: 5,
-      petName: 'Μάξ',
-      microchip: 'GR999888777666555',
-      date: '10/10/2025',
-      type: 'Επείγον Περιστατικό',
-      description: 'Κάταγμα ποδιού'
-    },
-    {
-      id: 6,
-      petName: 'Μπέλλα',
-      microchip: 'GR444333222111000',
-      date: '05/10/2025',
-      type: 'Οδοντιατρική',
-      description: 'Οδοντιατρικός έλεγχος'
-    }
-  ];
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // Mock data for declarations
-  const declarationsData = [
-    {
-      id: 1,
-      petName: 'Μπάμπης',
-      microchip: 'GR123456789012345',
-      date: '05/11/2025',
-      type: 'Μεταβίβαση',
-      ownerLabel: 'Νέος Ιδιοκτήτης',
-      owner: 'Νίκος Μιχαλόπουλος'
-    },
-    {
-      id: 2,
-      petName: 'Μίνι',
-      microchip: 'GR987654321098765',
-      date: '01/11/2025',
-      type: 'Υιοθεσία',
-      ownerLabel: 'Υιοθετών',
-      owner: 'Μαρία Ιωάννου'
-    },
-    {
-      id: 3,
-      petName: 'Ρεξ',
-      microchip: 'GR555666777888999',
-      date: '28/10/2025',
-      type: 'Αναδοχή',
-      ownerLabel: 'Ανάδοχος',
-      owner: 'Δημήτρης Παπάς'
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || currentUser.id === undefined) return;
+
+      // Fetch medical procedures
+      const proceduresResponse = await fetch(`http://localhost:5000/medicalProcedures?vetId=${currentUser.id}`);
+      if (proceduresResponse.ok) {
+        const procedures = await proceduresResponse.json();
+        
+        // Fetch all pets to get their names
+        const petsResponse = await fetch('http://localhost:5000/pets');
+        const allPets = petsResponse.ok ? await petsResponse.json() : [];
+        
+        const visitsArray = procedures.map(proc => {
+          const pet = allPets.find(p => p.id == proc.petId);
+          return {
+            id: proc.id,
+            petId: proc.petId,
+            petName: pet?.name || 'Άγνωστο',
+            microchip: pet?.microchipId || proc.microchip || '-',
+            date: formatDate(proc.date),
+            type: proc.type,
+            description: proc.description || '-'
+          };
+        });
+        setVisitsData(visitsArray);
+      }
+
+      // Fetch transfers
+      const transfersResponse = await fetch(`http://localhost:5000/transfers?vetId=${currentUser.id}`);
+      let transfers = [];
+      if (transfersResponse.ok) {
+        transfers = await transfersResponse.json();
+      }
+
+      // Fetch adoptions
+      const adoptionsResponse = await fetch(`http://localhost:5000/adoptions?vetId=${currentUser.id}`);
+      let adoptions = [];
+      if (adoptionsResponse.ok) {
+        adoptions = await adoptionsResponse.json();
+      }
+
+      // Fetch fosters
+      const fostersResponse = await fetch(`http://localhost:5000/fosters?vetId=${currentUser.id}`);
+      let fosters = [];
+      if (fostersResponse.ok) {
+        fosters = await fostersResponse.json();
+      }
+
+      // Combine declarations
+      const declarationsArray = [
+        ...transfers.map(t => ({
+          id: t.id,
+          petName: t.petName || 'Άγνωστο',
+          microchip: t.microchip || '-',
+          date: formatDate(t.transferDate),
+          type: 'Μεταβίβαση',
+          ownerLabel: 'Νέος Ιδιοκτήτης',
+          owner: t.newOwnerName || '-'
+        })),
+        ...adoptions.map(a => ({
+          id: a.id,
+          petName: a.petName || 'Άγνωστο',
+          microchip: a.microchip || '-',
+          date: formatDate(a.adoptionDate),
+          type: 'Υιοθεσία',
+          ownerLabel: 'Υιοθετών',
+          owner: a.adoptingOwnerName || '-'
+        })),
+        ...fosters.map(f => ({
+          id: f.id,
+          petName: f.petName || 'Άγνωστο',
+          microchip: f.microchip || '-',
+          date: formatDate(f.fosterDate),
+          type: 'Αναδοχή',
+          ownerLabel: 'Ανάδοχος',
+          owner: f.fosterParentName || '-'
+        }))
+      ];
+
+      setDeclarationsData(declarationsArray);
+    } catch (err) {
+      console.error('Error fetching history data:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    // Handle YYYY-MM-DD format
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+    return dateStr;
+  };
 
   const currentData = activeTab === 'visits' ? visitsData : declarationsData;
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
@@ -152,15 +176,13 @@ const History = () => {
               <div key={item.id} className="history__card">
                 <div className="history__card-header">
                   <h3 className="history__card-title">{item.petName}</h3>
-                  {activeTab === 'declarations' && (
-                    <button 
-                      className="history__view-btn"
-                      onClick={() => handleViewDetails(item.id)}
-                    >
-                      <Eye size={18} />
-                      Προβολή
-                    </button>
-                  )}
+                  <button 
+                    className="history__view-btn"
+                    onClick={() => handleViewDetails(item.id)}
+                  >
+                    <Eye size={18} />
+                    Προβολή
+                  </button>
                 </div>
                 <p className="history__card-microchip">Μικροτσίπ: {item.microchip}</p>
                 

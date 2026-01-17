@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -8,110 +8,173 @@ import './HistoryDetail.css';
 const HistoryDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [detailData, setDetailData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data - In real app, fetch based on id
-  const mockDataCollection = {
-    '1': {
-      declarationType: 'Μεταβίβαση',
-      pet: {
-        name: 'Μπάμπης',
-        species: 'Σκύλος',
-        breed: 'Golden Retriever',
-        age: '2',
-        gender: 'Αρσενικό',
-        microchip: 'GR123456789012345'
-      },
-      transfer: {
-        currentOwner: {
-          name: 'Σοφία',
-          surname: 'Παπαδόκη',
-          afm: '123456789',
-          phone: '+30 210 1234567',
-          email: 'sofia.papadoki@example.com',
-          address: 'Λεωφόρος Αθηνών 123',
-          city: 'Αθήνα',
-          postalCode: '11524'
-        },
-        newOwner: {
-          name: 'Νίκος',
-          surname: 'Μιχαλόπουλος',
-          afm: '987654321',
-          phone: '+30 210 9876543',
-          email: 'nikos.michalopoulos@example.com',
-          address: 'Πατησίων 45',
-          city: 'Αθήνα',
-          postalCode: '10682'
-        },
-        transferDate: '05/11/2025',
-        transferReason: 'Μετακόμιση σε άλλη πόλη και αδυναμία φροντίδας του κατοικιδίου',
-        notes: 'Το κατοικίδιο είναι εμβολιασμένο και σε άριστη κατάσταση υγείας. Έχει υποβληθεί σε τακτικούς ελέγχους.'
+  useEffect(() => {
+    fetchOperationData();
+  }, [id]);
+
+  const fetchOperationData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let data = null;
+      let operationType = null;
+
+      // Check medical procedures
+      const proceduresResponse = await fetch(`http://localhost:5000/medicalProcedures/${id}`);
+      if (proceduresResponse.ok) {
+        const procedure = await proceduresResponse.json();
+        const petResponse = await fetch(`http://localhost:5000/pets/${procedure.petId}`);
+        const pet = petResponse.ok ? await petResponse.json() : {};
+        
+        data = {
+          declarationType: 'Ιατρική Πράξη',
+          pet: {
+            name: pet.name || '-',
+            species: pet.species || '-',
+            breed: pet.breed || '-',
+            microchip: procedure.microchip || pet.microchipId || '-'
+          },
+          procedure: procedure
+        };
+        operationType = 'procedure';
       }
-    },
-    '2': {
-      declarationType: 'Υιοθεσία',
-      pet: {
-        name: 'Μίνι',
-        species: 'Γάτα',
-        breed: 'Σιαμέζα',
-        age: '1',
-        gender: 'Θηλυκό',
-        microchip: 'GR987654321098765'
-      },
-      adoption: {
-        owner: {
-          name: 'Μαρία',
-          surname: 'Ιωάννου',
-          afm: '456789123',
-          phone: '+30 210 5555555',
-          email: 'maria.ioannou@example.com',
-          address: 'Σόλωνος 78',
-          city: 'Αθήνα',
-          postalCode: '10679'
-        },
-        adoptionDate: '01/11/2025',
-        shelterName: 'Καταφύγιο Φιλόζωων Αθηνών "Η Στέγη"',
-        hasGarden: 'Ναι',
-        hasOtherPets: 'Ναι',
-        hasPetExperience: 'Ναι',
-        notes: 'Η υιοθετούσα διαθέτει όλο τον απαραίτητο εξοπλισμό και κρίνεται κατάλληλη για την υιοθεσία.'
+
+      // Check transfers
+      if (!data) {
+        const transferResponse = await fetch(`http://localhost:5000/transfers/${id}`);
+        if (transferResponse.ok) {
+          const transfer = await transferResponse.json();
+          const petResponse = await fetch(`http://localhost:5000/pets/${transfer.petId}`);
+          const pet = petResponse.ok ? await petResponse.json() : {};
+          
+          data = {
+            declarationType: 'Μεταβίβαση',
+            pet: {
+              name: transfer.petName || pet.name || '-',
+              species: pet.species || '-',
+              breed: pet.breed || '-',
+              microchip: transfer.microchip || pet.microchipId || '-'
+            },
+            transfer: {
+              currentOwner: {
+                name: transfer.currentOwnerName?.split(' ')[0] || '-',
+                surname: transfer.currentOwnerName?.split(' ')[1] || '-',
+                afm: transfer.currentOwnerAfm || '-'
+              },
+              newOwner: {
+                name: transfer.newOwnerName?.split(' ')[0] || '-',
+                surname: transfer.newOwnerName?.split(' ')[1] || '-',
+                afm: transfer.newOwnerAfm || '-'
+              },
+              transferDate: formatDate(transfer.transferDate),
+              transferReason: transfer.transferReason || '-'
+            }
+          };
+          operationType = 'transfer';
+        }
       }
-    },
-    '3': {
-      declarationType: 'Αναδοχή',
-      pet: {
-        name: 'Ρεξ',
-        species: 'Σκύλος',
-        breed: 'Λαμπραντόρ',
-        age: '3',
-        gender: 'Αρσενικό',
-        microchip: 'GR555666777888999'
-      },
-      adoption: {
-        owner: {
-          name: 'Δημήτρης',
-          surname: 'Παπάς',
-          afm: '321654987',
-          phone: '+30 210 7777777',
-          email: 'dimitris.papas@example.com',
-          address: 'Ακαδημίας 156',
-          city: 'Αθήνα',
-          postalCode: '10673'
-        },
-        adoptionDate: '28/10/2025',
-        shelterName: 'Φιλοζωική Οργάνωση "Ελπίδα για τα Ζώα"',
-        hasGarden: 'Όχι',
-        hasOtherPets: 'Όχι',
-        hasPetExperience: 'Ναι',
-        notes: 'Ο ανάδοχος έχει προηγούμενη εμπειρία με σκύλους μεγάλου μεγέθους και έχει ξανά υπάρξει ανάδοχος.'
+
+      // Check adoptions
+      if (!data) {
+        const adoptionResponse = await fetch(`http://localhost:5000/adoptions/${id}`);
+        if (adoptionResponse.ok) {
+          const adoption = await adoptionResponse.json();
+          const petResponse = await fetch(`http://localhost:5000/pets/${adoption.petId}`);
+          const pet = petResponse.ok ? await petResponse.json() : {};
+          
+          data = {
+            declarationType: 'Υιοθεσία',
+            pet: {
+              name: adoption.petName || pet.name || '-',
+              species: pet.species || '-',
+              breed: pet.breed || '-',
+              microchip: adoption.microchip || pet.microchipId || '-'
+            },
+            adoption: {
+              owner: {
+                name: adoption.adoptingOwnerName?.split(' ')[0] || '-',
+                surname: adoption.adoptingOwnerName?.split(' ')[1] || '-',
+                afm: adoption.adoptingOwnerAfm || '-'
+              },
+              adoptionDate: formatDate(adoption.adoptionDate),
+              shelterName: adoption.shelterName || '-',
+              hasGarden: adoption.hasGarden ? 'Ναι' : 'Όχι',
+              hasOtherPets: adoption.hasOtherPets ? 'Ναι' : 'Όχι',
+              hasPetExperience: adoption.hasPetExperience ? 'Ναι' : 'Όχι'
+            }
+          };
+          operationType = 'adoption';
+        }
       }
+
+      // Check fosters
+      if (!data) {
+        const fosterResponse = await fetch(`http://localhost:5000/fosters/${id}`);
+        if (fosterResponse.ok) {
+          const foster = await fosterResponse.json();
+          const petResponse = await fetch(`http://localhost:5000/pets/${foster.petId}`);
+          const pet = petResponse.ok ? await petResponse.json() : {};
+          
+          data = {
+            declarationType: 'Αναδοχή',
+            pet: {
+              name: foster.petName || pet.name || '-',
+              species: pet.species || '-',
+              breed: pet.breed || '-',
+              microchip: foster.microchip || pet.microchipId || '-'
+            },
+            adoption: {
+              owner: {
+                name: foster.fosterParentName?.split(' ')[0] || '-',
+                surname: foster.fosterParentName?.split(' ')[1] || '-',
+                afm: foster.fosterParentAfm || '-'
+              },
+              adoptionDate: formatDate(foster.fosterDate),
+              shelterName: foster.shelterName || '-',
+              hasGarden: foster.hasGarden ? 'Ναι' : 'Όχι',
+              hasOtherPets: foster.hasOtherPets ? 'Ναι' : 'Όχι',
+              hasPetExperience: foster.hasPetExperience ? 'Ναι' : 'Όχι'
+            }
+          };
+          operationType = 'foster';
+        }
+      }
+
+      if (data) {
+        setDetailData(data);
+      } else {
+        setError('Δεν βρέθηκαν δεδομένα');
+      }
+    } catch (err) {
+      console.error('Error fetching operation data:', err);
+      setError('Σφάλμα φόρτωσης δεδομένων');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Get the detail data based on ID, default to first entry
-  const detailData = mockDataCollection[id] || mockDataCollection['1'];
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+    return dateStr;
+  };
+
+  // Get title based on declaration type
+  const getPageTitle = () => {
+    if (!detailData) return 'Προβολή';
+    return `Προβολή ${detailData.declarationType}`;
+  };
 
   // Get icon based on declaration type
   const getTitleIcon = () => {
+    if (!detailData) return null;
     switch (detailData.declarationType) {
       case 'Μεταβίβαση':
         return <ArrowRightLeft size={24} className="history-detail__icon" />;
@@ -119,6 +182,8 @@ const HistoryDetail = () => {
         return <Heart size={24} className="history-detail__icon" />;
       case 'Αναδοχή':
         return <HandHeart size={24} className="history-detail__icon" />;
+      case 'Ιατρική Πράξη':
+        return <PawPrint size={24} className="history-detail__icon" />;
       default:
         return <HandHeart size={24} className="history-detail__icon" />;
     }
@@ -137,8 +202,31 @@ const HistoryDetail = () => {
     { label: 'Ιστορικό', path: ROUTES.vet.history }
   ];
 
+  if (loading) {
+    return (
+      <PageLayout title="Φόρτωση..." breadcrumbs={breadcrumbItems}>
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <p>Φόρτωση δεδομένων...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error || !detailData) {
+    return (
+      <PageLayout title="Σφάλμα" breadcrumbs={breadcrumbItems}>
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <p>{error || 'Δεν βρέθηκαν δεδομένα'}</p>
+          <button onClick={() => navigate(ROUTES.vet.history)} style={{ marginTop: '20px' }}>
+            Επιστροφή
+          </button>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
-    <PageLayout title="Προβολή Δήλωσης" breadcrumbs={breadcrumbItems}>
+    <PageLayout title={getPageTitle()} breadcrumbs={breadcrumbItems}>
       <div className="history-detail">
         <div className="history-detail__header">
           <button 
@@ -189,20 +277,43 @@ const HistoryDetail = () => {
                 <span className="history-detail__info-label">Αριθμός Μικροτσίπ</span>
                 <span className="history-detail__info-value">{detailData.pet.microchip}</span>
               </div>
-              {(detailData.declarationType === 'Υιοθεσία' || detailData.declarationType === 'Αναδοχή') && (
+              {(detailData.declarationType === 'Υιοθεσία' || detailData.declarationType === 'Αναδοχή') && detailData.pet.age && (
                 <>
                   <div className="history-detail__info-item">
                     <span className="history-detail__info-label">Ηλικία</span>
                     <span className="history-detail__info-value">{detailData.pet.age} έτη</span>
                   </div>
-                  <div className="history-detail__info-item">
-                    <span className="history-detail__info-label">Φύλο</span>
-                    <span className="history-detail__info-value">{detailData.pet.gender}</span>
-                  </div>
+                  {detailData.pet.gender && (
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Φύλο</span>
+                      <span className="history-detail__info-value">{detailData.pet.gender}</span>
+                    </div>
+                  )}
                 </>
               )}
             </div>
           </div>
+
+          {/* ΙΑΤΡΙΚΗ ΠΡΑΞΗ */}
+          {detailData.declarationType === 'Ιατρική Πράξη' && detailData.procedure && (
+            <div className="history-detail__section">
+              <h2 className="history-detail__section-title">Στοιχεία Ιατρικής Πράξης</h2>
+              <div className="history-detail__info-column">
+                <div className="history-detail__info-item">
+                  <span className="history-detail__info-label">Ημερομηνία</span>
+                  <span className="history-detail__info-value">{formatDate(detailData.procedure.date)}</span>
+                </div>
+                <div className="history-detail__info-item">
+                  <span className="history-detail__info-label">Τύπος Πράξης</span>
+                  <span className="history-detail__info-value">{detailData.procedure.type}</span>
+                </div>
+                <div className="history-detail__info-item">
+                  <span className="history-detail__info-label">Περιγραφή</span>
+                  <span className="history-detail__info-value">{detailData.procedure.description}</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ΜΕΤΑΒΙΒΑΣΗ */}
           {detailData.declarationType === 'Μεταβίβαση' && (
@@ -226,20 +337,6 @@ const HistoryDetail = () => {
                       <span className="history-detail__info-label">ΑΦΜ</span>
                       <span className="history-detail__info-value">{detailData.transfer.currentOwner.afm}</span>
                     </div>
-                    <div className="history-detail__info-item">
-                      <span className="history-detail__info-label">Τηλέφωνο</span>
-                      <span className="history-detail__info-value">{detailData.transfer.currentOwner.phone}</span>
-                    </div>
-                    <div className="history-detail__info-item">
-                      <span className="history-detail__info-label">Email</span>
-                      <span className="history-detail__info-value">{detailData.transfer.currentOwner.email}</span>
-                    </div>
-                    <div className="history-detail__info-item">
-                      <span className="history-detail__info-label">Διεύθυνση</span>
-                      <span className="history-detail__info-value">
-                        {detailData.transfer.currentOwner.address}, {detailData.transfer.currentOwner.city}, {detailData.transfer.currentOwner.postalCode}
-                      </span>
-                    </div>
                   </div>
                 </div>
 
@@ -260,20 +357,6 @@ const HistoryDetail = () => {
                     <div className="history-detail__info-item">
                       <span className="history-detail__info-label">ΑΦΜ</span>
                       <span className="history-detail__info-value">{detailData.transfer.newOwner.afm}</span>
-                    </div>
-                    <div className="history-detail__info-item">
-                      <span className="history-detail__info-label">Τηλέφωνο</span>
-                      <span className="history-detail__info-value">{detailData.transfer.newOwner.phone}</span>
-                    </div>
-                    <div className="history-detail__info-item">
-                      <span className="history-detail__info-label">Email</span>
-                      <span className="history-detail__info-value">{detailData.transfer.newOwner.email}</span>
-                    </div>
-                    <div className="history-detail__info-item">
-                      <span className="history-detail__info-label">Διεύθυνση</span>
-                      <span className="history-detail__info-value">
-                        {detailData.transfer.newOwner.address}, {detailData.transfer.newOwner.city}, {detailData.transfer.newOwner.postalCode}
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -323,20 +406,6 @@ const HistoryDetail = () => {
                   <div className="history-detail__info-item">
                     <span className="history-detail__info-label">ΑΦΜ</span>
                     <span className="history-detail__info-value">{detailData.adoption.owner.afm}</span>
-                  </div>
-                  <div className="history-detail__info-item">
-                    <span className="history-detail__info-label">Τηλέφωνο</span>
-                    <span className="history-detail__info-value">{detailData.adoption.owner.phone}</span>
-                  </div>
-                  <div className="history-detail__info-item">
-                    <span className="history-detail__info-label">Email</span>
-                    <span className="history-detail__info-value">{detailData.adoption.owner.email}</span>
-                  </div>
-                  <div className="history-detail__info-item">
-                    <span className="history-detail__info-label">Διεύθυνση</span>
-                    <span className="history-detail__info-value">
-                      {detailData.adoption.owner.address}, {detailData.adoption.owner.city}, {detailData.adoption.owner.postalCode}
-                    </span>
                   </div>
                 </div>
               </div>

@@ -23,6 +23,40 @@ const HomePage = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedProfileVet, setSelectedProfileVet] = useState(null);
 
+  // Hero carousel state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [lostPets, setLostPets] = useState([]);
+  const [loadingLostPets, setLoadingLostPets] = useState(true);
+
+  // Fetch lost pets from database for carousel
+  useEffect(() => {
+    const fetchLostPets = async () => {
+      try {
+        setLoadingLostPets(true);
+        const response = await fetch('http://localhost:5000/lostPets');
+        if (!response.ok) throw new Error('Failed to fetch lost pets');
+        
+        const data = await response.json();
+        // Transform data to match carousel format
+        const transformedPets = data.map(pet => ({
+          id: pet.id,
+          name: pet.petName || pet.name || 'Άγνωστο',
+          type: pet.type || 'Άγνωστο',
+          breed: pet.breed || 'Άγνωστο',
+          area: pet.lostLocation || pet.area || 'Άγνωστη τοποθεσία',
+          dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
+        }));
+        setLostPets(transformedPets);
+        setLoadingLostPets(false);
+      } catch (error) {
+        console.error('Error fetching lost pets:', error);
+        setLoadingLostPets(false);
+      }
+    };
+
+    fetchLostPets();
+  }, []);
+
   // Check for notification from navigation state
   useEffect(() => {
     if (location.state?.notification) {
@@ -39,53 +73,6 @@ const HomePage = () => {
       return () => clearTimeout(timer);
     }
   }, [location]);
-
-  // Hero carousel state
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Mock lost pets data for carousel
-  const lostPets = [
-    {
-      id: 1,
-      name: 'Μπάμπης',
-      type: 'Σκύλος',
-      breed: 'Golden Retriever',
-      area: 'Κέντρο Αθήνας',
-      dateLost: '05/01/2026',
-    },
-    {
-      id: 2,
-      name: 'Φιφή',
-      type: 'Γάτα',
-      breed: 'Περσική',
-      area: 'Θεσσαλονίκη',
-      dateLost: '03/01/2026',
-    },
-    {
-      id: 3,
-      name: 'Ρεξ',
-      type: 'Σκύλος',
-      breed: 'Λαμπραντόρ',
-      area: 'Πάτρα',
-      dateLost: '01/01/2026',
-    },
-    {
-      id: 4,
-      name: 'Λούλου',
-      type: 'Γάτα',
-      breed: 'Σιαμέζα',
-      area: 'Ηράκλειο',
-      dateLost: '28/12/2025',
-    },
-    {
-      id: 5,
-      name: 'Μάικι',
-      type: 'Σκύλος',
-      breed: 'Μπίγκλ',
-      area: 'Λάρισα',
-      dateLost: '25/12/2025',
-    },
-  ];
 
   // Mock top-rated vets data (expanded)
   const topVets = [
