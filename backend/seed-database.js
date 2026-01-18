@@ -12,7 +12,6 @@ db.pets = [];
 db.medicalProcedures = [];
 db.appointments = [];
 db.availability = [];
-db.lostPets = [];
 
 console.log('='.repeat(70));
 console.log('🏥 PETCARE DATABASE SEEDING - COMPREHENSIVE DATA GENERATION');
@@ -315,7 +314,7 @@ for (let i = 0; i < 10; i++) {
       id: String(nextPetId),
       ownerId: Number(nextOwnerId),
       name: petName,
-      species: speciesType,
+      type: speciesType,
       breed: breed,
       gender: Math.random() > 0.5 ? 'male' : 'female',
       birthDate: generatePastDate(2000),
@@ -323,6 +322,15 @@ for (let i = 0; i < 10; i++) {
       weight: weight,
       microchipId: generateMicrochip(),
       registeredByVetId: Number(registeredVet.id),
+      lostDate: null,
+      lostLocation: null,
+      area: null,
+      locationLat: null,
+      locationLon: null,
+      reportedByVetId: null,
+      petStatus: 0,
+      status: 'active',
+      imageUrl: null,
       createdAt: getCurrentDateFormatted()
     };
 
@@ -395,7 +403,7 @@ vets.forEach(vet => {
       ownerName: `${owner.name} ${owner.lastName}`,
       ownerPhone: owner.phone,
       petName: pet.name,
-      petSpecies: pet.species,
+      petSpecies: pet.type,
       petBreed: pet.breed,
       date: appointmentDate,
       time: generateTime(),
@@ -439,7 +447,7 @@ const lostPetDescriptions = {
   ]
 };
 
-let nextLostPetId = 1;
+let nextLostPetId = db.pets.length + 1;
 let totalLostPets = 0;
 
 // Randomly select 30-40% of pets to be lost
@@ -450,36 +458,35 @@ for (let i = 0; i < numLostPets; i++) {
   const owner = db.users.find(u => u.id === String(pet.ownerId));
   const vet = vets[Math.floor(Math.random() * vets.length)];
   const area = lostAreas[Math.floor(Math.random() * lostAreas.length)];
-  const descriptions = lostPetDescriptions[pet.species] || lostPetDescriptions['Σκύλος'];
+  const descriptions = lostPetDescriptions[pet.type] || lostPetDescriptions['Σκύλος'];
   const description = descriptions[Math.floor(Math.random() * descriptions.length)];
 
   const lostPet = {
     id: String(nextLostPetId),
-    petId: Number(pet.id),
     ownerId: Number(pet.ownerId),
-    reportedByVetId: Number(vet.id),
-    microchipNumber: pet.microchipId,
-    petName: pet.name,
-    type: pet.species,
+    name: pet.name,
+    type: pet.type,
     breed: pet.breed,
+    gender: pet.gender,
+    birthDate: pet.birthDate,
+    color: pet.color,
+    weight: pet.weight,
+    microchipId: pet.microchipId,
+    registeredByVetId: pet.registeredByVetId,
     lostDate: generatePastDate(60),
     lostLocation: area,
     area: area,
     locationLat: String((38 + Math.random() * 2).toFixed(4)),
     locationLon: String((23 + Math.random() * 2).toFixed(4)),
-    contactPhone: owner ? owner.phone : generatePhone(),
-    contactEmail: owner ? owner.email : `owner${Math.random()}@petcare.gr`,
-    ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Unknown',
-    color: pet.color,
-    microchip: pet.microchipId,
-    name: pet.name,
-    description: `${pet.species === 'Σκύλος' ? 'Σκύλος' : 'Γάτα'} ${pet.breed}, ${pet.color}. ${description}`,
+    reportedByVetId: Number(vet.id),
+    petStatus: 1,
     status: 'active',
     imageUrl: null,
+    description: `${pet.type} ${pet.breed}, ${pet.color}. ${description}`,
     createdAt: getCurrentDateFormatted()
   };
 
-  db.lostPets.push(lostPet);
+  db.pets.push(lostPet);
   nextLostPetId++;
   totalLostPets++;
 }
@@ -502,7 +509,7 @@ console.log(`      Cities: ${new Set(owners.map(o => o.city)).size}`);
 
 console.log(`\n   🐾 Pets: ${db.pets.length}`);
 db.pets.forEach(pet => {
-  console.log(`      - ${pet.name} (${pet.species})`);
+  console.log(`      - ${pet.name} (${pet.type})`;
 });
 
 console.log(`\n   📋 Medical Procedures: ${totalMedicalEntries}`);

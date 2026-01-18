@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -11,17 +11,72 @@ const Review = () => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [appointment, setAppointment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock appointment data - in real app, this would come from API
-  const appointment = {
-    id: appointmentId,
-    vet: 'Ελένη Γεωργίου',
-    pet: 'Μπάμπης',
-    date: '05/11/2025',
-    service: 'Εμβολιασμός',
-  };
+  // Fetch appointment and vet data
+  useEffect(() => {
+    const fetchAppointmentData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch appointment details
+        const aptResponse = await fetch(`http://localhost:5000/appointments/${appointmentId}`);
+        if (!aptResponse.ok) throw new Error('Failed to fetch appointment');
+        const apt = await aptResponse.json();
+        
+        // Fetch vet details
+        let vetName = 'Άγνωστος';
+        try {
+          const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
+          if (vetResponse.ok) {
+            const vet = await vetResponse.json();
+            vetName = `${vet.name} ${vet.lastName}`;
+          }
+        } catch (err) {
+          console.error('Error fetching vet details:', err);
+        }
+        
+        // Fetch pet details if needed
+        let petName = apt.petName || 'Άγνωστο';
+        try {
+          if (apt.petId) {
+            const petResponse = await fetch(`http://localhost:5000/pets/${apt.petId}`);
+            if (petResponse.ok) {
+              const pet = await petResponse.json();
+              petName = pet.name || petName;
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching pet details:', err);
+        }
+        
+        setAppointment({
+          id: apt.id,
+          vet: vetName,
+          vetId: apt.vetId,
+          pet: petName,
+          date: apt.date || new Date().toLocaleDateString('el-GR'),
+          service: apt.serviceType || 'Υπηρεσία',
+          ownerId: apt.ownerId
+        });
+        
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching appointment data:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSubmit = (e) => {
+    if (appointmentId) {
+      fetchAppointmentData();
+    }
+  }, [appointmentId]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (rating === 0) {
@@ -29,20 +84,72 @@ const Review = () => {
       return;
     }
 
-    // In real app, this would send data to API
-    console.log({
-      appointmentId,
-      rating,
-      comment,
-    });
+    try {
+      // Prepare review data
+      const reviewData = {
+        appointmentId,
+        vetId: appointment.vetId,
+        ownerId: appointment.ownerId,
+        rating,
+        comment,
+        reviewedAt: new Date().toISOString()
+      };
 
-    // Redirect back to appointments
-    navigate(ROUTES.owner.appointments);
+      // Submit review to backend
+      const response = await fetch('http://localhost:5000/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reviewData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+
+      // Show success and redirect
+      alert('Η αξιολόγηση υποβλήθηκε με επιτυχία!');
+      navigate(ROUTES.owner.appointments);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('Σφάλμα κατά την υποβολή της αξιολόγησης. Παρακαλώ προσπαθήστε ξανά.');
+    }
   };
 
   const handleCancel = () => {
     navigate(ROUTES.owner.appointments);
   };
+
+  if (loading) {
+    return (
+      <PageLayout variant="owner" title="Αξιολόγηση" breadcrumbs={[]}>
+        <div className="owner-review">
+          <div className="owner-review__content">
+            <p>Φόρτωση δεδομένων αξιολόγησης...</p>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error || !appointment) {
+    return (
+      <PageLayout variant="owner" title="Σφάλμα" breadcrumbs={[]}>
+        <div className="owner-review">
+          <div className="owner-review__content">
+            <p style={{ color: '#d32f2f' }}>Σφάλμα: {error || 'Δεν ήταν δυνατή η φόρτωση των δεδομένων αξιολόγησης'}</p>
+            <button 
+              onClick={() => navigate(ROUTES.owner.appointments)}
+              style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+            >
+              Επιστροφή
+            </button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   const breadcrumbItems = [
     { label: 'Ραντεβού', path: ROUTES.owner.appointments },

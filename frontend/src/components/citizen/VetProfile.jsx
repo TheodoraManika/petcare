@@ -32,6 +32,12 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
 
   const displayName = vet.lastName ? `${vet.name} ${vet.lastName}` : vet.name;
   
+  // Calculate average rating from reviews if not provided
+  let averageRating = vet.rating || 0;
+  if (!vet.rating && reviewsList.length > 0) {
+    averageRating = reviewsList.reduce((sum, review) => sum + (Number(review.rating) || 0), 0) / reviewsList.length;
+  }
+  
   // Map database fields to component expectations
   const vetSpec = vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος';
   const vetClinicName = vet.clinicName || 'Δεν διατίθεται';
@@ -68,7 +74,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
               <div className="rating-section">
                 <Star className="star-icon" />
                 <span className="rating-text">
-                  {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || reviewsList.length || 0} αξιολογήσεις)
+                  {averageRating ? averageRating.toFixed(1) : 'N/A'} ({vet.reviewCount || reviewsList.length || 0} αξιολογήσεις)
                 </span>
               </div>
             </div>

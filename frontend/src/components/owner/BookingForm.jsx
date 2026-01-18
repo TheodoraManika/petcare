@@ -94,9 +94,11 @@ const BookingForm = ({
       try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (currentUser.id) {
-          const response = await fetch(`http://localhost:5000/pets?ownerId=${currentUser.id}`);
-          const data = await response.json();
-          setUserPets(data);
+          const response = await fetch('http://localhost:5000/pets');
+          const allPets = await response.json();
+          // Filter pets that belong to this owner (use String comparison since IDs are strings)
+          const ownerPets = allPets.filter(pet => String(pet.ownerId) === String(currentUser.id));
+          setUserPets(ownerPets);
         }
       } catch (err) {
         console.error('Error fetching pets:', err);
@@ -656,7 +658,7 @@ const BookingForm = ({
               {selectedSlot && (
                 <div className="booking-form__selected-slot-info">
                   <Check size={18} />
-                  Επιλεγμένη ώρα: <strong>{selectedSlot.date}</strong> στις <strong>{selectedSlot.displayTime}</strong>
+                  Επιλεγμένη ώρα: <strong>{selectedSlot.displayTime}</strong> στις <strong>{new Date(selectedSlot.date).toLocaleDateString('el-GR')}</strong>
                 </div>
               )}
             </div>
@@ -682,7 +684,7 @@ const BookingForm = ({
                   placeholder="Επιλέξτε κατοικίδιο"
                   options={userPets.map(pet => ({
                     value: String(pet.id),
-                    label: `${pet.name} (${pet.species})`
+                    label: `${pet.name} (${pet.type})`
                   }))}
                   variant="owner"
                 />

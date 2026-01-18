@@ -388,25 +388,33 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
     }
 
     try {
-      // Create the found pet declaration object
+      // Create the found pet declaration object with unified pets schema
       const newFoundPet = {
-        petName: formData.petName || 'Άγνωστο',
-        species: formData.species || '',
+        name: formData.petName || 'Άγνωστο',
+        type: formData.species || '',
         breed: formData.breed || '',
         description: formData.description || '',
-        foundDate: formData.foundDate,
-        foundLocation: formData.foundLocation,
-        reporterFirstName: formData.firstName,
-        reporterLastName: formData.lastName,
-        reporterEmail: formData.email,
-        reporterPhone: formData.phone,
+        lostDate: formData.foundDate,
+        lostLocation: formData.foundLocation,
+        reportedByVetId: null,
+        ownerId: null,
+        registeredByVetId: null,
+        gender: '',
+        birthDate: '',
+        color: formData.color || '',
+        weight: '',
+        microchipId: formData.microchip || '',
+        area: '',
+        locationLat: formData.latitude || null,
+        locationLon: formData.longitude || null,
+        petStatus: 2, // 2 = found pet
         status: 'active',
         imageUrl: null, // TODO: Implement file upload
         createdAt: new Date().toISOString()
       };
 
-      // Submit to backend
-      const response = await fetch('http://localhost:5000/foundPets', {
+      // Submit to backend using /pets endpoint
+      const response = await fetch('http://localhost:5000/pets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

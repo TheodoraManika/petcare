@@ -14,6 +14,7 @@ const Profile = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -30,23 +31,51 @@ const Profile = () => {
   
   // Original data that won't change unless saved
   const [originalData, setOriginalData] = useState({
-    firstName: 'Γιάννης',
-    lastName: 'Πετρίδης',
-    email: 'john@example.com',
-    phone: '6912345678',
-    afm: '123456789',
-    vetLicense: 'VET12345',
-    specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'],
-    yearsOfExperience: '5',
-    clinicName: 'Κτηνιατρικό Κέντρο Γέρακα',
-    address: 'Ερμού 8, 15344',
-    city: 'Γέρακας',
-    university: 'Γεωπονικό Πανεπιστήμιο Αθηνών',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    afm: '',
+    vetLicense: '',
+    specialties: [],
+    yearsOfExperience: '',
+    clinicName: '',
+    address: '',
+    city: '',
+    university: '',
     bio: '',
   });
   
   // Working copy for editing
   const [formData, setFormData] = useState({...originalData});
+
+  // Load user data from localStorage on component mount
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (currentUser) {
+      const userData = {
+        firstName: currentUser.name || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        afm: currentUser.afm || '',
+        vetLicense: currentUser.licenseNumber || '',
+        specialties: currentUser.specialization ? [currentUser.specialization] : [],
+        yearsOfExperience: currentUser.experience || '',
+        clinicName: currentUser.clinicName || '',
+        address: currentUser.clinicAddress || '',
+        city: currentUser.clinicCity || '',
+        university: currentUser.education || '',
+        bio: currentUser.biography || '',
+      };
+      
+      setOriginalData(userData);
+      setFormData({...userData});
+    }
+    
+    setIsLoading(false);
+  }, []);
 
   // Helper function to filter only Greek and English letters and spaces
   const filterLettersOnly = (value) => {
@@ -245,12 +274,80 @@ const Profile = () => {
       return;
     }
 
-    // If validation passes, save the changes
-    console.log('Form submitted:', formData);
-    // Save the changes to originalData
-    setOriginalData({...formData});
-    setIsEditing(false);
-    setShowSaveSuccessModal(true);
+    // If validation passes, save the changes to database
+    saveProfileChanges();
+  };
+
+  const saveProfileChanges = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || !currentUser.id) {
+        throw new Error('User not logged in');
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        afm: formData.afm,
+        licenseNumber: formData.vetLicense,
+        licenseType: formData.licenseType,
+        specialization: Array.isArray(formData.specialties) ? formData.specialties.join(', ') : formData.specialties,
+        experience: formData.yearsOfExperience,
+        education: formData.university,
+        biography: formData.bio,
+        clinicName: formData.clinicName,
+        clinicAddress: formData.address,
+        clinicCity: formData.city,
+      };
+
+      console.log('Saving vet profile:', updatedUser);
+
+      // Save to database
+      const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const savedUser = await response.json();
+      console.log('Profile updated successfully:', savedUser);
+
+      // Update localStorage with new data
+      localStorage.setItem('currentUser', JSON.stringify({
+        ...currentUser,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        afm: formData.afm,
+        licenseNumber: formData.vetLicense,
+        licenseType: formData.licenseType,
+        specialization: formData.specialties,
+        experience: formData.yearsOfExperience,
+        education: formData.university,
+        biography: formData.bio,
+        clinicName: formData.clinicName,
+        clinicAddress: formData.address,
+        clinicCity: formData.city,
+      }));
+
+      // Update original data to reflect saved changes
+      setOriginalData({...formData});
+      setIsEditing(false);
+      setShowSaveSuccessModal(true);
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      setError('Σφάλμα κατά την αποθήκευση. Παρακαλώ δοκιμάστε ξανά.');
+    }
   };
 
   const handleBackToProfile = () => {
@@ -274,6 +371,19 @@ const Profile = () => {
         pageTitle="Προφίλ"
         variant="vet"
       />
+    );
+  }
+
+  // If loading, show loading state
+  if (isLoading) {
+    return (
+      <PageLayout title="Προφίλ" breadcrumbs={breadcrumbItems}>
+        <div className="profile">
+          <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <Loader2 size={40} className="loader-spin" />
+          </div>
+        </div>
+      </PageLayout>
     );
   }
 

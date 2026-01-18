@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SquarePen, X, Save, UserRound, UserRoundCheck, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -13,6 +13,7 @@ const Profile = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -27,18 +28,41 @@ const Profile = () => {
   
   // Original data that won't change unless saved
   const [originalData, setOriginalData] = useState({
-    firstName: 'Μαρία',
-    lastName: 'Παπαδοπούλου',
-    email: 'maria.p@example.com',
-    phone: '6912345678',
-    afm: '123456789',
-    address: 'Πανεπιστημίου 45',
-    city: 'Αθήνα',
-    postalCode: '10679',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    afm: '',
+    address: '',
+    city: '',
+    postalCode: '',
   });
   
   // Working copy for editing
   const [formData, setFormData] = useState({...originalData});
+
+  // Load user data from localStorage on component mount
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (currentUser) {
+      const userData = {
+        firstName: currentUser.name || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        afm: currentUser.afm || '',
+        address: currentUser.address || '',
+        city: currentUser.city || '',
+        postalCode: currentUser.postalCode || '',
+      };
+      
+      setOriginalData(userData);
+      setFormData({...userData});
+    }
+    
+    setIsLoading(false);
+  }, []);
 
   // Helper function to filter only Greek and English letters and spaces
   const filterLettersOnly = (value) => {
@@ -204,12 +228,66 @@ const Profile = () => {
       return;
     }
 
-    // If validation passes, save the changes
-    console.log('Form submitted:', formData);
-    // Save the changes to originalData
-    setOriginalData({...formData});
-    setIsEditing(false);
-    setShowSaveSuccessModal(true);
+    // If validation passes, save the changes to database
+    saveProfileChanges();
+  };
+
+  const saveProfileChanges = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || !currentUser.id) {
+        throw new Error('User not logged in');
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        afm: formData.afm,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+      };
+
+      // Save to database
+      const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const savedUser = await response.json();
+      console.log('Profile updated successfully:', savedUser);
+
+      // Update localStorage with new data
+      localStorage.setItem('currentUser', JSON.stringify({
+        ...currentUser,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        afm: formData.afm,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+      }));
+
+      // Update original data to reflect saved changes
+      setOriginalData({...formData});
+      setIsEditing(false);
+      setShowSaveSuccessModal(true);
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      setError('Σφάλμα κατά την αποθήκευση. Παρακαλώ δοκιμάστε ξανά.');
+    }
   };
 
   const handleBackToProfile = () => {
@@ -234,6 +312,19 @@ const Profile = () => {
         pageTitle="Προφίλ"
         variant="owner"
       />
+    );
+  }
+
+  // If loading, show loading state
+  if (isLoading) {
+    return (
+      <PageLayout variant="owner" title="Προφίλ" breadcrumbs={breadcrumbItems}>
+        <div className="owner-profile">
+          <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <Loader2 size={40} className="loader-spin" />
+          </div>
+        </div>
+      </PageLayout>
     );
   }
 

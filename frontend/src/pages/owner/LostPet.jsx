@@ -36,7 +36,7 @@ const OwnerLostPet = () => {
           label: `${pet.name}${pet.microchip ? ' - ' + pet.microchip : ''}`,
           microchip: pet.microchip || '',
           name: pet.name,
-          type: pet.species || pet.type || 'Σκύλος',
+          type: pet.type || 'Σκύλος',
           breed: pet.breed || '',
           image: pet.image || '🐾'
         }));
@@ -112,7 +112,7 @@ const OwnerLostPet = () => {
       setFormData(prev => ({
         ...prev,
         selectedPet: value,
-        microchipNumber: selectedPetData.microchip,
+        microchipNumber: selectedPetData.microchipId,
         petName: selectedPetData.name
       }));
     }
@@ -174,7 +174,7 @@ const OwnerLostPet = () => {
       // Create lost pet declaration
       const lostPetData = {
         ownerId: currentUser.id,
-        microchipNumber: formData.microchipNumber,
+        microchipId: formData.microchipNumber,
         petName: formData.petName,
         lostDate: formData.lostDate,
         lostLocation: formData.location,
@@ -185,11 +185,12 @@ const OwnerLostPet = () => {
         contactEmail: currentUser.email,
         ownerName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
         description: formData.description,
+        petStatus: 1,
         status: 'active',
         imageUrl: formData.photo || null
       };
 
-      const response = await fetch('http://localhost:5000/lostPets', {
+      const response = await fetch('http://localhost:5000/pets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

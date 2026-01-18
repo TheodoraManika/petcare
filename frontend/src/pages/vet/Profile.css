@@ -275,5 +275,17 @@
   }
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.loader-spin {
+  animation: spin 1s linear infinite;
+  color: #FCA47C;
+}
+
 
 

@@ -206,6 +206,9 @@ const OwnerRegisterPage = () => {
     try {
       // Check if email already exists
       const checkEmailResponse = await fetch(`http://localhost:5000/users?email=${encodeURIComponent(formData.email)}`);
+      if (!checkEmailResponse.ok) {
+        throw new Error('Failed to check email');
+      }
       const existingUsers = await checkEmailResponse.json();
       
       if (existingUsers && existingUsers.length > 0) {
@@ -227,8 +230,10 @@ const OwnerRegisterPage = () => {
         city: formData.city,
         postalCode: formData.postalCode,
         avatar: null,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString('el-GR'),
       };
+
+      console.log('Sending owner registration data:', newUser);
 
       // POST to JSON Server
       const response = await fetch('http://localhost:5000/users', {
@@ -239,20 +244,33 @@ const OwnerRegisterPage = () => {
         body: JSON.stringify(newUser),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       if (!response.ok) {
-        throw new Error('Failed to register user');
+        const errorData = await response.text();
+        console.error('Server error response:', errorData);
+        throw new Error(`Failed to register user: ${response.statusText}`);
       }
 
       const registeredUser = await response.json();
+      console.log('Registered user:', registeredUser);
 
       // Save to localStorage and redirect
       localStorage.setItem('currentUser', JSON.stringify({
         id: registeredUser.id,
         email: registeredUser.email,
         name: registeredUser.name,
+        lastName: registeredUser.lastName,
         username: registeredUser.name,
         userType: registeredUser.userType,
         avatar: registeredUser.avatar,
+        phone: registeredUser.phone,
+        afm: registeredUser.afm,
+        address: registeredUser.address,
+        addressNumber: registeredUser.addressNumber,
+        city: registeredUser.city,
+        postalCode: registeredUser.postalCode,
       }));
 
       // Dispatch custom event to notify auth change

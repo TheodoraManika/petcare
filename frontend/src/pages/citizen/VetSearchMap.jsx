@@ -115,6 +115,11 @@ const VetSearchMap = () => {
         const availabilityRecords = await availabilityResponse.json();
         console.log('Fetched availability records:', availabilityRecords);
 
+        // Fetch reviews data
+        const reviewsResponse = await fetch('http://localhost:5000/reviews');
+        const allReviews = await reviewsResponse.json();
+        console.log('Fetched reviews:', allReviews);
+
         // Filter only vet users and add default coordinates and availability
         const vetUsers = users
           .filter(user => user.userType === 'vet')
@@ -123,14 +128,28 @@ const VetSearchMap = () => {
             const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vet.id));
             const availableDays = [...new Set(vetAvailability.map(a => a.day))];
 
-            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays);
+            // Get reviews for this vet
+            const vetReviews = allReviews.filter(review => Number(review.vetId) === Number(vet.id));
+            
+            // Calculate average rating from reviews
+            let rating = 0;
+            if (vetReviews.length > 0) {
+              const totalRating = vetReviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
+              rating = totalRating / vetReviews.length;
+            } else {
+              rating = 4.5 + (Math.random() * 0.4); // Random rating between 4.5-4.9 as fallback
+            }
+
+            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays, 'reviews:', vetReviews.length, 'rating:', rating);
 
             return {
               ...vet,
               name: vet.name || 'Άγνωστος',
               specialty: vet.specialization || 'Γενικός Κτηνίατρος',
               area: `${vet.clinicCity || 'Αθήνα'}, ${vet.clinicAddress || 'Άγνωστη διεύθυνση'}`,
-              rating: 4.5 + (Math.random() * 0.4), // Random rating between 4.5-4.9
+              rating: rating,
+              reviewCount: vetReviews.length,
+              reviews: vetReviews,
               lat: 37.9838 + (Math.random() * 0.3 - 0.15), // Random latitude around Athens
               lon: 23.7275 + (Math.random() * 0.3 - 0.15), // Random longitude around Athens
               position: { top: `${30 + (index * 10)}%`, left: `${40 + (index * 8)}%` },

@@ -91,8 +91,6 @@ const minimalDb = {
       "createdAt": "2025-01-05T00:00:00Z"
     }
   ],
-  "lostPets": [],
-  "foundPets": [],
   "medicalProcedures": [],
   "availability": [],
   "appointments": []
@@ -110,8 +108,6 @@ console.log('📊 CURRENT DATABASE STATE:');
 console.log(`   • Users: ${currentDb.users.length}`);
 console.log(`   • Pets: ${currentDb.pets.length}`);
 console.log(`   • Medical Procedures: ${currentDb.medicalProcedures.length}`);
-console.log(`   • Lost Pets: ${currentDb.lostPets.length}`);
-console.log(`   • Found Pets: ${currentDb.foundPets.length}`);
 console.log(`   • Availability Slots: ${currentDb.availability.length}`);
 console.log(`   • Appointments: ${currentDb.appointments.length}`);
 

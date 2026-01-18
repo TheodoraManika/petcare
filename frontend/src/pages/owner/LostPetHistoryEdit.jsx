@@ -41,7 +41,7 @@ const LostPetHistoryEdit = () => {
         setError(null);
 
         // Fetch the lost pet declaration
-        const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`);
+        const response = await fetch(`http://localhost:5000/pets/${declarationId}`);
         if (!response.ok) {
           throw new Error('Δήλωση δεν βρέθηκε');
         }
@@ -176,7 +176,7 @@ const LostPetHistoryEdit = () => {
       };
 
       // Update the lost pet declaration in database
-      const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`, {
+      const response = await fetch(`http://localhost:5000/pets/${declarationId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ const LostPetHistoryEdit = () => {
       };
 
       // Update the lost pet declaration with submitted status
-      const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`, {
+      const response = await fetch(`http://localhost:5000/pets/${declarationId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -19,19 +19,52 @@ const LostPetHistoryDetail = () => {
         setError(null);
 
         // Fetch the lost pet declaration
-        const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`);
+        const response = await fetch(`http://localhost:5000/pets/${declarationId}`);
         if (!response.ok) {
           throw new Error('Δήλωση δεν βρέθηκε');
         }
 
         const lostPet = await response.json();
 
-        // Fetch pet details if petId exists
+        // Helper function to parse dates in DD/MM/YYYY or ISO format
+        const parseDate = (dateStr) => {
+          if (!dateStr) return '-';
+          
+          // Try to parse ISO format first
+          if (dateStr.includes('T') || dateStr.includes('-')) {
+            const parsed = new Date(dateStr);
+            return isNaN(parsed) ? dateStr : parsed.toLocaleDateString('el-GR');
+          }
+          
+          // Try to parse DD/MM/YYYY format
+          if (dateStr.includes('/')) {
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+              const parsed = new Date(parts[2], parts[1] - 1, parts[0]); // Year, Month (0-based), Day
+              return isNaN(parsed) ? dateStr : parsed.toLocaleDateString('el-GR');
+            }
+          }
+          
+          return dateStr;
+        };
+
+        // Fetch pet details - try by petId first, then by microchipId
         let petDetails = {};
         if (lostPet.petId) {
           const petResponse = await fetch(`http://localhost:5000/pets/${lostPet.petId}`);
           if (petResponse.ok) {
             petDetails = await petResponse.json();
+          }
+        }
+        
+        // If no petDetails found and we have microchipId, fetch by microchip
+        if (!petDetails.id && lostPet.microchipId) {
+          const petsResponse = await fetch(`http://localhost:5000/pets?microchipId=${lostPet.microchipId}`);
+          if (petsResponse.ok) {
+            const pets = await petsResponse.json();
+            if (pets.length > 0) {
+              petDetails = pets[0];
+            }
           }
         }
 
@@ -57,24 +90,24 @@ const LostPetHistoryDetail = () => {
         const formattedDeclaration = {
           id: lostPet.id,
           type: lostPet.finderName && lostPet.finderId ? 'found_by_other' : 'loss',
-          petName: lostPet.petName || petDetails.name || '-',
-          petType: petDetails.species || lostPet.petType || '-',
-          petSpecies: petDetails.species || '-',
-          breed: petDetails.breed || lostPet.breed || '-',
-          petBreed: petDetails.breed || '-',
-          petColor: petDetails.color || lostPet.color || '-',
-          petGender: petDetails.gender || lostPet.gender || '-',
-          microchip: petDetails.microchipId || lostPet.microchip || '-',
-          date: lostPet.dateLost || lostPet.dateFound || '-',
-          location: lostPet.location || '-',
+          petName: lostPet.name || lostPet.petName || petDetails.name || '-',
+          petType: lostPet.type || petDetails.type || '-',
+          petSpecies: lostPet.type || petDetails.type || '-',
+          breed: lostPet.breed || petDetails.breed || '-',
+          petBreed: lostPet.breed || petDetails.breed || '-',
+          petColor: lostPet.color || petDetails.color || '-',
+          petGender: lostPet.gender || petDetails.gender || '-',
+          microchip: lostPet.microchipId || petDetails.microchipId || '-',
+          date: parseDate(lostPet.lostDate || lostPet.dateFound || lostPet.dateLost),
+          location: lostPet.lostLocation || lostPet.location || lostPet.foundLocation || '-',
           description: lostPet.description || '-',
-          phone: ownerInfo.phone || lostPet.phone || '-',
+          phone: ownerInfo.phone || lostPet.contactPhone || '-',
           status: 'submitted',
           statusLabel: 'Υποβλήθηκε',
           // For found_by_other
           contactName: finderInfo.name && finderInfo.lastName ? `${finderInfo.name} ${finderInfo.lastName}` : lostPet.finderName || '-',
-          contactPhone: finderInfo.phone || lostPet.finderPhone || '-',
-          contactEmail: finderInfo.email || lostPet.finderEmail || '-',
+          contactPhone: finderInfo.phone || lostPet.finderPhone || lostPet.contactPhone || '-',
+          contactEmail: finderInfo.email || lostPet.finderEmail || lostPet.contactEmail || '-',
         };
 
         setDeclaration(formattedDeclaration);
@@ -110,8 +143,27 @@ const LostPetHistoryDetail = () => {
     navigate(`${ROUTES.owner.lostHistory}/${declarationId}/edit`);
   };
 
-  const handleFound = () => {
-    setDeclaration(prev => ({ ...prev, status: 'found', statusLabel: 'Βρέθηκε' }));
+  const handleFound = async () => {
+    try {
+      // Update ONLY petStatus in database to mark as found (petStatus: 0)
+      const response = await fetch(`http://localhost:5000/pets/${declarationId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ petStatus: 0 }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update pet status');
+      }
+
+      // Update local state
+      setDeclaration(prev => ({ ...prev, status: 'found', statusLabel: 'Βρέθηκε' }));
+    } catch (error) {
+      console.error('Error marking pet as found:', error);
+      alert('Σφάλμα κατά την ενημέρωση της κατάστασης. Παρακαλώ προσπαθήστε ξανά.');
+    }
   };
 
   const handlePrint = () => {

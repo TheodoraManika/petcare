@@ -41,14 +41,32 @@ const LoginPage = () => {
       const user = users.find(u => u.email === email && u.password === password);
 
       if (user) {
-        // Successful login
+        // Successful login - store all user data
         localStorage.setItem('currentUser', JSON.stringify({
           id: user.id,
           email: user.email,
           name: user.name,
+          lastName: user.lastName,
           username: user.name,
           userType: user.userType,
           avatar: user.avatar,
+          phone: user.phone,
+          afm: user.afm,
+          address: user.address,
+          addressNumber: user.addressNumber,
+          city: user.city,
+          postalCode: user.postalCode,
+          // Vet-specific fields
+          specialization: user.specialization,
+          clinicName: user.clinicName,
+          licenseNumber: user.licenseNumber,
+          licenseType: user.licenseType,
+          clinicAddress: user.clinicAddress,
+          clinicCity: user.clinicCity,
+          clinicPostalCode: user.clinicPostalCode,
+          experience: user.experience,
+          education: user.education,
+          biography: user.biography,
         }));
 
         // Dispatch custom event to notify auth change

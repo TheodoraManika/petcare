@@ -26,10 +26,27 @@ const Reviews = () => {
         return;
       }
 
-      const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${currentUser.id}`);
-      if (reviewsResponse.ok) {
-        const data = await reviewsResponse.json();
-        setReviews(data);
+      // Fetch reviews and users
+      const [reviewsResponse, usersResponse] = await Promise.all([
+        fetch(`http://localhost:5000/reviews?vetId=${currentUser.id}`),
+        fetch('http://localhost:5000/users')
+      ]);
+
+      if (reviewsResponse.ok && usersResponse.ok) {
+        const reviewsData = await reviewsResponse.json();
+        const usersData = await usersResponse.json();
+
+        // Enrich reviews with owner names
+        const enrichedReviews = reviewsData.map(review => {
+          const owner = usersData.find(u => String(u.id) === String(review.ownerId));
+          return {
+            ...review,
+            ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Ανώνυμος',
+            date: review.reviewedAt
+          };
+        });
+
+        setReviews(enrichedReviews);
       }
     } catch (err) {
       console.error('Error fetching reviews:', err);
@@ -77,12 +94,14 @@ const Reviews = () => {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '-';
-    // Handle YYYY-MM-DD format
-    if (dateStr.includes('-')) {
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
+    try {
+      // Handle ISO format (2026-01-18T19:32:34.514Z)
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '-';
+      return date.toLocaleDateString('el-GR');
+    } catch {
+      return '-';
     }
-    return dateStr;
   };
 
   const breadcrumbItems = [];

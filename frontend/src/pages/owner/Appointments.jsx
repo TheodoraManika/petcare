@@ -60,6 +60,7 @@ const Appointments = () => {
                 const vet = await vetResponse.json();
                 aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
                 aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
+                aptWithDetails.vetId = vet.id;
               }
             } catch (err) {
               console.error('Error fetching vet details:', err);
@@ -72,12 +73,15 @@ const Appointments = () => {
                 if (petResponse.ok) {
                   const pet = await petResponse.json();
                   aptWithDetails.petName = pet.name || pet.petName || '';
-                  aptWithDetails.petSpecies = pet.species || pet.petSpecies || '';
+                  aptWithDetails.petSpecies = pet.type || pet.petSpecies || '';
                 }
               } catch (err) {
                 console.error('Error fetching pet details:', err);
               }
             }
+            
+            // Add canReview flag for completed appointments
+            aptWithDetails.canReview = apt.status === 'completed';
             
             return aptWithDetails;
           })
@@ -159,6 +163,7 @@ const Appointments = () => {
                 const vet = await vetResponse.json();
                 aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
                 aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
+                aptWithDetails.vetId = vet.id;
               }
             } catch (err) {
               console.error('Error fetching vet details:', err);
@@ -171,12 +176,15 @@ const Appointments = () => {
                 if (petResponse.ok) {
                   const pet = await petResponse.json();
                   aptWithDetails.petName = pet.name || pet.petName || '';
-                  aptWithDetails.petSpecies = pet.species || pet.petSpecies || '';
+                  aptWithDetails.petSpecies = pet.type || pet.petSpecies || '';
                 }
               } catch (err) {
                 console.error('Error fetching pet details:', err);
               }
             }
+            
+            // Add canReview flag for completed appointments
+            aptWithDetails.canReview = apt.status === 'completed';
             
             return aptWithDetails;
           })
@@ -319,7 +327,7 @@ const Appointments = () => {
                 if (petResponse.ok) {
                   const pet = await petResponse.json();
                   aptWithDetails.petName = pet.name || pet.petName || '';
-                  aptWithDetails.petSpecies = pet.species || pet.petSpecies || '';
+                  aptWithDetails.petSpecies = pet.type || pet.petSpecies || '';
                 }
               } catch (err) {
                 console.error('Error fetching pet details:', err);

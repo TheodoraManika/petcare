@@ -14,9 +14,29 @@ const PetCard = ({ pet, onClick, onFound }) => {
     }
   };
 
-  const handleFoundClick = (e) => {
+  const handleFoundClick = async (e) => {
     e.stopPropagation();
-    onFound && onFound();
+    
+    try {
+      // Update ONLY petStatus in database to mark as found (petStatus: 0)
+      const response = await fetch(`http://localhost:5000/pets/${pet.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ petStatus: 0 }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update pet status');
+      }
+
+      // Call the parent callback
+      onFound && onFound();
+    } catch (error) {
+      console.error('Error marking pet as found:', error);
+      alert('Σφάλμα κατά την ενημέρωση της κατάστασης. Παρακαλώ προσπαθήστε ξανά.');
+    }
   };
 
   return (

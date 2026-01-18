@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, FileText, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -30,8 +30,6 @@ const Operation = () => {
     description: ''
   });
 
-
-
   const handleSearchComplete = (result) => {
     const { found, pet, microchip } = result;
 
@@ -39,7 +37,7 @@ const Operation = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        petSearch: pet.microchip,
+        petSearch: pet.microchipId,
       }));
       setFoundPetDetails(pet);
     } else {
@@ -48,8 +46,7 @@ const Operation = () => {
         ...prev,
         petSearch: microchip
       }));
-      setFoundPetDetails({ microchip });
-      setFoundPetDetails({ microchip });
+      setFoundPetDetails({ microchipId: microchip });
       // Removed error handling
     }
   };
@@ -148,7 +145,7 @@ const Operation = () => {
         throw new Error('Failed to fetch pets');
       }
       const pets = await petsResponse.json();
-      const pet = pets.find(p => p.microchip === formData.petSearch || p.microchipNumber === formData.petSearch);
+      const pet = pets.find(p => p.microchipId === formData.petSearch);
 
       if (!pet) {
         setNotification({
@@ -163,19 +160,15 @@ const Operation = () => {
       // Prepare medical operation data
       const operationData = {
         petId: pet.id,
-        petName: pet.petName || pet.name,
-        microchip: formData.petSearch,
         vetId: currentUser.id,
-        vetName: `${currentUser.name} ${currentUser.lastName || ''}`,
-        operationType: formData.operationType,
-        operationDate: formData.operationDate,
+        type: formData.operationType,
+        date: formData.operationDate,
         description: formData.description,
-        createdAt: new Date().toISOString(),
-        status: 'completed'
+        createdAt: new Date().toLocaleDateString('el-GR')
       };
 
       // Submit to backend
-      const response = await fetch('http://localhost:5000/medicalOperations', {
+      const response = await fetch('http://localhost:5000/medicalProcedures', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -184,26 +177,7 @@ const Operation = () => {
       });
 
       if (!response.ok) {
-        // If medicalOperations endpoint doesn't exist, try adding to pet's history
-        if (response.status === 404) {
-          // Try alternative: update pet with operation history
-          const updateResponse = await fetch(`http://localhost:5000/pets/${pet.id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              lastOperation: operationData.operationDate,
-              lastOperationType: operationData.operationType,
-            }),
-          });
-          
-          if (!updateResponse.ok) {
-            throw new Error('Failed to save medical operation');
-          }
-        } else {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       console.log('Medical operation recorded successfully');
@@ -240,25 +214,20 @@ const Operation = () => {
   // Check if form is valid (all required fields filled and microchip is 15 digits)
   const isFormValid = () => {
     return (
-      formData.petSearch.trim() !== '' &&
+      formData.petSearch &&
+      formData.petSearch.toString().trim() !== '' &&
       formData.petSearch.length === 15 &&
-      formData.operationType.trim() !== '' &&
-      formData.operationDate.trim() !== ''
+      formData.operationType &&
+      formData.operationType.toString().trim() !== '' &&
+      formData.operationDate &&
+      formData.operationDate.toString().trim() !== ''
     );
   };
 
   // Helper function to get label for operation type
   const getOperationTypeLabel = (value) => {
-    const options = {
-      'vaccination': 'Εμβολιασμός',
-      'checkup': 'Γενική Εξέταση',
-      'surgery': 'Χειρουργείο',
-      'treatment': 'Θεραπεία',
-      'dental': 'Οδοντιατρική',
-      'emergency': 'Επείγον Περιστατικό',
-      'other': 'Άλλο'
-    };
-    return options[value] || value;
+    // Since we now store Greek labels directly, just return the value
+    return value || '';
   };
 
   // Prepare fields for confirmation modal
@@ -326,13 +295,13 @@ const Operation = () => {
                 value={formData.operationType}
                 onChange={(value) => handleSelectChange('operationType', value)}
                 options={[
-                  { value: 'vaccination', label: 'Εμβολιασμός' },
-                  { value: 'checkup', label: 'Γενική Εξέταση' },
-                  { value: 'surgery', label: 'Χειρουργείο' },
-                  { value: 'treatment', label: 'Θεραπεία' },
-                  { value: 'dental', label: 'Οδοντιατρική' },
-                  { value: 'emergency', label: 'Επείγον Περιστατικό' },
-                  { value: 'other', label: 'Άλλο' }
+                  { value: 'Εμβολιασμός', label: 'Εμβολιασμός' },
+                  { value: 'Γενική Εξέταση', label: 'Γενική Εξέταση' },
+                  { value: 'Χειρουργείο', label: 'Χειρουργείο' },
+                  { value: 'Θεραπεία', label: 'Θεραπεία' },
+                  { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },
+                  { value: 'Επείγον Περιστατικό', label: 'Επείγον Περιστατικό' },
+                  { value: 'Άλλο', label: 'Άλλο' }
                 ]}
                 placeholder="Επιλέξτε τύπο πράξης"
                 required

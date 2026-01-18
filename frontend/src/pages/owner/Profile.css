@@ -339,3 +339,24 @@
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-spin {
+  animation: spin 1s linear infinite;
+  color: #23CDD9;
+}

@@ -49,7 +49,7 @@ const Appointments = () => {
                   if (petRes.ok) {
                     const petData = await petRes.json();
                     petName = petData.name || petName || '-';
-                    species = petData.species || species || '-';
+                    species = petData.type || species || '-';
                     breed = petData.breed || breed || '-';
                   }
                 } catch (err) {

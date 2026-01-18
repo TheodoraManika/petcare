@@ -65,7 +65,7 @@ const SearchResultsList = ({
         {item.rating && (
           <div className="result-rating-info">
             <Star size={14} fill="#23CED9" color="#23CED9" />
-            <span className="rating-stars">{item.rating}</span>
+            <span className="rating-stars">{typeof item.rating === 'number' ? item.rating.toFixed(1) : item.rating}</span>
             {item.reviewCount && <span className="rating-count">({item.reviewCount} αξιολογήσεις)</span>}
           </div>
         )}

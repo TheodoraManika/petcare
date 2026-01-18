@@ -36,10 +36,32 @@ const PetDetail = () => {
         const ownerResponse = await fetch(`http://localhost:5000/users/${pet.ownerId}`);
         const owner = await ownerResponse.json();
         
+        // Function to translate gender to Greek
+        const translateGender = (gender) => {
+          const genderMap = {
+            'male': 'Αρσενικό',
+            'female': 'Θηλυκό',
+            'Αρσενικό': 'Αρσενικό',
+            'Θηλυκό': 'Θηλυκό'
+          };
+          return genderMap[gender] || gender;
+        };
+        
+        // Function to translate pet type to Greek
+        const translatePetType = (type) => {
+          const typeMap = {
+            'dog': 'Σκύλος',
+            'cat': 'Γάτα',
+            'Σκύλος': 'Σκύλος',
+            'Γάτα': 'Γάτα'
+          };
+          return typeMap[type] || type;
+        };
+        
         // Fetch medical procedures for this pet
         const medicalResponse = await fetch('http://localhost:5000/medicalProcedures');
         const allProcedures = await medicalResponse.json();
-        const petProcedures = allProcedures.filter(proc => Number(proc.petId) === Number(petId));
+        const petProcedures = allProcedures.filter(proc => String(proc.petId) === String(petId));
         
         // Fetch vets for medical history
         const vetsResponse = await fetch('http://localhost:5000/users');
@@ -47,18 +69,29 @@ const PetDetail = () => {
         
         // Transform medical procedures for display
         const transformedHistory = petProcedures.map(proc => {
-          const vet = allVets.find(v => Number(v.id) === Number(proc.vetId));
+          const vet = allVets.find(v => String(v.id) === String(proc.vetId));
           
           // Map Greek procedure types to internal type keys for icons and statistics
           const typeMap = {
             'Εμβολιασμός': 'vaccination',
+            'vaccination': 'vaccination',
             'Τακτική Εξέταση': 'examination',
+            'Γενική Εξέταση': 'examination',
+            'checkup': 'examination',
             'Χειρουργείο': 'surgery',
-            'Θεραπεία': 'treatment',
-            'Οδοντιατρική Εξέταση': 'dental',
+            'surgery': 'surgery',
+            'Θεραπεία': 'examination',
+            'treatment': 'examination',
+            'Οδοντιατρική Εξέταση': 'examination',
+            'Οδοντιατρική': 'examination',
+            'dental': 'examination',
             'Έκτακτη Περίπτωση': 'emergency',
+            'Επείγον Περιστατικό': 'emergency',
+            'emergency': 'emergency',
             'Συμβουλή': 'consultation',
-            'Περιποίηση': 'grooming'
+            'Περιποίηση': 'grooming',
+            'Άλλο': 'examination',
+            'other': 'examination'
           };
           
           return {
@@ -82,15 +115,15 @@ const PetDetail = () => {
         // Format pet data
         const formattedPet = {
           name: pet.name || 'Άγνωστο',
-          type: pet.species || 'Άγνωστο',
+          type: translatePetType(pet.type) || 'Άγνωστο',
           breed: pet.breed || '-',
-          gender: pet.gender || '-',
+          gender: translateGender(pet.gender) || '-',
           birthDate: pet.birthDate || '-',
           microchip: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
-          afm: pet.ownerAFM || owner?.afm || '-',
-          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
+          afm: owner?.afm || '-',
+          icon: pet.type === 'Σκύλος' ? 'dog' : pet.type === 'Γάτα' ? 'cat' : 'pet',
           stats: stats
         };
         
@@ -199,7 +232,7 @@ return (
                             </div>
                             <div className="owner-pet-detail__info-row">
                                 <span className="owner-pet-detail__info-label">ΑΦΜ Ιδιοκτήτη</span>
-                                <span className="owner-pet-detail__info-value">{pet.ownerAFM}</span>
+                                <span className="owner-pet-detail__info-value">{pet.afm}</span>
                             </div>
                         </div>
 

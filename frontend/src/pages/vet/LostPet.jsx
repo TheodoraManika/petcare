@@ -69,13 +69,13 @@ const LostPet = () => {
       // Normalize pet data (could have different field names)
       const petName = pet.petName || pet.name || '';
       const petColor = pet.petColor || pet.color || '';
-      const petSpecies = pet.species || pet.type || '';
+      const petSpecies = pet.type || '';
       
       if (!pet.isFromLostPets) {
         // Only fill form data if NOT from lostPets
         setFormData(prev => ({
           ...prev,
-          microchipNumber: pet.microchip || microchip,
+          microchipNumber: pet.microchipId || microchip,
           petName: petName,
           petColor: petColor,
           description: pet.description || '',
@@ -267,48 +267,58 @@ const LostPet = () => {
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       
-      // Create lost pet declaration
-      const lostPetData = {
+      // First, find the existing pet by microchipId
+      const petsResponse = await fetch('http://localhost:5000/pets');
+      if (!petsResponse.ok) {
+        throw new Error('Failed to fetch pets');
+      }
+      
+      const allPets = await petsResponse.json();
+      const existingPet = allPets.find(p => p.microchipId === formData.microchipNumber);
+      
+      if (!existingPet) {
+        setNotification({
+          type: 'error',
+          message: 'Δεν βρέθηκε κατοικίδιο με αυτόν τον αριθμό μικροτσίπ'
+        });
+        setShowConfirmModal(false);
+        return;
+      }
+
+      // Update the existing pet with lost information
+      const updatedPetData = {
+        ...existingPet,
         reportedByVetId: currentUser.id,
-        microchipNumber: formData.microchipNumber,
-        petName: formData.petName,
         lostDate: formData.lostDate,
         lostLocation: formData.location,
         area: formData.location,
         locationLat: formData.locationLat,
         locationLon: formData.locationLon,
-        contactPhone: formData.contactPhone,
-        contactEmail: formData.ownerEmail,
-        ownerName: `${formData.ownerName} ${formData.ownerSurname}`.trim(),
-        color: formData.petColor,
-        description: formData.description,
-        status: 'active',
-        imageUrl: formData.photo || null
+        petStatus: 1,
+        description: formData.description
       };
 
-      const response = await fetch('http://localhost:5000/lostPets', {
-        method: 'POST',
+      const updateResponse = await fetch(`http://localhost:5000/pets/${existingPet.id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(lostPetData)
+        body: JSON.stringify(updatedPetData)
       });
 
-      if (response.ok) {
-        setShowConfirmModal(false);
-        setShowSuccess(true);
-      } else {
-        setNotification({
-          type: 'error',
-          message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
-        });
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update pet');
       }
+
+      setShowConfirmModal(false);
+      setShowSuccess(true);
     } catch (err) {
       console.error('Error submitting lost pet declaration:', err);
       setNotification({
         type: 'error',
         message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
       });
+      setShowConfirmModal(false);
     }
   };
 

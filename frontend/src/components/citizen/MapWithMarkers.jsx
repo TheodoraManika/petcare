@@ -73,7 +73,7 @@ const MapWithMarkers = ({
           {marker.rating && (
             <div className="popup-rating">
               <Star size={14} fill="#FCA47C" color="#FCA47C" />
-              <span>{marker.rating}</span>
+              <span>{typeof marker.rating === 'number' ? marker.rating.toFixed(1) : marker.rating}</span>
             </div>
           )}
         </div>

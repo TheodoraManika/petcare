@@ -16,6 +16,17 @@ const LostPets = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Function to translate pet type to Greek
+  const translatePetType = (type) => {
+    const typeMap = {
+      'dog': 'Σκύλος',
+      'cat': 'Γάτα',
+      'Σκύλος': 'Σκύλος',
+      'Γάτα': 'Γάτα'
+    };
+    return typeMap[type] || type;
+  };
+
   const [filters, setFilters] = useState({
     animal: '',
     area: '',
@@ -42,17 +53,20 @@ const LostPets = () => {
   useEffect(() => {
     const fetchLostPets = async () => {
       try {
-        const [lostPetsResponse, usersResponse] = await Promise.all([
-          fetch('http://localhost:5000/lostPets'),
+        const [petAlertsResponse, usersResponse] = await Promise.all([
+          fetch('http://localhost:5000/pets'),
           fetch('http://localhost:5000/users')
         ]);
 
-        if (!lostPetsResponse.ok || !usersResponse.ok) {
+        if (!petAlertsResponse.ok || !usersResponse.ok) {
           throw new Error('Failed to fetch data');
         }
 
-        const lostPetsData = await lostPetsResponse.json();
+        const petAlertsData = await petAlertsResponse.json();
         const usersData = await usersResponse.json();
+
+        // Filter only lost pets (petStatus === 1)
+        const lostPetsData = petAlertsData.filter(pet => pet.petStatus === 1);
 
         // Transform data for display (add owner info and default coordinates if missing)
         const transformedPets = lostPetsData.map((pet, index) => {
@@ -62,13 +76,14 @@ const LostPets = () => {
             ...pet,
             id: pet.id,
             name: pet.petName || pet.name || 'Άγνωστο',
-            type: pet.type || pet.species || 'Άγνωστο',
+            type: pet.type || 'Άγνωστο',
             breed: pet.breed || 'Άγνωστο',
             area: pet.lostLocation || 'Άγνωστη τοποθεσία',
             dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
             color: pet.color || 'Άγνωστο χρώμα',
             ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Άγνωστο',
             contactEmail: owner?.email || '',
+            contactPhone: owner?.phone || '',
             // Default coordinates for Athens if not specified
             lat: pet.locationLat || 37.9838,
             lon: pet.locationLon || 23.7275,
@@ -600,7 +615,7 @@ const LostPets = () => {
                           >
                             {pet.name}
                           </h3>
-                          <p className="pet-card-breed">{pet.type} - {pet.breed}</p>
+                          <p className="pet-card-breed">{translatePetType(pet.type)} - {pet.breed}</p>
                           <div className="pet-card-info">
                             <MapPin size={14} />
                             <span>{pet.area}</span>
@@ -676,7 +691,7 @@ const LostPets = () => {
                       <SearchIcon size={18} className="modal-detail-icon" />
                       <h4>Microchip</h4>
                     </div>
-                    <p className="modal-detail-content">{detailPet.microchip}</p>
+                    <p className="modal-detail-content">{detailPet.microchipId || '-'}</p>
                   </div>
 
                   <div className="modal-detail-item">

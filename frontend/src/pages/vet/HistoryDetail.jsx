@@ -34,7 +34,7 @@ const HistoryDetail = () => {
           declarationType: 'Ιατρική Πράξη',
           pet: {
             name: pet.name || '-',
-            species: pet.species || '-',
+            species: pet.type || '-',
             breed: pet.breed || '-',
             microchip: procedure.microchip || pet.microchipId || '-'
           },
@@ -55,7 +55,7 @@ const HistoryDetail = () => {
             declarationType: 'Μεταβίβαση',
             pet: {
               name: transfer.petName || pet.name || '-',
-              species: pet.species || '-',
+              species: pet.type || '-',
               breed: pet.breed || '-',
               microchip: transfer.microchip || pet.microchipId || '-'
             },
@@ -90,7 +90,7 @@ const HistoryDetail = () => {
             declarationType: 'Υιοθεσία',
             pet: {
               name: adoption.petName || pet.name || '-',
-              species: pet.species || '-',
+              species: pet.type || '-',
               breed: pet.breed || '-',
               microchip: adoption.microchip || pet.microchipId || '-'
             },
@@ -123,7 +123,7 @@ const HistoryDetail = () => {
             declarationType: 'Αναδοχή',
             pet: {
               name: foster.petName || pet.name || '-',
-              species: pet.species || '-',
+              species: pet.type || '-',
               breed: pet.breed || '-',
               microchip: foster.microchip || pet.microchipId || '-'
             },
@@ -267,7 +267,7 @@ const HistoryDetail = () => {
               </div>
               <div className="history-detail__info-item">
                 <span className="history-detail__info-label">Είδος Ζώου</span>
-                <span className="history-detail__info-value">{detailData.pet.species}</span>
+                <span className="history-detail__info-value">{detailData.pet.type}</span>
               </div>
               <div className="history-detail__info-item">
                 <span className="history-detail__info-label">Ράτσα</span>

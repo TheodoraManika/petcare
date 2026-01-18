@@ -28,8 +28,8 @@ const LostPetHistory = () => {
           return;
         }
 
-        // Fetch all lost pets from database
-        const response = await fetch('http://localhost:5000/lostPets');
+        // Fetch all lost pets from database (petStatus: 1)
+        const response = await fetch('http://localhost:5000/pets?petStatus=1');
         if (!response.ok) throw new Error('Failed to fetch lost pets');
         const allLostPets = await response.json();
 
@@ -45,41 +45,89 @@ const LostPetHistory = () => {
         const others = allLostPets.filter(pet => pet.ownerId == currentUser.id && (pet.finderName || pet.finderId));
 
         // Transform mine data (user's own findings + user's own lost pet declarations)
-        const mineTransformed = mine.map(pet => ({
-          id: pet.id,
-          type: pet.finderName || pet.finderId ? 'found_by_me' : 'own_lost_pet',
-          petName: pet.petName || pet.name,
-          petType: pet.type,
-          date: pet.dateFound 
-            ? new Date(pet.dateFound).toLocaleDateString('el-GR')
-            : pet.lostDate 
-            ? new Date(pet.lostDate).toLocaleDateString('el-GR')
-            : new Date().toLocaleDateString('el-GR'),
-          location: pet.location || pet.lostLocation || pet.lostLocation,
-          description: pet.description,
-          status: pet.status || 'submitted',
-          ownerName: pet.ownerName,
-          ownerPhone: pet.ownerPhone,
-          ownerEmail: pet.ownerEmail,
-        }));
+        const mineTransformed = mine.map(pet => {
+          // Helper function to parse dates in DD/MM/YYYY or ISO format
+          const parseDate = (dateStr) => {
+            if (!dateStr) return new Date().toLocaleDateString('el-GR');
+            
+            // Try to parse ISO format first
+            if (dateStr.includes('T') || dateStr.includes('-')) {
+              const parsed = new Date(dateStr);
+              return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+            }
+            
+            // Try to parse DD/MM/YYYY format
+            if (dateStr.includes('/')) {
+              const parts = dateStr.split('/');
+              if (parts.length === 3) {
+                const parsed = new Date(parts[2], parts[1] - 1, parts[0]); // Year, Month (0-based), Day
+                return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+              }
+            }
+            
+            return dateStr;
+          };
+
+          return {
+            id: pet.id,
+            type: pet.finderName || pet.finderId ? 'found_by_me' : 'own_lost_pet',
+            petName: pet.petName || pet.name,
+            petType: pet.type,
+            date: pet.dateFound 
+              ? parseDate(pet.dateFound)
+              : pet.lostDate 
+              ? parseDate(pet.lostDate)
+              : new Date().toLocaleDateString('el-GR'),
+            location: pet.location || pet.lostLocation || pet.lostLocation,
+            description: pet.description,
+            status: pet.status || 'submitted',
+            ownerName: pet.ownerName,
+            ownerPhone: pet.ownerPhone,
+            ownerEmail: pet.ownerEmail,
+          };
+        });
 
         // Transform others' findings (other people finding this user's pets)
-        const othersTransformed = others.map(pet => ({
-          id: pet.id,
-          type: 'found_by_other',
-          petName: pet.petName || pet.name,
-          petSpecies: pet.type,
-          petBreed: pet.breed,
-          petColor: pet.color,
-          petGender: pet.gender,
-          date: pet.foundDate ? new Date(pet.foundDate).toLocaleDateString('el-GR') : new Date().toLocaleDateString('el-GR'),
-          location: pet.foundLocation || pet.location,
-          description: pet.description,
-          contactName: pet.finderName,
-          contactPhone: pet.finderPhone,
-          contactEmail: pet.finderEmail,
-          status: pet.status || 'submitted',
-        }));
+        const othersTransformed = others.map(pet => {
+          // Helper function to parse dates in DD/MM/YYYY or ISO format
+          const parseDate = (dateStr) => {
+            if (!dateStr) return new Date().toLocaleDateString('el-GR');
+            
+            // Try to parse ISO format first
+            if (dateStr.includes('T') || dateStr.includes('-')) {
+              const parsed = new Date(dateStr);
+              return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+            }
+            
+            // Try to parse DD/MM/YYYY format
+            if (dateStr.includes('/')) {
+              const parts = dateStr.split('/');
+              if (parts.length === 3) {
+                const parsed = new Date(parts[2], parts[1] - 1, parts[0]); // Year, Month (0-based), Day
+                return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+              }
+            }
+            
+            return dateStr;
+          };
+
+          return {
+            id: pet.id,
+            type: 'found_by_other',
+            petName: pet.petName || pet.name,
+            petSpecies: pet.type,
+            petBreed: pet.breed,
+            petColor: pet.color,
+            petGender: pet.gender,
+            date: pet.foundDate ? parseDate(pet.foundDate) : pet.lostDate ? parseDate(pet.lostDate) : new Date().toLocaleDateString('el-GR'),
+            location: pet.foundLocation || pet.location,
+            description: pet.description,
+            contactName: pet.finderName,
+            contactPhone: pet.finderPhone,
+            contactEmail: pet.finderEmail,
+            status: pet.status || 'submitted',
+          };
+        });
 
         setDeclarations(mineTransformed);
         setFoundByOthers(othersTransformed);

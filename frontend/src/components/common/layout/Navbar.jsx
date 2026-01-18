@@ -34,6 +34,7 @@ const Navbar = ({ variant = 'vet' }) => {
         const userData = JSON.parse(storedUser);
         return {
           name: userData.name || userData.username || 'User',
+          lastName: userData.lastName || '',
           avatar: userData.avatar || null,
           userType: userData.userType || userData.role || variant,
         };
@@ -43,6 +44,7 @@ const Navbar = ({ variant = 'vet' }) => {
     }
     return {
       name: 'User',
+      lastName: '',
       avatar: null,
       userType: variant,
     };
@@ -323,6 +325,7 @@ const Navbar = ({ variant = 'vet' }) => {
                 <Avatar
                   src={user.avatar}
                   name={user.name}
+                  lastName={user.lastName}
                   size="sm"
                 />
                 {unreadNotificationsCount > 0 && (

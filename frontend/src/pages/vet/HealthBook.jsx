@@ -54,21 +54,13 @@ const HealthBook = () => {
       let pets = await petResponse.json();
       let pet = pets[0];
       
-      // If not found in pets, search in lostPets table
+      // If not found, search again by microchipId (in case it's a lost pet)
       if (!pet) {
-        const lostPetsResponse = await fetch(`http://localhost:5000/lostPets?microchip=${microchipNumber}`);
-        if (lostPetsResponse.ok) {
-          const lostPets = await lostPetsResponse.json();
-          if (lostPets.length > 0) {
-            // Get the petId from the lost pet entry
-            const lostPetEntry = lostPets[0];
-            if (lostPetEntry.petId) {
-              // Fetch the actual pet by ID
-              const actualPetResponse = await fetch(`http://localhost:5000/pets/${lostPetEntry.petId}`);
-              if (actualPetResponse.ok) {
-                pet = await actualPetResponse.json();
-              }
-            }
+        const petAlertsResponse = await fetch(`http://localhost:5000/pets?microchipId=${microchipNumber}`);
+        if (petAlertsResponse.ok) {
+          const petAlerts = await petAlertsResponse.json();
+          if (petAlerts.length > 0) {
+            pet = petAlerts[0];
           }
         }
       }
@@ -110,10 +102,18 @@ const HealthBook = () => {
         'Χειρουργείο': 'surgery',
         'surgery': 'surgery',
         'Τακτική Εξέταση': 'examination',
+        'Γενική Εξέταση': 'examination',
         'checkup': 'examination',
         'examination': 'examination',
         'Οδοντιατρική Εξέταση': 'examination',
-        'dental': 'examination'
+        'Οδοντιατρική': 'examination',
+        'dental': 'examination',
+        'Θεραπεία': 'examination',
+        'treatment': 'examination',
+        'Επείγον Περιστατικό': 'examination',
+        'emergency': 'examination',
+        'Άλλο': 'examination',
+        'other': 'examination'
       };
 
       const medicalHistory = procedures.map((proc) => {
@@ -140,7 +140,7 @@ const HealthBook = () => {
       };
 
       // Get pet type icon
-      const petSpecies = pet.species || 'dog';
+      const petSpecies = pet.type || 'dog';
       const icon = petSpecies.toLowerCase().includes('cat') ? 'cat' : 'dog';
 
       // Build pet data object
@@ -234,9 +234,6 @@ const HealthBook = () => {
                 maxLength={15}
                 required
               />
-              <span style={{ fontSize: '12px', color: '#666', marginLeft: '8px', minWidth: '30px' }}>
-                {microchipNumber.length}/15
-              </span>
             </div>
             <button 
               type="submit" 

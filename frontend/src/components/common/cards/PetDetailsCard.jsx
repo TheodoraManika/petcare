@@ -5,7 +5,7 @@ import './PetDetailsCard.css';
 const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
     if (!petData) return null;
 
-    const hasPetName = !!petData.petName;
+    const hasPetName = !!petData.name || !!petData.petName;
     const isNotFound = !hasPetName;
 
     const getPetIcon = (species) => {
@@ -16,6 +16,16 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
         // Snake/Reptile fallback to PawPrint as specific icon might not exist
         return <PawPrint size={50} color="#23CED9" />;
     };
+
+    // Support both old field names (petName, species, microchip) and new ones (name, type, microchipId)
+    const petName = petData.name || petData.petName;
+    const petSpecies = petData.type || petData.species;
+    const petBreed = petData.breed;
+    const petMicrochip = petData.microchipId || petData.microchip;
+    const petColor = petData.color;
+    const petWeight = petData.weight;
+    const petGender = petData.gender;
+    const petBirthDate = petData.birthDate;
 
     return (
         <div className={`pet-details-card ${isNotFound ? 'pet-details-card--not-found' : ''}`}>
@@ -30,7 +40,7 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
 
             <div className="pet-card__container">
                 <div className="pet-card__image">
-                    {hasPetName ? getPetIcon(petData.species) : <PawPrint size={50} color="#23CED9" />}
+                    {hasPetName ? getPetIcon(petSpecies) : <PawPrint size={50} color="#23CED9" />}
                 </div>
 
                 <div className="pet-card__content">
@@ -44,35 +54,47 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
                                 <div className="pet-card__column">
                                     <div className="pet-card__row">
                                         <span className="pet-card__label">Όνομα</span>
-                                        <span className="pet-card__value">{petData.petName}</span>
+                                        <span className="pet-card__value">{petName}</span>
                                     </div>
                                     <div className="pet-card__row">
                                         <span className="pet-card__label">Είδος</span>
-                                        <span className="pet-card__value">{petData.species}</span>
+                                        <span className="pet-card__value">{petSpecies}</span>
                                     </div>
                                     <div className="pet-card__row">
                                         <span className="pet-card__label">Ράτσα</span>
-                                        <span className="pet-card__value">{petData.breed || '-'}</span>
+                                        <span className="pet-card__value">{petBreed || '-'}</span>
                                     </div>
                                 </div>
 
                                 <div className="pet-card__column">
-                                    {petData.microchip && (
+                                    {petColor && (
+                                        <div className="pet-card__row">
+                                            <span className="pet-card__label">Χρώμα</span>
+                                            <span className="pet-card__value">{petColor}</span>
+                                        </div>
+                                    )}
+                                    {petWeight && (
+                                        <div className="pet-card__row">
+                                            <span className="pet-card__label">Βάρος</span>
+                                            <span className="pet-card__value">{petWeight} kg</span>
+                                        </div>
+                                    )}
+                                    {petGender && (
+                                        <div className="pet-card__row">
+                                            <span className="pet-card__label">Φύλο</span>
+                                            <span className="pet-card__value">{petGender}</span>
+                                        </div>
+                                    )}
+                                    {petBirthDate && (
+                                        <div className="pet-card__row">
+                                            <span className="pet-card__label">Ημ/νία Γέννησης</span>
+                                            <span className="pet-card__value">{petBirthDate}</span>
+                                        </div>
+                                    )}
+                                    {petMicrochip && (
                                         <div className="pet-card__row">
                                             <span className="pet-card__label">Microchip</span>
-                                            <span className="pet-card__value">{petData.microchip}</span>
-                                        </div>
-                                    )}
-                                    {petData.dateReported && (
-                                        <div className="pet-card__row">
-                                            <span className="pet-card__label">Ημ. Απώλειας</span>
-                                            <span className="pet-card__value">{petData.dateReported}</span>
-                                        </div>
-                                    )}
-                                    {petData.foundLocation && (
-                                        <div className="pet-card__row">
-                                            <span className="pet-card__label">Περιοχή</span>
-                                            <span className="pet-card__value">{petData.foundLocation}</span>
+                                            <span className="pet-card__value">{petMicrochip}</span>
                                         </div>
                                     )}
                                 </div>

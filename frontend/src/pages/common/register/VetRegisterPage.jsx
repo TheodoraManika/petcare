@@ -288,6 +288,9 @@ const VetRegisterPage = () => {
     try {
       // Check if email already exists
       const checkEmailResponse = await fetch(`http://localhost:5000/users?email=${encodeURIComponent(formData.email)}`);
+      if (!checkEmailResponse.ok) {
+        throw new Error('Failed to check email');
+      }
       const existingUsers = await checkEmailResponse.json();
       
       if (existingUsers && existingUsers.length > 0) {
@@ -304,19 +307,21 @@ const VetRegisterPage = () => {
         userType: 'vet',
         phone: formData.phone,
         afm: formData.afm,
-        specialization: formData.specialization,
+        specialization: formData.specialization.join(', ') || formData.specialization,
         licenseNumber: formData.licenseNumber,
-        yearsOfExperience: formData.yearsOfExperience,
-        university: formData.university,
-        bio: formData.bio,
-        clinicName: formData.clinicName,
         licenseType: formData.licenseType,
+        experience: formData.yearsOfExperience,
+        education: formData.university,
+        biography: formData.bio,
+        clinicName: formData.clinicName,
         clinicAddress: formData.clinicAddress,
         clinicCity: formData.clinicCity,
         clinicPostalCode: formData.clinicPostalCode,
         avatar: null,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toLocaleDateString('el-GR'),
       };
+
+      console.log('Sending vet registration data:', newVet);
 
       // POST to JSON Server
       const response = await fetch('http://localhost:5000/users', {
@@ -327,20 +332,38 @@ const VetRegisterPage = () => {
         body: JSON.stringify(newVet),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       if (!response.ok) {
-        throw new Error('Failed to register user');
+        const errorData = await response.text();
+        console.error('Server error response:', errorData);
+        throw new Error(`Failed to register user: ${response.statusText}`);
       }
 
       const registeredVet = await response.json();
+      console.log('Registered vet:', registeredVet);
 
       // Save to localStorage and redirect
       localStorage.setItem('currentUser', JSON.stringify({
         id: registeredVet.id,
         email: registeredVet.email,
         name: registeredVet.name,
+        lastName: registeredVet.lastName,
         username: registeredVet.name,
         userType: registeredVet.userType,
         avatar: registeredVet.avatar,
+        phone: registeredVet.phone,
+        afm: registeredVet.afm,
+        specialization: registeredVet.specialization,
+        licenseNumber: registeredVet.licenseNumber,
+        experience: registeredVet.experience,
+        education: registeredVet.education,
+        biography: registeredVet.biography,
+        clinicName: registeredVet.clinicName,
+        clinicAddress: registeredVet.clinicAddress,
+        clinicCity: registeredVet.clinicCity,
+        clinicPostalCode: registeredVet.clinicPostalCode,
       }));
 
       // Dispatch custom event to notify auth change

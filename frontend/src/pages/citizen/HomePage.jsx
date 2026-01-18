@@ -90,12 +90,15 @@ const HomePage = () => {
     const fetchLostPets = async () => {
       try {
         setLoadingLostPets(true);
-        const response = await fetch('http://localhost:5000/lostPets');
-        if (!response.ok) throw new Error('Failed to fetch lost pets');
+        const response = await fetch('http://localhost:5000/pets');
+        if (!response.ok) throw new Error('Failed to fetch pet alerts');
         
         const data = await response.json();
+        // Filter only lost pets (petStatus === 1)
+        const lostPetsData = data.filter(pet => pet.petStatus === 1);
+        
         // Transform data to match carousel format
-        const transformedPets = data.map(pet => ({
+        const transformedPets = lostPetsData.map(pet => ({
           id: pet.id,
           name: pet.petName || pet.name || 'Άγνωστο',
           type: pet.type || 'Άγνωστο',
@@ -106,7 +109,7 @@ const HomePage = () => {
         setLostPets(transformedPets);
         setLoadingLostPets(false);
       } catch (error) {
-        console.error('Error fetching lost pets:', error);
+        console.error('Error fetching pet alerts:', error);
         setLoadingLostPets(false);
       }
     };
@@ -561,8 +564,8 @@ const HomePage = () => {
                     style={{ transform: `translateX(${(sIdx - currentVetSlide) * 100}%)` }}
                   >
                     <div className="vet-carousel-slide-inner">
-                      {slide.map((vet) => (
-                        <div key={vet.id} className="vet-carousel-card" onClick={() => handleVetClick(vet)}>
+                      {slide.map((vet, vetIdx) => (
+                        <div key={`${sIdx}-${vetIdx}`} className="vet-carousel-card" onClick={() => handleVetClick(vet)}>
                           <div className="vet-card__avatar-circle orange-icon">{vet.initials}</div>
                           <h3 className="card-title">{vet.name}</h3>
                           <p className="vet-card__specialty-text">{vet.specialty}</p>

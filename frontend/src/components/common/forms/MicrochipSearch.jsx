@@ -26,44 +26,23 @@ const MicrochipSearch = ({ onSearchComplete, variant = 'citizen', initialValue =
 
         setIsSearching(true);
         try {
-            // First, try to search in pets table
-            let response = await fetch(`http://localhost:5000/pets?microchipId=${microchipInput}`);
+            // Search in unified pets table by microchipId
+            const response = await fetch(`http://localhost:5000/pets`);
             if (!response.ok) throw new Error('Failed to search');
             
-            let pets = await response.json();
-            let foundPet = pets.length > 0 ? pets[0] : null;
-
-            // If not found in pets, search in lostPets table
-            if (!foundPet) {
-                const lostPetsResponse = await fetch(`http://localhost:5000/lostPets?microchip=${microchipInput}`);
-                if (lostPetsResponse.ok) {
-                    const lostPets = await lostPetsResponse.json();
-                    if (lostPets.length > 0) {
-                        const lostPetEntry = lostPets[0];
-                        // Return the lost pet data with flag indicating it's from lostPets
-                        foundPet = {
-                            id: lostPetEntry.petId || lostPetEntry.id,
-                            name: lostPetEntry.petName,
-                            species: lostPetEntry.type,
-                            breed: lostPetEntry.breed,
-                            microchip: lostPetEntry.microchip,
-                            color: lostPetEntry.color,
-                            description: lostPetEntry.description,
-                            isFromLostPets: true
-                        };
-                    }
-                }
-            }
+            const allPets = await response.json();
+            
+            // Look for a pet matching microchipId
+            let foundPet = allPets.find(pet => pet.microchipId === microchipInput);
 
             if (foundPet) {
                 setError('');
-                onSearchComplete({ found: true, pet: foundPet, microchip: foundPet.microchip || microchipInput });
+                onSearchComplete({ found: true, pet: foundPet, microchip: foundPet.microchipId || microchipInput });
             } else {
                 setError(''); // Clear error if valid length but not found (just fill field)
                 onSearchComplete({ found: false, pet: null, microchip: microchipInput });
             }
         } catch (err) {
-            console.error('Error searching microchip:', err);
             setError('Σφάλμα κατά την αναζήτηση. Προσπαθήστε ξανά.');
             onSearchComplete({ found: false, pet: null, microchip: microchipInput });
         } finally {

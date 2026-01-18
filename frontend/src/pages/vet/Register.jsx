@@ -249,19 +249,38 @@ const Register = () => {
         return;
       }
 
-      // Prepare pet data for submission
+      // Prepare pet data for submission with unified schema (only required fields)
       const petData = {
+        // Basic pet info
         name: formData.ownerName,
-        species: formData.species,
+        type: getSpeciesLabel(formData.species),
         breed: formData.breed,
-        microchipId: formData.microchipNumber,
         gender: formData.gender,
         birthDate: formData.birthDate,
         color: formData.color,
         weight: formData.weight || null,
+        
+        // Microchip info
+        microchipId: formData.microchipNumber,
+        
+        // Owner info
         ownerId: owner.id,
-        ownerAFM: formData.afm,
+        
+        // Vet info
         registeredByVetId: currentUser.id,
+        reportedByVetId: null,
+        
+        // Lost pet fields (empty for regular registration)
+        lostDate: null,
+        lostLocation: null,
+        area: null,
+        locationLat: null,
+        locationLon: null,
+        
+        // Status fields
+        petStatus: 0,
+        status: 'active',
+        imageUrl: null,
         createdAt: new Date().toISOString()
       };
 
@@ -705,11 +724,20 @@ const Register = () => {
         />
 
         {/* Notification */}
-        <Notification
-          isVisible={notification !== null}
-          message="Η καταγραφή του κατοικιδίου ακυρώθηκε με επιτυχία!"
-          type="error"
-        />
+        {notification && typeof notification === 'object' ? (
+          <Notification
+            isVisible={true}
+            message={notification.message}
+            title={notification.title}
+            type={notification.type}
+          />
+        ) : (
+          <Notification
+            isVisible={notification !== null}
+            message={notification === 'cancelled' ? 'Η καταγραφή του κατοικιδίου ακυρώθηκε με επιτυχία!' : 'Σφάλμα'}
+            type={notification === 'cancelled' ? 'info' : 'error'}
+          />
+        )}
       </div>
     </PageLayout>
   );
