@@ -48,21 +48,23 @@ const PetDetail = () => {
         // Transform medical procedures for display
         const transformedHistory = petProcedures.map(proc => {
           const vet = allVets.find(v => Number(v.id) === Number(proc.vetId));
+          
+          // Map Greek procedure types to internal type keys for icons and statistics
           const typeMap = {
-            'vaccination': 'Εμβολιασμός',
-            'checkup': 'Εξέταση',
-            'surgery': 'Χειρουργείο',
-            'treatment': 'Θεραπεία',
-            'dental': 'Οδοντιατρική',
-            'emergency': 'Έκτακτη περίπτωση',
-            'consultation': 'Συμβουλή',
-            'grooming': 'Περιποίηση'
+            'Εμβολιασμός': 'vaccination',
+            'Τακτική Εξέταση': 'examination',
+            'Χειρουργείο': 'surgery',
+            'Θεραπεία': 'treatment',
+            'Οδοντιατρική Εξέταση': 'dental',
+            'Έκτακτη Περίπτωση': 'emergency',
+            'Συμβουλή': 'consultation',
+            'Περιποίηση': 'grooming'
           };
           
           return {
             id: proc.id,
-            type: proc.type,
-            title: typeMap[proc.type] || proc.type,
+            type: typeMap[proc.type] || 'other',
+            title: proc.type,
             description: proc.description || '-',
             date: proc.date,
             vet: vet ? `Δρ. ${vet.name} ${vet.lastName}` : 'Άγνωστος κτηνίατρος',
@@ -74,7 +76,7 @@ const PetDetail = () => {
         const stats = {
           vaccinations: transformedHistory.filter(h => h.type === 'vaccination').length,
           surgeries: transformedHistory.filter(h => h.type === 'surgery').length,
-          examinations: transformedHistory.filter(h => h.type === 'checkup').length,
+          examinations: transformedHistory.filter(h => h.type !== 'vaccination' && h.type !== 'surgery').length,
         };
         
         // Format pet data

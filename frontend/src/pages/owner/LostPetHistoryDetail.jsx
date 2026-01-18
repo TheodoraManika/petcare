@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Eye, Edit2, Trash2, AlertCircle, Printer, Download, CheckCircle, ChevronLeft } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -8,41 +8,90 @@ import './LostPetHistoryDetail.css';
 const LostPetHistoryDetail = () => {
   const navigate = useNavigate();
   const { declarationId } = useParams();
+  const [declaration, setDeclaration] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data - in real app, this would come from API
-  // Check if this is from "Από άλλους" tab based on ID or query parameter
-  const isFoundByOther = parseInt(declarationId) >= 4; // IDs 4+ are from others
-  
-  const [declaration, setDeclaration] = useState(
-    isFoundByOther ? {
-      id: declarationId,
-      type: 'found_by_other',
-      petName: 'Μπάμπης',
-      petSpecies: 'Σκύλος',
-      petBreed: 'Λαμπραντόρ',
-      petColor: 'Καφέ',
-      petGender: 'Αρσενικό',
-      date: '10/11/2025',
-      location: 'Πλατεία Βικτωρίας, Αθήνα',
-      description: 'Βρήκα έναν σκύλο που ταιριάζει με τη δήλωσή σας. Είναι φιλικός και φοράει κόκκινο περιλαίμιο.',
-      contactName: 'Μαρία Παπαδοπούλου',
-      contactPhone: '6912345678',
-      contactEmail: 'maria.p@email.com',
-    } : {
-      id: declarationId,
-      type: 'loss',
-      petName: 'Μπάμπης',
-      petType: 'Σκύλος',
-      breed: 'Golden Retriever',
-      microchip: '123456789012345',
-      date: '05/11/2025',
-      phone: '6935552540',
-      location: 'Κέντρο Αθήνας, Πλατεία Συντάγματος',
-      description: 'Ακούει στο όνομα του και είναι πολύ φιλικός',
-      status: 'submitted',
-      statusLabel: 'Υποβλήθηκε',
+  useEffect(() => {
+    const fetchDeclaration = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch the lost pet declaration
+        const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`);
+        if (!response.ok) {
+          throw new Error('Δήλωση δεν βρέθηκε');
+        }
+
+        const lostPet = await response.json();
+
+        // Fetch pet details if petId exists
+        let petDetails = {};
+        if (lostPet.petId) {
+          const petResponse = await fetch(`http://localhost:5000/pets/${lostPet.petId}`);
+          if (petResponse.ok) {
+            petDetails = await petResponse.json();
+          }
+        }
+
+        // Fetch finder and owner information
+        let finderInfo = {};
+        let ownerInfo = {};
+
+        if (lostPet.finderId) {
+          const finderResponse = await fetch(`http://localhost:5000/users/${lostPet.finderId}`);
+          if (finderResponse.ok) {
+            finderInfo = await finderResponse.json();
+          }
+        }
+
+        if (lostPet.ownerId) {
+          const ownerResponse = await fetch(`http://localhost:5000/users/${lostPet.ownerId}`);
+          if (ownerResponse.ok) {
+            ownerInfo = await ownerResponse.json();
+          }
+        }
+
+        // Format the declaration data
+        const formattedDeclaration = {
+          id: lostPet.id,
+          type: lostPet.finderName && lostPet.finderId ? 'found_by_other' : 'loss',
+          petName: lostPet.petName || petDetails.name || '-',
+          petType: petDetails.species || lostPet.petType || '-',
+          petSpecies: petDetails.species || '-',
+          breed: petDetails.breed || lostPet.breed || '-',
+          petBreed: petDetails.breed || '-',
+          petColor: petDetails.color || lostPet.color || '-',
+          petGender: petDetails.gender || lostPet.gender || '-',
+          microchip: petDetails.microchipId || lostPet.microchip || '-',
+          date: lostPet.dateLost || lostPet.dateFound || '-',
+          location: lostPet.location || '-',
+          description: lostPet.description || '-',
+          phone: ownerInfo.phone || lostPet.phone || '-',
+          status: 'submitted',
+          statusLabel: 'Υποβλήθηκε',
+          // For found_by_other
+          contactName: finderInfo.name && finderInfo.lastName ? `${finderInfo.name} ${finderInfo.lastName}` : lostPet.finderName || '-',
+          contactPhone: finderInfo.phone || lostPet.finderPhone || '-',
+          contactEmail: finderInfo.email || lostPet.finderEmail || '-',
+        };
+
+        setDeclaration(formattedDeclaration);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching declaration:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    if (declarationId) {
+      fetchDeclaration();
     }
-  );
+  }, [declarationId]);
+
+  const isFoundByOther = declaration?.type === 'found_by_other';
 
   const breadcrumbItems = [
     { label: 'Ιστορικό Δηλώσεων', path: ROUTES.owner.lostHistory },
@@ -84,8 +133,34 @@ const LostPetHistoryDetail = () => {
     navigate(ROUTES.owner.lostHistory);
   };
 
+  if (loading) {
+    return (
+      <PageLayout variant="owner" title="Φόρτωση..." breadcrumbs={breadcrumbItems}>
+        <div className="lost-pet-detail">
+          <p>Φόρτωση δήλωσης...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error || !declaration) {
+    return (
+      <PageLayout variant="owner" title="Σφάλμα" breadcrumbs={breadcrumbItems}>
+        <div className="lost-pet-detail">
+          <p style={{ color: '#d32f2f' }}>Σφάλμα: {error || 'Η δήλωση δεν βρέθηκε'}</p>
+          <button 
+            onClick={handleBack}
+            style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+          >
+            Επιστροφή
+          </button>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
-    <PageLayout variant="owner" title="Μπάμπης" breadcrumbs={breadcrumbItems}>
+    <PageLayout variant="owner" title={declaration.petName} breadcrumbs={breadcrumbItems}>
       <div className="lost-pet-detail">
         <button 
           className="lost-pet-detail__back-btn"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -14,13 +14,44 @@ import './OwnerLostPet.css';
 
 const OwnerLostPet = () => {
   const navigate = useNavigate();
+  const [userPets, setUserPets] = useState([]);
+  const [petsLoading, setPetsLoading] = useState(true);
 
-  // Mock pet data - in real app, this would come from API/database
-  const userPets = [
-    { value: 'pet1', label: 'Μαξ - GR123456789012345', microchip: 'GR123456789012345', name: 'Μαξ', type: 'Σκύλος', breed: 'Golden Retriever', image: '🐕' },
-    { value: 'pet2', label: 'Λούνα - GR987654321098765', microchip: 'GR987654321098765', name: 'Λούνα', type: 'Γάτα', breed: 'Persian', image: '🐱' },
-    { value: 'pet3', label: 'Τσάρλι - GR456789123456789', microchip: 'GR456789123456789', name: 'Τσάρλι', type: 'Σκύλος', breed: 'Labrador Retriever', image: '🐶' },
-  ];
+  // Fetch owner's pets from database
+  useEffect(() => {
+    const fetchUserPets = async () => {
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const response = await fetch('http://localhost:5000/pets');
+        const allPets = await response.json();
+        
+        // Filter pets by current user's ID - handle both string and number IDs
+        const ownerPets = allPets.filter(pet => 
+          String(pet.ownerId) === String(currentUser.id)
+        );
+        
+        // Transform to dropdown format
+        const formattedPets = ownerPets.map(pet => ({
+          value: pet.id,
+          label: `${pet.name}${pet.microchip ? ' - ' + pet.microchip : ''}`,
+          microchip: pet.microchip || '',
+          name: pet.name,
+          type: pet.species || pet.type || 'Σκύλος',
+          breed: pet.breed || '',
+          image: pet.image || '🐾'
+        }));
+        
+        setUserPets(formattedPets);
+      } catch (error) {
+        console.error('Error fetching user pets:', error);
+        setUserPets([]);
+      } finally {
+        setPetsLoading(false);
+      }
+    };
+
+    fetchUserPets();
+  }, []);
 
   // Location options (now will be used by LocationPicker)
   const locationOptions = [

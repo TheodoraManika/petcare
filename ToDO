@@ -47,3 +47,30 @@ Vet pages:
 - [ ] Να γίνουν όλα τα Confirmation ως **ξεχωριστή** σελίδα που αλλάζει ανάλογα κάθε φορά που χρειάζεται.
 - [x] Breadcrumb everywhere 
 - [ ] Έλεγχοι σε **ΟΛΑ** τα πεδία που χρειάζεται (π.χ. αν ειναι υποχρεωτικοί 15 χαρακτήρες και έχεις >15 ή <15 να βγάζει μήνυμα λάθους)
+
+=== MOCK DATA LOCATIONS ===
+Pages with Mock Data (to be converted to real database):
+
+Owner Pages:
+- [x] frontend/src/pages/owner/LostPetHistoryDetail.jsx - Mock lost pet and finding data (hardcoded in useState)
+- [ ] frontend/src/pages/owner/LostPetHistoryEdit.jsx - Mock form data for editing lost pet declarations
+- [ ] frontend/src/pages/owner/Review.jsx - Mock appointment data (vet name, pet name, date, service)
+- [ ] frontend/src/pages/owner/Profile.jsx - Hardcoded owner profile data (Μαρία Παπαδοπούλου)
+
+Vet Pages:
+- [ ] frontend/src/pages/vet/Profile.jsx - Hardcoded vet profile data (Γιάννης Πετρίδης)
+
+Citizen Pages:
+- [ ] frontend/src/pages/citizen/FoundPetForm.jsx - Hardcoded mock pets list for owner variant (Μαξ, Λούνα, Ρεξ) - ACTIVELY USED
+- [ ] frontend/src/pages/citizen/LostPets.jsx - Uses FoundPetForm
+
+Utilities & Components:
+- [ ] frontend/src/utils/mockData.js - Lost pets database with 4 mock pets (GR123456789012345, GR987654321098765, GR555666777888999, GR000111222333444) - ACTIVELY USED
+  Used by:
+  - MicrochipSearch component (frontend/src/components/common/forms/MicrochipSearch.jsx)
+  - FoundPetForm.jsx (citizen)
+  - Adoption.jsx (vet)
+  - Foster.jsx (vet)
+  - LostPet.jsx (vet)
+  - Operation.jsx (vet)
+  - Transfer.jsx (vet)

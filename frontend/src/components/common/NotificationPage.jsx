@@ -106,6 +106,8 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
             notif.id === id ? { ...notif, read: true } : notif
           )
         );
+        // Refresh navbar badge
+        window.dispatchEvent(new Event('notificationCreated'));
       }
     } catch (error) {
       console.error('Error marking notification as read:', error);
@@ -129,6 +131,8 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
       setNotifications(prev =>
         prev.map(notif => ({ ...notif, read: true }))
       );
+      // Refresh navbar badge
+      window.dispatchEvent(new Event('notificationCreated'));
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
     }

@@ -29,18 +29,49 @@ const HealthBook = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    
+    // Validate microchip length
+    if (!microchipNumber.trim()) {
+      setError('Παρακαλώ εισάγετε έναν αριθμό μικροτσίπ');
+      return;
+    }
+    
+    if (microchipNumber.length !== 15) {
+      setError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
+      return;
+    }
+    
     setIsLoading(true);
     setSearchAttempted(false); // Reset to hide old results
     setError('');
     setPetData(null); // Clear previous pet data
 
     try {
-      // Fetch pet data by microchip ID
-      const petResponse = await fetch(`http://localhost:5000/pets?microchipId=${microchipNumber}`);
+      // First, try to fetch pet data by microchipId from pets table
+      let petResponse = await fetch(`http://localhost:5000/pets?microchipId=${microchipNumber}`);
       if (!petResponse.ok) throw new Error('Failed to fetch pet');
       
-      const pets = await petResponse.json();
-      const pet = pets[0];
+      let pets = await petResponse.json();
+      let pet = pets[0];
+      
+      // If not found in pets, search in lostPets table
+      if (!pet) {
+        const lostPetsResponse = await fetch(`http://localhost:5000/lostPets?microchip=${microchipNumber}`);
+        if (lostPetsResponse.ok) {
+          const lostPets = await lostPetsResponse.json();
+          if (lostPets.length > 0) {
+            // Get the petId from the lost pet entry
+            const lostPetEntry = lostPets[0];
+            if (lostPetEntry.petId) {
+              // Fetch the actual pet by ID
+              const actualPetResponse = await fetch(`http://localhost:5000/pets/${lostPetEntry.petId}`);
+              if (actualPetResponse.ok) {
+                pet = await actualPetResponse.json();
+              }
+            }
+          }
+        }
+      }
       
       setIsLoading(false); // Stop loading first
       
@@ -72,13 +103,27 @@ const HealthBook = () => {
         procedures = await proceduresResponse.json();
       }
 
-      // Transform procedures to medical history format
+      // Transform procedures to medical history format and map types
+      const typeMap = {
+        'Εμβολιασμός': 'vaccination',
+        'vaccination': 'vaccination',
+        'Χειρουργείο': 'surgery',
+        'surgery': 'surgery',
+        'Τακτική Εξέταση': 'examination',
+        'checkup': 'examination',
+        'examination': 'examination',
+        'Οδοντιατρική Εξέταση': 'examination',
+        'dental': 'examination'
+      };
+
       const medicalHistory = procedures.map((proc) => {
         const vet = allUsers.find(u => u.id === proc.vetId || u.id == proc.vetId);
         const vetName = vet ? `${vet.name} ${vet.lastName || ''}`.trim() : 'Άγνωστος';
+        const mappedType = typeMap[proc.type] || 'other';
         return {
           id: proc.id,
           type: proc.type || 'examination',
+          mappedType: mappedType,
           title: getOperationTypeLabel(proc.type),
           description: proc.description || '-',
           date: formatDateForDisplay(proc.date),
@@ -87,11 +132,11 @@ const HealthBook = () => {
         };
       });
 
-      // Calculate statistics
+      // Calculate statistics using mapped types
       const stats = {
-        vaccinations: procedures.filter(p => p.type === 'vaccination').length,
-        surgeries: procedures.filter(p => p.type === 'surgery').length,
-        examinations: procedures.filter(p => ['checkup', 'examination', 'dental'].includes(p.type)).length
+        vaccinations: medicalHistory.filter(p => p.mappedType === 'vaccination').length,
+        surgeries: medicalHistory.filter(p => p.mappedType === 'surgery').length,
+        examinations: medicalHistory.filter(p => p.mappedType !== 'vaccination' && p.mappedType !== 'surgery').length
       };
 
       // Get pet type icon
@@ -180,15 +225,23 @@ const HealthBook = () => {
                 className="health-book__search-input"
                 placeholder="π.χ. 123456789012345"
                 value={microchipNumber}
-                onChange={(e) => setMicrochipNumber(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+                  if (value.length <= 15) {
+                    setMicrochipNumber(value);
+                  }
+                }}
                 maxLength={15}
                 required
               />
+              <span style={{ fontSize: '12px', color: '#666', marginLeft: '8px', minWidth: '30px' }}>
+                {microchipNumber.length}/15
+              </span>
             </div>
             <button 
               type="submit" 
               className="health-book__search-btn"
-              disabled={isLoading || !microchipNumber.trim()}
+              disabled={isLoading || !microchipNumber.trim() || microchipNumber.length !== 15}
             >
               {isLoading ? 'Αναζήτηση...' : 'Αναζήτηση'}
             </button>

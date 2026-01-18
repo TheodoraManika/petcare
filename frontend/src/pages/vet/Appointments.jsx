@@ -111,13 +111,13 @@ const Appointments = () => {
 
   // Auto-update confirmed appointments to completed if their time has passed
   useEffect(() => {
-    const updatePastAppointments = () => {
+    const updatePastAppointments = async () => {
       const now = new Date();
-
-      setAppointments(prevAppointments =>
-        prevAppointments.map(apt => {
-          // Only update confirmed appointments
-          if (apt.status !== 'confirmed') return apt;
+      
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt => {
+          // Only update confirmed or pending appointments that aren't already completed/cancelled
+          if (apt.status === 'completed' || apt.status === 'cancelled') return apt;
 
           const aptDate = new Date(apt.date);
           const nowDateObj = new Date();
@@ -126,12 +126,21 @@ const Appointments = () => {
 
           // If appointment date is in the past, mark as completed
           if (aptDate < nowDateObj) {
+            // Persist the status change to the backend
+            fetch(`http://localhost:5000/appointments/${apt.id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: 'completed' })
+            }).catch(err => console.error('Error updating appointment status:', err));
+
             return { ...apt, status: 'completed' };
           }
 
           return apt;
-        })
-      );
+        });
+
+        return updated;
+      });
     };
 
     // Run on component mount
@@ -273,6 +282,9 @@ const Appointments = () => {
         body: JSON.stringify(notificationData)
       }).catch(err => console.error('Error creating notification:', err));
 
+      // Trigger immediate notification badge update
+      window.dispatchEvent(new Event('notificationCreated'));
+
       // Update local state
       setAppointments(prevAppointments =>
         prevAppointments.map(apt =>
@@ -337,6 +349,9 @@ const Appointments = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(notificationData)
       }).catch(err => console.error('Error creating notification:', err));
+
+      // Trigger immediate notification badge update
+      window.dispatchEvent(new Event('notificationCreated'));
 
       // Update local state
       setAppointments(prevAppointments =>

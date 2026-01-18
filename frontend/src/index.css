@@ -3,9 +3,9 @@
 /* CSS Variables */
 :root {
   /* Colors */
-  --color-primary: #4F46E5;
+  --color-primary: #4e46e5;
   --color-primary-dark: #4338CA;
-  --color-primary-light: rgba(79, 70, 229, 0.1);
+  --color-primary-light: #4f46e51a;
   --color-secondary: #10B981;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;

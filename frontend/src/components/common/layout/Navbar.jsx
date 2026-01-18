@@ -70,16 +70,6 @@ const Navbar = ({ variant = 'vet' }) => {
     navigate(isOwner ? ROUTES.owner.dashboard : ROUTES.vet.dashboard);
   };
 
-  // Fetch unread notifications count
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchUnreadCount();
-      // Poll for updates every 30 seconds
-      const interval = setInterval(fetchUnreadCount, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [isLoggedIn]);
-
   const fetchUnreadCount = async () => {
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -94,6 +84,28 @@ const Navbar = ({ variant = 'vet' }) => {
       console.error('Error fetching unread notifications:', error);
     }
   };
+
+  // Fetch unread notifications count
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUnreadCount();
+      // Poll for updates every 30 seconds
+      const interval = setInterval(fetchUnreadCount, 30000);
+      
+      // Listen for immediate notification updates
+      const handleNotificationCreated = () => {
+        // Add delay to ensure database has been updated
+        setTimeout(fetchUnreadCount, 200);
+      };
+      
+      window.addEventListener('notificationCreated', handleNotificationCreated);
+      
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('notificationCreated', handleNotificationCreated);
+      };
+    }
+  }, [isLoggedIn]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {

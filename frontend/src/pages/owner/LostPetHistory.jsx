@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, Edit2, X, PawPrint, CheckCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -12,71 +12,86 @@ const LostPetHistory = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedDeclaration, setSelectedDeclaration] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 5;
-  const [declarations, setDeclarations] = useState([
-    {
-      id: 1,
-      type: 'loss',
-      petName: 'Μπάμπης',
-      petType: 'Σκύλος',
-      date: '05/11/2025',
-      location: 'Κέντρο Αθήνας, Πλατεία Συντάγματος',
-      status: 'submitted',
-    },
-    {
-      id: 2,
-      type: 'found',
-      petName: 'Μίνι',
-      petType: 'Γάτα',
-      date: '01/11/2025',
-      location: 'Πάρκο Εργηνης',
-      status: 'submitted',
-    },
-    {
-      id: 3,
-      type: 'loss',
-      petName: 'Ρέξ',
-      petType: 'Σκύλος',
-      date: '28/10/2025',
-      location: 'Θεσσαλονίκη',
-      status: 'draft',
-    },
-  ]);
+  const itemsPerPage = 5;
+  const [declarations, setDeclarations] = useState([]);
+  const [foundByOthers, setFoundByOthers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for "Από άλλους" - Found pet declarations from other users
-  // These should match the structure of found pet declarations
-  const [foundByOthers, setFoundByOthers] = useState([
-    {
-      id: 4,
-      type: 'found_by_other',
-      petName: 'Μπάμπης',
-      petSpecies: 'Σκύλος',
-      petBreed: 'Λαμπραντόρ',
-      petColor: 'Καφέ',
-      petGender: 'Αρσενικό',
-      date: '10/11/2025',
-      location: 'Πλατεία Βικτωρίας, Αθήνα',
-      description: 'Βρήκα έναν σκύλο που ταιριάζει με τη δήλωσή σας. Είναι φιλικός και φοράει κόκκινο περιλαίμιο.',
-      contactName: 'Μαρία Παπαδοπούλου',
-      contactPhone: '6912345678',
-      contactEmail: 'maria.p@email.com',
-    },
-    {
-      id: 5,
-      type: 'found_by_other',
-      petName: 'Ρέξ',
-      petSpecies: 'Σκύλος',
-      petBreed: 'Γερμανικός Ποιμενικός',
-      petColor: 'Μαύρος με καφέ',
-      petGender: 'Αρσενικό',
-      date: '02/11/2025',
-      location: 'Καλαμαριά, Θεσσαλονίκη',
-      description: 'Είδα σκύλο που μοιάζει με την περιγραφή σας στην περιοχή. Περπατούσε μόνος του.',
-      contactName: 'Γιώργος Κωνσταντίνου',
-      contactPhone: '6987654321',
-      contactEmail: 'g.konstantinou@email.com',
-    },
-  ]);
+  // Fetch lost pet declarations from database
+  useEffect(() => {
+    const fetchDeclarations = async () => {
+      try {
+        setLoading(true);
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+          setLoading(false);
+          return;
+        }
+
+        // Fetch all lost pets from database
+        const response = await fetch('http://localhost:5000/lostPets');
+        if (!response.ok) throw new Error('Failed to fetch lost pets');
+        const allLostPets = await response.json();
+
+        // "Δικές μου" has TWO types:
+        // 1. Findings THIS user MADE about finding other people's pets (user is the finder)
+        // 2. OWN LOST PET DECLARATIONS by this user (ownerId = currentUser.id) including drafts
+        const mine = allLostPets.filter(pet => 
+          (pet.finderName === currentUser.name || pet.finderId == currentUser.id) || // User found someone's pet
+          (pet.ownerId == currentUser.id && !pet.finderName && !pet.finderId) // User's own lost pet declaration (no finder yet)
+        );
+        
+        // "Από άλλους" = declarations OTHER PEOPLE MADE about finding THIS user's lost pets
+        const others = allLostPets.filter(pet => pet.ownerId == currentUser.id && (pet.finderName || pet.finderId));
+
+        // Transform mine data (user's own findings + user's own lost pet declarations)
+        const mineTransformed = mine.map(pet => ({
+          id: pet.id,
+          type: pet.finderName || pet.finderId ? 'found_by_me' : 'own_lost_pet',
+          petName: pet.petName || pet.name,
+          petType: pet.type,
+          date: pet.dateFound 
+            ? new Date(pet.dateFound).toLocaleDateString('el-GR')
+            : pet.lostDate 
+            ? new Date(pet.lostDate).toLocaleDateString('el-GR')
+            : new Date().toLocaleDateString('el-GR'),
+          location: pet.location || pet.lostLocation || pet.lostLocation,
+          description: pet.description,
+          status: pet.status || 'submitted',
+          ownerName: pet.ownerName,
+          ownerPhone: pet.ownerPhone,
+          ownerEmail: pet.ownerEmail,
+        }));
+
+        // Transform others' findings (other people finding this user's pets)
+        const othersTransformed = others.map(pet => ({
+          id: pet.id,
+          type: 'found_by_other',
+          petName: pet.petName || pet.name,
+          petSpecies: pet.type,
+          petBreed: pet.breed,
+          petColor: pet.color,
+          petGender: pet.gender,
+          date: pet.foundDate ? new Date(pet.foundDate).toLocaleDateString('el-GR') : new Date().toLocaleDateString('el-GR'),
+          location: pet.foundLocation || pet.location,
+          description: pet.description,
+          contactName: pet.finderName,
+          contactPhone: pet.finderPhone,
+          contactEmail: pet.finderEmail,
+          status: pet.status || 'submitted',
+        }));
+
+        setDeclarations(mineTransformed);
+        setFoundByOthers(othersTransformed);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching declarations:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchDeclarations();
+  }, []);
 
   const breadcrumbItems = [
   ];
@@ -87,6 +102,12 @@ const LostPetHistory = () => {
   };
 
   const currentData = activeTab === 'mine' ? declarations : foundByOthers;
+  
+  // Calculate pagination
+  const totalPages = Math.ceil(currentData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = currentData.slice(startIndex, endIndex);
 
   const getStatusBadge = (status) => {
     const statusConfig = {
@@ -165,7 +186,16 @@ const LostPetHistory = () => {
         </div>
 
         <div className="lost-pet-history__content">
-          {currentData.map((declaration) => (
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+              Φόρτωση δηλώσεων...
+            </div>
+          ) : currentData.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+              Δεν υπάρχουν δηλώσεις για εμφάνιση.
+            </div>
+          ) : (
+            paginatedData.map((declaration) => (
             <div key={declaration.id} className="lost-pet-history__card">
               <div className="lost-pet-history__icon">
                 <PawPrint size={24} />
@@ -176,8 +206,8 @@ const LostPetHistory = () => {
                   <h3 className="lost-pet-history__card-title">
                     {declaration.type === 'found_by_other' 
                       ? 'Δήλωση Εύρεσης από Χρήστη' 
-                      : declaration.type === 'loss' 
-                      ? 'Δήλωση Απώλειας' 
+                      : declaration.type === 'own_lost_pet'
+                      ? 'Δήλωση Απώλειας Κατοικιδίου'
                       : 'Δήλωση Εύρεσης'}
                   </h3>
                   <span className="lost-pet-history__card-subtitle">
@@ -228,12 +258,13 @@ const LostPetHistory = () => {
                         <button
                           className="lost-pet-history__btn lost-pet-history__btn--edit"
                           onClick={() => handleEdit(declaration.id)}
+                          title="Επεξεργασία"
                         >
                           <Edit2 size={16} />
                         </button>
                       )}
 
-                      {declaration.type === 'loss' && declaration.status === 'submitted' && (
+                      {(declaration.type === 'own_lost_pet' || declaration.type === 'loss') && declaration.status === 'submitted' && (
                         <button
                           className="lost-pet-history__btn lost-pet-history__btn--found"
                           onClick={() => handleFound(declaration.id)}
@@ -277,7 +308,8 @@ const LostPetHistory = () => {
                 )}
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
 
         <Pagination

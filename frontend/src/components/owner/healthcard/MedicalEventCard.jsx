@@ -3,6 +3,9 @@ import { Syringe, Stethoscope, Activity, Calendar } from 'lucide-react';
 import './MedicalEventCard.css';
 
 const MedicalEventCard = ({ event }) => {
+  // Use mappedType if available (for correct icon matching), otherwise use type
+  const iconType = event.mappedType || event.type;
+  
   const getIcon = (type) => {
     switch (type) {
       case 'vaccination':
@@ -25,14 +28,14 @@ const MedicalEventCard = ({ event }) => {
       case 'examination':
         return 'owner-medical-event__icon--examination';
       default:
-        return '';
+        return 'owner-medical-event__icon--examination';
     }
   };
 
   return (
     <div className="owner-medical-event">
-      <div className={`owner-medical-event__icon ${getIconClass(event.type)}`}>
-        {getIcon(event.type)}
+      <div className={`owner-medical-event__icon ${getIconClass(iconType)}`}>
+        {getIcon(iconType)}
       </div>
       <div className="owner-medical-event__content">
         <div className="owner-medical-event__header">

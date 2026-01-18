@@ -60,6 +60,7 @@ const BookingForm = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [bookedSlots, setBookedSlots] = useState([]);
 
   const serviceOptions = [
     { value: 'Εμβολιασμός', label: 'Εμβολιασμός' },
@@ -104,23 +105,45 @@ const BookingForm = ({
     fetchUserPets();
   }, []);
 
-  // Fetch availability when vet is selected
+  // Fetch availability and booked appointments when vet is selected
   useEffect(() => {
-    const fetchAvailability = async () => {
+    const fetchAvailabilityAndBookings = async () => {
       if (!selectedVet) {
         setVetAvailability([]);
+        setBookedSlots([]);
         return;
       }
       try {
-        const response = await fetch(`http://localhost:5000/availability?vetId=${selectedVet.id}`);
-        const data = await response.json();
-        setVetAvailability(data);
+        // Fetch availability
+        const availResponse = await fetch(`http://localhost:5000/availability?vetId=${selectedVet.id}`);
+        const availData = await availResponse.json();
+        setVetAvailability(availData);
+
+        // Fetch booked appointments (pending or confirmed only)
+        const appointmentsResponse = await fetch(`http://localhost:5000/appointments?vetId=${selectedVet.id}`);
+        const appointments = await appointmentsResponse.json();
+        
+        // Extract booked time slots (only pending and confirmed appointments)
+        const booked = appointments
+          .filter(apt => apt.status === 'pending' || apt.status === 'confirmed')
+          .map(apt => {
+            // Extract the hour from the time (e.g., "10:00 - 11:00" -> 10)
+            const timeMatch = apt.time?.match(/(\d{1,2}):/);
+            const hour = timeMatch ? parseInt(timeMatch[1]) : null;
+            return {
+              date: apt.date,
+              hour: hour
+            };
+          });
+        
+        setBookedSlots(booked);
       } catch (err) {
-        console.error('Error fetching availability:', err);
+        console.error('Error fetching availability or appointments:', err);
         setVetAvailability([]);
+        setBookedSlots([]);
       }
     };
-    fetchAvailability();
+    fetchAvailabilityAndBookings();
   }, [selectedVet]);
 
   // Search vets
@@ -215,6 +238,7 @@ const BookingForm = ({
       return [];
     }
 
+    const dateString = date.toISOString().split('T')[0];
     const slots = [];
     
     // For each availability slot on this day, generate hourly time slots
@@ -223,16 +247,23 @@ const BookingForm = ({
       const [endHour] = (availability.endTime || '17:00').split(':').map(Number);
 
       for (let hour = startHour; hour < endHour; hour++) {
-        const startTime = `${String(hour).padStart(2, '0')}:00`;
-        const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
-        slots.push({
-          id: `${date.toISOString().split('T')[0]}-${startTime}`,
-          date: date.toISOString().split('T')[0],
-          startTime,
-          endTime,
-          displayTime: `${startTime} - ${endTime}`,
-          serviceType: availability.serviceType
-        });
+        // Check if this slot is already booked
+        const isBooked = bookedSlots.some(
+          slot => slot.date === dateString && slot.hour === hour
+        );
+
+        if (!isBooked) {
+          const startTime = `${String(hour).padStart(2, '0')}:00`;
+          const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
+          slots.push({
+            id: `${dateString}-${startTime}`,
+            date: dateString,
+            startTime,
+            endTime,
+            displayTime: `${startTime} - ${endTime}`,
+            serviceType: availability.serviceType
+          });
+        }
       }
     });
 
@@ -294,9 +325,6 @@ const BookingForm = ({
         ownerName: currentUser.name || currentUser.username,
         ownerPhone: currentUser.phone || '',
         petId: pet?.id,
-        petName: pet?.name || '',
-        petSpecies: pet?.species || '',
-        petBreed: pet?.breed || '',
         date: selectedSlot.date,
         time: selectedSlot.displayTime,
         serviceType,
@@ -340,6 +368,9 @@ const BookingForm = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(vetNotificationData)
       }).catch(err => console.error('Error creating vet notification:', err));
+
+      // Trigger immediate notification badge update
+      window.dispatchEvent(new Event('notificationCreated'));
 
       resetForm();
 

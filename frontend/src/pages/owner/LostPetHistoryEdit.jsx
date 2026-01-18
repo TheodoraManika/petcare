@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, FileCheck, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -15,22 +15,82 @@ const LostPetHistoryEdit = () => {
   const navigate = useNavigate();
   const { declarationId } = useParams();
 
-  // Mock data - in real app, this would come from API
   const [formData, setFormData] = useState({
-    petName: 'Μπάμπης',
-    petType: 'Σκύλος',
-    breed: 'Golden Retriever',
-    microchip: '123456789012345',
-    date: '05/11/2025',
-    phone: '6935552540',
-    location: 'Κέντρο Αθήνας, Πλατεία Συντάγματος',
-    description: 'Ακούει στο όνομα του και είναι πολύ φιλικός',
+    petName: '',
+    petType: '',
+    breed: '',
+    microchip: '',
+    date: '',
+    phone: '',
+    location: '',
+    description: '',
   });
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [phoneError, setPhoneError] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchDeclaration = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch the lost pet declaration
+        const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`);
+        if (!response.ok) {
+          throw new Error('Δήλωση δεν βρέθηκε');
+        }
+
+        const lostPet = await response.json();
+
+        // Fetch pet details if petId exists
+        let petDetails = {};
+        if (lostPet.petId) {
+          const petResponse = await fetch(`http://localhost:5000/pets/${lostPet.petId}`);
+          if (petResponse.ok) {
+            petDetails = await petResponse.json();
+          }
+        }
+
+        // Fetch owner info to get phone if not in lostPet
+        let ownerInfo = {};
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.id) {
+          const ownerResponse = await fetch(`http://localhost:5000/users/${currentUser.id}`);
+          if (ownerResponse.ok) {
+            ownerInfo = await ownerResponse.json();
+          }
+        }
+
+        // Format the form data
+        setFormData({
+          petName: lostPet.petName || petDetails.name || '',
+          petType: petDetails.species || lostPet.petType || '',
+          breed: petDetails.breed || lostPet.breed || '',
+          microchip: petDetails.microchipId || lostPet.microchip || '',
+          date: lostPet.dateLost || '',
+          phone: lostPet.phone || ownerInfo.phone || '',
+          location: lostPet.location || '',
+          description: lostPet.description || '',
+        });
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching declaration:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    if (declarationId) {
+      fetchDeclaration();
+    }
+  }, [declarationId]);
 
   const locationOptions = [
     { value: 'syntagma', label: 'Κέντρο Αθήνας, Πλατεία Συντάγματος' },
@@ -101,17 +161,51 @@ const LostPetHistoryEdit = () => {
     setShowCancelModal(false);
   };
 
-  const handleDraft = () => {
-    console.log('Saving as draft:', formData);
-    
-    // Show success notification
-    setNotification('draft');
-    
-    // Auto-hide notification after 8 seconds and navigate
-    setTimeout(() => {
-      setNotification(null);
-      navigate(ROUTES.owner.lostHistory);
-    }, 8000);
+  const handleDraft = async () => {
+    try {
+      setIsSaving(true);
+
+      const updateData = {
+        petName: formData.petName,
+        breed: formData.breed,
+        dateLost: formData.date,
+        phone: formData.phone,
+        location: formData.location,
+        description: formData.description,
+        status: 'draft'
+      };
+
+      // Update the lost pet declaration in database
+      const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Αποτυχία αποθήκευσης');
+      }
+
+      setIsSaving(false);
+
+      // Show success notification
+      setNotification('draft');
+
+      // Navigate back quickly so user sees draft in history
+      setTimeout(() => {
+        setNotification(null);
+        navigate(ROUTES.owner.lostHistory);
+      }, 2000);
+    } catch (err) {
+      setIsSaving(false);
+      console.error('Error saving draft:', err);
+      setNotification('error');
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
   };
 
   const handleSubmitClick = () => {
@@ -123,19 +217,50 @@ const LostPetHistoryEdit = () => {
     setShowSubmitModal(true);
   };
 
-  const handleConfirmSubmit = () => {
-    // Update status to 'submitted' when final submission is made
-    const updatedData = {
-      ...formData,
-      status: 'submitted',
-      statusLabel: 'Υποβλήθηκε'
-    };
-    
-    console.log('Submitting with status updated:', updatedData);
-    // ADD API CALL HERE
-    
-    setShowSubmitModal(false);
-    navigate(ROUTES.owner.lostHistory);
+  const handleConfirmSubmit = async () => {
+    try {
+      setIsSaving(true);
+
+      const updateData = {
+        petName: formData.petName,
+        breed: formData.breed,
+        dateLost: formData.date,
+        phone: formData.phone,
+        location: formData.location,
+        description: formData.description,
+        status: 'submitted'
+      };
+
+      // Update the lost pet declaration with submitted status
+      const response = await fetch(`http://localhost:5000/lostPets/${declarationId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Αποτυχία υποβολής');
+      }
+
+      setIsSaving(false);
+      setShowSubmitModal(false);
+      
+      // Show success and navigate
+      setNotification('submitted');
+      setTimeout(() => {
+        setNotification(null);
+        navigate(ROUTES.owner.lostHistory);
+      }, 5000);
+    } catch (err) {
+      setIsSaving(false);
+      console.error('Error submitting:', err);
+      setNotification('error');
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -157,17 +282,33 @@ const LostPetHistoryEdit = () => {
   };
 
   return (
-    <PageLayout variant="owner" title="Μπάμπης" breadcrumbs={breadcrumbItems}>
+    <PageLayout variant="owner" title={formData.petName || 'Δήλωση Απώλειας'} breadcrumbs={breadcrumbItems}>
       <div className="lost-pet-edit">
-        <div className="lost-pet-edit__header">
-          <h1 className="lost-pet-edit__title">Δήλωση Απώλειας Κατοικιδίου</h1>
-        </div>
+        {loading ? (
+          <div style={{ padding: '40px', textAlign: 'center' }}>
+            <p>Φόρτωση δήλωσης...</p>
+          </div>
+        ) : error ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#d32f2f' }}>
+            <p>Σφάλμα: {error}</p>
+            <button 
+              onClick={() => navigate(ROUTES.owner.lostHistory)}
+              style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+            >
+              Επιστροφή
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="lost-pet-edit__header">
+              <h1 className="lost-pet-edit__title">Δήλωση Απώλειας Κατοικιδίου</h1>
+            </div>
 
-        <div className="lost-pet-edit__card">
-          {/* Pet Info Card */}
-          <div className="lost-pet-edit__pet-card">
-            <div className="lost-pet-edit__pet-image">🐕</div>
-            <div className="lost-pet-edit__pet-details">
+            <div className="lost-pet-edit__card">
+              {/* Pet Info Card */}
+              <div className="lost-pet-edit__pet-card">
+                <div className="lost-pet-edit__pet-image">🐕</div>
+                <div className="lost-pet-edit__pet-details">
               <h3 className="lost-pet-edit__pet-name">Στοιχεία Κατοικιδίου</h3>
               <div className="lost-pet-edit__pet-info">
                 <div className="lost-pet-edit__pet-row">
@@ -261,6 +402,7 @@ const LostPetHistoryEdit = () => {
                 type="button"
                 className="lost-pet-edit__btn lost-pet-edit__btn--cancel"
                 onClick={handleCancel}
+                disabled={isSaving}
               >
                 Ακύρωση
               </button>
@@ -268,14 +410,16 @@ const LostPetHistoryEdit = () => {
                 type="button"
                 className="lost-pet-edit__btn lost-pet-edit__btn--draft"
                 onClick={handleDraft}
+                disabled={isSaving}
               >
                 <Save size={18} />
-                Πρόχειρο
+                {isSaving ? 'Αποθήκευση...' : 'Πρόχειρο'}
               </button>
               <button
                 type="button"
                 className="lost-pet-edit__btn lost-pet-edit__btn--submit"
                 onClick={handleSubmitClick}
+                disabled={isSaving}
               >
                 Οριστική Υποβολή
               </button>
@@ -312,10 +456,14 @@ const LostPetHistoryEdit = () => {
           message={
             notification === 'draft' 
               ? "Η δήλωση αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων"
+              : notification === 'submitted'
+              ? "Η δήλωση υποβλήθηκε με επιτυχία!"
               : "Η επεξεργασία της δήλωσης ακυρώθηκε με επιτυχία!"
           }
-          type={notification === 'draft' ? 'success' : 'error'}
+          type={notification === 'draft' || notification === 'submitted' ? 'success' : 'error'}
         />
+          </>
+        )}
       </div>
     </PageLayout>
   );

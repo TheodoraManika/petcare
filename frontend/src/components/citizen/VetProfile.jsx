@@ -31,6 +31,19 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
   const displayedReviews = showAllReviews ? reviewsList : reviewsList.slice(0, visibleReviews);
 
   const displayName = vet.lastName ? `${vet.name} ${vet.lastName}` : vet.name;
+  
+  // Map database fields to component expectations
+  const vetSpec = vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος';
+  const vetClinicName = vet.clinicName || 'Δεν διατίθεται';
+  const vetClinicAddress = vet.clinicAddress || 'Δεν διατίθεται';
+  const vetClinicCity = vet.clinicCity || '';
+  const vetClinicPostalCode = vet.clinicPostalCode || '';
+  const vetPhone = vet.phone || 'Δεν διατίθεται';
+  const vetEmail = vet.email || 'Δεν διατίθεται';
+  const vetEducation = vet.education || 'Δεν διατίθεται';
+  const vetExperience = vet.experience || 'Δεν διατίθεται';
+  const vetLicenseNumber = vet.licenseNumber || 'Δεν διατίθεται';
+  const vetBiography = vet.biography || 'Κανένα βιογραφικό διαθέσιμο';
 
   return (
     <div className="vet-profile-overlay" onClick={onClose}>
@@ -51,7 +64,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
             </div>
             <div className="profile-identity">
               <h1 className="vet-name">{displayName}</h1>
-              <p className="vet-specialty">{vet.specialty}</p> {/* change to specialties */}
+              <p className="vet-specialty">{vetSpec}</p> {/* change to specialties */}
               <div className="rating-section">
                 <Star className="star-icon" />
                 <span className="rating-text">
@@ -87,7 +100,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <Hospital className="detail-icon" size={20} />
                   <h3>Όνομα Κλινικής/Ιατρείου</h3>
                 </div>
-                <p className="detail-content">{vet.clinicName}</p>
+                <p className="detail-content">{vetClinicName}</p>
               </div>
 
               <div className="detail-item">
@@ -95,9 +108,9 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <MapPin className="detail-icon" size={20} />
                   <h3>Διεύθυνση Ιατρείου</h3>
                 </div>
-                <p className="detail-content">{vet.clinicAddress}</p>
-                <p className="detail-content">{vet.clinicCity}</p>
-                <p className="detail-content">{vet.clinicPostalCode}</p>
+                <p className="detail-content">{vetClinicAddress}</p>
+                {vetClinicCity && <p className="detail-content">{vetClinicCity}</p>}
+                {vetClinicPostalCode && <p className="detail-content">{vetClinicPostalCode}</p>}
               </div>
 
               <div className="detail-item">
@@ -105,8 +118,8 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <Phone className="detail-icon" size={20} />
                   <h3>Στοιχεία Επικοινωνίας</h3>
                 </div>
-                <p className="detail-content">{vet.phone}</p>
-                <p className="detail-content">{vet.email}</p>
+                <p className="detail-content">{vetPhone}</p>
+                <p className="detail-content">{vetEmail}</p>
               </div>
 
               <div className="detail-item">
@@ -114,7 +127,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <GraduationCap className="detail-icon" size={20} />
                   <h3>Εκπαίδευση</h3>
                 </div>
-                <p className="detail-content">{vet.education || 'Δεν διατίθεται'}</p>
+                <p className="detail-content">{vetEducation}</p>
               </div>
 
               <div className="detail-item">
@@ -122,7 +135,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <Briefcase className="detail-icon" size={20} />
                   <h3>Έτη Εμπειρίας</h3>
                 </div>
-                <p className="detail-content">{vet.experience || 'Δεν διατίθεται'}</p>
+                <p className="detail-content">{vetExperience}</p>
               </div>
 
               <div className="detail-item">
@@ -130,7 +143,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <IdCard className="detail-icon" size={30} />
                   <h3>Αριθμός Άδειας Άσκησης Επαγγέλματος</h3>
                 </div>
-                <p className="detail-content">{vet.licenseNumber}</p>
+                <p className="detail-content">{vetLicenseNumber}</p>
               </div>
 
             </div>
@@ -139,7 +152,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
           {/* Biography Section */}
           <div className="biography-section">
             <h2 className="section-title">Βιογραφικό</h2>
-            <p className="biography-content">{vet.biography}</p>
+            <p className="biography-content">{vetBiography}</p>
           </div>
 
           {/* Reviews Section */}

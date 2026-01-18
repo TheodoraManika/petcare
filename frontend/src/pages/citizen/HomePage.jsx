@@ -27,6 +27,63 @@ const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [lostPets, setLostPets] = useState([]);
   const [loadingLostPets, setLoadingLostPets] = useState(true);
+  const [topVets, setTopVets] = useState([]);
+  const [loadingVets, setLoadingVets] = useState(true);
+
+  // Fetch vets from database
+  useEffect(() => {
+    const fetchVets = async () => {
+      try {
+        setLoadingVets(true);
+        const response = await fetch('http://localhost:5000/users?role=vet');
+        if (!response.ok) throw new Error('Failed to fetch vets');
+        
+        const vets = await response.json();
+        // Transform vets data and get reviews
+        const transformedVets = await Promise.all(vets.map(async (vet) => {
+          try {
+            // Fetch reviews for this vet
+            const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${vet.id}`);
+            const reviews = await reviewsResponse.json();
+            const avgRating = reviews.length > 0 
+              ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+              : 0;
+            
+            return {
+              id: vet.id,
+              name: vet.name || 'Κτηνίατρος',
+              specialty: vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος',
+              initials: vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??',
+              area: vet.location || 'Άγνωστη τοποθεσία',
+              rating: parseFloat(avgRating),
+              reviews: reviews.length
+            };
+          } catch (err) {
+            console.error(`Error fetching reviews for vet ${vet.id}:`, err);
+            return {
+              id: vet.id,
+              name: vet.name || 'Κτηνίατρος',
+              specialty: vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος',
+              initials: vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??',
+              area: vet.location || 'Άγνωστη τοποθεσία',
+              rating: 0,
+              reviews: 0
+            };
+          }
+        }));
+        
+        // Sort by rating and take top 9
+        const sorted = transformedVets.sort((a, b) => b.rating - a.rating).slice(0, 9);
+        setTopVets(sorted);
+        setLoadingVets(false);
+      } catch (error) {
+        console.error('Error fetching vets:', error);
+        setLoadingVets(false);
+      }
+    };
+
+    fetchVets();
+  }, []);
 
   // Fetch lost pets from database for carousel
   useEffect(() => {
@@ -73,67 +130,6 @@ const HomePage = () => {
       return () => clearTimeout(timer);
     }
   }, [location]);
-
-  // Mock top-rated vets data (expanded)
-  const topVets = [
-    { id: 1, name: 'Δρ. Παπαδόπουλος', specialty: 'Γενικός Κτηνίατρος', initials: 'ΔΠ', area: 'Αθήνα, Ψυχικό', rating: 5.0, reviews: 127 },
-    { id: 2, name: 'Δρ. Κωνσταντίνου', specialty: 'Ειδικός Γατών', initials: 'ΜΚ', area: 'Θεσσαλονίκη, Πανόραμα', rating: 4.9, reviews: 98 },
-    { id: 3, name: 'Δρ. Σωτηρίου', specialty: 'Χειρουργός', initials: 'ΑΣ', area: 'Πάτρα, Κέντρο', rating: 4.8, reviews: 156 },
-    {
-      id: 4,
-      name: 'Δρ. Νικολάου',
-      specialty: 'Οδοντίατρος Ζώων',
-      initials: 'ΝΚ',
-      area: 'Αθήνα, Κολωνάκι',
-      rating: 4.7,
-      reviews: 64,
-    },
-    {
-      id: 5,
-      name: 'Δρ. Μαρίνα',
-      specialty: 'Δερματολόγος',
-      initials: 'ΜΡ',
-      area: 'Θεσσαλονίκη',
-      rating: 4.6,
-      reviews: 88,
-    },
-    {
-      id: 6,
-      name: 'Δρ. Ηλίας',
-      specialty: 'Ειδικός Μικρών Ζώων',
-      initials: 'ΗΛ',
-      area: 'Πάτρα',
-      rating: 4.5,
-      reviews: 42,
-    },
-    {
-      id: 7,
-      name: 'Δρ. Στέλλα',
-      specialty: 'Γενικός Κτηνίατρος',
-      initials: 'ΣΤ',
-      area: 'Ηράκλειο',
-      rating: 4.4,
-      reviews: 51,
-    },
-    {
-      id: 8,
-      name: 'Δρ. Γιώργος',
-      specialty: 'Χειρουργός',
-      initials: 'ΓΡ',
-      area: 'Λάρισα',
-      rating: 4.3,
-      reviews: 37,
-    },
-    {
-      id: 9,
-      name: 'Δρ. Ελένη',
-      specialty: 'Ειδικός Γατών',
-      initials: 'ΕΛ',
-      area: 'Ρέθυμνο',
-      rating: 4.2,
-      reviews: 22,
-    },
-  ];
 
   // Helper to get pet icon
   const getPetIcon = (type, size = 56) => {
@@ -191,10 +187,34 @@ const HomePage = () => {
     setCurrentSlide(index);
   };
 
-  // Handle vet click - Open Modal
-  const handleVetClick = (vet) => {
-    setSelectedProfileVet(vet);
-    setShowProfileModal(true);
+  // Handle vet click - Fetch full details and Open Modal
+  const handleVetClick = async (vet) => {
+    try {
+      // Fetch full vet details from database
+      const vetResponse = await fetch(`http://localhost:5000/users/${vet.id}`);
+      if (!vetResponse.ok) throw new Error('Failed to fetch vet details');
+      
+      const fullVetData = await vetResponse.json();
+      
+      // Fetch reviews for this vet
+      const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${vet.id}`);
+      const reviews = await reviewsResponse.json();
+      
+      // Combine vet data with reviews
+      const vetWithReviews = {
+        ...fullVetData,
+        reviews: reviews,
+        reviewCount: reviews.length
+      };
+      
+      setSelectedProfileVet(vetWithReviews);
+      setShowProfileModal(true);
+    } catch (error) {
+      console.error('Error fetching vet details:', error);
+      // Fallback: open modal with basic data
+      setSelectedProfileVet(vet);
+      setShowProfileModal(true);
+    }
   };
 
   // Handle hero "Δήλωση Εύρεσης" button

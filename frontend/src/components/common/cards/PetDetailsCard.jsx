@@ -84,7 +84,9 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
                                     <span className="pet-card__value">{petData.microchip}</span>
                                 </div>
                                 <p className="pet-card__note">
-                                    Δεν βρέθηκε καταχωρημένο κατοικίδιο με αυτόν τον αριθμό. Παρακαλώ συμπληρώστε τα στοιχεία του κατοικιδίου παρακάτω.
+                                    {petData.isFromLostPets 
+                                        ? 'Αυτό το κατοικίδιο είναι ήδη καταχωρημένο ως χαμένο.'
+                                        : 'Δεν βρέθηκε καταχωρημένο κατοικίδιο με αυτόν τον αριθμό. Παρακαλώ συμπληρώστε τα στοιχεία του κατοικιδίου παρακάτω.'}
                                 </p>
                             </div>
                         )}

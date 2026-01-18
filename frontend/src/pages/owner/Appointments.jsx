@@ -48,7 +48,42 @@ const Appointments = () => {
         const response = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
         if (!response.ok) throw new Error('Failed to fetch appointments');
         const data = await response.json();
-        setAppointments(data);
+        
+        // Fetch vet details and pet details for each appointment
+        const appointmentsWithDetails = await Promise.all(
+          data.map(async (apt) => {
+            let aptWithDetails = { ...apt };
+            
+            try {
+              const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
+              if (vetResponse.ok) {
+                const vet = await vetResponse.json();
+                aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
+                aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
+              }
+            } catch (err) {
+              console.error('Error fetching vet details:', err);
+            }
+            
+            // Fetch pet details if petName is missing
+            if (!apt.petName && apt.petId) {
+              try {
+                const petResponse = await fetch(`http://localhost:5000/pets/${apt.petId}`);
+                if (petResponse.ok) {
+                  const pet = await petResponse.json();
+                  aptWithDetails.petName = pet.name || pet.petName || '';
+                  aptWithDetails.petSpecies = pet.species || pet.petSpecies || '';
+                }
+              } catch (err) {
+                console.error('Error fetching pet details:', err);
+              }
+            }
+            
+            return aptWithDetails;
+          })
+        );
+        
+        setAppointments(appointmentsWithDetails);
         setError(null);
       } catch (err) {
         console.error('Error fetching appointments:', err);
@@ -61,6 +96,47 @@ const Appointments = () => {
     fetchAppointments();
   }, []);
 
+  // Auto-update confirmed/pending appointments to completed if their date has passed
+  useEffect(() => {
+    const updatePastAppointments = async () => {
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt => {
+          // Only update confirmed or pending appointments
+          if (apt.status === 'completed' || apt.status === 'cancelled') return apt;
+
+          const aptDate = new Date(apt.date);
+          const nowDateObj = new Date();
+          nowDateObj.setHours(0, 0, 0, 0);
+          aptDate.setHours(0, 0, 0, 0);
+
+          // If appointment date is in the past, mark as completed
+          if (aptDate < nowDateObj) {
+            // Persist the status change to the backend
+            fetch(`http://localhost:5000/appointments/${apt.id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: 'completed' })
+            }).catch(err => console.error('Error updating appointment status:', err));
+
+            return { ...apt, status: 'completed' };
+          }
+
+          return apt;
+        });
+
+        return updated;
+      });
+    };
+
+    // Run on component mount
+    updatePastAppointments();
+
+    // Run every minute to keep checking
+    const interval = setInterval(updatePastAppointments, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleBookingSuccess = (message) => {
     setSuccessMessage(message);
     setIsBookingExpanded(false);
@@ -71,7 +147,42 @@ const Appointments = () => {
         const response = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
         if (!response.ok) throw new Error('Failed to fetch appointments');
         const data = await response.json();
-        setAppointments(data);
+        
+        // Fetch vet details and pet details for each appointment
+        const appointmentsWithDetails = await Promise.all(
+          data.map(async (apt) => {
+            let aptWithDetails = { ...apt };
+            
+            try {
+              const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
+              if (vetResponse.ok) {
+                const vet = await vetResponse.json();
+                aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
+                aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
+              }
+            } catch (err) {
+              console.error('Error fetching vet details:', err);
+            }
+            
+            // Fetch pet details if petName is missing
+            if (!apt.petName && apt.petId) {
+              try {
+                const petResponse = await fetch(`http://localhost:5000/pets/${apt.petId}`);
+                if (petResponse.ok) {
+                  const pet = await petResponse.json();
+                  aptWithDetails.petName = pet.name || pet.petName || '';
+                  aptWithDetails.petSpecies = pet.species || pet.petSpecies || '';
+                }
+              } catch (err) {
+                console.error('Error fetching pet details:', err);
+              }
+            }
+            
+            return aptWithDetails;
+          })
+        );
+        
+        setAppointments(appointmentsWithDetails);
       } catch (err) {
         console.error('Error refetching appointments:', err);
       }
@@ -83,20 +194,20 @@ const Appointments = () => {
     setIsBookingExpanded(false);
   };
 
-  // Separate appointments into active and history based on date
+  // Separate appointments into active and history based on date and status
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
   const activeAppointmentsData = appointments.filter(apt => {
     const aptDate = new Date(apt.date);
     aptDate.setHours(0, 0, 0, 0);
-    return aptDate >= today;
+    return aptDate >= today && apt.status !== 'cancelled';
   });
 
   const historyAppointmentsData = appointments.filter(apt => {
     const aptDate = new Date(apt.date);
     aptDate.setHours(0, 0, 0, 0);
-    return aptDate < today;
+    return aptDate < today || apt.status === 'cancelled';
   });
 
   const displayAppointments = activeTab === 'active' ? activeAppointmentsData : historyAppointmentsData;
@@ -175,13 +286,51 @@ const Appointments = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(vetNotificationData)
           }).catch(err => console.error('Error creating vet notification:', err));
+
+          // Trigger immediate notification badge update
+          window.dispatchEvent(new Event('notificationCreated'));
         }
 
         // Refetch appointments
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const appointmentsResponse = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
         const data = await appointmentsResponse.json();
-        setAppointments(data);
+        
+        // Fetch vet details and pet details for each appointment
+        const appointmentsWithDetails = await Promise.all(
+          data.map(async (apt) => {
+            let aptWithDetails = { ...apt };
+            
+            try {
+              const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
+              if (vetResponse.ok) {
+                const vet = await vetResponse.json();
+                aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
+                aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
+              }
+            } catch (err) {
+              console.error('Error fetching vet details:', err);
+            }
+            
+            // Fetch pet details if petName is missing
+            if (!apt.petName && apt.petId) {
+              try {
+                const petResponse = await fetch(`http://localhost:5000/pets/${apt.petId}`);
+                if (petResponse.ok) {
+                  const pet = await petResponse.json();
+                  aptWithDetails.petName = pet.name || pet.petName || '';
+                  aptWithDetails.petSpecies = pet.species || pet.petSpecies || '';
+                }
+              } catch (err) {
+                console.error('Error fetching pet details:', err);
+              }
+            }
+            
+            return aptWithDetails;
+          })
+        );
+        
+        setAppointments(appointmentsWithDetails);
         setNotification('cancel_success');
         setTimeout(() => setNotification(null), 5000);
       }
@@ -308,7 +457,7 @@ const Appointments = () => {
 
                   {getStatusBadge(appointment.status)}
                 </div>
-                {activeTab === 'active' && (
+                {activeTab === 'active' && appointment.status !== 'cancelled' && (
                   <button
                     className="owner-appointments__cancel-btn"
                     onClick={() => handleCancel(appointment.id)}
@@ -319,9 +468,17 @@ const Appointments = () => {
                 )}
               </div>
 
-              <p className="owner-appointments__pet">Κατοικίδιο: {appointment.pet}</p>
+              <p className="owner-appointments__pet">Κατοικίδιο: {appointment.petName} ({appointment.petSpecies})</p>
 
               <div className="owner-appointments__details">
+                <div className="owner-appointments__detail">
+                  <span className="owner-appointments__detail-label">Κτηνίατρος</span>
+                  <span className="owner-appointments__detail-value">{appointment.vetName || '-'}</span>
+                </div>
+                <div className="owner-appointments__detail">
+                  <span className="owner-appointments__detail-label">Κλινική</span>
+                  <span className="owner-appointments__detail-value">{appointment.clinicName || '-'}</span>
+                </div>
                 <div className="owner-appointments__detail">
                   <span className="owner-appointments__detail-label">Ημερομηνία</span>
                   <span className="owner-appointments__detail-value">{appointment.date}</span>
@@ -332,8 +489,14 @@ const Appointments = () => {
                 </div>
                 <div className="owner-appointments__detail">
                   <span className="owner-appointments__detail-label">Υπηρεσία</span>
-                  <span className="owner-appointments__detail-value">{appointment.service}</span>
+                  <span className="owner-appointments__detail-value">{appointment.serviceType}</span>
                 </div>
+                {appointment.notes && (
+                  <div className="owner-appointments__detail">
+                    <span className="owner-appointments__detail-label">Σημειώσεις</span>
+                    <span className="owner-appointments__detail-value">{appointment.notes}</span>
+                  </div>
+                )}
               </div>
 
               {appointment.status === 'pending' && (
