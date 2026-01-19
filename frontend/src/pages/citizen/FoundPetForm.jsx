@@ -14,46 +14,6 @@ import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './FoundPetForm.css';
 
-// Mock lost pets database
-const lostPetsDatabase = [
-  {
-    id: 1,
-    name: 'Μπάμπης',
-    type: 'Σκύλος',
-    breed: 'Golden Retriever',
-    area: 'Κέντρο Αθήνας, Πλατεία Συντάγματος',
-    dateLost: '05/11/2025',
-    color: 'Χρυσαφί',
-    microchip: 'GR123456789012345',
-    description: 'Φιλικός, φοράει πράσινο περιλαίμιο.',
-    traits: ['Ήρεμος', 'Αγαπά παιδιά', 'Σπιτικός'],
-  },
-  {
-    id: 2,
-    name: 'Φιφή',
-    type: 'Γάτα',
-    breed: 'Περσική',
-    area: 'Θεσσαλονίκη, Καλαμαριά',
-    dateLost: '10/11/2025',
-    color: 'Λευκό',
-    microchip: 'GR987654321000111',
-    description: 'Τρομάζει εύκολα, προτιμά ήρεμα περιβάλλοντα.',
-    traits: ['Πολύ ήρεμη', 'Αγαπά λιχουδιές'],
-  },
-  {
-    id: 3,
-    name: 'Ρεξ',
-    type: 'Σκύλος',
-    breed: 'Λαμπραντόρ',
-    area: 'Πάτρα, Κέντρο',
-    dateLost: '08/11/2025',
-    color: 'Μαύρο',
-    microchip: 'GR000111222333444',
-    description: 'Ενεργητικός, αγαπά να τρέχει.',
-    traits: ['Ενεργητικός', 'Χρειάζεται χώρο'],
-  },
-];
-
 const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -80,13 +40,6 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
 
   const variant = getVariant();
   const isOwner = currentUser?.userType === 'owner';
-
-  // Mock pet data for owner
-  const userPets = [
-    { value: 'pet1', label: 'Μαξ - GR123456789012345', name: 'Μαξ', type: 'Σκύλος', breed: 'Golden Retriever', microchip: 'GR123456789012345' },
-    { value: 'pet2', label: 'Λούνα - GR987654321098765', name: 'Λούνα', type: 'Γάτα', breed: 'Persian', microchip: 'GR987654321098765' },
-    { value: 'pet3', label: 'Ρεξ - GR555666777888999', name: 'Ρεξ', type: 'Σκύλος', breed: 'German Shepherd', microchip: 'GR555666777888999' },
-  ];
 
   // Get pet details from prefill prop or navigation state if coming from LostPetDetails
   const navigationState = location.state || {};
@@ -138,7 +91,7 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
 
   // Helper functions for validation
   const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
-  const allowedNameChars = (value) => value.replace(/[^a-zA-ZΑ-Ωα-ωάέήίόύώΆΈΉΊΌΎΏ\s]/g, ''); // Επιτρέπει μόνο γράμματα και κενά
+  const allowedNameChars = (value) => value.replace(/[^A-Za-z\u0370-\u03FF\u1F00-\u1FFF\u00B4\s]/g, ''); // Επιτρέπει μόνο γράμματα και κενά
   const allowedMicrochipChars = (value) => value.replace(/[^0-9]/g, ''); // Επιτρέπει μόνο αριθμούς
 
   // Validation functions
