@@ -1254,6 +1254,15 @@
       "rating": 4,
       "comment": "",
       "reviewedAt": "2026-01-19T11:17:02.571Z"
+    },
+    {
+      "id": "c424",
+      "appointmentId": "eeba",
+      "vetId": "1",
+      "ownerId": "ef39",
+      "rating": 5,
+      "comment": "Η καλύτερη κτηνίατρος!!!",
+      "reviewedAt": "2026-01-19T11:50:36.025Z"
     }
   ]
 }

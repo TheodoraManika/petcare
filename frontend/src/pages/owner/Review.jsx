@@ -142,7 +142,7 @@ const Review = () => {
   const handleConfirmCancel = () => {
     setShowCancelModal(false);
     setNotification({
-      type: 'cancelled',
+      type: 'error',
       message: 'Η αξιολόγηση ακυρώθηκε'
     });
 
