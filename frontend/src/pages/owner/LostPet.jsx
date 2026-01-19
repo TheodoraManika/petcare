@@ -81,6 +81,7 @@ const OwnerLostPet = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [draftId, setDraftId] = useState(null);
 
   // Helper function to filter phone characters
   const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
@@ -169,33 +170,24 @@ const OwnerLostPet = () => {
 
   const handleConfirmSubmit = async () => {
     try {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      
-      // Create lost pet declaration
-      const lostPetData = {
-        ownerId: currentUser.id,
-        microchipId: formData.microchipNumber,
-        petName: formData.petName,
+      // Update pet with lost information
+      const selectedPetData = userPets.find(p => p.value === formData.selectedPet);
+      const submitData = {
         lostDate: formData.lostDate,
         lostLocation: formData.location,
         area: formData.location,
         locationLat: formData.locationLat,
         locationLon: formData.locationLon,
-        contactPhone: formData.contactPhone,
-        contactEmail: currentUser.email,
-        ownerName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
-        description: formData.description,
         petStatus: 1,
-        status: 'active',
-        imageUrl: formData.photo || null
+        status: 'active'
       };
 
-      const response = await fetch('http://localhost:5000/pets', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:5000/pets/${formData.selectedPet}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(lostPetData)
+        body: JSON.stringify(submitData)
       });
 
       if (response.ok) {
@@ -261,35 +253,61 @@ const OwnerLostPet = () => {
     setShowCancelModal(false);
   };
 
-  const handleDraft = () => {
-    // TODO: Save form data to backend with status 'draft'
-    // API call example: await saveLostPetDraft(formData);
+  const handleDraft = async () => {
+    try {
+      const selectedPetData = userPets.find(p => p.value === formData.selectedPet);
+      const updateData = {
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        petStatus: 1,
+        status: 'draft'
+      };
 
-    console.log('Draft saved:', formData);
+      const response = await fetch(`http://localhost:5000/pets/${formData.selectedPet}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData)
+      });
 
-    // Reset all form fields
-    setFormData({
-      selectedPet: '',
-      microchipNumber: '',
-      petName: '',
-      lostDate: '',
-      contactPhone: '',
-      location: '',
-      locationLat: '',
-      locationLon: '',
-      description: '',
-      photo: ''
-    });
-    setPhotoPreview(null);
-    setPhoneError('');
+      if (response.ok) {
+        setNotification({
+          type: 'success',
+          message: 'Η δήλωση απώλειας αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων'
+        });
 
-    // Show success notification
-    setNotification('draft');
-
-    // Auto-hide notification after 8 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 8000);
+        setTimeout(() => {
+          setFormData({
+            selectedPet: '',
+            microchipNumber: '',
+            petName: '',
+            lostDate: '',
+            contactPhone: '',
+            location: '',
+            locationLat: '',
+            locationLon: '',
+            description: '',
+            photo: ''
+          });
+          setPhotoPreview(null);
+          setPhoneError('');
+          navigate(ROUTES.owner.lostHistory);
+        }, 2000);
+      } else {
+        setNotification({
+          type: 'error',
+          message: 'Σφάλμα κατά την αποθήκευση του προχείρου'
+        });
+      }
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την αποθήκευση του προχείρου'
+      });
+    }
   };
 
   // Prepare fields for ConfirmDetailModal

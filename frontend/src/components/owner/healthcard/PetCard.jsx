@@ -18,8 +18,36 @@ const PetCard = ({ pet, onClick, onFound }) => {
     e.stopPropagation();
     
     try {
-      // Update ONLY petStatus in database to mark as found (petStatus: 0)
-      const response = await fetch(`http://localhost:5000/pets/${pet.id}`, {
+      // First, fetch the complete pet data from backend
+      const petResponse = await fetch(`http://localhost:5000/pets/${pet.id}`);
+      if (!petResponse.ok) {
+        throw new Error('Failed to fetch pet data');
+      }
+      const completePetData = await petResponse.json();
+
+      // Save the complete pet data to lost_history
+      const lostHistoryEntry = {
+        ...completePetData,
+        id: `history_${completePetData.id}_${Date.now()}`,
+        petStatus: 2,
+        foundDate: new Date().toISOString(),
+        markedFoundAt: new Date().toISOString()
+      };
+      
+      const historyResponse = await fetch(`http://localhost:5000/lost_history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(lostHistoryEntry),
+      });
+
+      if (!historyResponse.ok) {
+        throw new Error('Failed to save to lost_history');
+      }
+
+      // Then update pet status
+      const patchResponse = await fetch(`http://localhost:5000/pets/${pet.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -27,12 +55,13 @@ const PetCard = ({ pet, onClick, onFound }) => {
         body: JSON.stringify({ petStatus: 0 }),
       });
 
-      if (!response.ok) {
+      if (!patchResponse.ok) {
         throw new Error('Failed to update pet status');
       }
 
       // Call the parent callback
       onFound && onFound();
+      alert('Το κατοικίδιό σας σημειώθηκε ως βρεθέν και η ιστορία αποθηκεύτηκε.');
     } catch (error) {
       console.error('Error marking pet as found:', error);
       alert('Σφάλμα κατά την ενημέρωση της κατάστασης. Παρακαλώ προσπαθήστε ξανά.');

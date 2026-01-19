@@ -65,8 +65,8 @@ const LostPets = () => {
         const petAlertsData = await petAlertsResponse.json();
         const usersData = await usersResponse.json();
 
-        // Filter only lost pets (petStatus === 1)
-        const lostPetsData = petAlertsData.filter(pet => pet.petStatus === 1);
+        // Filter only lost pets (petStatus === 1 AND status is 'active', not 'draft')
+        const lostPetsData = petAlertsData.filter(pet => pet.petStatus === 1 && pet.status === 'active');
 
         // Transform data for display (add owner info and default coordinates if missing)
         const transformedPets = lostPetsData.map((pet, index) => {

@@ -15,6 +15,7 @@ const LostPetHistory = () => {
   const itemsPerPage = 5;
   const [declarations, setDeclarations] = useState([]);
   const [foundByOthers, setFoundByOthers] = useState([]);
+  const [lostHistory, setLostHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch lost pet declarations from database
@@ -131,6 +132,92 @@ const LostPetHistory = () => {
 
         setDeclarations(mineTransformed);
         setFoundByOthers(othersTransformed);
+
+        // Fetch Found_pet - pets that were found by others
+        const foundPetResponse = await fetch('http://localhost:5000/Found_pet');
+        if (foundPetResponse.ok) {
+          const allFoundPets = await foundPetResponse.json();
+          // Filter to only show pets belonging to this user
+          const userFoundPets = allFoundPets.filter(pet => pet.ownerId == currentUser.id);
+          
+          const foundPetTransformed = userFoundPets.map(pet => {
+            const parseDate = (dateStr) => {
+              if (!dateStr) return new Date().toLocaleDateString('el-GR');
+              if (dateStr.includes('T') || dateStr.includes('-')) {
+                const parsed = new Date(dateStr);
+                return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+              }
+              if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                  const parsed = new Date(parts[2], parts[1] - 1, parts[0]);
+                  return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+                }
+              }
+              return dateStr;
+            };
+
+            return {
+              id: pet.id,
+              type: 'found_by_other',
+              petName: pet.name,
+              petSpecies: pet.type,
+              petBreed: pet.breed,
+              petColor: pet.color,
+              petGender: pet.gender,
+              date: pet.foundDate ? parseDate(pet.foundDate) : parseDate(pet.foundAt),
+              location: pet.area || pet.lostLocation || '-',
+              description: pet.description,
+              contactName: `${pet.foundByUserName} ${pet.foundByUserSurname}`,
+              contactPhone: pet.foundByUserPhone,
+              contactEmail: pet.foundByUserEmail,
+              status: 'submitted',
+            };
+          });
+
+          // Append to foundByOthers
+          setFoundByOthers([...othersTransformed, ...foundPetTransformed]);
+        }
+
+        // Fetch lost_history - pets that were found and marked as found
+        const lostHistoryResponse = await fetch('http://localhost:5000/lost_history');
+        if (lostHistoryResponse.ok) {
+          const allLostHistory = await lostHistoryResponse.json();
+          // Filter to only show this user's pets from lost_history
+          const userLostHistory = allLostHistory.filter(pet => pet.ownerId == currentUser.id);
+          
+          const historyTransformed = userLostHistory.map(pet => {
+            const parseDate = (dateStr) => {
+              if (!dateStr) return new Date().toLocaleDateString('el-GR');
+              if (dateStr.includes('T') || dateStr.includes('-')) {
+                const parsed = new Date(dateStr);
+                return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+              }
+              if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                  const parsed = new Date(parts[2], parts[1] - 1, parts[0]);
+                  return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+                }
+              }
+              return dateStr;
+            };
+
+            return {
+              id: pet.id,
+              type: 'found',
+              petName: pet.petName || pet.name,
+              petType: pet.type,
+              date: pet.markedFoundAt ? parseDate(pet.markedFoundAt) : new Date().toLocaleDateString('el-GR'),
+              location: pet.area || pet.lostLocation || '-',
+              description: pet.description,
+              status: 'found',
+            };
+          });
+
+          setLostHistory(historyTransformed);
+        }
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching declarations:', error);
@@ -149,7 +236,7 @@ const LostPetHistory = () => {
     setCurrentPage(1);
   };
 
-  const currentData = activeTab === 'mine' ? declarations : foundByOthers;
+  const currentData = activeTab === 'mine' ? [...declarations, ...lostHistory] : foundByOthers;
   
   // Calculate pagination
   const totalPages = Math.ceil(currentData.length / itemsPerPage);

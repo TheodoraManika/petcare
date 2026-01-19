@@ -48,7 +48,7 @@ const LostPetHistoryEdit = () => {
 
         const lostPet = await response.json();
 
-        // Fetch pet details if petId exists
+        // Fetch pet details if petId exists (for fallback info)
         let petDetails = {};
         if (lostPet.petId) {
           const petResponse = await fetch(`http://localhost:5000/pets/${lostPet.petId}`);
@@ -67,15 +67,15 @@ const LostPetHistoryEdit = () => {
           }
         }
 
-        // Format the form data
+        // Format the form data - use fields saved from draft
         setFormData({
-          petName: lostPet.petName || petDetails.name || '',
-          petType: petDetails.species || lostPet.petType || '',
-          breed: petDetails.breed || lostPet.breed || '',
-          microchip: petDetails.microchipId || lostPet.microchip || '',
-          date: lostPet.dateLost || '',
-          phone: lostPet.phone || ownerInfo.phone || '',
-          location: lostPet.location || '',
+          petName: lostPet.name || petDetails.name || '',
+          petType: lostPet.type || petDetails.type || '',
+          breed: lostPet.breed || petDetails.breed || '',
+          microchip: lostPet.microchipId || petDetails.microchipId || '',
+          date: lostPet.lostDate || '',
+          phone: ownerInfo.phone || '',
+          location: lostPet.lostLocation || '',
           description: lostPet.description || '',
         });
 
@@ -166,12 +166,10 @@ const LostPetHistoryEdit = () => {
       setIsSaving(true);
 
       const updateData = {
-        petName: formData.petName,
-        breed: formData.breed,
-        dateLost: formData.date,
-        phone: formData.phone,
-        location: formData.location,
-        description: formData.description,
+        lostDate: formData.date,
+        lostLocation: formData.location,
+        area: formData.location,
+        petStatus: 1,
         status: 'draft'
       };
 
@@ -222,13 +220,11 @@ const LostPetHistoryEdit = () => {
       setIsSaving(true);
 
       const updateData = {
-        petName: formData.petName,
-        breed: formData.breed,
-        dateLost: formData.date,
-        phone: formData.phone,
-        location: formData.location,
-        description: formData.description,
-        status: 'submitted'
+        lostDate: formData.date,
+        lostLocation: formData.location,
+        area: formData.location,
+        petStatus: 1,
+        status: 'active'
       };
 
       // Update the lost pet declaration with submitted status
