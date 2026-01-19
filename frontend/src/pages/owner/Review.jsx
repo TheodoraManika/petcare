@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Review.css';
 
@@ -14,6 +16,8 @@ const Review = () => {
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   // Fetch appointment and vet data
   useEffect(() => {
@@ -80,8 +84,7 @@ const Review = () => {
     e.preventDefault();
     
     if (rating === 0) {
-      alert('Παρακαλώ επιλέξτε βαθμολογία');
-      return;
+      return; // Button should be disabled, but double check
     }
 
     try {
@@ -108,17 +111,49 @@ const Review = () => {
         throw new Error('Failed to submit review');
       }
 
-      // Show success and redirect
-      alert('Η αξιολόγηση υποβλήθηκε με επιτυχία!');
-      navigate(ROUTES.owner.appointments);
+      // Show success notification
+      setNotification({
+        type: 'success',
+        message: 'Η αξιολόγηση υποβλήθηκε με επιτυχία!'
+      });
+
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate(ROUTES.owner.appointments);
+      }, 2000);
     } catch (error) {
       console.error('Error submitting review:', error);
-      alert('Σφάλμα κατά την υποβολή της αξιολόγησης. Παρακαλώ προσπαθήστε ξανά.');
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την υποβολή της αξιολόγησης. Παρακαλώ προσπαθήστε ξανά.'
+      });
+      
+      // Clear error notification after 3 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     }
   };
 
-  const handleCancel = () => {
-    navigate(ROUTES.owner.appointments);
+  const handleCancelClick = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelModal(false);
+    setNotification({
+      type: 'cancelled',
+      message: 'Η αξιολόγηση ακυρώθηκε'
+    });
+
+    // Redirect after showing notification
+    setTimeout(() => {
+      navigate(ROUTES.owner.appointments);
+    }, 1500);
+  };
+
+  const handleCancelModalClose = () => {
+    setShowCancelModal(false);
   };
 
   if (loading) {
@@ -225,7 +260,7 @@ const Review = () => {
                 rows={6}
               />
               <p className="owner-review__field-hint">
-                Το σχόλιο σας θα βοηθήσει άλλους ιδιοκτήτες κατοικιδίων
+                Το σχόλιο σας θα βοηθήσει άλλους ιδιοκτήτες κατοικιδίων να επιλέξουν τον κατάλληλο κτηνίατρο
               </p>
             </div>
 
@@ -233,19 +268,45 @@ const Review = () => {
               <button
                 type="button"
                 className="owner-review__btn owner-review__btn--cancel"
-                onClick={handleCancel}
+                onClick={handleCancelClick}
               >
                 Ακύρωση
               </button>
               <button
                 type="submit"
                 className="owner-review__btn owner-review__btn--submit"
+                disabled={rating === 0}
+                style={{
+                  opacity: rating === 0 ? 0.5 : 1,
+                  cursor: rating === 0 ? 'not-allowed' : 'pointer'
+                }}
               >
-                ✓ Υποβολή Αξιολόγησης
+                Υποβολή Αξιολόγησης
               </button>
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε;"
+          description="Η αξιολόγηση δεν θα αποθηκευτεί."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelModalClose}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Notification */}
+        {notification && (
+          <Notification
+            isVisible={true}
+            message={notification.message}
+            type={notification.type}
+          />
+        )}
       </div>
     </PageLayout>
   );

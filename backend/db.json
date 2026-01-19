@@ -18,7 +18,7 @@
     },
     {
       "id": "0564",
-      "email": "owner2@petcare.com",
+      "email": "owner2@petcare.gr",
       "password": "password123",
       "name": "Πέτρος ",
       "lastName": "Αντωνίου",
@@ -50,7 +50,7 @@
     },
     {
       "id": "0589",
-      "email": "owner4@petcare.com",
+      "email": "owner4@petcare.gr",
       "password": "password123",
       "name": "Λευτέρης",
       "lastName": "Μιχαλόπουλος",
@@ -66,7 +66,7 @@
     },
     {
       "id": "1234",
-      "email": "owner5@petcare.com",
+      "email": "owner5@petcare.gr",
       "password": "password123",
       "name": "Γιώργος",
       "lastName": "Αγγελόπουλος",
@@ -82,7 +82,7 @@
     },
     {
       "id": "0987",
-      "email": "owner6@petcare.com",
+      "email": "owner6@petcare.gr",
       "password": "password123",
       "name": "Μαρία",
       "lastName": "Χαραλαμποπούλου",
@@ -98,7 +98,7 @@
     },
     {
       "id": "6758",
-      "email": "owner7@petcare.com",
+      "email": "owner7@petcare.gr",
       "password": "password123",
       "name": "Παναγιώτα",
       "lastName": "Καραγιάννη",
@@ -330,7 +330,7 @@
       "vetId": "1",
       "type": "Εμβολιασμός",
       "date": "18/01/2026",
-      "description": "DEAF",
+      "description": "Πρώτος εμβολιασμός (Puppy DP).",
       "createdAt": "18/1/2026"
     },
     {
@@ -1245,6 +1245,15 @@
       "rating": 5,
       "comment": "Άψογη χειρουργός. Η τομή ήταν ελάχιστη και η ανάρρωση ταχύτατη.",
       "reviewedAt": "2026-01-11T18:50:00.000Z"
+    },
+    {
+      "id": "2e7c",
+      "appointmentId": "eeba",
+      "vetId": "1",
+      "ownerId": "ef39",
+      "rating": 4,
+      "comment": "",
+      "reviewedAt": "2026-01-19T11:17:02.571Z"
     }
   ]
 }
