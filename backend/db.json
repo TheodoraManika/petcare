@@ -721,6 +721,24 @@
       "endTime": "13:00",
       "serviceType": "other",
       "createdAt": "2026-01-18T19:08:12.003Z"
+    },
+    {
+      "id": "ccac",
+      "vetId": "1",
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T12:58:16.184Z"
+    },
+    {
+      "id": "0570",
+      "vetId": "1",
+      "day": "tuesday",
+      "startTime": "11:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:02:28.357Z"
     }
   ],
   "appointments": [
@@ -775,7 +793,7 @@
         "appointmentId": "eeba"
       },
       "date": "2026-01-18T19:23:07.747Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-18T19:23:07.747Z"
     }
   ],

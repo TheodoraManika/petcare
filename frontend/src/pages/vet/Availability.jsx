@@ -26,7 +26,6 @@ const Availability = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [slotToDelete, setSlotToDelete] = useState({ day: '', index: -1 });
   const [notification, setNotification] = useState(null);
@@ -175,7 +174,10 @@ const Availability = () => {
         throw new Error(`Failed to save slot: ${response.status} - ${errorText}`);
       }
 
-      // Update local state
+      // Get the created record with its ID
+      const createdSlot = await response.json();
+
+      // Update local state with the new slot including its ID
       setAvailabilityData(prev => ({
         ...prev,
         [newSlot.day]: [
@@ -183,7 +185,8 @@ const Availability = () => {
           {
             start: newSlot.startTime,
             end: newSlot.endTime,
-            status: newSlot.status
+            status: newSlot.status,
+            id: createdSlot.id // Include the ID from the database
           }
         ]
       }));
@@ -196,8 +199,13 @@ const Availability = () => {
         status: ''
       });
       
-      setSuccessMessage('Η ώρα προστέθηκε επιτυχώς!');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      // Show success notification
+      setNotification('success');
+      
+      // Auto-hide notification after 5 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     } catch (error) {
       console.error('Error adding slot:', error);
       setErrorMessage(`Σφάλμα: ${error.message}`);
@@ -390,12 +398,6 @@ const Availability = () => {
             </div>
           )}
 
-          {successMessage && (
-            <div className="availability__success">
-              {successMessage}
-            </div>
-          )}
-
           <button 
             className="availability__add-btn"
             onClick={handleAddSlot}
@@ -485,8 +487,12 @@ const Availability = () => {
       {/* Notification */}
       <Notification
         isVisible={notification !== null}
-        message="Η διαθέσιμη ώρα ραντεβού διαγράφτηκε με επιτυχία!"
-        type="error"
+        message={
+          notification === 'success' 
+            ? 'Η ώρα προστέθηκε επιτυχώς!' 
+            : 'Η διαθέσιμη ώρα ραντεβού διαγράφτηκε με επιτυχία!'
+        }
+        type={notification === 'success' ? 'success' : 'error'}
       />
     </PageLayout>
   );
