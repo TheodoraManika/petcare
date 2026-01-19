@@ -51,10 +51,10 @@ const HomePage = () => {
             
             return {
               id: vet.id,
-              name: vet.name || 'Κτηνίατρος',
+              name: `${vet.name || 'Κτηνίατρος'} ${vet.lastName || ''}`.trim(),
               specialty: vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος',
-              initials: vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??',
-              area: vet.location || 'Άγνωστη τοποθεσία',
+              initials: vet.name && vet.lastName ? `${vet.name[0]}${vet.lastName[0]}` : (vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??'),
+              area: vet.clinicCity || 'Άγνωστη τοποθεσία',
               rating: parseFloat(avgRating),
               reviews: reviews.length
             };
@@ -62,10 +62,10 @@ const HomePage = () => {
             console.error(`Error fetching reviews for vet ${vet.id}:`, err);
             return {
               id: vet.id,
-              name: vet.name || 'Κτηνίατρος',
+              name: `${vet.name || 'Κτηνίατρος'} ${vet.lastName || ''}`.trim(),
               specialty: vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος',
-              initials: vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??',
-              area: vet.location || 'Άγνωστη τοποθεσία',
+              initials: vet.name && vet.lastName ? `${vet.name[0]}${vet.lastName[0]}` : (vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??'),
+              area: vet.clinicCity || 'Άγνωστη τοποθεσία',
               rating: 0,
               reviews: 0
             };
