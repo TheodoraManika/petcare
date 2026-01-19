@@ -1380,6 +1380,21 @@
       "notes": "",
       "status": "completed",
       "createdAt": "2026-01-18T19:14:43.779Z"
+    },
+    {
+      "id": "e279",
+      "vetId": "1",
+      "vetName": "Αναστασία Μιχαηλίδου",
+      "ownerId": "ef39",
+      "ownerName": "Γιάννης ",
+      "ownerPhone": "6985339659",
+      "petId": "40",
+      "date": "2026-01-20",
+      "time": "09:00 - 10:00",
+      "serviceType": "checkup",
+      "notes": "πρωτο ραντεβου",
+      "status": "pending",
+      "createdAt": "2026-01-19T14:08:04.928Z"
     }
   ],
   "transfers": [],
@@ -1419,6 +1434,23 @@
       "date": "2026-01-18T19:23:07.747Z",
       "read": true,
       "createdAt": "2026-01-18T19:23:07.747Z"
+    },
+    {
+      "id": "08d1",
+      "userId": "1",
+      "userType": "vet",
+      "type": "new_appointment",
+      "title": "Νέο αίτημα ραντεβού",
+      "data": {
+        "ownerName": "Γιάννης ",
+        "appointmentDate": "2026-01-20",
+        "appointmentTime": "09:00 - 10:00",
+        "petName": "Ρεξ",
+        "appointmentId": "e279"
+      },
+      "date": "2026-01-19T14:08:04.942Z",
+      "read": false,
+      "createdAt": "2026-01-19T14:08:04.942Z"
     }
   ],
   "pets": [

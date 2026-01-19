@@ -88,6 +88,17 @@
   margin-bottom: 20px;
 }
 
+.booking-form__info-message {
+  padding: 14px 18px;
+  background: white;
+  border: 1px solid #23CED9;
+  border-radius: 8px;
+  color: #23CED9;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.5;
+}
+
 /* Content */
 .booking-form__content {
   display: flex;

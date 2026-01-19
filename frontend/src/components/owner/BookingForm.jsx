@@ -63,13 +63,15 @@ const BookingForm = ({
   const [bookedSlots, setBookedSlots] = useState([]);
 
   const serviceOptions = [
-    { value: 'Εμβολιασμός', label: 'Εμβολιασμός' },
-    { value: 'Γενική Εξέταση', label: 'Γενική Εξέταση' },
-    { value: 'Χειρουργείο', label: 'Χειρουργείο' },
-    { value: 'Θεραπεία', label: 'Θεραπεία' },
-    { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },
-    { value: 'Επείγον Περιστατικό', label: 'Επείγον Περιστατικό' },
-    { value: 'Άλλο', label: 'Άλλο' },
+    { value: 'vaccination', label: 'Εμβολιασμός' },
+    { value: 'checkup', label: 'Γενική Εξέταση' },
+    { value: 'surgery', label: 'Χειρουργείο' },
+    { value: 'treatment', label: 'Θεραπεία' },
+    { value: 'dental', label: 'Οδοντιατρική' },
+    { value: 'cardiology', label: 'Καρδιολογία' },
+    { value: 'dermatology', label: 'Δερματολογία' },
+    { value: 'ophthalmology', label: 'Οφθαλμολογία' },
+    { value: 'other', label: 'Άλλο' },
   ];
 
   // Fetch all vets for search
@@ -229,12 +231,19 @@ const BookingForm = ({
 
   // Generate time slots for a day
   const getTimeSlotsForDay = (date) => {
+    // Don't show any slots if no service type is selected
+    if (!serviceType) {
+      return [];
+    }
+
     const dayOfWeek = date.getDay();
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const dayName = dayNames[dayOfWeek];
 
-    // Find all availability slots for this day of the week
-    const dayAvailabilitySlots = vetAvailability.filter(a => a.day?.toLowerCase() === dayName);
+    // Find all availability slots for this day of the week and filter by selected service type
+    let dayAvailabilitySlots = vetAvailability.filter(
+      a => a.day?.toLowerCase() === dayName && a.serviceType === serviceType
+    );
 
     if (dayAvailabilitySlots.length === 0) {
       return [];
@@ -532,6 +541,29 @@ const BookingForm = ({
           )}
         </div>
 
+        {/* Service Selection Section */}
+        {selectedVet && (
+          <div className="booking-form__section">
+            <h3 className="booking-form__section-title">
+              <FileText size={18} />
+              Επιλογή Υπηρεσίας
+            </h3>
+
+            <div className="booking-form__form-group">
+              <label className="booking-form__label">
+                Τύπος Υπηρεσίας <span className="booking-form__required"> *</span>
+              </label>
+              <CustomSelect
+                value={serviceType}
+                onChange={setServiceType}
+                placeholder="Επιλέξτε υπηρεσία"
+                options={serviceOptions}
+                variant="owner"
+              />
+            </div>
+          </div>
+        )}
+
         {/* Calendar Section */}
         {selectedVet && (
           <div className="booking-form__section">
@@ -540,7 +572,14 @@ const BookingForm = ({
               Επιλογή Ημερομηνίας & Ώρας
             </h3>
 
-            <div className="booking-form__calendar">
+            {!serviceType && (
+              <div className="booking-form__info-message">
+                Παρακαλώ επιλέξτε πρώτα τον τύπο υπηρεσίας για να δείτε τις διαθέσιμες ημερομηνίες και ώρες.
+              </div>
+            )}
+
+            {serviceType && (
+              <div className="booking-form__calendar">
               <div className="booking-form__view-controls">
                 <div className="booking-form__view-buttons">
                   <button
@@ -662,6 +701,7 @@ const BookingForm = ({
                 </div>
               )}
             </div>
+            )}
           </div>
         )}
 
@@ -673,35 +713,20 @@ const BookingForm = ({
               Λεπτομέρειες Ραντεβού
             </h3>
 
-            <div className="booking-form__form-grid">
-              <div className="booking-form__form-group">
-                <label className="booking-form__label">
-                  Κατοικίδιο <span className="booking-form__required"> *</span>
-                </label>
-                <CustomSelect
-                  value={selectedPet}
-                  onChange={setSelectedPet}
-                  placeholder="Επιλέξτε κατοικίδιο"
-                  options={userPets.map(pet => ({
-                    value: String(pet.id),
-                    label: `${pet.name} (${pet.type})`
-                  }))}
-                  variant="owner"
-                />
-              </div>
-
-              <div className="booking-form__form-group">
-                <label className="booking-form__label">
-                  Τύπος Υπηρεσίας <span className="booking-form__required"> *</span>
-                </label>
-                <CustomSelect
-                  value={serviceType}
-                  onChange={setServiceType}
-                  placeholder="Επιλέξτε υπηρεσία"
-                  options={serviceOptions}
-                  variant="owner"
-                />
-              </div>
+            <div className="booking-form__form-group">
+              <label className="booking-form__label">
+                Κατοικίδιο <span className="booking-form__required"> *</span>
+              </label>
+              <CustomSelect
+                value={selectedPet}
+                onChange={setSelectedPet}
+                placeholder="Επιλέξτε κατοικίδιο"
+                options={userPets.map(pet => ({
+                  value: String(pet.id),
+                  label: `${pet.name} (${pet.type})`
+                }))}
+                variant="owner"
+              />
             </div>
 
             <div className="booking-form__form-group">
