@@ -49,7 +49,7 @@ const PetCard = ({ pet, onClick, onFound }) => {
           {getPetIcon(pet.icon)}
         </div>
         {pet.status === 'lost' && (
-          <span className="owner-pet-card__status-badge">Απώλεια</span>
+          <span className="owner-pet-card__status-badge">ΧΑΜΕΝΟ</span>
         )}
       </div>
 

@@ -66,22 +66,20 @@
 
 /* Lost Status Styles */
 .owner-pet-card--lost {
-  border-color: #fca5a5;
-  background-color: #fef2f2;
+  border-color: #ff52528d;
 }
 
 .owner-pet-card--lost:hover {
-  border-color: #f87171;
-  background-color: #fee2e2;
+  border-color: #FF5252;
 }
 
 .owner-pet-card--lost .owner-pet-card__icon {
-  border-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.1);
+  border-color: #1ab8c2;
+  background-color: rgba(35, 206, 217, 0.16);
 }
 
 .owner-pet-card--lost .owner-pet-card__icon svg {
-  color: #ef4444;
+  color: #1ab8c2;
 }
 
 .owner-pet-card__header {
@@ -92,7 +90,7 @@
 }
 
 .owner-pet-card__status-badge {
-  background: #ef4444;
+  background: #ff5252;
   color: white;
   font-size: 11px;
   font-weight: 600;
@@ -109,8 +107,8 @@
   width: 100%;
   margin-top: 16px;
   padding: 8px 12px;
-  background: #10b981;
-  color: white;
+  background: #A1CCA6;
+  color: #101828;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -120,7 +118,7 @@
 }
 
 .owner-pet-card__found-btn:hover {
-  background: #059669;
+  background: #7cbb83;
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
 }
