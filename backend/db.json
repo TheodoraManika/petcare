@@ -131,7 +131,8 @@
       "education": "Κτηνιατρική, Πανεπιστήμιο Θεσσαλίας",
       "biography": "Εξειδικευμένη κτηνίατρος με εμπειρία στις ειδικότητες: Γενική Κτηνιατρική, Καρδιολογία",
       "avatar": null,
-      "createdAt": "18/01/2026"
+      "createdAt": "18/01/2026",
+      "username": "Αναστασία"
     },
     {
       "id": "2",
@@ -163,7 +164,7 @@
       "userType": "vet",
       "phone": "6950867912",
       "afm": "769622125",
-      "specialization": "Δερματολογία",
+      "specialization": "Δερματολογία, Γενική Κτηνιατρική",
       "clinicName": "Πλακεντία Κτηνιατρική Κλινική",
       "licenseNumber": "1-85637",
       "clinicAddress": "Αλ. Παναγούλη 31",
@@ -171,9 +172,10 @@
       "clinicPostalCode": "15343",
       "experience": "19",
       "education": "Κτηνιατρική, Πανεπιστήμιο Λευκωσίας",
-      "biography": "Εξειδικευμένη κτηνίατρος με εμπειρία στις ειδικότητες: Δερματολογία",
+      "biography": "Εξειδικευμένη κτηνίατρος με εμπειρία στις ειδικότητες: Δερματολογία, Γενική Κτηνιατρική",
       "avatar": null,
-      "createdAt": "18/01/2026"
+      "createdAt": "18/01/2026",
+      "username": "Αφροδίτη"
     },
     {
       "id": "4",
@@ -247,7 +249,7 @@
       "userType": "vet",
       "phone": "6901503843",
       "afm": "930706401",
-      "specialization": "Οδοντιατρική",
+      "specialization": "Οδοντιατρική, Γενική Κτηνιατρική",
       "clinicName": "Small Animal Hospital",
       "licenseNumber": "1-75666",
       "clinicAddress": "Λεωφ. Ασκληπιού 17",
@@ -257,7 +259,8 @@
       "education": "Κτηνιατρική, Πανεπιστήμιο Θεσσαλίας",
       "biography": "Εξειδικευμένος κτηνίατρος με εμπειρία στις ειδικότητες: Οδοντιατρική",
       "avatar": null,
-      "createdAt": "18/01/2026"
+      "createdAt": "18/01/2026",
+      "username": "Παύλος"
     },
     {
       "id": "8",
@@ -696,49 +699,670 @@
   ],
   "availability": [
     {
-      "id": "37a8",
+      "id": "a2ae",
       "vetId": "1",
       "day": "monday",
-      "startTime": "08:00",
-      "endTime": "13:00",
-      "serviceType": "other",
-      "createdAt": "2026-01-18T19:07:09.838Z"
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:19:26.143Z"
     },
     {
-      "id": "1891",
+      "id": "e371",
+      "vetId": "1",
+      "day": "monday",
+      "startTime": "17:00",
+      "endTime": "20:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:19:46.893Z"
+    },
+    {
+      "id": "1378",
       "vetId": "1",
       "day": "tuesday",
       "startTime": "09:00",
-      "endTime": "17:00",
-      "serviceType": "other",
-      "createdAt": "2026-01-18T19:07:24.587Z"
+      "endTime": "21:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:20:42.226Z"
     },
     {
-      "id": "10df",
+      "id": "2b7d",
+      "vetId": "1",
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:21:02.288Z"
+    },
+    {
+      "id": "a28e",
+      "vetId": "1",
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:21:30.353Z"
+    },
+    {
+      "id": "8d79",
+      "vetId": "1",
+      "day": "thursday",
+      "startTime": "15:00",
+      "endTime": "18:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:21:51.623Z"
+    },
+    {
+      "id": "79af",
       "vetId": "1",
       "day": "friday",
       "startTime": "09:00",
-      "endTime": "13:00",
+      "endTime": "21:00",
       "serviceType": "other",
-      "createdAt": "2026-01-18T19:08:12.003Z"
+      "createdAt": "2026-01-19T13:22:49.933Z"
     },
     {
-      "id": "ccac",
+      "id": "3867",
       "vetId": "1",
-      "day": "wednesday",
-      "startTime": "10:00",
-      "endTime": "16:00",
-      "serviceType": "checkup",
-      "createdAt": "2026-01-19T12:58:16.184Z"
-    },
-    {
-      "id": "0570",
-      "vetId": "1",
-      "day": "tuesday",
+      "day": "saturday",
       "startTime": "11:00",
       "endTime": "14:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:23:07.985Z"
+    },
+    {
+      "id": "2d0f",
+      "vetId": "2",
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "14:00",
       "serviceType": "surgery",
-      "createdAt": "2026-01-19T13:02:28.357Z"
+      "createdAt": "2026-01-19T13:24:13.268Z"
+    },
+    {
+      "id": "db1d",
+      "vetId": "2",
+      "day": "monday",
+      "startTime": "15:00",
+      "endTime": "20:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:24:26.912Z"
+    },
+    {
+      "id": "dba3",
+      "vetId": "2",
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:24:45.061Z"
+    },
+    {
+      "id": "329d",
+      "vetId": "2",
+      "day": "tuesday",
+      "startTime": "16:00",
+      "endTime": "20:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:25:06.957Z"
+    },
+    {
+      "id": "80fc",
+      "vetId": "2",
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "20:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:25:47.793Z"
+    },
+    {
+      "id": "830b",
+      "vetId": "2",
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "20:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:26:15.146Z"
+    },
+    {
+      "id": "50ef",
+      "vetId": "2",
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "20:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:26:32.834Z"
+    },
+    {
+      "id": "79b2",
+      "vetId": "3",
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "19:00",
+      "serviceType": "dermatology",
+      "createdAt": "2026-01-19T13:27:43.789Z"
+    },
+    {
+      "id": "f96d",
+      "vetId": "3",
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:29:04.986Z"
+    },
+    {
+      "id": "db4c",
+      "vetId": "3",
+      "day": "tuesday",
+      "startTime": "15:00",
+      "endTime": "21:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:29:17.278Z"
+    },
+    {
+      "id": "6b8c",
+      "vetId": "3",
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:29:34.455Z"
+    },
+    {
+      "id": "e161",
+      "vetId": "3",
+      "day": "wednesday",
+      "startTime": "14:00",
+      "endTime": "20:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:29:54.703Z"
+    },
+    {
+      "id": "2ba6",
+      "vetId": "3",
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "20:00",
+      "serviceType": "dermatology",
+      "createdAt": "2026-01-19T13:30:16.704Z"
+    },
+    {
+      "id": "cc00",
+      "vetId": "3",
+      "day": "friday",
+      "startTime": "08:00",
+      "endTime": "12:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:30:34.426Z"
+    },
+    {
+      "id": "8387",
+      "vetId": "3",
+      "day": "friday",
+      "startTime": "13:00",
+      "endTime": "17:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:30:55.061Z"
+    },
+    {
+      "id": "3c4d",
+      "vetId": "3",
+      "day": "friday",
+      "startTime": "17:00",
+      "endTime": "20:00",
+      "serviceType": "dermatology",
+      "createdAt": "2026-01-19T13:31:15.336Z"
+    },
+    {
+      "id": "cdeb",
+      "vetId": "3",
+      "day": "saturday",
+      "startTime": "11:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:31:30.481Z"
+    },
+    {
+      "id": "f00a",
+      "vetId": "3",
+      "day": "sunday",
+      "startTime": "11:00",
+      "endTime": "13:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:31:48.948Z"
+    },
+    {
+      "id": "8bed",
+      "vetId": "4",
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "13:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:32:38.021Z"
+    },
+    {
+      "id": "b158",
+      "vetId": "4",
+      "day": "monday",
+      "startTime": "16:00",
+      "endTime": "19:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:32:51.495Z"
+    },
+    {
+      "id": "5670",
+      "vetId": "4",
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:33:10.689Z"
+    },
+    {
+      "id": "4f86",
+      "vetId": "4",
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "16:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:33:35.843Z"
+    },
+    {
+      "id": "a5cf",
+      "vetId": "4",
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "20:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:33:52.788Z"
+    },
+    {
+      "id": "73a1",
+      "vetId": "5",
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "other",
+      "createdAt": "2026-01-19T13:35:14.308Z"
+    },
+    {
+      "id": "d3f6",
+      "vetId": "5",
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:35:27.798Z"
+    },
+    {
+      "id": "1705",
+      "vetId": "5",
+      "day": "tuesday",
+      "startTime": "16:00",
+      "endTime": "21:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:36:04.214Z"
+    },
+    {
+      "id": "949e",
+      "vetId": "5",
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:36:17.647Z"
+    },
+    {
+      "id": "4034",
+      "vetId": "5",
+      "day": "thursday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:36:33.256Z"
+    },
+    {
+      "id": "273b",
+      "vetId": "5",
+      "day": "thursday",
+      "startTime": "16:00",
+      "endTime": "21:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:37:07.515Z"
+    },
+    {
+      "id": "b574",
+      "vetId": "5",
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:37:24.341Z"
+    },
+    {
+      "id": "55dc",
+      "vetId": "5",
+      "day": "saturday",
+      "startTime": "10:00",
+      "endTime": "13:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:37:35.542Z"
+    },
+    {
+      "id": "ce21",
+      "vetId": "5",
+      "day": "sunday",
+      "startTime": "11:00",
+      "endTime": "13:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:37:47.959Z"
+    },
+    {
+      "id": "8961",
+      "vetId": "6",
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "15:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:38:26.650Z"
+    },
+    {
+      "id": "154b",
+      "vetId": "6",
+      "day": "monday",
+      "startTime": "18:00",
+      "endTime": "21:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:38:37.924Z"
+    },
+    {
+      "id": "4d4e",
+      "vetId": "6",
+      "day": "tuesday",
+      "startTime": "10:00",
+      "endTime": "20:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:38:55.320Z"
+    },
+    {
+      "id": "7aff",
+      "vetId": "6",
+      "day": "wednesday",
+      "startTime": "08:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:39:07.096Z"
+    },
+    {
+      "id": "d3f6",
+      "vetId": "6",
+      "day": "wednesday",
+      "startTime": "16:00",
+      "endTime": "20:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:39:19.967Z"
+    },
+    {
+      "id": "1cad",
+      "vetId": "6",
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "20:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:39:31.725Z"
+    },
+    {
+      "id": "d11e",
+      "vetId": "6",
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:39:44.028Z"
+    },
+    {
+      "id": "6f51",
+      "vetId": "6",
+      "day": "friday",
+      "startTime": "15:00",
+      "endTime": "20:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:39:53.197Z"
+    },
+    {
+      "id": "b51f",
+      "vetId": "7",
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:41:52.450Z"
+    },
+    {
+      "id": "34ec",
+      "vetId": "7",
+      "day": "monday",
+      "startTime": "15:00",
+      "endTime": "20:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:42:03.362Z"
+    },
+    {
+      "id": "7d2e",
+      "vetId": "7",
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:42:17.393Z"
+    },
+    {
+      "id": "d460",
+      "vetId": "7",
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-19T13:42:32.938Z"
+    },
+    {
+      "id": "1198",
+      "vetId": "7",
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-19T13:42:48.814Z"
+    },
+    {
+      "id": "2cd4",
+      "vetId": "7",
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:43:11.070Z"
+    },
+    {
+      "id": "33b3",
+      "vetId": "7",
+      "day": "saturday",
+      "startTime": "09:00",
+      "endTime": "14:00",
+      "serviceType": "vaccination",
+      "createdAt": "2026-01-19T13:43:18.942Z"
+    },
+    {
+      "id": "96ca",
+      "vetId": "7",
+      "day": "sunday",
+      "startTime": "10:00",
+      "endTime": "13:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:43:27.022Z"
+    },
+    {
+      "id": "d296",
+      "vetId": "8",
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "other",
+      "createdAt": "2026-01-19T13:44:32.440Z"
+    },
+    {
+      "id": "6a1f",
+      "vetId": "8",
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "13:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:44:51.368Z"
+    },
+    {
+      "id": "4460",
+      "vetId": "8",
+      "day": "wednesday",
+      "startTime": "13:00",
+      "endTime": "18:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:45:01.569Z"
+    },
+    {
+      "id": "eddd",
+      "vetId": "8",
+      "day": "monday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-19T13:45:15.162Z"
+    },
+    {
+      "id": "d9b4",
+      "vetId": "8",
+      "day": "thursday",
+      "startTime": "09:00",
+      "endTime": "19:00",
+      "serviceType": "cardiology",
+      "createdAt": "2026-01-19T13:45:25.105Z"
+    },
+    {
+      "id": "c78b",
+      "vetId": "8",
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "checkup",
+      "createdAt": "2026-01-19T13:45:34.438Z"
+    },
+    {
+      "id": "2442",
+      "vetId": "9",
+      "day": "monday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "dermatology",
+      "createdAt": "2026-01-19T13:46:21.256Z"
+    },
+    {
+      "id": "dd18",
+      "vetId": "9",
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "ophthalmology",
+      "createdAt": "2026-01-19T13:46:29.480Z"
+    },
+    {
+      "id": "36e3",
+      "vetId": "9",
+      "day": "wednesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "dental",
+      "createdAt": "2026-01-19T13:46:37.529Z"
+    },
+    {
+      "id": "024b",
+      "vetId": "9",
+      "day": "friday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "other",
+      "createdAt": "2026-01-19T13:46:52.873Z"
+    },
+    {
+      "id": "e9b5",
+      "vetId": "9",
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "17:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-19T13:47:17.187Z"
+    },
+    {
+      "id": "e828",
+      "vetId": "10",
+      "day": "monday",
+      "startTime": "08:00",
+      "endTime": "21:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:48:00.253Z"
+    },
+    {
+      "id": "8a8e",
+      "vetId": "10",
+      "day": "tuesday",
+      "startTime": "08:00",
+      "endTime": "21:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:48:07.981Z"
+    },
+    {
+      "id": "af7a",
+      "vetId": "10",
+      "day": "wednesday",
+      "startTime": "10:00",
+      "endTime": "19:00",
+      "serviceType": "dermatology",
+      "createdAt": "2026-01-19T13:48:21.485Z"
+    },
+    {
+      "id": "a18c",
+      "vetId": "10",
+      "day": "thursday",
+      "startTime": "10:00",
+      "endTime": "19:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-19T13:48:39.882Z"
+    },
+    {
+      "id": "08b1",
+      "vetId": "10",
+      "day": "friday",
+      "startTime": "10:00",
+      "endTime": "19:00",
+      "serviceType": "treatment",
+      "createdAt": "2026-01-19T13:48:49.888Z"
+    },
+    {
+      "id": "15a1",
+      "vetId": "10",
+      "day": "saturday",
+      "startTime": "08:00",
+      "endTime": "13:00",
+      "serviceType": "surgery",
+      "createdAt": "2026-01-19T13:48:57.724Z"
+    },
+    {
+      "id": "0065",
+      "vetId": "10",
+      "day": "sunday",
+      "startTime": "11:00",
+      "endTime": "14:00",
+      "serviceType": "dermatology",
+      "createdAt": "2026-01-19T13:49:10.117Z"
     }
   ],
   "appointments": [
