@@ -1420,7 +1420,7 @@
       "time": "18:00 - 19:00",
       "serviceType": "ophthalmology",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:01:12.062Z"
     },
     {
@@ -1452,7 +1452,7 @@
       "time": "11:00 - 12:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:01:53.742Z"
     },
     {
@@ -1468,7 +1468,7 @@
       "time": "08:00 - 09:00",
       "serviceType": "surgery",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:04:59.783Z"
     },
     {
@@ -1500,7 +1500,7 @@
       "time": "10:00 - 11:00",
       "serviceType": "treatment",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:07:22.366Z"
     },
     {
@@ -1532,7 +1532,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:08:42.552Z"
     },
     {
@@ -1548,7 +1548,7 @@
       "time": "12:00 - 13:00",
       "serviceType": "dental",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:09:07.678Z"
     },
     {
@@ -1564,7 +1564,7 @@
       "time": "20:00 - 21:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:09:54.977Z"
     },
     {
@@ -1580,7 +1580,7 @@
       "time": "10:00 - 11:00",
       "serviceType": "vaccination",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:10:31.816Z"
     },
     {
@@ -1628,7 +1628,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "dental",
       "notes": "",
-      "status": "pending",
+      "status": "cancelled",
       "createdAt": "2026-01-20T18:53:11.917Z"
     },
     {
@@ -1644,7 +1644,7 @@
       "time": "13:00 - 14:00",
       "serviceType": "cardiology",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:53:29.413Z"
     },
     {
@@ -1660,7 +1660,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "dental",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:53:41.688Z"
     },
     {
@@ -2125,6 +2125,159 @@
       "date": "2026-01-20T18:59:28.319Z",
       "read": false,
       "createdAt": "2026-01-20T18:59:28.319Z"
+    },
+    {
+      "id": "861b",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "appointment_cancelled",
+      "title": "Το ραντεβού σας ακυρώθηκε",
+      "data": {
+        "vetName": "Κώστας Σακελλαρίου",
+        "appointmentDate": "2026-01-22",
+        "appointmentTime": "09:00 - 10:00",
+        "petName": "Βιολέτα",
+        "appointmentId": "3bca"
+      },
+      "date": "2026-01-20T19:22:52.525Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:22:52.525Z"
+    },
+    {
+      "id": "c585",
+      "userId": "1234",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Κώστας Σακελλαρίου",
+        "appointmentDate": "2026-01-22",
+        "appointmentTime": "12:00 - 13:00",
+        "petName": "Ρόκι",
+        "appointmentId": "e186"
+      },
+      "date": "2026-01-20T19:22:56.853Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:22:56.853Z"
+    },
+    {
+      "id": "e1ea",
+      "userId": "0987",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Πηνελόπη Μαθιουδάκη",
+        "appointmentDate": "2026-01-20",
+        "appointmentTime": "18:00 - 19:00",
+        "petName": "Χιονάτη",
+        "appointmentId": "5393"
+      },
+      "date": "2026-01-20T19:23:31.220Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:23:31.220Z"
+    },
+    {
+      "id": "ebc1",
+      "userId": "0987",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Πηνελόπη Μαθιουδάκη",
+        "appointmentDate": "2026-01-28",
+        "appointmentTime": "11:00 - 12:00",
+        "petName": "Χιονάτη",
+        "appointmentId": "165a"
+      },
+      "date": "2026-01-20T19:23:37.107Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:23:37.107Z"
+    },
+    {
+      "id": "ae12",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Χριστίνα Πετροπούλου",
+        "appointmentDate": "2026-01-20",
+        "appointmentTime": "13:00 - 14:00",
+        "petName": "Σπίθας",
+        "appointmentId": "4e7e"
+      },
+      "date": "2026-01-20T19:24:02.641Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:24:02.641Z"
+    },
+    {
+      "id": "1bb5",
+      "userId": "0589",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Παύλος Χαραλάμπους",
+        "appointmentDate": "2026-01-24",
+        "appointmentTime": "10:00 - 11:00",
+        "petName": "Λούνα",
+        "appointmentId": "d359"
+      },
+      "date": "2026-01-20T19:24:29.732Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:24:29.732Z"
+    },
+    {
+      "id": "9781",
+      "userId": "0564",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Θοδωρής Αναστασίου",
+        "appointmentDate": "2026-01-26",
+        "appointmentTime": "10:00 - 11:00",
+        "petName": "Μπρούνο",
+        "appointmentId": "7108"
+      },
+      "date": "2026-01-20T19:24:48.985Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:24:48.985Z"
+    },
+    {
+      "id": "feee",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Γιάννης Νικολάου",
+        "appointmentDate": "2026-01-21",
+        "appointmentTime": "09:00 - 10:00",
+        "petName": "Σπίθας",
+        "appointmentId": "2692"
+      },
+      "date": "2026-01-20T19:25:23.831Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:25:23.832Z"
+    },
+    {
+      "id": "41f8",
+      "userId": "0987",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Νικόλαος Τσαρδακλής",
+        "appointmentDate": "2026-01-26",
+        "appointmentTime": "08:00 - 09:00",
+        "petName": "Χιονάτη",
+        "appointmentId": "25b0"
+      },
+      "date": "2026-01-20T19:25:45.050Z",
+      "read": false,
+      "createdAt": "2026-01-20T19:25:45.050Z"
     }
   ],
   "pets": [

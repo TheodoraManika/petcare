@@ -122,13 +122,32 @@ const Appointments = () => {
           // Only update confirmed or pending appointments that aren't already completed/cancelled
           if (apt.status === 'completed' || apt.status === 'cancelled') return apt;
 
-          const aptDate = new Date(apt.date);
-          const nowDateObj = new Date();
-          nowDateObj.setHours(0, 0, 0, 0);
-          aptDate.setHours(0, 0, 0, 0);
+          // Parse appointment date - handle both formats: DD/MM/YYYY and YYYY-MM-DD
+          let aptDate;
+          if (apt.date.includes('/')) {
+            // DD/MM/YYYY format
+            const [day, month, year] = apt.date.split('/').map(Number);
+            aptDate = new Date(year, month - 1, day);
+          } else {
+            // YYYY-MM-DD format
+            aptDate = new Date(apt.date);
+          }
 
-          // If appointment date is in the past, mark as completed
-          if (aptDate < nowDateObj) {
+          // Parse appointment end time
+          let aptEndTime = null;
+          if (apt.time && apt.time.includes('-')) {
+            const endTimeStr = apt.time.split('-')[1].trim(); // Get "10:00" from "09:00 - 10:00"
+            const [hours, minutes] = endTimeStr.split(':').map(Number);
+            aptDate.setHours(hours, minutes, 0, 0);
+            aptEndTime = aptDate;
+          } else {
+            // If no end time, assume appointment lasts 1 hour
+            aptDate.setHours(23, 59, 59, 999); // End of day
+            aptEndTime = aptDate;
+          }
+
+          // If appointment has passed (date + end time is in the past), mark as completed
+          if (aptEndTime && aptEndTime < now) {
             // Persist the status change to the backend
             fetch(`http://localhost:5000/appointments/${apt.id}`, {
               method: 'PATCH',
