@@ -5,7 +5,7 @@ import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
@@ -531,7 +531,7 @@ const Appointments = () => {
                                 <Clock size={12} /> {apt.time}
                               </div>
                               <div className="appointments__card-pet">{apt.petName}</div>
-                              <div className="appointments__card-service">{apt.serviceType}</div>
+                              <div className="appointments__card-service">{SERVICE_LABELS[apt.serviceType] || apt.serviceType}</div>
                               <div className={getStatusClass(apt.status)}>
                                 {getStatusLabel(apt.status)}
                               </div>
@@ -614,7 +614,7 @@ const Appointments = () => {
                           </div>
                           <div className="appointments__day-card-meta-item">
                             <span className="appointments__day-card-meta-label">Υπηρεσία</span>
-                            <span>{apt.serviceType}</span>
+                            <span>{SERVICE_LABELS[apt.serviceType] || apt.serviceType}</span>
                           </div>
                           <div className="appointments__day-card-meta-item">
                             <span className="appointments__day-card-meta-label">Σημειώσεις</span>
@@ -740,7 +740,7 @@ const Appointments = () => {
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Υπηρεσία:</span>
-                      <span>{apt.serviceType}</span>
+                      <span>{SERVICE_LABELS[apt.serviceType] || apt.serviceType}</span>
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Σημειώσεις:</span>
@@ -828,7 +828,7 @@ const Appointments = () => {
                   <h4 className="appointments__modal-section-title"><Stethoscope size={16} color="#F9D779" /> Υπηρεσία</h4>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Τύπος:</span>
-                    <span>{selectedAppointment.serviceType}</span>
+                    <span>{SERVICE_LABELS[selectedAppointment.serviceType] || selectedAppointment.serviceType}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Σημειώσεις:</span>
