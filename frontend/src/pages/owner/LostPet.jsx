@@ -200,9 +200,23 @@ const OwnerLostPet = () => {
           type: 'success',
           message: 'Η δήλωση απώλειας κατοικιδίου καταχωρήθηκε με επιτυχία!'
         });
-        setTimeout(() => {
-          navigate(ROUTES.owner.dashboard);
-        }, 2000);
+        // clear form after submission
+        setFormData({
+          selectedPet: '',
+          microchipNumber: '',
+          petName: '',
+          petType: '',
+          breed: '',
+          lostDate: '',
+          contactPhone: '',
+          location: '',
+          locationLat: '',
+          locationLon: '',
+          description: '',
+          photo: ''
+        });
+        setPhotoPreview(null);
+        setPhoneError('');
       } else {
         setNotification({
           type: 'error',
