@@ -61,7 +61,6 @@ const PetCard = ({ pet, onClick, onFound }) => {
 
       // Call the parent callback
       onFound && onFound();
-      alert('Το κατοικίδιό σας σημειώθηκε ως βρεθέν και η ιστορία αποθηκεύτηκε.');
     } catch (error) {
       console.error('Error marking pet as found:', error);
       alert('Σφάλμα κατά την ενημέρωση της κατάστασης. Παρακαλώ προσπαθήστε ξανά.');
