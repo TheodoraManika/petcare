@@ -314,32 +314,36 @@ const VetSearchMap = () => {
 
       // Filter by availability (day) - only if explicitly selected
       if (filters.availability) {
-        const availabilityMap = {
-          'today': getTodayDay(),
-          'tomorrow': getTomorrowDay(),
-          'week': null // null means show all with any availability this week
-        };
-
-        const targetDay = availabilityMap[filters.availability];
-
         // Skip filter if no availableDays data exists
-        if (!vet.availableDays) {
+        if (!vet.availableDays || vet.availableDays.length === 0) {
           return false;
         }
 
+        // Handle 'all' option - show vets with any availability
+        if (filters.availability === 'all') {
+          return true;
+        }
+
+        // Handle 'week' option - show vets with any availability
         if (filters.availability === 'week') {
-          // Check if vet has any availability this week
-          if (vet.availableDays.length === 0) {
-            return false;
-          }
-        } else if (targetDay) {
-          // Check if vet has availability on specific day - case insensitive comparison
-          const hasDay = vet.availableDays.some(day =>
-            day.toLowerCase() === targetDay.toLowerCase()
-          );
-          if (!hasDay) {
-            return false;
-          }
+          return true;
+        }
+
+        // Handle 'today' and 'tomorrow' options
+        const availabilityMap = {
+          'today': getTodayDay(),
+          'tomorrow': getTomorrowDay()
+        };
+
+        const targetDay = availabilityMap[filters.availability] || filters.availability;
+
+        // Check if vet has availability on specific day - case insensitive comparison
+        const hasDay = vet.availableDays.some(day =>
+          day.toLowerCase() === targetDay.toLowerCase()
+        );
+        
+        if (!hasDay) {
+          return false;
         }
       }
 
@@ -353,19 +357,26 @@ const VetSearchMap = () => {
 
         const targetRange = timeRanges[filters.time];
         if (targetRange) {
-          // If a specific day is selected, only check slots for that day
+          // Determine which slots to check based on day filter
           let slotsToCheck = vet.availabilitySlots;
 
-          if (filters.availability && filters.availability !== 'week') {
+          if (filters.availability && filters.availability !== 'week' && filters.availability !== 'all') {
+            // Map special day values to actual day names
             const availabilityMap = {
               'today': getTodayDay(),
               'tomorrow': getTomorrowDay()
             };
-            const targetDay = availabilityMap[filters.availability];
-            slotsToCheck = vet.availabilitySlots.filter(slot => slot.day === targetDay);
-          } else if (filters.availability === 'week') {
-            // For week filter, include all slots (which should already be limited to this week in backend)
-            slotsToCheck = vet.availabilitySlots;
+            const targetDay = availabilityMap[filters.availability] || filters.availability;
+            
+            // Filter slots by the selected day (case insensitive)
+            slotsToCheck = vet.availabilitySlots.filter(slot => 
+              slot.day.toLowerCase() === targetDay.toLowerCase()
+            );
+          }
+
+          // If no slots match the day filter, vet doesn't match
+          if (slotsToCheck.length === 0) {
+            return false;
           }
 
           // Check if vet has any slots that overlap with the requested time range

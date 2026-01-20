@@ -704,6 +704,15 @@
       "date": "17/01/2026",
       "description": "",
       "createdAt": "20/1/2026"
+    },
+    {
+      "id": "aacd",
+      "petId": "41",
+      "vetId": "1",
+      "type": "Χειρουργείο",
+      "date": "20/01/2026",
+      "description": "It hurt a lot",
+      "createdAt": "20/1/2026"
     }
   ],
   "availability": [
