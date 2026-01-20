@@ -148,13 +148,18 @@ const LostPetHistory = () => {
         if (foundPetResponse.ok) {
           const allFoundPets = await foundPetResponse.json();
           
-          // Split Found_pet into two categories:
-          // 1. Pets YOU found (foundByUserId matches current user) - goes to "Δικές μου"
-          // 2. YOUR pets found by others (ownerId matches current user) - goes to "Από άλλους"
+          // Split Found_pet into categories:
+          // For "Δικές μου": Include both active AND draft findings by current user
+          // For "Από άλλους": Only active findings by others (no drafts)
           
-          const myFindings = allFoundPets.filter(pet => pet.foundByUserId == currentUser.id);
+          const myFindings = allFoundPets.filter(pet => 
+            pet.foundByUserId == currentUser.id // All findings by current user (active + draft)
+          );
+          
           const othersFoundMyPets = allFoundPets.filter(pet => 
-            pet.ownerId == currentUser.id && pet.foundByUserId != currentUser.id
+            pet.ownerId == currentUser.id && 
+            pet.foundByUserId != currentUser.id &&
+            pet.status === 'active' // Only active findings by others (no drafts)
           );
           
           const parseDate = (dateStr) => {
@@ -187,7 +192,7 @@ const LostPetHistory = () => {
             location: pet.area || pet.lostLocation || '-',
             description: pet.description,
             ownerName: pet.ownerId ? 'Γνωστός ιδιοκτήτης' : 'Άγνωστος ιδιοκτήτης',
-            status: 'submitted',
+            status: pet.status === 'draft' ? 'draft' : 'submitted', // Preserve draft status
           }));
 
           // Transform YOUR pets found by others

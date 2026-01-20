@@ -41,24 +41,27 @@ const LostPetHistoryEdit = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch the lost pet declaration
-        const response = await fetch(`http://localhost:5000/pets/${declarationId}`);
-        if (!response.ok) {
-          throw new Error('Δήλωση δεν βρέθηκε');
-        }
-
-        const lostPet = await response.json();
-
-        // Fetch pet details if petId exists (for fallback info)
-        let petDetails = {};
-        if (lostPet.petId) {
-          const petResponse = await fetch(`http://localhost:5000/pets/${lostPet.petId}`);
-          if (petResponse.ok) {
-            petDetails = await petResponse.json();
+        // Check if this is a Found_pet declaration (ID starts with "found_")
+        const isFoundPet = declarationId.startsWith('found_');
+        
+        let declaration;
+        if (isFoundPet) {
+          // Fetch from Found_pet endpoint
+          const response = await fetch(`http://localhost:5000/Found_pet/${declarationId}`);
+          if (!response.ok) {
+            throw new Error('Δήλωση δεν βρέθηκε');
           }
+          declaration = await response.json();
+        } else {
+          // Fetch from pets endpoint (lost pet declaration)
+          const response = await fetch(`http://localhost:5000/pets/${declarationId}`);
+          if (!response.ok) {
+            throw new Error('Δήλωση δεν βρέθηκε');
+          }
+          declaration = await response.json();
         }
 
-        // Fetch owner info to get phone if not in lostPet
+        // Fetch owner info to get phone
         let ownerInfo = {};
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (currentUser.id) {
@@ -68,17 +71,32 @@ const LostPetHistoryEdit = () => {
           }
         }
 
-        // Format the form data - use fields saved from draft
-        setFormData({
-          petName: lostPet.name || petDetails.name || '',
-          petType: lostPet.type || petDetails.type || '',
-          breed: lostPet.breed || petDetails.breed || '',
-          microchip: lostPet.microchipId || petDetails.microchipId || '',
-          date: lostPet.lostDate || '',
-          phone: ownerInfo.phone || '',
-          location: lostPet.lostLocation || '',
-          description: lostPet.description || '',
-        });
+        // Format the form data based on declaration type
+        if (isFoundPet) {
+          // Found pet declaration
+          setFormData({
+            petName: declaration.name || '',
+            petType: declaration.type || '',
+            breed: declaration.breed || '',
+            microchip: declaration.microchipId || '',
+            date: declaration.foundAt || '',
+            phone: ownerInfo.phone || declaration.foundByUserPhone || '',
+            location: declaration.area || '',
+            description: declaration.description || '',
+          });
+        } else {
+          // Lost pet declaration
+          setFormData({
+            petName: declaration.name || '',
+            petType: declaration.type || '',
+            breed: declaration.breed || '',
+            microchip: declaration.microchipId || '',
+            date: declaration.lostDate || '',
+            phone: ownerInfo.phone || '',
+            location: declaration.lostLocation || '',
+            description: declaration.description || '',
+          });
+        }
 
         setLoading(false);
       } catch (err) {
@@ -166,16 +184,36 @@ const LostPetHistoryEdit = () => {
     try {
       setIsSaving(true);
 
-      const updateData = {
-        lostDate: formData.date,
-        lostLocation: formData.location,
-        area: formData.location,
-        petStatus: 1,
-        status: 'draft'
-      };
+      // Check if this is a Found_pet declaration
+      const isFoundPet = declarationId.startsWith('found_');
+      
+      let updateData;
+      let endpoint;
+      
+      if (isFoundPet) {
+        // Update Found_pet declaration as draft
+        updateData = {
+          foundAt: formData.date,
+          area: formData.location,
+          description: formData.description,
+          foundByUserPhone: formData.phone,
+          status: 'draft' // Keep as draft
+        };
+        endpoint = `http://localhost:5000/Found_pet/${declarationId}`;
+      } else {
+        // Update lost pet declaration as draft
+        updateData = {
+          lostDate: formData.date,
+          lostLocation: formData.location,
+          area: formData.location,
+          petStatus: 1,
+          status: 'draft'
+        };
+        endpoint = `http://localhost:5000/pets/${declarationId}`;
+      }
 
-      // Update the lost pet declaration in database
-      const response = await fetch(`http://localhost:5000/pets/${declarationId}`, {
+      // Update the declaration in database
+      const response = await fetch(endpoint, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -220,16 +258,37 @@ const LostPetHistoryEdit = () => {
     try {
       setIsSaving(true);
 
-      const updateData = {
-        lostDate: formData.date,
-        lostLocation: formData.location,
-        area: formData.location,
-        petStatus: 1,
-        status: 'active'
-      };
+      // Check if this is a Found_pet declaration
+      const isFoundPet = declarationId.startsWith('found_');
+      
+      let updateData;
+      let endpoint;
+      
+      if (isFoundPet) {
+        // Update Found_pet declaration
+        updateData = {
+          foundAt: formData.date,
+          area: formData.location,
+          description: formData.description,
+          foundByUserPhone: formData.phone,
+          status: 'active', // Change from draft to active
+          markedFoundAt: new Date().toISOString()
+        };
+        endpoint = `http://localhost:5000/Found_pet/${declarationId}`;
+      } else {
+        // Update lost pet declaration
+        updateData = {
+          lostDate: formData.date,
+          lostLocation: formData.location,
+          area: formData.location,
+          petStatus: 1,
+          status: 'active'
+        };
+        endpoint = `http://localhost:5000/pets/${declarationId}`;
+      }
 
-      // Update the lost pet declaration with submitted status
-      const response = await fetch(`http://localhost:5000/pets/${declarationId}`, {
+      // Update the declaration with submitted status
+      const response = await fetch(endpoint, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -239,6 +298,40 @@ const LostPetHistoryEdit = () => {
 
       if (!response.ok) {
         throw new Error('Αποτυχία υποβολής');
+      }
+
+      // If this is a found pet with an owner, send notification
+      if (isFoundPet) {
+        const declaration = await response.json();
+        if (declaration.ownerId) {
+          const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+          const notification = {
+            userId: declaration.ownerId,
+            userType: 'owner',
+            type: 'found_pet',
+            title: 'Το κατοικίδιό σας βρέθηκε!',
+            data: {
+              finderName: currentUser.name || formData.firstName,
+              finderId: currentUser.id || null,
+              petName: declaration.name,
+              petId: declaration.ownerId,
+              location: formData.location
+            },
+            icon: 'pet',
+            relatedId: declarationId,
+            read: false,
+            date: new Date().toISOString(),
+            createdAt: new Date().toISOString()
+          };
+
+          await fetch('http://localhost:5000/notifications', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(notification)
+          });
+        }
       }
 
       setIsSaving(false);

@@ -1477,16 +1477,6 @@
       "createdAt": "2026-01-19T14:08:04.942Z"
     },
     {
-      "id": "b09c",
-      "userId": "6762",
-      "type": "pet_found",
-      "title": "Το κατοικίδιό σας βρέθηκε!",
-      "message": "Κάποιος βρήκε το Γκάρφιλντ σας! Ελέγξτε το ιστορικό δηλώσεων για περισσότερες πληροφορίες.",
-      "relatedId": "found_43_1768852139683",
-      "read": true,
-      "createdAt": "2026-01-19T19:48:59.737Z"
-    },
-    {
       "id": "e8a0",
       "userId": "1",
       "userType": "vet",
@@ -1589,6 +1579,25 @@
       "read": true,
       "date": "2026-01-20T14:15:43.521Z",
       "createdAt": "2026-01-20T14:15:43.521Z"
+    },
+    {
+      "id": "bb66",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "found_pet",
+      "title": "Το κατοικίδιό σας βρέθηκε!",
+      "data": {
+        "finderName": "Γιώργος",
+        "finderId": "1234",
+        "petName": "Σπίθας",
+        "petId": "6762",
+        "location": "Δημοτική Ενότητα Ελευσίνος, 192 00"
+      },
+      "icon": "pet",
+      "relatedId": "found_draft_1768919153800",
+      "read": true,
+      "date": "2026-01-20T14:33:07.238Z",
+      "createdAt": "2026-01-20T14:33:07.238Z"
     }
   ],
   "pets": [
@@ -2844,6 +2853,38 @@
       "foundByUserPhone": "6946559777",
       "foundByUserEmail": "owner4@petcare.gr",
       "foundAt": "09/01/2026"
+    },
+    {
+      "id": "found_draft_1768919153800",
+      "name": "Σπίθας",
+      "type": "Σκύλος",
+      "breed": "Τζακ Ράσελ",
+      "gender": "male",
+      "birthDate": "22/09/2025",
+      "color": "Λευκό/Καφέ",
+      "weight": "7",
+      "microchipId": "900888999000111",
+      "ownerId": "6762",
+      "registeredByVetId": "3",
+      "reportedByVetId": null,
+      "lostDate": "18/01/2026",
+      "lostLocation": "Athens, Athens Township, Athens County, Οχάιο, 45701, Ηνωμένες Πολιτείες της Αμερικής",
+      "area": "Δημοτική Ενότητα Ελευσίνος, 192 00",
+      "locationLat": null,
+      "locationLon": null,
+      "petStatus": 2,
+      "status": "active",
+      "imageUrl": null,
+      "createdAt": "2026-01-20T14:25:53.800Z",
+      "description": "",
+      "foundDate": "2026-01-20T14:25:53.800Z",
+      "markedFoundAt": "2026-01-20T14:33:07.226Z",
+      "foundByUserId": "1234",
+      "foundByUserName": "Γιώργος",
+      "foundByUserSurname": "Αγγελόπουλος",
+      "foundByUserPhone": "6980448563",
+      "foundByUserEmail": "owner5@petcare.gr",
+      "foundAt": "17/01/2026"
     }
   ]
 }

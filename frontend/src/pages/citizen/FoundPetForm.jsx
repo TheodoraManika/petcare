@@ -328,47 +328,126 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
     setShowCancelModal(false);
   };
 
-  const handleDraft = () => {
-    console.log('Draft saved:', formData);
+  const handleDraft = async () => {
+    if (!isFormValid()) {
+      alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία (*)');
+      return;
+    }
 
-    // Reset all form fields
-    setFormData({
-      petName: '',
-      species: '',
-      breed: '',
-      foundLocation: '',
-      foundDate: '',
-      description: '',
-      photo: null,
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-    });
-    setImagePreview(null);
-    setErrors({
-      petName: '',
-      species: '',
-      foundLocation: '',
-      foundDate: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      microchip: '',
-      description: ''
-    });
-    setSelectedOwnPet('');
-    setPrefilledPetData({});
-    setMicrochipInput('');
+    try {
+      // Try to find the pet in database by microchip or selected pet
+      let petData = null;
 
-    // Show success notification
-    setNotification('draft');
+      if (selectedOwnPet) {
+        const petResponse = await fetch(`http://localhost:5000/pets/${selectedOwnPet}`);
+        if (petResponse.ok) {
+          petData = await petResponse.json();
+        }
+      } else if (prefilledPetData.microchip) {
+        const petsResponse = await fetch(`http://localhost:5000/pets?microchipId=${prefilledPetData.microchip}`);
+        if (petsResponse.ok) {
+          const pets = await petsResponse.json();
+          if (pets.length > 0) {
+            petData = pets[0];
+          }
+        }
+      }
 
-    // Auto-hide notification after 8 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 8000);
+      const finderUser = currentUser || {};
+
+      // Create the found pet entry with status: 'draft'
+      const foundPetEntry = {
+        id: `found_draft_${Date.now()}`,
+        name: petData?.name || prefilledPetData.petName || formData.petName || 'Άγνωστο',
+        type: petData?.type || prefilledPetData.species || formData.species || '',
+        breed: petData?.breed || prefilledPetData.breed || formData.breed || '',
+        gender: petData?.gender || '',
+        birthDate: petData?.birthDate || '',
+        color: petData?.color || '',
+        weight: petData?.weight || '',
+        microchipId: petData?.microchipId || prefilledPetData.microchip || '',
+        ownerId: petData?.ownerId || null,
+        registeredByVetId: petData?.registeredByVetId || null,
+        reportedByVetId: null,
+        lostDate: petData?.lostDate || null,
+        lostLocation: petData?.lostLocation || null,
+        area: formData.foundLocation,
+        locationLat: formData.latitude || null,
+        locationLon: formData.longitude || null,
+        petStatus: 2,
+        status: 'draft', // Mark as draft
+        imageUrl: petData?.imageUrl || null,
+        createdAt: new Date().toISOString(),
+        description: formData.description || '',
+        foundDate: new Date().toISOString(),
+        markedFoundAt: null, // Don't mark as found yet
+        foundByUserId: finderUser.id || null,
+        foundByUserName: finderUser.name || formData.firstName,
+        foundByUserSurname: finderUser.lastName || formData.lastName,
+        foundByUserPhone: finderUser.phone || formData.phone,
+        foundByUserEmail: finderUser.email || formData.email,
+        foundAt: formData.foundDate
+      };
+
+      // Submit to Found_pet endpoint
+      const response = await fetch('http://localhost:5000/Found_pet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(foundPetEntry)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save draft');
+      }
+
+      // DO NOT send notification for drafts
+
+      // Reset form
+      setFormData({
+        petName: '',
+        species: '',
+        breed: '',
+        foundLocation: '',
+        foundDate: '',
+        description: '',
+        photo: null,
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+      });
+      setImagePreview(null);
+      setErrors({
+        petName: '',
+        species: '',
+        foundLocation: '',
+        foundDate: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        microchip: '',
+        description: ''
+      });
+      setSelectedOwnPet('');
+      setPrefilledPetData({});
+      setMicrochipInput('');
+
+      // Show success notification
+      setNotification('draft');
+
+      // Auto-hide notification after 2 seconds and navigate
+      setTimeout(() => {
+        setNotification(null);
+        navigate(ROUTES.owner.lostHistory);
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      alert('Σφάλμα κατά την αποθήκευση του προχείρου. Παρακαλώ προσπαθήστε ξανά.');
+    }
   };
 
 
@@ -433,7 +512,7 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
         locationLat: formData.latitude || null,
         locationLon: formData.longitude || null,
         petStatus: 2,
-        status: 'active',
+        status: 'active', // Active status for final submission
         imageUrl: petData?.imageUrl || null,
         createdAt: petData?.createdAt || new Date().toISOString(),
         description: formData.description || '',
