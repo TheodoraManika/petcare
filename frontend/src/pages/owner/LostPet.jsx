@@ -53,16 +53,6 @@ const OwnerLostPet = () => {
     fetchUserPets();
   }, []);
 
-  // Location options (now will be used by LocationPicker)
-  const locationOptions = [
-    { value: 'syntagma', label: 'Κέντρο Αθήνας, Πλατεία Συντάγματος' },
-    { value: 'monastiraki', label: 'Μοναστηράκι' },
-    { value: 'kolonaki', label: 'Κολωνάκι' },
-    { value: 'glyfada', label: 'Γλυφάδα' },
-    { value: 'piraeus', label: 'Πειραιάς' },
-    { value: 'other', label: 'Άλλη περιοχή' },
-  ];
-
   const [formData, setFormData] = useState({
     selectedPet: '',
     microchipNumber: '',
@@ -183,7 +173,8 @@ const OwnerLostPet = () => {
         locationLat: formData.locationLat,
         locationLon: formData.locationLon,
         petStatus: 1,
-        status: 'active'
+        status: 'active',
+        description: formData.description
       };
 
       const response = await fetch(`http://localhost:5000/pets/${formData.selectedPet}`, {
@@ -285,7 +276,7 @@ const OwnerLostPet = () => {
         area: formData.location,
         locationLat: formData.locationLat,
         locationLon: formData.locationLon,
-        petStatus: 2,
+        petStatus: 1,
         status: 'draft'
       };
 

@@ -63,8 +63,8 @@ const HealthBook = () => {
           color: pet.color || '-',
           weight: pet.weight || '-',
           icon: pet.type === 'Σκύλος' ? 'dog' : pet.type === 'Γάτα' ? 'cat' : 'pet',
-          // MOCK: Set pet with ID 1 as 'lost' for demonstration
-          status: pet.petStatus === 1 ? 'lost' : 'safe'
+          // Pet is considered 'lost' when status is 'lost' AND petStatus is 1
+          status: (pet.status === 'active' && pet.petStatus === 1) ? 'lost' : 'safe'
         }));
 
         setUserPets(transformedPets);

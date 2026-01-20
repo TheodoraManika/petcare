@@ -46,13 +46,16 @@ const PetCard = ({ pet, onClick, onFound }) => {
         throw new Error('Failed to save to lost_history');
       }
 
-      // Then update pet status
+      // Then update pet status to found (petStatus: 0 means found/safe, status: 'found')
       const patchResponse = await fetch(`http://localhost:5000/pets/${pet.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ petStatus: 0 }),
+        body: JSON.stringify({ 
+          petStatus: 0,
+          status: 'found'
+        }),
       });
 
       if (!patchResponse.ok) {

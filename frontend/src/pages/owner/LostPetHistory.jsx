@@ -385,7 +385,7 @@ const LostPetHistory = () => {
                       ? 'Δήλωση Εύρεσης από Χρήστη' 
                       : declaration.type === 'own_lost_pet'
                       ? 'Δήλωση Απώλειας Κατοικιδίου'
-                      : 'Δήλωση Εύρεσης'}
+                      : 'Δήλωση Απώλειας Κατοικιδίου'}
                   </h3>
                   <span className="lost-pet-history__card-subtitle">
                     {declaration.petType || declaration.petSpecies}

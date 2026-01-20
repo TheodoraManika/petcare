@@ -74,21 +74,21 @@
   color: #ff9362;
 }
 
-/* Variant: Citizen (Green) */
+/* Variant: Citizen */
 .pagination--citizen .pagination__btn {
-  color: #059669;
+  color: #23ced9;
 }
 
 .pagination--citizen .pagination__btn:hover:not(:disabled) {
-  color: #047857;
+  color: #23ced9;
 }
 
 .pagination--citizen .pagination__btn--next {
-  color: #059669;
+  color: #23ced9;
 }
 
 .pagination--citizen .pagination__btn--next:hover:not(:disabled) {
-  color: #047857;
+  color: #1bb4be;
 }
 
 .pagination__info {
