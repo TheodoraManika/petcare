@@ -59,6 +59,7 @@ const Appointments = () => {
               
               // Fetch owner details if not already in appointment
               let ownerName = apt.ownerName;
+              let ownerLastName = apt.ownerLastName;
               let phone = apt.ownerPhone || apt.phone;
               
               if (!ownerName || !phone) {
@@ -67,6 +68,7 @@ const Appointments = () => {
                   if (ownerRes.ok) {
                     const ownerData = await ownerRes.json();
                     ownerName = ownerName || ownerData.name || ownerData.username || '-';
+                    ownerLastName = ownerData.lastName || '-';
                     phone = phone || ownerData.phone || '-';
                   }
                 } catch (err) {
@@ -80,6 +82,7 @@ const Appointments = () => {
                 species: species || '-',
                 breed: breed || '-',
                 ownerName: ownerName || '-',
+                ownerLastName: ownerLastName || '-',
                 phone: phone || '-',
                 notes: apt.notes || ''
               };
@@ -559,7 +562,7 @@ const Appointments = () => {
                     >
                       <div className="appointments__day-card-header">
                         <div className="appointments__day-card-owner">
-                          <h4 className="appointments__day-card-name">{apt.ownerName}</h4>
+                          <h4 className="appointments__day-card-name">{apt.ownerName} {apt.ownerLastName}</h4>
                           <p className="appointments__day-card-phone">Τηλέφωνο: {apt.phone}</p>
                         </div>
                         <div className="appointments__day-card-badge">
@@ -678,7 +681,7 @@ const Appointments = () => {
                 <div key={apt.id} className="appointments__list-card appointments__list-card--with-actions">
                   <div className="appointments__list-card-header">
                     <div>
-                      <h4 className="appointments__list-pet-name">{apt.ownerName}</h4>
+                      <h4 className="appointments__list-pet-name">{apt.ownerName} {apt.ownerLastName}</h4>
                       <p className="appointments__list-phone">Τηλέφωνο: {apt.phone}</p>
                     </div>
                     <div className="appointments__list-card-actions">

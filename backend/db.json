@@ -1381,13 +1381,14 @@
       "vetName": "Αναστασία Μιχαηλίδου",
       "ownerId": "ef39",
       "ownerName": "Γιάννης ",
+      "ownerLastName": "Παπανδρέου",
       "ownerPhone": "6985339659",
       "petId": "41",
       "date": "2026-01-29",
       "time": "11:00 - 12:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T17:45:24.331Z"
     },
     {
@@ -1396,13 +1397,14 @@
       "vetName": "Αφροδίτη Αθανασίου",
       "ownerId": "ef39",
       "ownerName": "Γιάννης ",
+      "ownerLastName": "Παπανδρέου",
       "ownerPhone": "6985339659",
       "petId": "41",
       "date": "2026-01-30",
       "time": "17:00 - 18:00",
       "serviceType": "dermatology",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T17:46:06.636Z"
     },
     {
@@ -1411,6 +1413,7 @@
       "vetName": "Πηνελόπη Μαθιουδάκη",
       "ownerId": "0987",
       "ownerName": "Μαρία",
+      "ownerLastName": "Χαραλαμποπούλου",
       "ownerPhone": "6954967105",
       "petId": "46",
       "date": "2026-01-20",
@@ -1426,13 +1429,14 @@
       "vetName": "Αναστασία Μιχαηλίδου",
       "ownerId": "0987",
       "ownerName": "Μαρία",
+      "ownerLastName": "Χαραλαμποπούλου",
       "ownerPhone": "6954967105",
       "petId": "46",
       "date": "2026-01-21",
       "time": "12:00 - 13:00",
       "serviceType": "cardiology",
       "notes": "",
-      "status": "pending",
+      "status": "cancelled",
       "createdAt": "2026-01-20T18:01:35.942Z"
     },
     {
@@ -1441,6 +1445,7 @@
       "vetName": "Πηνελόπη Μαθιουδάκη",
       "ownerId": "0987",
       "ownerName": "Μαρία",
+      "ownerLastName": "Χαραλαμποπούλου",
       "ownerPhone": "6954967105",
       "petId": "46",
       "date": "2026-01-28",
@@ -1456,6 +1461,7 @@
       "vetName": "Νικόλαος Τσαρδακλής",
       "ownerId": "0987",
       "ownerName": "Μαρία",
+      "ownerLastName": "Χαραλαμποπούλου",
       "ownerPhone": "6954967105",
       "petId": "46",
       "date": "2026-01-26",
@@ -1471,6 +1477,7 @@
       "vetName": "Αναστασία Μιχαηλίδου",
       "ownerId": "0564",
       "ownerName": "Πέτρος ",
+      "ownerLastName": "Αντωνίου",
       "ownerPhone": "6937550174",
       "petId": "42",
       "date": "2026-01-22",
@@ -1486,6 +1493,7 @@
       "vetName": "Θοδωρής Αναστασίου",
       "ownerId": "0564",
       "ownerName": "Πέτρος ",
+      "ownerLastName": "Αντωνίου",
       "ownerPhone": "6937550174",
       "petId": "42",
       "date": "2026-01-26",
@@ -1501,13 +1509,14 @@
       "vetName": "Ελένη Νικολάου",
       "ownerId": "1234",
       "ownerName": "Γιώργος",
+      "ownerLastName": "Αγγελόπουλος",
       "ownerPhone": "6980448563",
       "petId": "45",
       "date": "2026-01-21",
       "time": "13:00 - 14:00",
       "serviceType": "ophthalmology",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:08:28.331Z"
     },
     {
@@ -1516,13 +1525,14 @@
       "vetName": "Αναστασία Μιχαηλίδου",
       "ownerId": "1234",
       "ownerName": "Γιώργος",
+      "ownerLastName": "Αγγελόπουλος",
       "ownerPhone": "6980448563",
       "petId": "45",
       "date": "2026-01-20",
       "time": "09:00 - 10:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:08:42.552Z"
     },
     {
@@ -1531,6 +1541,7 @@
       "vetName": "Κώστας Σακελλαρίου",
       "ownerId": "1234",
       "ownerName": "Γιώργος",
+      "ownerLastName": "Αγγελόπουλος",
       "ownerPhone": "6980448563",
       "petId": "45",
       "date": "2026-01-22",
@@ -1546,13 +1557,14 @@
       "vetName": "Αναστασία Μιχαηλίδου",
       "ownerId": "0589",
       "ownerName": "Λευτέρης",
+      "ownerLastName": "Μιχαλόπουλος",
       "ownerPhone": "6946559777",
       "petId": "44",
       "date": "2026-01-20",
       "time": "20:00 - 21:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:09:54.977Z"
     },
     {
@@ -1561,6 +1573,7 @@
       "vetName": "Παύλος Χαραλάμπους",
       "ownerId": "0589",
       "ownerName": "Λευτέρης",
+      "ownerLastName": "Μιχαλόπουλος",
       "ownerPhone": "6946559777",
       "petId": "44",
       "date": "2026-01-24",
@@ -1576,13 +1589,14 @@
       "vetName": "Αναστασία Μιχαηλίδου",
       "ownerId": "6762",
       "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
       "ownerPhone": "6927456011",
       "petId": "f806",
       "date": "2026-01-27",
       "time": "09:00 - 10:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "pending",
+      "status": "confirmed",
       "createdAt": "2026-01-20T18:52:41.471Z"
     },
     {
@@ -1591,6 +1605,7 @@
       "vetName": "Αφροδίτη Αθανασίου",
       "ownerId": "6762",
       "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
       "ownerPhone": "6927456011",
       "petId": "f806",
       "date": "2026-01-20",
@@ -1606,6 +1621,7 @@
       "vetName": "Κώστας Σακελλαρίου",
       "ownerId": "6762",
       "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
       "ownerPhone": "6927456011",
       "petId": "f806",
       "date": "2026-01-22",
@@ -1621,6 +1637,7 @@
       "vetName": "Χριστίνα Πετροπούλου",
       "ownerId": "6762",
       "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
       "ownerPhone": "6927456011",
       "petId": "47",
       "date": "2026-01-20",
@@ -1636,6 +1653,7 @@
       "vetName": "Γιάννης Νικολάου",
       "ownerId": "6762",
       "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
       "ownerPhone": "6927456011",
       "petId": "47",
       "date": "2026-01-21",
@@ -1651,6 +1669,7 @@
       "vetName": "Γιάννης Νικολάου",
       "ownerId": "6762",
       "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
       "ownerPhone": "6927456011",
       "petId": "47",
       "date": "2026-01-26",
@@ -1679,7 +1698,7 @@
         "appointmentId": "f63d"
       },
       "date": "2026-01-20T17:45:24.344Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T17:45:24.344Z"
     },
     {
@@ -1730,7 +1749,7 @@
         "appointmentId": "4535"
       },
       "date": "2026-01-20T18:01:35.952Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:01:35.952Z"
     },
     {
@@ -1781,7 +1800,7 @@
         "appointmentId": "89ea"
       },
       "date": "2026-01-20T18:07:01.688Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:07:01.688Z"
     },
     {
@@ -1815,7 +1834,7 @@
         "appointmentId": "b7e6"
       },
       "date": "2026-01-20T18:08:28.343Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:08:28.343Z"
     },
     {
@@ -1832,7 +1851,7 @@
         "appointmentId": "c053"
       },
       "date": "2026-01-20T18:08:42.566Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:08:42.566Z"
     },
     {
@@ -1987,6 +2006,125 @@
       "date": "2026-01-20T18:53:59.382Z",
       "read": false,
       "createdAt": "2026-01-20T18:53:59.382Z"
+    },
+    {
+      "id": "877d",
+      "userId": "1234",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Αναστασία Μιχαηλίδου",
+        "appointmentDate": "2026-01-20",
+        "appointmentTime": "09:00 - 10:00",
+        "petName": "Ρόκι",
+        "appointmentId": "c053"
+      },
+      "date": "2026-01-20T18:55:21.908Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:55:21.908Z"
+    },
+    {
+      "id": "9e85",
+      "userId": "0589",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Αναστασία Μιχαηλίδου",
+        "appointmentDate": "2026-01-20",
+        "appointmentTime": "20:00 - 21:00",
+        "petName": "Λούνα",
+        "appointmentId": "aeef"
+      },
+      "date": "2026-01-20T18:55:23.812Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:55:23.812Z"
+    },
+    {
+      "id": "5558",
+      "userId": "0987",
+      "userType": "owner",
+      "type": "appointment_cancelled",
+      "title": "Το ραντεβού σας ακυρώθηκε",
+      "data": {
+        "vetName": "Αναστασία Μιχαηλίδου",
+        "appointmentDate": "2026-01-21",
+        "appointmentTime": "12:00 - 13:00",
+        "petName": "Χιονάτη",
+        "appointmentId": "4535"
+      },
+      "date": "2026-01-20T18:55:31.552Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:55:31.552Z"
+    },
+    {
+      "id": "d4d9",
+      "userId": "ef39",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Αναστασία Μιχαηλίδου",
+        "appointmentDate": "2026-01-29",
+        "appointmentTime": "11:00 - 12:00",
+        "petName": "Μίνι",
+        "appointmentId": "f63d"
+      },
+      "date": "2026-01-20T18:55:51.614Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:55:51.614Z"
+    },
+    {
+      "id": "09a0",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Αναστασία Μιχαηλίδου",
+        "appointmentDate": "2026-01-27",
+        "appointmentTime": "09:00 - 10:00",
+        "petName": "Βιολέτα",
+        "appointmentId": "1c97"
+      },
+      "date": "2026-01-20T18:55:57.498Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:55:57.498Z"
+    },
+    {
+      "id": "f514",
+      "userId": "1234",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Ελένη Νικολάου",
+        "appointmentDate": "2026-01-21",
+        "appointmentTime": "13:00 - 14:00",
+        "petName": "Ρόκι",
+        "appointmentId": "b7e6"
+      },
+      "date": "2026-01-20T18:58:51.461Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:58:51.461Z"
+    },
+    {
+      "id": "a216",
+      "userId": "ef39",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Αφροδίτη Αθανασίου",
+        "appointmentDate": "2026-01-30",
+        "appointmentTime": "17:00 - 18:00",
+        "petName": "Μίνι",
+        "appointmentId": "ecaf"
+      },
+      "date": "2026-01-20T18:59:28.319Z",
+      "read": false,
+      "createdAt": "2026-01-20T18:59:28.319Z"
     }
   ],
   "pets": [

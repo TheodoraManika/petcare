@@ -327,6 +327,7 @@ const BookingForm = ({
         vetName: `${selectedVet.name} ${selectedVet.lastName || ''}`.trim(),
         ownerId: currentUser.id,
         ownerName: currentUser.name || currentUser.username,
+        ownerLastName: currentUser.lastName || '',
         ownerPhone: currentUser.phone || '',
         petId: pet?.id,
         date: selectedSlot.date,
