@@ -464,11 +464,20 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
       if (petData && petData.ownerId) {
         const notification = {
           userId: petData.ownerId,
-          type: 'pet_found',
+          userType: 'owner',
+          type: 'found_pet',
           title: 'Το κατοικίδιό σας βρέθηκε!',
-          message: `Κάποιος βρήκε το ${petData.name} σας! Ελέγξτε το ιστορικό δηλώσεων για περισσότερες πληροφορίες.`,
+          data: {
+            finderName: formData.firstName,
+            finderId: finderUser.id || null,
+            petName: foundPetEntry.name,
+            petId: petData.id,
+            location: formData.foundLocation
+          },
+          icon: 'pet',
           relatedId: foundPetEntry.id,
           read: false,
+          date: new Date().toISOString(),
           createdAt: new Date().toISOString()
         };
 
