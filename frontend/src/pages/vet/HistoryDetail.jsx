@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart } from 'lucide-react';
+import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart, MapPin } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import { ROUTES } from '../../utils/constants';
 import './HistoryDetail.css';
@@ -144,6 +144,45 @@ const HistoryDetail = () => {
         }
       }
 
+      // Check Found_pet declarations
+      if (!data) {
+        const foundPetResponse = await fetch(`http://localhost:5000/Found_pet/${id}`);
+        if (foundPetResponse.ok) {
+          const foundPet = await foundPetResponse.json();
+          
+          // Fetch owner info if ownerId exists
+          let ownerInfo = null;
+          if (foundPet.ownerId) {
+            const ownerResponse = await fetch(`http://localhost:5000/users/${foundPet.ownerId}`);
+            if (ownerResponse.ok) {
+              ownerInfo = await ownerResponse.json();
+            }
+          }
+          
+          data = {
+            declarationType: 'Δήλωση Εύρεσης',
+            pet: {
+              name: foundPet.name || 'Άγνωστο',
+              species: foundPet.type || '-',
+              breed: foundPet.breed || '-',
+              microchip: foundPet.microchipId || '-'
+            },
+            foundPet: {
+              foundDate: formatDate(foundPet.foundAt || foundPet.foundDate),
+              foundLocation: foundPet.area || '-',
+              description: foundPet.description || '-',
+              owner: ownerInfo ? {
+                name: ownerInfo.name || '-',
+                surname: ownerInfo.lastName || '-',
+                phone: ownerInfo.phone || '-',
+                email: ownerInfo.email || '-'
+              } : null
+            }
+          };
+          operationType = 'foundPet';
+        }
+      }
+
       if (data) {
         setDetailData(data);
       } else {
@@ -184,6 +223,8 @@ const HistoryDetail = () => {
         return <HandHeart size={24} className="history-detail__icon" />;
       case 'Ιατρική Πράξη':
         return <PawPrint size={24} className="history-detail__icon" />;
+      case 'Δήλωση Εύρεσης':
+        return <MapPin size={24} className="history-detail__icon" />;
       default:
         return <HandHeart size={24} className="history-detail__icon" />;
     }
@@ -441,6 +482,64 @@ const HistoryDetail = () => {
                     <div className="history-detail__info-item history-detail__info-item--full">
                       <span className="history-detail__info-label">Σημειώσεις</span>
                       <span className="history-detail__info-value">{detailData.adoption.notes}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ΔΗΛΩΣΗ ΕΥΡΕΣΗΣ */}
+          {detailData.declarationType === 'Δήλωση Εύρεσης' && (
+            <>
+              {detailData.foundPet.owner && (
+                <div className="history-detail__section">
+                  <div className="history-detail__section-header">
+                    <User size={20} className="history-detail__section-icon" />
+                    <h2 className="history-detail__section-title">Στοιχεία Ιδιοκτήτη</h2>
+                  </div>
+                  <div className="history-detail__info-grid">
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Όνομα</span>
+                      <span className="history-detail__info-value">{detailData.foundPet.owner.name}</span>
+                    </div>
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Επώνυμο</span>
+                      <span className="history-detail__info-value">{detailData.foundPet.owner.surname}</span>
+                    </div>
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Τηλέφωνο</span>
+                      <span className="history-detail__info-value">{detailData.foundPet.owner.phone}</span>
+                    </div>
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Email</span>
+                      <span className="history-detail__info-value">{detailData.foundPet.owner.email}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="history-detail__section">
+                <h2 className="history-detail__section-title">Στοιχεία Εύρεσης</h2>
+                <div className="history-detail__info-grid">
+                  <div className="history-detail__info-item">
+                    <span className="history-detail__info-label">Ημερομηνία Εύρεσης</span>
+                    <span className="history-detail__info-value">{detailData.foundPet.foundDate}</span>
+                  </div>
+                  <div className="history-detail__info-item">
+                    <span className="history-detail__info-label">Τοποθεσία Εύρεσης</span>
+                    <span className="history-detail__info-value">{detailData.foundPet.foundLocation}</span>
+                  </div>
+                  {!detailData.foundPet.owner && (
+                    <div className="history-detail__info-item history-detail__info-item--full">
+                      <span className="history-detail__info-label">Κατάσταση</span>
+                      <span className="history-detail__info-value">Άγνωστος Ιδιοκτήτης</span>
+                    </div>
+                  )}
+                  {detailData.foundPet.description && (
+                    <div className="history-detail__info-item history-detail__info-item--full">
+                      <span className="history-detail__info-label">Περιγραφή</span>
+                      <span className="history-detail__info-value">{detailData.foundPet.description}</span>
                     </div>
                   )}
                 </div>

@@ -70,6 +70,28 @@ const History = () => {
         fosters = await fostersResponse.json();
       }
 
+      // Fetch Found_pet declarations by this vet
+      const foundPetsResponse = await fetch(`http://localhost:5000/Found_pet?foundByUserId=${currentUser.id}`);
+      let foundPets = [];
+      if (foundPetsResponse.ok) {
+        const allFoundPets = await foundPetsResponse.json();
+        // Only include active declarations (not drafts)
+        foundPets = allFoundPets.filter(fp => fp.status === 'active');
+        
+        // Fetch owner names for found pets
+        const ownersResponse = await fetch('http://localhost:5000/users');
+        const allUsers = ownersResponse.ok ? await ownersResponse.json() : [];
+        
+        // Add owner names to foundPets
+        foundPets = foundPets.map(fp => {
+          const owner = allUsers.find(u => u.id == fp.ownerId);
+          return {
+            ...fp,
+            ownerName: owner ? `${owner.name} ${owner.lastName || ''}`.trim() : 'Άγνωστος'
+          };
+        });
+      }
+
       // Combine declarations
       const declarationsArray = [
         ...transfers.map(t => ({
@@ -98,6 +120,16 @@ const History = () => {
           type: 'Αναδοχή',
           ownerLabel: 'Ανάδοχος',
           owner: f.fosterParentName || '-'
+        })),
+        ...foundPets.map(fp => ({
+          id: fp.id,
+          petName: fp.name || 'Άγνωστο',
+          microchip: fp.microchipId || '-',
+          date: formatDate(fp.foundAt || fp.foundDate),
+          type: 'Δήλωση Εύρεσης',
+          ownerLabel: 'Ιδιοκτήτης',
+          owner: fp.ownerName || 'Άγνωστος',
+          isFoundPet: true // Flag to identify Found_pet declarations
         }))
       ];
 

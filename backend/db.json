@@ -1598,6 +1598,25 @@
       "read": true,
       "date": "2026-01-20T14:33:07.238Z",
       "createdAt": "2026-01-20T14:33:07.238Z"
+    },
+    {
+      "id": "68c6",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "found_pet",
+      "title": "Το κατοικίδιό σας βρέθηκε!",
+      "data": {
+        "finderName": "Αναστασία",
+        "finderId": "1",
+        "petName": "Γκάρφιλντ",
+        "petId": "43",
+        "location": "Αθήνα, 105 57"
+      },
+      "icon": "pet",
+      "relatedId": "found_43_1768920559213",
+      "read": false,
+      "date": "2026-01-20T14:49:19.217Z",
+      "createdAt": "2026-01-20T14:49:19.217Z"
     }
   ],
   "pets": [
@@ -2911,6 +2930,38 @@
       "foundByUserPhone": "6980448563",
       "foundByUserEmail": "owner5@petcare.gr",
       "foundAt": "17/01/2026"
+    },
+    {
+      "id": "found_43_1768920559213",
+      "name": "Γκάρφιλντ",
+      "type": "Γάτα",
+      "breed": "Περσική",
+      "gender": "male",
+      "birthDate": "05/11/2021",
+      "color": "Πορτοκαλί",
+      "weight": "6",
+      "microchipId": "900444555666777",
+      "ownerId": "6762",
+      "registeredByVetId": "2",
+      "reportedByVetId": null,
+      "lostDate": "15/01/2026",
+      "lostLocation": "Πλατεία Αμερικής, Αθήνα, 112 52",
+      "area": "Αθήνα, 105 57",
+      "locationLat": null,
+      "locationLon": null,
+      "petStatus": 2,
+      "status": "active",
+      "imageUrl": null,
+      "createdAt": "2026-01-18T18:43:00.000Z",
+      "description": "",
+      "foundDate": "2026-01-20T14:49:19.213Z",
+      "markedFoundAt": "2026-01-20T14:49:19.213Z",
+      "foundByUserId": "1",
+      "foundByUserName": "Αναστασία",
+      "foundByUserSurname": "Μιχαηλίδου",
+      "foundByUserPhone": "6934556888",
+      "foundByUserEmail": "vet1@petcare.gr",
+      "foundAt": "19/01/2026"
     }
   ]
 }
