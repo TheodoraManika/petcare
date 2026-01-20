@@ -69,13 +69,13 @@ const LostPet = () => {
       // Normalize pet data (could have different field names)
       const petName = pet.petName || pet.name || '';
       const petColor = pet.petColor || pet.color || '';
-      const petSpecies = pet.type || '';
+      const petSpecies = pet.species || pet.type || '';
       
       if (!pet.isFromLostPets) {
         // Only fill form data if NOT from lostPets
         setFormData(prev => ({
           ...prev,
-          microchipNumber: pet.microchipId || microchip,
+          microchipNumber: pet.microchip || microchip,
           petName: petName,
           petColor: petColor,
           description: pet.description || '',
@@ -267,7 +267,7 @@ const LostPet = () => {
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       
-      // First, find the existing pet by microchipId
+      // First, find the pet by microchip to get its ID and owner
       const petsResponse = await fetch('http://localhost:5000/pets');
       if (!petsResponse.ok) {
         throw new Error('Failed to fetch pets');
@@ -284,30 +284,90 @@ const LostPet = () => {
         setShowConfirmModal(false);
         return;
       }
-
-      // Update the existing pet with lost information
-      const updatedPetData = {
-        ...existingPet,
+      
+      // Create lost pet declaration in lostPets collection
+      const lostPetData = {
         reportedByVetId: currentUser.id,
+        microchipNumber: formData.microchipNumber,
+        petName: formData.petName || foundPet?.petName || foundPet?.name || 'Άγνωστο',
+        type: foundPet?.species || foundPet?.type || '-',
+        breed: foundPet?.breed || '-',
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        contactPhone: formData.contactPhone,
+        contactEmail: formData.ownerEmail,
+        ownerName: `${formData.ownerName} ${formData.ownerSurname}`.trim(),
+        color: formData.petColor || foundPet?.color || '-',
+        description: formData.description,
+        status: 'active',
+        imageUrl: formData.photo || null
+      };
+
+      const lostPetResponse = await fetch('http://localhost:5000/lostPets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(lostPetData)
+      });
+
+      if (!lostPetResponse.ok) {
+        throw new Error('Failed to create lost pet declaration');
+      }
+
+      // Update the pet status to lost
+      const petUpdateData = {
         lostDate: formData.lostDate,
         lostLocation: formData.location,
         area: formData.location,
         locationLat: formData.locationLat,
         locationLon: formData.locationLon,
         petStatus: 1,
+        status: 'active',
+        reportedByVetId: currentUser.id,
         description: formData.description
       };
 
-      const updateResponse = await fetch(`http://localhost:5000/pets/${existingPet.id}`, {
-        method: 'PUT',
+      const petUpdateResponse = await fetch(`http://localhost:5000/pets/${existingPet.id}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updatedPetData)
+        body: JSON.stringify(petUpdateData)
       });
 
-      if (!updateResponse.ok) {
-        throw new Error('Failed to update pet');
+      if (!petUpdateResponse.ok) {
+        throw new Error('Failed to update pet status');
+      }
+
+      // Send notification to pet owner
+      if (existingPet.ownerId) {
+        const notificationData = {
+          userId: existingPet.ownerId,
+          userType: 'owner',
+          type: 'lost_pet',
+          title: 'Δήλωση Απώλειας Κατοικιδίου',
+          data: {
+            vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
+            petName: existingPet.name || formData.petName,
+            location: formData.location,
+            date: formData.lostDate
+          },
+          icon: 'alert',
+          date: new Date().toISOString(),
+          read: false
+        };
+
+        await fetch('http://localhost:5000/notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(notificationData)
+        });
       }
 
       setShowConfirmModal(false);

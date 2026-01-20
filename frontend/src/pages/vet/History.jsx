@@ -92,6 +92,15 @@ const History = () => {
         });
       }
 
+      // Fetch lost pet declarations by this vet from lostPets endpoint
+      const lostPetsResponse = await fetch(`http://localhost:5000/lostPets?reportedByVetId=${currentUser.id}`);
+      let lostPets = [];
+      if (lostPetsResponse.ok) {
+        const allLostPets = await lostPetsResponse.json();
+        // Only include active declarations (not drafts)
+        lostPets = allLostPets.filter(lp => lp.status === 'active');
+      }
+
       // Combine declarations
       const declarationsArray = [
         ...transfers.map(t => ({
@@ -130,6 +139,16 @@ const History = () => {
           ownerLabel: 'Ιδιοκτήτης',
           owner: fp.ownerName || 'Άγνωστος',
           isFoundPet: true // Flag to identify Found_pet declarations
+        })),
+        ...lostPets.map(lp => ({
+          id: lp.id,
+          petName: lp.petName || 'Άγνωστο',
+          microchip: lp.microchipNumber || '-',
+          date: formatDate(lp.lostDate),
+          type: 'Δήλωση Απώλειας',
+          ownerLabel: 'Ιδιοκτήτης',
+          owner: lp.ownerName || 'Άγνωστος',
+          isLostPet: true // Flag to identify lost pet declarations
         }))
       ];
 

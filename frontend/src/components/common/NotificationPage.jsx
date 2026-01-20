@@ -40,6 +40,9 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
           ? `Ο/η ${data.finderName} έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}. Μπορείτε να δείτε τη δήλωση στη σελίδα "Ιστορικό Δηλώσεων -> Από άλλους".`
           : `Κάποιος έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}. Μπορείτε να δείτε τη δήλωση στη σελίδα "Ιστορικό Δηλώσεων -> Από άλλους".`;
       
+      case 'lost_pet':
+        return `Ο/η ${data.vetName} έκανε δήλωση απώλειας για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}${data.date ? ` την ${data.date}` : ''}. Το κατοικίδιό σας έχει πλέον την κατάσταση "Χαμένο".`;
+      
       // VET NOTIFICATION TEMPLATES
       case 'new_appointment':
         return `${data.ownerName} ζήτησε ραντεβού για τις ${data.appointmentDate} στις ${data.appointmentTime} για το κατοικίδιο ${data.petName}. Εγκρίνετε ή ακυρώστε το αίτημα από τη σελίδα "Διαχείριση Ραντεβού".`;
@@ -69,7 +72,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
 
   const getIconColor = (type) => {
     if (type.includes('approved') || type.includes('found')) return '#10b981';
-    if (type.includes('cancelled')) return '#ef4444';
+    if (type.includes('cancelled') || type.includes('lost')) return '#ef4444';
     if (type.includes('new')) return userType === 'owner' ? '#23CED9' : '#FCA47C';
     return '#6b7280';
   };
