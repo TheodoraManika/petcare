@@ -27,16 +27,37 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
     const petGender = petData.gender;
     const petBirthDate = petData.birthDate;
 
+    // Translation helpers
+    const translateSpecies = (species) => {
+        if (!species) return '-';
+        const s = species.toLowerCase();
+        if (s.includes('dog') || s.includes('σκύλος')) return 'Σκύλος';
+        if (s.includes('cat') || s.includes('γάτα')) return 'Γάτα';
+        if (s.includes('bird') || s.includes('πτηνό')) return 'Πτηνό';
+        if (s.includes('reptile') || s.includes('ερπετό')) return 'Ερπετό';
+        return species;
+    };
+
+    const translateGender = (gender) => {
+        if (!gender) return '-';
+        const g = gender.toLowerCase();
+        if (g === 'male' || g === 'm') return 'Αρσενικό';
+        if (g === 'female' || g === 'f') return 'Θηλυκό';
+        return gender;
+    };
+
     return (
         <div className={`pet-details-card ${isNotFound ? 'pet-details-card--not-found' : ''}`}>
-            <button
-                type="button"
-                className="pet-card__remove-btn"
-                onClick={onClear}
-                title="Αφαίρεση"
-            >
-                <X size={20} />
-            </button>
+            {onClear && (
+                <button
+                    type="button"
+                    className="pet-card__remove-btn"
+                    onClick={onClear}
+                    title="Αφαίρεση"
+                >
+                    <X size={20} />
+                </button>
+            )}
 
             <div className="pet-card__container">
                 <div className="pet-card__image">
@@ -58,7 +79,7 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
                                     </div>
                                     <div className="pet-card__row">
                                         <span className="pet-card__label">Είδος</span>
-                                        <span className="pet-card__value">{petSpecies}</span>
+                                        <span className="pet-card__value">{translateSpecies(petSpecies)}</span>
                                     </div>
                                     <div className="pet-card__row">
                                         <span className="pet-card__label">Ράτσα</span>
@@ -82,7 +103,7 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
                                     {petGender && (
                                         <div className="pet-card__row">
                                             <span className="pet-card__label">Φύλο</span>
-                                            <span className="pet-card__value">{petGender}</span>
+                                            <span className="pet-card__value">{translateGender(petGender)}</span>
                                         </div>
                                     )}
                                     {petBirthDate && (
@@ -103,10 +124,10 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
                             <div className="pet-card__column">
                                 <div className="pet-card__row">
                                     <span className="pet-card__label">Microchip</span>
-                                    <span className="pet-card__value">{petData.microchip}</span>
+                                    <span className="pet-card__value">{petMicrochip}</span>
                                 </div>
                                 <p className="pet-card__note">
-                                    {petData.isFromLostPets 
+                                    {petData.isFromLostPets
                                         ? 'Αυτό το κατοικίδιο είναι ήδη καταχωρημένο ως χαμένο.'
                                         : 'Δεν βρέθηκε καταχωρημένο κατοικίδιο με αυτόν τον αριθμό. Παρακαλώ συμπληρώστε τα στοιχεία του κατοικιδίου παρακάτω.'}
                                 </p>

@@ -18,13 +18,13 @@ const LostPets = () => {
 
   // Function to translate pet type to Greek
   const translatePetType = (type) => {
-    const typeMap = {
-      'dog': 'Σκύλος',
-      'cat': 'Γάτα',
-      'Σκύλος': 'Σκύλος',
-      'Γάτα': 'Γάτα'
-    };
-    return typeMap[type] || type;
+    if (!type) return '';
+    const typeLower = type.toLowerCase();
+    if (typeLower.includes('dog') || typeLower.includes('σκύλος')) return 'Σκύλος';
+    if (typeLower.includes('cat') || typeLower.includes('γάτα')) return 'Γάτα';
+    if (typeLower.includes('bird') || typeLower.includes('πτηνό')) return 'Πτηνό';
+    if (typeLower.includes('reptile') || typeLower.includes('ερπετό')) return 'Ερπετό';
+    return type;
   };
 
   const [filters, setFilters] = useState({
@@ -187,29 +187,29 @@ const LostPets = () => {
   // Smart matching function for color and breed
   const smartMatch = (petValue, filterValue, synonymMap) => {
     if (!filterValue || !petValue) return false;
-    
+
     const petNorm = normalizeText(petValue);
     const filterNorm = normalizeText(filterValue);
-    
+
     // Exact match after normalization
     if (petNorm === filterNorm) return true;
-    
+
     // Partial match (one contains the other)
     if (petNorm.includes(filterNorm) || filterNorm.includes(petNorm)) return true;
-    
+
     // Check for synonyms
     const petSynonyms = Object.entries(synonymMap)
       .filter(([_, syns]) => syns.some(syn => syn === petNorm || petNorm.includes(syn)))
       .map(([key, _]) => key);
-    
+
     const filterSynonyms = Object.entries(synonymMap)
       .filter(([_, syns]) => syns.some(syn => syn === filterNorm || filterNorm.includes(syn)))
       .map(([key, _]) => key);
-    
+
     // If either value matches any synonym of the other
     if (petSynonyms.some(syn => filterNorm === syn || filterNorm.includes(syn))) return true;
     if (filterSynonyms.some(syn => petNorm === syn || petNorm.includes(syn))) return true;
-    
+
     return false;
   };
 
@@ -218,7 +218,7 @@ const LostPets = () => {
     return lostPets.filter(pet => {
       // Microchip filter
       if (filters.microchip) {
-        const chip = (pet.microchip || '').toString().toLowerCase();
+        const chip = (pet.microchipId || pet.microchip || '').toString().toLowerCase();
         const needle = filters.microchip.toString().toLowerCase();
         if (!chip.includes(needle)) return false;
       }
@@ -227,13 +227,13 @@ const LostPets = () => {
       if (filters.animal) {
         const petType = (pet.type || '').toLowerCase();
         // Map Greek names to English values
-        const typeMatches = 
+        const typeMatches =
           (filters.animal === 'dog' && (petType.includes('dog') || petType.includes('σκύλος'))) ||
           (filters.animal === 'cat' && (petType.includes('cat') || petType.includes('γάτα'))) ||
           (filters.animal === 'bird' && (petType.includes('bird') || petType.includes('πτηνό'))) ||
           (filters.animal === 'reptile' && petType.includes('reptile')) ||
           (filters.animal === 'other' && !['dog', 'cat', 'bird', 'reptile'].some(t => petType.includes(t)));
-        
+
         if (!typeMatches) return false;
       }
 
@@ -258,16 +258,16 @@ const LostPets = () => {
       if (filters.area) {
         const petArea = normalizeText(pet.area || '');
         const filterArea = normalizeText(filters.area);
-        
+
         // Check if pet area contains any part of the filter area
         // This handles cases like "Αθήνα, Ελλάδα" matching "Μαρούσι, Αθήνα"
         const filterParts = filterArea.split(',').map(p => p.trim());
         const petParts = petArea.split(',').map(p => p.trim());
-        
-        const hasMatch = filterParts.some(filterPart => 
+
+        const hasMatch = filterParts.some(filterPart =>
           petParts.some(petPart => petPart.includes(filterPart) || filterPart.includes(petPart))
         );
-        
+
         if (!hasMatch) return false;
       }
 
@@ -296,7 +296,11 @@ const LostPets = () => {
         foundLocation: pet.area,
         description: pet.description,
         dateReported: pet.dateLost,
-        microchip: pet.microchip
+        microchip: pet.microchipId || pet.microchip,
+        gender: pet.gender,
+        color: pet.color,
+        weight: pet.weight,
+        birthDate: pet.birthDate
       }
     });
     setShowFoundForm(true);

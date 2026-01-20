@@ -77,11 +77,29 @@ const LocationPicker = ({
         }
 
         const data = await response.json();
-        const mapped = data.map((item) => ({
-          label: item.display_name,
-          lat: item.lat,
-          lon: item.lon,
-        }));
+        const mapped = data.map((item) => {
+          const { address } = item;
+          // Extract relevant parts: Road/Street, House Number, City/Town/Suburb, Postcode
+          const road = address.road || address.pedestrian || address.footway || '';
+          const houseNumber = address.house_number || '';
+          const place = address.city || address.town || address.village || address.suburb || '';
+          const postcode = address.postcode || '';
+
+          // Construct the label
+          const parts = [];
+          if (road) parts.push(road);
+          if (houseNumber) parts.push(houseNumber);
+          if (place) parts.push(place);
+          if (postcode) parts.push(postcode);
+
+          const label = parts.length > 0 ? parts.join(', ') : item.display_name;
+
+          return {
+            label: label,
+            lat: item.lat,
+            lon: item.lon,
+          };
+        });
         setSuggestions(mapped);
         setShowDropdown(true);
         setShowMap(mapped.length > 0);

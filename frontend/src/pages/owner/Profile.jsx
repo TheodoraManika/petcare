@@ -25,7 +25,7 @@ const Profile = () => {
     postalCode: '',
   });
   const navigate = useNavigate();
-  
+
   // Original data that won't change unless saved
   const [originalData, setOriginalData] = useState({
     firstName: '',
@@ -37,14 +37,14 @@ const Profile = () => {
     city: '',
     postalCode: '',
   });
-  
+
   // Working copy for editing
-  const [formData, setFormData] = useState({...originalData});
+  const [formData, setFormData] = useState({ ...originalData });
 
   // Load user data from localStorage on component mount
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
+
     if (currentUser) {
       const userData = {
         firstName: currentUser.name || '',
@@ -56,11 +56,11 @@ const Profile = () => {
         city: currentUser.city || '',
         postalCode: currentUser.postalCode || '',
       };
-      
+
       setOriginalData(userData);
-      setFormData({...userData});
+      setFormData({ ...userData });
     }
-    
+
     setIsLoading(false);
   }, []);
 
@@ -99,7 +99,7 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     let filteredValue = value;
 
     // Apply character filters based on field type
@@ -107,7 +107,7 @@ const Profile = () => {
       filteredValue = filterLettersOnly(value);
     } else if (name === 'afm' || name === 'postalCode') {
       filteredValue = allowedAFMChars(value);
-      
+
       // Apply max length
       if (name === 'afm' && filteredValue.length > 9) {
         filteredValue = filteredValue.slice(0, 9);
@@ -147,7 +147,7 @@ const Profile = () => {
     setIsEditing(false);
     setShowCancelModal(false);
     // Reset form data to original values
-    setFormData({...originalData});
+    setFormData({ ...originalData });
     // Clear all errors
     setErrors({
       firstName: '',
@@ -169,15 +169,35 @@ const Profile = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    console.log('Account deleted');
-    setShowDeleteModal(false);
-    setShowSuccessModal(true);
-    
-    // Redirect to home after 5 seconds
-    setTimeout(() => {
-      navigate(ROUTES.home);
-    }, 5000);
+  const handleConfirmDelete = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || !currentUser.id) {
+        throw new Error('User not logged in');
+      }
+
+      const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
+
+      console.log('Account deleted');
+      localStorage.removeItem('currentUser'); // Clear local storage
+      setShowDeleteModal(false);
+      setShowSuccessModal(true);
+
+      // Redirect to home after 5 seconds
+      setTimeout(() => {
+        navigate(ROUTES.home);
+      }, 5000);
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      // You might want to show an error message to the user here
+      setShowDeleteModal(false);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -186,7 +206,7 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate all fields
     const newErrors = {};
 
@@ -281,7 +301,7 @@ const Profile = () => {
       }));
 
       // Update original data to reflect saved changes
-      setOriginalData({...formData});
+      setOriginalData({ ...formData });
       setIsEditing(false);
       setShowSaveSuccessModal(true);
     } catch (err) {
@@ -336,14 +356,14 @@ const Profile = () => {
           <div className="owner-profile__actions">
             {isEditing ? (
               <>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--cancel"
                   onClick={handleCancel}
                   type="button"
                 >
                   Ακύρωση
                 </button>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--save"
                   onClick={handleSubmit}
                   type="button"
@@ -354,7 +374,7 @@ const Profile = () => {
               </>
             ) : (
               <>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--delete"
                   onClick={handleDelete}
                   type="button"
@@ -362,12 +382,12 @@ const Profile = () => {
                   <X size={18} />
                   Διαγραφή Λογαριασμού
                 </button>
-                <button 
+                <button
                   className="owner-profile__btn owner-profile__btn--edit"
                   onClick={handleEditToggle}
                   type="button"
                 >
-                  <SquarePen size={18} /> 
+                  <SquarePen size={18} />
                   Επεξεργασία
                 </button>
               </>

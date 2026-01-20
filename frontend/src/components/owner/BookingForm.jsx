@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import CustomSelect from '../common/forms/CustomSelect';
 import ConfirmModal from '../common/modals/ConfirmModal';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
 import './BookingForm.css';
 
 const BookingForm = ({
@@ -62,17 +62,10 @@ const BookingForm = ({
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [bookedSlots, setBookedSlots] = useState([]);
 
-  const serviceOptions = [
-    { value: 'vaccination', label: 'Εμβολιασμός' },
-    { value: 'checkup', label: 'Γενική Εξέταση' },
-    { value: 'surgery', label: 'Χειρουργείο' },
-    { value: 'treatment', label: 'Θεραπεία' },
-    { value: 'dental', label: 'Οδοντιατρική' },
-    { value: 'cardiology', label: 'Καρδιολογία' },
-    { value: 'dermatology', label: 'Δερματολογία' },
-    { value: 'ophthalmology', label: 'Οφθαλμολογία' },
-    { value: 'other', label: 'Άλλο' },
-  ];
+  const serviceOptions = Object.entries(SERVICE_LABELS).map(([value, label]) => ({
+    value,
+    label
+  }));
 
   // Fetch all vets for search
   useEffect(() => {
@@ -126,7 +119,7 @@ const BookingForm = ({
         // Fetch booked appointments (pending or confirmed only)
         const appointmentsResponse = await fetch(`http://localhost:5000/appointments?vetId=${selectedVet.id}`);
         const appointments = await appointmentsResponse.json();
-        
+
         // Extract booked time slots (only pending and confirmed appointments)
         const booked = appointments
           .filter(apt => apt.status === 'pending' || apt.status === 'confirmed')
@@ -139,7 +132,7 @@ const BookingForm = ({
               hour: hour
             };
           });
-        
+
         setBookedSlots(booked);
       } catch (err) {
         console.error('Error fetching availability or appointments:', err);
@@ -251,7 +244,7 @@ const BookingForm = ({
 
     const dateString = date.toISOString().split('T')[0];
     const slots = [];
-    
+
     // For each availability slot on this day, generate hourly time slots
     dayAvailabilitySlots.forEach(availability => {
       const [startHour] = (availability.startTime || '09:00').split(':').map(Number);
@@ -416,6 +409,12 @@ const BookingForm = ({
     setShowCancelModal(false);
   };
 
+  const getInitials = (name, lastName) => {
+    const firstInitial = name ? name.charAt(0).toUpperCase() : '';
+    const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : '';
+    return `${firstInitial}${lastInitial}`;
+  };
+
   return (
     <div className={`booking-form ${inline ? 'booking-form--inline' : ''}`}>
       {/* Header */}
@@ -449,11 +448,9 @@ const BookingForm = ({
           {selectedVet ? (
             <div className="booking-form__selected-vet">
               <div className="booking-form__vet-card">
-                <img
-                  src={selectedVet.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150'}
-                  alt={selectedVet.name}
-                  className="booking-form__vet-avatar"
-                />
+                <div className="booking-form__vet-avatar">
+                  {getInitials(selectedVet.name, selectedVet.lastName)}
+                </div>
                 <div className="booking-form__vet-info">
                   <h4 className="booking-form__vet-name">
                     {selectedVet.name} {selectedVet.lastName || ''}
@@ -507,11 +504,9 @@ const BookingForm = ({
                         className="booking-form__search-result"
                         onClick={() => handleSelectVet(vet)}
                       >
-                        <img
-                          src={vet.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150'}
-                          alt={vet.name}
-                          className="booking-form__result-avatar"
-                        />
+                        <div className="booking-form__result-avatar">
+                          {getInitials(vet.name, vet.lastName)}
+                        </div>
                         <div className="booking-form__result-info">
                           <span className="booking-form__result-name">
                             {vet.name} {vet.lastName || ''}
@@ -580,127 +575,127 @@ const BookingForm = ({
 
             {serviceType && (
               <div className="booking-form__calendar">
-              <div className="booking-form__view-controls">
-                <div className="booking-form__view-buttons">
-                  <button
-                    className={`booking-form__view-btn ${viewMode === 'day' ? 'booking-form__view-btn--active' : ''}`}
-                    onClick={() => setViewMode('day')}
-                  >
-                    Ημέρα
-                  </button>
-                  <button
-                    className={`booking-form__view-btn ${viewMode === 'week' ? 'booking-form__view-btn--active' : ''}`}
-                    onClick={() => setViewMode('week')}
-                  >
-                    Εβδομάδα
-                  </button>
-                </div>
+                <div className="booking-form__view-controls">
+                  <div className="booking-form__view-buttons">
+                    <button
+                      className={`booking-form__view-btn ${viewMode === 'day' ? 'booking-form__view-btn--active' : ''}`}
+                      onClick={() => setViewMode('day')}
+                    >
+                      Ημέρα
+                    </button>
+                    <button
+                      className={`booking-form__view-btn ${viewMode === 'week' ? 'booking-form__view-btn--active' : ''}`}
+                      onClick={() => setViewMode('week')}
+                    >
+                      Εβδομάδα
+                    </button>
+                  </div>
 
-                <div className="booking-form__date-navigation">
-                  <button className="booking-form__nav-btn" onClick={handlePreviousWeek}>
-                    <ChevronLeft size={20} />
-                  </button>
-                  <span className="booking-form__date-range">{formatDateRange()}</span>
-                  <button className="booking-form__nav-btn" onClick={handleNextWeek}>
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Week View */}
-              {viewMode === 'week' && (
-                <div className="booking-form__week-calendar">
-                  {getWeekDays().map((day, index) => {
-                    const slots = getTimeSlotsForDay(day);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const currentDay = new Date(day);
-                    currentDay.setHours(0, 0, 0, 0);
-
-                    const isToday = currentDay.getTime() === today.getTime();
-                    const isPast = currentDay < today;
-
-                    return (
-                      <div key={index} className="booking-form__day-column">
-                        <div className={`booking-form__day-header ${isToday ? 'booking-form__day-header--today' : ''} ${isPast ? 'booking-form__day-header--past' : ''}`}>
-                          <div className="booking-form__day-name">{getDayName(day)}</div>
-                          <div className="booking-form__day-number">{day.getDate()}</div>
-                        </div>
-
-                        <div className="booking-form__day-slots">
-                          {slots.length === 0 ? (
-                            <div className="booking-form__no-slots">
-                              Μη διαθέσιμος
-                            </div>
-                          ) : isPast ? (
-                            <div className="booking-form__no-slots">
-                              Παρελθούσα ημέρα
-                            </div>
-                          ) : (
-                            slots.map(slot => (
-                              <button
-                                key={slot.id}
-                                className={`booking-form__slot ${isSlotSelected(slot) ? 'booking-form__slot--selected' : ''}`}
-                                onClick={() => handleSelectSlot(slot)}
-                              >
-                                <Clock size={12} />
-                                {slot.displayTime}
-                              </button>
-                            ))
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Day View */}
-              {viewMode === 'day' && (
-                <div className="booking-form__day-view">
-                  <h4 className="booking-form__day-title">
-                    Διαθέσιμες ώρες για {selectedDate.getDate()}/{selectedDate.getMonth() + 1}/{selectedDate.getFullYear()}
-                  </h4>
-                  <div className="booking-form__day-slots-grid">
-                    {(() => {
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      const currentDay = new Date(selectedDate);
-                      currentDay.setHours(0, 0, 0, 0);
-                      const isPast = currentDay < today;
-
-                      if (isPast) {
-                        return <div className="booking-form__no-slots">Παρελθούσα ημέρα</div>;
-                      }
-
-                      const slots = getTimeSlotsForDay(selectedDate);
-                      if (slots.length === 0) {
-                        return <div className="booking-form__no-slots">Ο κτηνίατρος δεν είναι διαθέσιμος αυτή την ημέρα</div>;
-                      }
-
-                      return slots.map(slot => (
-                        <button
-                          key={slot.id}
-                          className={`booking-form__slot booking-form__slot--large ${isSlotSelected(slot) ? 'booking-form__slot--selected' : ''}`}
-                          onClick={() => handleSelectSlot(slot)}
-                        >
-                          <Clock size={16} />
-                          {slot.displayTime}
-                          {isSlotSelected(slot) && <Check size={16} className="booking-form__slot-check" />}
-                        </button>
-                      ));
-                    })()}
+                  <div className="booking-form__date-navigation">
+                    <button className="booking-form__nav-btn" onClick={handlePreviousWeek}>
+                      <ChevronLeft size={20} />
+                    </button>
+                    <span className="booking-form__date-range">{formatDateRange()}</span>
+                    <button className="booking-form__nav-btn" onClick={handleNextWeek}>
+                      <ChevronRight size={20} />
+                    </button>
                   </div>
                 </div>
-              )}
 
-              {selectedSlot && (
-                <div className="booking-form__selected-slot-info">
-                  <Check size={18} />
-                  Επιλεγμένη ώρα: <strong>{selectedSlot.displayTime}</strong> στις <strong>{new Date(selectedSlot.date).toLocaleDateString('el-GR')}</strong>
-                </div>
-              )}
-            </div>
+                {/* Week View */}
+                {viewMode === 'week' && (
+                  <div className="booking-form__week-calendar">
+                    {getWeekDays().map((day, index) => {
+                      const slots = getTimeSlotsForDay(day);
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      const currentDay = new Date(day);
+                      currentDay.setHours(0, 0, 0, 0);
+
+                      const isToday = currentDay.getTime() === today.getTime();
+                      const isPast = currentDay < today;
+
+                      return (
+                        <div key={index} className="booking-form__day-column">
+                          <div className={`booking-form__day-header ${isToday ? 'booking-form__day-header--today' : ''} ${isPast ? 'booking-form__day-header--past' : ''}`}>
+                            <div className="booking-form__day-name">{getDayName(day)}</div>
+                            <div className="booking-form__day-number">{day.getDate()}</div>
+                          </div>
+
+                          <div className="booking-form__day-slots">
+                            {slots.length === 0 ? (
+                              <div className="booking-form__no-slots">
+                                Μη διαθέσιμος
+                              </div>
+                            ) : isPast ? (
+                              <div className="booking-form__no-slots">
+                                Παρελθούσα ημέρα
+                              </div>
+                            ) : (
+                              slots.map(slot => (
+                                <button
+                                  key={slot.id}
+                                  className={`booking-form__slot ${isSlotSelected(slot) ? 'booking-form__slot--selected' : ''}`}
+                                  onClick={() => handleSelectSlot(slot)}
+                                >
+                                  <Clock size={12} />
+                                  {slot.displayTime}
+                                </button>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Day View */}
+                {viewMode === 'day' && (
+                  <div className="booking-form__day-view">
+                    <h4 className="booking-form__day-title">
+                      Διαθέσιμες ώρες για {selectedDate.getDate()}/{selectedDate.getMonth() + 1}/{selectedDate.getFullYear()}
+                    </h4>
+                    <div className="booking-form__day-slots-grid">
+                      {(() => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const currentDay = new Date(selectedDate);
+                        currentDay.setHours(0, 0, 0, 0);
+                        const isPast = currentDay < today;
+
+                        if (isPast) {
+                          return <div className="booking-form__no-slots">Παρελθούσα ημέρα</div>;
+                        }
+
+                        const slots = getTimeSlotsForDay(selectedDate);
+                        if (slots.length === 0) {
+                          return <div className="booking-form__no-slots">Ο κτηνίατρος δεν είναι διαθέσιμος αυτή την ημέρα</div>;
+                        }
+
+                        return slots.map(slot => (
+                          <button
+                            key={slot.id}
+                            className={`booking-form__slot booking-form__slot--large ${isSlotSelected(slot) ? 'booking-form__slot--selected' : ''}`}
+                            onClick={() => handleSelectSlot(slot)}
+                          >
+                            <Clock size={16} />
+                            {slot.displayTime}
+                            {isSlotSelected(slot) && <Check size={16} className="booking-form__slot-check" />}
+                          </button>
+                        ));
+                      })()}
+                    </div>
+                  </div>
+                )}
+
+                {selectedSlot && (
+                  <div className="booking-form__selected-slot-info">
+                    <Check size={18} />
+                    Επιλεγμένη ώρα: <strong>{selectedSlot.displayTime}</strong> στις <strong>{new Date(selectedSlot.date).toLocaleDateString('el-GR')}</strong>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}

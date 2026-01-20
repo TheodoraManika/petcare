@@ -98,12 +98,12 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
           const response = await fetch('http://localhost:5000/pets');
           if (!response.ok) throw new Error('Failed to fetch pets');
           const allPets = await response.json();
-          
+
           // Filter pets by current user's ID
-          const ownerPets = allPets.filter(pet => 
+          const ownerPets = allPets.filter(pet =>
             String(pet.ownerId) === String(currentUser.id)
           );
-          
+
           // Transform to dropdown format
           const formattedPets = ownerPets.map(pet => ({
             value: pet.id,
@@ -111,16 +111,20 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
             microchipId: pet.microchipId || '',
             name: pet.name,
             type: pet.type || 'Σκύλος',
-            breed: pet.breed || ''
+            breed: pet.breed || '',
+            gender: pet.gender,
+            color: pet.color,
+            weight: pet.weight,
+            birthDate: pet.birthDate
           }));
-          
+
           setUserPets(formattedPets);
         } catch (error) {
           console.error('Error fetching user pets:', error);
           setUserPets([]);
         }
       };
-      
+
       fetchUserPets();
     }
   }, [isOwner, currentUser?.id]);
@@ -504,25 +508,6 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
     { value: 'other', label: 'Άλλο' }
   ];
 
-  const handleOwnPetSelect = (petValue) => {
-    setSelectedOwnPet(petValue);
-    if (petValue) {
-      const selectedPet = userPets.find(p => p.value === petValue);
-      if (selectedPet) {
-        setPrefilledPetData({
-          petName: selectedPet.name,
-          species: selectedPet.type,
-          breed: selectedPet.breed,
-          microchip: selectedPet.microchipId,
-          dateReported: new Date().toLocaleDateString('el-GR'),
-          foundLocation: ''
-        });
-      }
-    } else {
-      setPrefilledPetData({});
-    }
-  };
-
   const isFormValid = () => {
     return (
       formData.foundLocation.trim() !== '' &&
@@ -553,7 +538,12 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
         foundLocation: pet.area,
         description: pet.description,
         dateReported: pet.dateLost,
-        microchip: pet.microchip,
+        dateReported: pet.dateLost,
+        microchip: pet.microchipId || microchip,
+        gender: pet.gender,
+        color: pet.color,
+        weight: pet.weight,
+        birthDate: pet.birthDate
       });
     } else {
       // Pet not found - just store microchip
@@ -634,22 +624,6 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
             <MicrochipSearch
               initialValue={microchipInput}
               onSearchComplete={handleSearchComplete}
-              variant={variant}
-            />
-          </div>
-        )}
-
-        {/* Owner Pet Selection */}
-        {isOwner && !hasPrefilledData && (
-          <div className="owner-pet-selection">
-            <label className="form-label">
-              Επιλέξτε κατοικίδιο
-            </label>
-            <CustomSelect
-              value={selectedOwnPet}
-              onChange={handleOwnPetSelect}
-              placeholder="Επιλέξτε ένα από τα κατοικίδιά σας"
-              options={userPets}
               variant={variant}
             />
           </div>

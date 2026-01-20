@@ -50,3 +50,15 @@ export const ROUTES = {
     information: '/vet/information',
   },
 };
+
+export const SERVICE_LABELS = {
+  vaccination: 'Εμβολιασμός',
+  checkup: 'Γενική Εξέταση',
+  surgery: 'Χειρουργείο',
+  treatment: 'Θεραπεία',
+  dental: 'Οδοντιατρική',
+  ophthalmology: 'Οφθαλμολογική',
+  cardiology: 'Καρδιολογική',
+  dermatology: 'Δερματολογική',
+  other: 'Όλες οι υπηρεσίες'
+};

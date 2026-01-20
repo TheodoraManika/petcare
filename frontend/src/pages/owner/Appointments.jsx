@@ -6,7 +6,7 @@ import Pagination from '../../components/common/layout/Pagination';
 import BookingForm from '../../components/owner/BookingForm';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
@@ -48,12 +48,12 @@ const Appointments = () => {
         const response = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
         if (!response.ok) throw new Error('Failed to fetch appointments');
         const data = await response.json();
-        
+
         // Fetch vet details and pet details for each appointment
         const appointmentsWithDetails = await Promise.all(
           data.map(async (apt) => {
             let aptWithDetails = { ...apt };
-            
+
             try {
               const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
               if (vetResponse.ok) {
@@ -61,11 +61,12 @@ const Appointments = () => {
                 aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
                 aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
                 aptWithDetails.vetId = vet.id;
+                aptWithDetails.vetInfo = vet;
               }
             } catch (err) {
               console.error('Error fetching vet details:', err);
             }
-            
+
             // Fetch pet details if petName is missing
             if (!apt.petName && apt.petId) {
               try {
@@ -79,14 +80,14 @@ const Appointments = () => {
                 console.error('Error fetching pet details:', err);
               }
             }
-            
+
             // Add canReview flag for completed appointments
             aptWithDetails.canReview = apt.status === 'completed';
-            
+
             return aptWithDetails;
           })
         );
-        
+
         setAppointments(appointmentsWithDetails);
         setError(null);
       } catch (err) {
@@ -151,12 +152,12 @@ const Appointments = () => {
         const response = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
         if (!response.ok) throw new Error('Failed to fetch appointments');
         const data = await response.json();
-        
+
         // Fetch vet details and pet details for each appointment
         const appointmentsWithDetails = await Promise.all(
           data.map(async (apt) => {
             let aptWithDetails = { ...apt };
-            
+
             try {
               const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
               if (vetResponse.ok) {
@@ -164,11 +165,12 @@ const Appointments = () => {
                 aptWithDetails.vetName = `${vet.name} ${vet.lastName}`;
                 aptWithDetails.clinicName = vet.clinicName || 'Κλινική';
                 aptWithDetails.vetId = vet.id;
+                aptWithDetails.vetInfo = vet;
               }
             } catch (err) {
               console.error('Error fetching vet details:', err);
             }
-            
+
             // Fetch pet details if petName is missing
             if (!apt.petName && apt.petId) {
               try {
@@ -182,14 +184,14 @@ const Appointments = () => {
                 console.error('Error fetching pet details:', err);
               }
             }
-            
+
             // Add canReview flag for completed appointments
             aptWithDetails.canReview = apt.status === 'completed';
-            
+
             return aptWithDetails;
           })
         );
-        
+
         setAppointments(appointmentsWithDetails);
       } catch (err) {
         console.error('Error refetching appointments:', err);
@@ -205,7 +207,7 @@ const Appointments = () => {
   // Separate appointments into active and history based on date and status
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const activeAppointmentsData = appointments.filter(apt => {
     const aptDate = new Date(apt.date);
     aptDate.setHours(0, 0, 0, 0);
@@ -261,7 +263,7 @@ const Appointments = () => {
     try {
       // Get appointment data to get vet info
       const appointment = appointments.find(apt => apt.id === appointmentToCancel);
-      
+
       // Update appointment status in database
       const response = await fetch(`http://localhost:5000/appointments/${appointmentToCancel}`, {
         method: 'PATCH',
@@ -303,12 +305,12 @@ const Appointments = () => {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const appointmentsResponse = await fetch(`http://localhost:5000/appointments?ownerId=${currentUser.id}`);
         const data = await appointmentsResponse.json();
-        
+
         // Fetch vet details and pet details for each appointment
         const appointmentsWithDetails = await Promise.all(
           data.map(async (apt) => {
             let aptWithDetails = { ...apt };
-            
+
             try {
               const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
               if (vetResponse.ok) {
@@ -319,7 +321,7 @@ const Appointments = () => {
             } catch (err) {
               console.error('Error fetching vet details:', err);
             }
-            
+
             // Fetch pet details if petName is missing
             if (!apt.petName && apt.petId) {
               try {
@@ -333,11 +335,11 @@ const Appointments = () => {
                 console.error('Error fetching pet details:', err);
               }
             }
-            
+
             return aptWithDetails;
           })
         );
-        
+
         setAppointments(appointmentsWithDetails);
         setNotification('cancel_success');
         setTimeout(() => setNotification(null), 5000);
@@ -345,13 +347,13 @@ const Appointments = () => {
     } catch (err) {
       console.error('Error cancelling appointment:', err);
     }
-    
+
     setShowCancelModal(false);
     setAppointmentToCancel(null);
-    
+
     // Show notification
     setNotification('cancelled');
-    
+
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
       setNotification(null);
@@ -364,10 +366,24 @@ const Appointments = () => {
   };
 
   const handleRebook = (appointment) => {
+    // Check if we have the full vet info stored
     if (appointment.vetInfo) {
       setBookingVet(appointment.vetInfo);
       setIsBookingExpanded(true);
       // Scroll to booking form
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Fallback: Construct vet object from appointment details if full info is missing
+    else if (appointment.vetId) {
+      const vetInfo = {
+        id: appointment.vetId,
+        name: appointment.vetName ? appointment.vetName.split(' ')[0] : '',
+        lastName: appointment.vetName ? appointment.vetName.split(' ').slice(1).join(' ') : '',
+        clinicName: appointment.clinicName || 'Κλινική'
+      };
+
+      setBookingVet(vetInfo);
+      setIsBookingExpanded(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       console.warn("No vet info available for rebooking");
@@ -497,7 +513,7 @@ const Appointments = () => {
                 </div>
                 <div className="owner-appointments__detail">
                   <span className="owner-appointments__detail-label">Υπηρεσία</span>
-                  <span className="owner-appointments__detail-value">{appointment.serviceType}</span>
+                  <span className="owner-appointments__detail-value">{SERVICE_LABELS[appointment.serviceType] || appointment.serviceType}</span>
                 </div>
                 {appointment.notes && (
                   <div className="owner-appointments__detail">

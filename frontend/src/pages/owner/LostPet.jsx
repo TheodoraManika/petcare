@@ -24,23 +24,23 @@ const OwnerLostPet = () => {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const response = await fetch('http://localhost:5000/pets');
         const allPets = await response.json();
-        
+
         // Filter pets by current user's ID - handle both string and number IDs
-        const ownerPets = allPets.filter(pet => 
+        const ownerPets = allPets.filter(pet =>
           String(pet.ownerId) === String(currentUser.id)
         );
-        
+
         // Transform to dropdown format
         const formattedPets = ownerPets.map(pet => ({
           value: pet.id,
-          label: `${pet.name}${pet.microchip ? ' - ' + pet.microchip : ''}`,
-          microchip: pet.microchip || '',
+          label: `${pet.name}${pet.microchipId ? ' - ' + pet.microchipId : ''}`,
+          microchipId: pet.microchipId || pet.microchip || '',
           name: pet.name,
           type: pet.type || 'Σκύλος',
           breed: pet.breed || '',
           image: pet.image || '🐾'
         }));
-        
+
         setUserPets(formattedPets);
       } catch (error) {
         console.error('Error fetching user pets:', error);
@@ -67,6 +67,8 @@ const OwnerLostPet = () => {
     selectedPet: '',
     microchipNumber: '',
     petName: '',
+    petType: '',
+    breed: '',
     lostDate: '',
     contactPhone: '',
     location: '',
@@ -114,7 +116,9 @@ const OwnerLostPet = () => {
         ...prev,
         selectedPet: value,
         microchipNumber: selectedPetData.microchipId,
-        petName: selectedPetData.name
+        petName: selectedPetData.name,
+        petType: selectedPetData.type,
+        breed: selectedPetData.breed
       }));
     }
   };
@@ -228,6 +232,8 @@ const OwnerLostPet = () => {
       selectedPet: '',
       microchipNumber: '',
       petName: '',
+      petType: '',
+      breed: '',
       lostDate: '',
       contactPhone: '',
       location: '',
@@ -241,7 +247,10 @@ const OwnerLostPet = () => {
     setShowCancelModal(false);
 
     // Show notification
-    setNotification('cancelled');
+    setNotification({
+      type: 'error',
+      message: 'Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!'
+    });
 
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
@@ -262,7 +271,7 @@ const OwnerLostPet = () => {
         area: formData.location,
         locationLat: formData.locationLat,
         locationLon: formData.locationLon,
-        petStatus: 1,
+        petStatus: 2,
         status: 'draft'
       };
 
@@ -283,6 +292,8 @@ const OwnerLostPet = () => {
             selectedPet: '',
             microchipNumber: '',
             petName: '',
+            petType: '',
+            breed: '',
             lostDate: '',
             contactPhone: '',
             location: '',
@@ -358,9 +369,9 @@ const OwnerLostPet = () => {
             {formData.selectedPet && (
               <PetDetailsCard
                 petData={{
-                  petName: userPets.find(p => p.value === formData.selectedPet)?.name,
-                  species: userPets.find(p => p.value === formData.selectedPet)?.type,
-                  breed: userPets.find(p => p.value === formData.selectedPet)?.breed,
+                  petName: formData.petName,
+                  species: formData.petType,
+                  breed: formData.breed,
                   microchip: formData.microchipNumber
                 }}
                 onClear={() => {
@@ -368,7 +379,9 @@ const OwnerLostPet = () => {
                     ...prev,
                     selectedPet: '',
                     microchipNumber: '',
-                    petName: ''
+                    petName: '',
+                    petType: '',
+                    breed: ''
                   }));
                 }}
                 variant="owner"
@@ -535,12 +548,8 @@ const OwnerLostPet = () => {
       {/* Notification */}
       <Notification
         isVisible={notification !== null}
-        message={
-          notification === 'draft'
-            ? "Η δήλωση απώλειας αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων"
-            : "Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
-        }
-        type={notification === 'draft' ? 'success' : 'error'}
+        message={notification?.message || ''}
+        type={notification?.type || 'success'}
       />
     </PageLayout>
   );
