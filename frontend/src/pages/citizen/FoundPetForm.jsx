@@ -538,7 +538,6 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
         foundLocation: pet.area,
         description: pet.description,
         dateReported: pet.dateLost,
-        dateReported: pet.dateLost,
         microchip: pet.microchipId || microchip,
         gender: pet.gender,
         color: pet.color,
