@@ -29,26 +29,30 @@ const LostPetHistory = () => {
           return;
         }
 
-        // Fetch all pets from database to include drafts (petStatus: 2) as well as lost (petStatus: 1)
-        const response = await fetch('http://localhost:5000/pets');
-        if (!response.ok) throw new Error('Failed to fetch pets');
-        const allPets = await response.json();
+        // Fetch all lost pets from database (petStatus: 1)
+        const response = await fetch('http://localhost:5000/pets?petStatus=1');
+        if (!response.ok) throw new Error('Failed to fetch lost pets');
+        const allLostPets = await response.json();
 
-        // "Δικές μου" has TWO types:
-        // 1. Findings THIS user MADE about finding other people's pets (user is the finder) - must be active/lost (status 1)
-        // 2. OWN LOST PET DECLARATIONS by this user (ownerId = currentUser.id) including drafts (status 2) and lost (status 1)
-        const mine = allPets.filter(pet =>
-          (pet.finderName === currentUser.name || String(pet.finderId) === String(currentUser.id)) || // User found someone's pet
-          (String(pet.ownerId) === String(currentUser.id) && !pet.finderName && !pet.finderId && (String(pet.petStatus) === '1' || String(pet.petStatus) === '2')) // User's own lost pet declaration (Active or Draft)
+        // "Δικές μου" (Mine tab) = YOUR lost pet declarations where:
+        // 1. You are the owner AND nobody else found it yet (still lost or you found it yourself)
+        // 2. Basically: pets you own where either no finder is set OR you are the finder
+        const mine = allLostPets.filter(pet => 
+          pet.ownerId == currentUser.id && (
+            !pet.finderId || // No finder set yet (still lost)
+            pet.finderId == currentUser.id || // You found your own pet
+            !pet.finderName || // No finder name set
+            pet.finderName === currentUser.name // You are listed as finder
+          )
         );
-
-        // "Από άλλους" = declarations OTHER PEOPLE MADE about finding THIS user's lost pets (must be active lost pets)
-        const others = allPets.filter(pet =>
-          String(pet.ownerId) === String(currentUser.id) &&
-          (pet.finderName || pet.finderId) &&
-          // CRITICAL: Exclude if the finder is the current user (that belongs in "Mine")
-          String(pet.finderId) !== String(currentUser.id) &&
-          String(pet.petStatus) === '1'
+        
+        // "Από άλλους" (Others tab) = Someone ELSE found YOUR lost pet
+        // Pet belongs to you BUT someone else is marked as the finder
+        const others = allLostPets.filter(pet => 
+          pet.ownerId == currentUser.id && (
+            (pet.finderId && pet.finderId != currentUser.id) || // Someone else's ID as finder
+            (pet.finderName && pet.finderName !== currentUser.name) // Someone else's name as finder
+          )
         );
 
         // Transform mine data (user's own findings + user's own lost pet declarations)
@@ -56,13 +60,13 @@ const LostPetHistory = () => {
           // Helper function to parse dates in DD/MM/YYYY or ISO format
           const parseDate = (dateStr) => {
             if (!dateStr) return new Date().toLocaleDateString('el-GR');
-
+            
             // Try to parse ISO format first
             if (dateStr.includes('T') || dateStr.includes('-')) {
               const parsed = new Date(dateStr);
               return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
             }
-
+            
             // Try to parse DD/MM/YYYY format
             if (dateStr.includes('/')) {
               const parts = dateStr.split('/');
@@ -71,22 +75,23 @@ const LostPetHistory = () => {
                 return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
               }
             }
-
+            
             return dateStr;
           };
 
+          // Determine if this is a found pet (by user themselves) or still lost
+          const isFoundByMe = (pet.finderId == currentUser.id) || (pet.finderName === currentUser.name);
+          
           return {
             id: pet.id,
-            // If I am the owner, it is ALWAYS my lost pet declaration (even if I found it).
-            // Only if I am NOT the owner but I am the finder, is it a 'found_by_me' declaration.
-            type: (String(pet.ownerId) === String(currentUser.id)) ? 'own_lost_pet' : (pet.finderName || pet.finderId ? 'found_by_me' : 'own_lost_pet'),
+            type: isFoundByMe ? 'found_by_me' : 'own_lost_pet',
             petName: pet.petName || pet.name,
             petType: pet.type,
-            date: pet.dateFound
+            date: pet.dateFound 
               ? parseDate(pet.dateFound)
-              : pet.lostDate
-                ? parseDate(pet.lostDate)
-                : new Date().toLocaleDateString('el-GR'),
+              : pet.lostDate 
+              ? parseDate(pet.lostDate)
+              : new Date().toLocaleDateString('el-GR'),
             location: pet.location || pet.lostLocation || pet.lostLocation,
             description: pet.description,
             status: pet.status || 'submitted',
@@ -101,13 +106,13 @@ const LostPetHistory = () => {
           // Helper function to parse dates in DD/MM/YYYY or ISO format
           const parseDate = (dateStr) => {
             if (!dateStr) return new Date().toLocaleDateString('el-GR');
-
+            
             // Try to parse ISO format first
             if (dateStr.includes('T') || dateStr.includes('-')) {
               const parsed = new Date(dateStr);
               return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
             }
-
+            
             // Try to parse DD/MM/YYYY format
             if (dateStr.includes('/')) {
               const parts = dateStr.split('/');
@@ -116,7 +121,7 @@ const LostPetHistory = () => {
                 return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
               }
             }
-
+            
             return dateStr;
           };
 
@@ -138,108 +143,77 @@ const LostPetHistory = () => {
           };
         });
 
-        setDeclarations(mineTransformed);
-        setFoundByOthers(othersTransformed);
-
-        // Fetch Found_pet - pets that were found by others
+        // Fetch Found_pet - pets that were found
         const foundPetResponse = await fetch('http://localhost:5000/Found_pet');
         if (foundPetResponse.ok) {
           const allFoundPets = await foundPetResponse.json();
-          // Get user's pet microchips to match found reports that might have missing ownerId
-          const myPetMicrochips = allPets
-            .filter(p => String(p.ownerId) === String(currentUser.id) && p.microchipId)
-            .map(p => p.microchipId);
-
-          // Filter to only show pets belonging to this user BUT found by OTHERS
-          const userFoundPets = allFoundPets.filter(pet => {
-            const belongsToUser = (pet.ownerId && String(pet.ownerId) === String(currentUser.id)) ||
-              (pet.microchipId && myPetMicrochips.includes(pet.microchipId));
-
-            return belongsToUser &&
-              // CRITICAL: Exclude if the finder is the current user
-              String(pet.finderId) !== String(currentUser.id) &&
-              pet.contactEmail !== currentUser.email &&
-              pet.foundByUserEmail !== currentUser.email;
-          });
-
-          const foundPetTransformed = userFoundPets.map(pet => {
-            const parseDate = (dateStr) => {
-              if (!dateStr) return new Date().toLocaleDateString('el-GR');
-              if (dateStr.includes('T') || dateStr.includes('-')) {
-                const parsed = new Date(dateStr);
-                return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
-              }
-              if (dateStr.includes('/')) {
-                const parts = dateStr.split('/');
-                if (parts.length === 3) {
-                  const parsed = new Date(parts[2], parts[1] - 1, parts[0]);
-                  return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
-                }
-              }
-              return dateStr;
-            };
-
-            return {
-              id: pet.id,
-              type: 'found_by_other',
-              petName: pet.name,
-              petSpecies: pet.type,
-              petBreed: pet.breed,
-              petColor: pet.color,
-              petGender: pet.gender,
-              date: pet.foundDate ? parseDate(pet.foundDate) : parseDate(pet.foundAt),
-              location: pet.area || pet.lostLocation || '-',
-              description: pet.description,
-              contactName: `${pet.foundByUserName} ${pet.foundByUserSurname}`,
-              contactPhone: pet.foundByUserPhone,
-              contactEmail: pet.foundByUserEmail,
-              status: 'submitted',
-            };
-          });
-
-          // Append to foundByOthers
-          setFoundByOthers([...othersTransformed, ...foundPetTransformed]);
-
-          // Also filter found pets to find ones THIS USER found (My Declarations -> Found)
-          const myFoundDeclarations = allFoundPets.filter(pet =>
-            // Check if current user is the finder (using email/phone match or finderId if available)
-            pet.finderId == currentUser.id ||
-            pet.contactEmail === currentUser.email ||
-            pet.foundByUserEmail === currentUser.email
+          
+          // Split Found_pet into two categories:
+          // 1. Pets YOU found (foundByUserId matches current user) - goes to "Δικές μου"
+          // 2. YOUR pets found by others (ownerId matches current user) - goes to "Από άλλους"
+          
+          const myFindings = allFoundPets.filter(pet => pet.foundByUserId == currentUser.id);
+          const othersFoundMyPets = allFoundPets.filter(pet => 
+            pet.ownerId == currentUser.id && pet.foundByUserId != currentUser.id
           );
-
-          const myFoundTransformed = myFoundDeclarations.map(pet => {
-            const parseDate = (dateStr) => {
-              if (!dateStr) return new Date().toLocaleDateString('el-GR');
-              if (dateStr.includes('T') || dateStr.includes('-')) {
-                const parsed = new Date(dateStr);
+          
+          const parseDate = (dateStr) => {
+            if (!dateStr) return new Date().toLocaleDateString('el-GR');
+            if (dateStr.includes('T') || dateStr.includes('-')) {
+              const parsed = new Date(dateStr);
+              return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
+            }
+            if (dateStr.includes('/')) {
+              const parts = dateStr.split('/');
+              if (parts.length === 3) {
+                const parsed = new Date(parts[2], parts[1] - 1, parts[0]);
                 return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
               }
-              if (dateStr.includes('/')) {
-                const parts = dateStr.split('/');
-                if (parts.length === 3) {
-                  const parsed = new Date(parts[2], parts[1] - 1, parts[0]);
-                  return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
-                }
-              }
-              return dateStr;
-            };
+            }
+            return dateStr;
+          };
 
-            return {
-              id: pet.id,
-              type: 'found_by_me', // Distinct type for UI handling if needed
-              petName: pet.petName || pet.name || 'Άγνωστο',
-              petType: pet.type || pet.species,
-              date: pet.foundDate ? parseDate(pet.foundDate) : parseDate(pet.foundAt),
-              location: pet.area || pet.foundLocation || '-',
-              description: pet.description,
-              status: 'submitted',
-              ownerName: 'Άγνωστος', // Usually unknown when found
-            };
-          });
+          // Transform pets YOU found
+          const myFindingsTransformed = myFindings.map(pet => ({
+            id: pet.id,
+            type: 'found_by_me',
+            petName: pet.name,
+            petType: pet.type,
+            petSpecies: pet.type,
+            petBreed: pet.breed,
+            petColor: pet.color,
+            petGender: pet.gender,
+            date: pet.foundDate ? parseDate(pet.foundDate) : parseDate(pet.foundAt),
+            location: pet.area || pet.lostLocation || '-',
+            description: pet.description,
+            ownerName: pet.ownerId ? 'Γνωστός ιδιοκτήτης' : 'Άγνωστος ιδιοκτήτης',
+            status: 'submitted',
+          }));
 
-          // MERGE with existing 'mine' declarations
-          setDeclarations(prev => [...prev, ...myFoundTransformed]);
+          // Transform YOUR pets found by others
+          const othersFoundMyPetsTransformed = othersFoundMyPets.map(pet => ({
+            id: pet.id,
+            type: 'found_by_other',
+            petName: pet.name,
+            petSpecies: pet.type,
+            petBreed: pet.breed,
+            petColor: pet.color,
+            petGender: pet.gender,
+            date: pet.foundDate ? parseDate(pet.foundDate) : parseDate(pet.foundAt),
+            location: pet.area || pet.lostLocation || '-',
+            description: pet.description,
+            contactName: `${pet.foundByUserName} ${pet.foundByUserSurname}`,
+            contactPhone: pet.foundByUserPhone,
+            contactEmail: pet.foundByUserEmail,
+            status: 'submitted',
+          }));
+          
+          // Add to respective arrays
+          setDeclarations([...mineTransformed, ...myFindingsTransformed]);
+          setFoundByOthers([...othersTransformed, ...othersFoundMyPetsTransformed]);
+        } else {
+          setDeclarations(mineTransformed);
+          setFoundByOthers(othersTransformed);
         }
 
         // Fetch lost_history - pets that were found and marked as found
@@ -248,7 +222,7 @@ const LostPetHistory = () => {
           const allLostHistory = await lostHistoryResponse.json();
           // Filter to only show this user's pets from lost_history
           const userLostHistory = allLostHistory.filter(pet => pet.ownerId == currentUser.id);
-
+          
           const historyTransformed = userLostHistory.map(pet => {
             const parseDate = (dateStr) => {
               if (!dateStr) return new Date().toLocaleDateString('el-GR');
@@ -273,54 +247,12 @@ const LostPetHistory = () => {
               petType: pet.type,
               date: pet.markedFoundAt ? parseDate(pet.markedFoundAt) : new Date().toLocaleDateString('el-GR'),
               location: pet.area || pet.lostLocation || '-',
-            };
-          });
-
-          // Distribute history items directly from source
-
-          // Split userLostHistory at source
-          const historyMineSource = userLostHistory.filter(pet =>
-            !pet.finderId || String(pet.finderId) === String(currentUser.id) || pet.finderName === currentUser.name
-          );
-          const historyOthersSource = userLostHistory.filter(pet =>
-            (pet.finderId && String(pet.finderId) !== String(currentUser.id)) ||
-            (pet.finderName && pet.finderName !== currentUser.name)
-          );
-
-          const transformHistory = (pets, typeBase) => pets.map(pet => {
-            const parseDate = (dateStr) => {
-              if (!dateStr) return new Date().toLocaleDateString('el-GR');
-              if (dateStr.includes('T') || dateStr.includes('-')) {
-                const parsed = new Date(dateStr);
-                return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
-              }
-              if (dateStr.includes('/')) {
-                const parts = dateStr.split('/');
-                if (parts.length === 3) {
-                  const parsed = new Date(parts[2], parts[1] - 1, parts[0]);
-                  return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
-                }
-              }
-              return dateStr;
-            };
-            return {
-              id: pet.id,
-              type: typeBase, // 'found' or 'found_by_other'
-              petName: pet.petName || pet.name,
-              petType: pet.type,
-              date: pet.markedFoundAt ? parseDate(pet.markedFoundAt) : new Date().toLocaleDateString('el-GR'),
-              location: pet.area || pet.lostLocation || '-',
               description: pet.description,
-              status: 'found', // History items are resolved/found
+              status: 'found',
             };
           });
 
-          const historyMineTransformed = transformHistory(historyMineSource, 'found');
-          const historyOthersTransformed = transformHistory(historyOthersSource, 'found_by_other');
-
-          setLostHistory(historyMineTransformed);
-          // Append historyOthers to foundByOthers
-          setFoundByOthers(prev => [...prev, ...historyOthersTransformed]);
+          setLostHistory(historyTransformed);
         }
 
         setLoading(false);
@@ -342,7 +274,7 @@ const LostPetHistory = () => {
   };
 
   const currentData = activeTab === 'mine' ? [...declarations, ...lostHistory] : foundByOthers;
-
+  
   // Calculate pagination
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -436,102 +368,57 @@ const LostPetHistory = () => {
             </div>
           ) : (
             paginatedData.map((declaration) => (
-              <div key={declaration.id} className="lost-pet-history__card">
-                <div className="lost-pet-history__icon">
-                  <PawPrint size={24} />
+            <div key={declaration.id} className="lost-pet-history__card">
+              <div className="lost-pet-history__icon">
+                <PawPrint size={24} />
+              </div>
+
+              <div className="lost-pet-history__card-info">
+                <div className="lost-pet-history__card-header">
+                  <h3 className="lost-pet-history__card-title">
+                    {declaration.type === 'found_by_other' 
+                      ? 'Δήλωση Εύρεσης από Χρήστη' 
+                      : declaration.type === 'own_lost_pet'
+                      ? 'Δήλωση Απώλειας Κατοικιδίου'
+                      : 'Δήλωση Εύρεσης'}
+                  </h3>
+                  <span className="lost-pet-history__card-subtitle">
+                    {declaration.petType || declaration.petSpecies}
+                  </span>
+                  <span className="lost-pet-history__card-name">{declaration.petName}</span>
                 </div>
 
-                <div className="lost-pet-history__card-info">
-                  <div className="lost-pet-history__card-header">
-                    <h3 className="lost-pet-history__card-title">
-                      {declaration.type === 'found_by_other'
-                        ? 'Δήλωση Εύρεσης από Χρήστη'
-                        : (declaration.type === 'own_lost_pet' || declaration.type === 'found')
-                          ? 'Δήλωση Απώλειας Κατοικιδίου'
-                          : 'Δήλωση Εύρεσης'}
-                    </h3>
-                    <span className="lost-pet-history__card-subtitle">
-                      {declaration.petType || declaration.petSpecies}
-                    </span>
-                    <span className="lost-pet-history__card-name">{declaration.petName}</span>
-                  </div>
-
-                  <div className="lost-pet-history__card-details">
-                    {activeTab === 'mine' ? (
-                      <>
-                        <div>
-                          <span className="lost-pet-history__label">Ημερομηνία</span>
-                          <p className="lost-pet-history__value">{declaration.date}</p>
-                        </div>
-                        <div>
-                          <span className="lost-pet-history__label">Τοποθεσία</span>
-                          <p className="lost-pet-history__value">{declaration.location}</p>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div>
-                          <span className="lost-pet-history__label">Ημερομηνία Εύρεσης</span>
-                          <p className="lost-pet-history__value">{declaration.date}</p>
-                        </div>
-                        <div>
-                          <span className="lost-pet-history__label">Τοποθεσία Εύρεσης</span>
-                          <p className="lost-pet-history__value">{declaration.location}</p>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                <div className="lost-pet-history__card-details">
+                  {activeTab === 'mine' ? (
+                    <>
+                      <div>
+                        <span className="lost-pet-history__label">Ημερομηνία</span>
+                        <p className="lost-pet-history__value">{declaration.date}</p>
+                      </div>
+                      <div>
+                        <span className="lost-pet-history__label">Τοποθεσία</span>
+                        <p className="lost-pet-history__value">{declaration.location}</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <span className="lost-pet-history__label">Ημερομηνία Εύρεσης</span>
+                        <p className="lost-pet-history__value">{declaration.date}</p>
+                      </div>
+                      <div>
+                        <span className="lost-pet-history__label">Τοποθεσία Εύρεσης</span>
+                        <p className="lost-pet-history__value">{declaration.location}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
+              </div>
 
-                <div className="lost-pet-history__card-actions">
-                  <div className="lost-pet-history__buttons">
-                    {activeTab === 'mine' ? (
-                      <>
-                        <button
-                          className="lost-pet-history__btn lost-pet-history__btn--view"
-                          onClick={() => handleView(declaration.id)}
-                        >
-                          <Eye size={16} />
-                          Προβολή
-                        </button>
-                        {declaration.status === 'draft' && (
-                          <button
-                            className="lost-pet-history__btn lost-pet-history__btn--edit"
-                            onClick={() => handleEdit(declaration.id)}
-                            title="Επεξεργασία"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                        )}
-
-                        {(declaration.type === 'own_lost_pet' || declaration.type === 'loss') && declaration.status === 'submitted' && (
-                          <button
-                            className="lost-pet-history__btn lost-pet-history__btn--found"
-                            onClick={() => handleFound(declaration.id)}
-                          >
-                            <CheckCircle size={16} />
-                            Βρέθηκε
-                          </button>
-                        )}
-
-                        {declaration.status === 'found' && (
-                          <div className="lost-pet-history__found-message">
-                            <CheckCircle size={16} />
-                            Το κατοικίδιο βρέθηκε!
-                          </div>
-                        )}
-
-                        {declaration.status === 'draft' && (
-                          <button
-                            className="lost-pet-history__btn lost-pet-history__btn--delete"
-                            onClick={() => handleDelete(declaration)}
-                            title="Διαγραφή"
-                          >
-                            <X size={16} />
-                          </button>
-                        )}
-                      </>
-                    ) : (
+              <div className="lost-pet-history__card-actions">
+                <div className="lost-pet-history__buttons">
+                  {activeTab === 'mine' ? (
+                    <>
                       <button
                         className="lost-pet-history__btn lost-pet-history__btn--view"
                         onClick={() => handleView(declaration.id)}
@@ -539,15 +426,60 @@ const LostPetHistory = () => {
                         <Eye size={16} />
                         Προβολή
                       </button>
-                    )}
-                  </div>
-                  {activeTab === 'mine' && (
-                    <div className="lost-pet-history__status-section">
-                      {getStatusBadge(declaration.status)}
-                    </div>
+                      {declaration.status === 'draft' && (
+                        <button
+                          className="lost-pet-history__btn lost-pet-history__btn--edit"
+                          onClick={() => handleEdit(declaration.id)}
+                          title="Επεξεργασία"
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                      )}
+
+                      {(declaration.type === 'own_lost_pet' || declaration.type === 'loss') && declaration.status === 'submitted' && (
+                        <button
+                          className="lost-pet-history__btn lost-pet-history__btn--found"
+                          onClick={() => handleFound(declaration.id)}
+                        >
+                          <CheckCircle size={16} />
+                          Βρέθηκε
+                        </button>
+                      )}
+
+                      {declaration.status === 'found' && (
+                        <div className="lost-pet-history__found-message">
+                          <CheckCircle size={16} />
+                          Το κατοικίδιο βρέθηκε!
+                        </div>
+                      )}
+
+                      {declaration.status === 'draft' && (
+                        <button
+                          className="lost-pet-history__btn lost-pet-history__btn--delete"
+                          onClick={() => handleDelete(declaration)}
+                          title="Διαγραφή"
+                        >
+                          <X size={16} />
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <button
+                      className="lost-pet-history__btn lost-pet-history__btn--view"
+                      onClick={() => handleView(declaration.id)}
+                    >
+                      <Eye size={16} />
+                      Προβολή
+                    </button>
                   )}
                 </div>
+                {activeTab === 'mine' && (
+                  <div className="lost-pet-history__status-section">
+                    {getStatusBadge(declaration.status)}
+                  </div>
+                )}
               </div>
+            </div>
             ))
           )}
         </div>
@@ -587,7 +519,6 @@ const LostPetHistory = () => {
                 <div className="lost-pet-history__modal-row">
                   <span className="lost-pet-history__modal-label">Περιγραφή:</span>
                   <span className="lost-pet-history__modal-value">
-                    Είναι μικρόσωμος και οραίος σκύλος
                   </span>
                 </div>
               </div>
