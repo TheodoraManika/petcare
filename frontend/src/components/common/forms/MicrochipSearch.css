@@ -90,32 +90,31 @@
 
 /* CITIZEN (Blue Theme) */
 .microchip-search--citizen {
-    background-color: #F0FDFA;
-    border: 1px solid #CCFBF1;
+    background: linear-gradient(135deg, rgba(35, 206, 217, 0.05) 0%, rgba(35, 206, 217, 0.02) 100%);
+    border: 2px dashed rgba(35, 206, 217, 0.3);
 }
 
 .microchip-search--citizen .microchip-search__label {
-    color: #115E59;
+    color: #374151;
 }
 
 .microchip-search--citizen .microchip-search__input {
-    border-color: #99F6E4;
+    border: 1px solid #d1d5db;
 }
 
 .microchip-search--citizen .microchip-search__input:focus {
-    border-color: #2DD4BF;
-    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+    border-color: #23CED9;
+    box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
 
 .microchip-search--citizen .microchip-search__btn {
     background-color: #23CED9;
-    /* Cyan from designs */
-    color: white;
+    color: #000;
 }
 
 .microchip-search--citizen .microchip-search__btn:hover:not(:disabled) {
-    background-color: #1dbdc7;
-    box-shadow: 0 4px 8px rgba(35, 206, 217, 0.2);
+    background-color: #1ab8c2;
+    box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
 
 /* VET (Blue Theme override) */

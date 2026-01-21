@@ -31,25 +31,25 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
       // OWNER NOTIFICATION TEMPLATES
       case 'appointment_approved':
         return `Το ραντεβού σας με τον ${data.vetName} για τις ${data.appointmentDate} στις ${data.appointmentTime} για το κατοικίδιο ${data.petName} εγκρίθηκε. Μπορείτε να το δείτε στη σελίδα "Τα Ραντεβού μου".`;
-      
+
       case 'appointment_cancelled':
         return `Το ραντεβού σας με τον ${data.vetName} για τις ${data.appointmentDate} στις ${data.appointmentTime} για το κατοικίδιο ${data.petName} ακυρώθηκε από τον κτηνίατρο. Μπορείτε να το δείτε στη σελίδα "Τα Ραντεβού μου".`;
-      
+
       case 'found_pet':
-        return data.finderName 
+        return data.finderName
           ? `Ο/η ${data.finderName} έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}. Μπορείτε να δείτε τη δήλωση στη σελίδα "Ιστορικό Δηλώσεων -> Από άλλους".`
           : `Κάποιος έκανε δήλωση εύρεσης για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}. Μπορείτε να δείτε τη δήλωση στη σελίδα "Ιστορικό Δηλώσεων -> Από άλλους".`;
-      
+
       case 'lost_pet':
         return `Ο/η ${data.vetName} έκανε δήλωση απώλειας για το κατοικίδιό σας "${data.petName}"${data.location ? ` στην περιοχή ${data.location}` : ''}${data.date ? ` την ${data.date}` : ''}. Το κατοικίδιό σας έχει πλέον την κατάσταση "Χαμένο".`;
-      
+
       // VET NOTIFICATION TEMPLATES
       case 'new_appointment':
         return `${data.ownerName} ζήτησε ραντεβού για τις ${data.appointmentDate} στις ${data.appointmentTime} για το κατοικίδιο ${data.petName}. Εγκρίνετε ή ακυρώστε το αίτημα από τη σελίδα "Διαχείριση Ραντεβού".`;
-      
+
       case 'appointment_cancelled_by_owner':
         return `${data.ownerName} ακύρωσε το ραντεβού για τις ${data.appointmentDate} στις ${data.appointmentTime} για το κατοικίδιο ${data.petName}. Μπορείτε να δείτε το ραντεβού στη σελίδα "Διαχείριση Ραντεβού".`;
-      
+
       default:
         return 'Νέα ειδοποίηση';
     }
@@ -71,7 +71,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
   };
 
   const getIconColor = (type) => {
-    if (type.includes('approved') || type.includes('found')) return '#10b981';
+    if (type.includes('approved') || type.includes('found')) return '#A1CCA6';
     if (type.includes('cancelled') || type.includes('lost')) return '#ef4444';
     if (type.includes('new')) return userType === 'owner' ? '#23CED9' : '#FCA47C';
     return '#6b7280';
@@ -89,7 +89,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
     if (diffMins < 60) return `Πριν ${diffMins} λεπτά`;
     if (diffHours < 24) return `Πριν ${diffHours} ${diffHours === 1 ? 'ώρα' : 'ώρες'}`;
     if (diffDays < 7) return `Πριν ${diffDays} ${diffDays === 1 ? 'μέρα' : 'μέρες'}`;
-    
+
     return date.toLocaleDateString('el-GR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
@@ -121,7 +121,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
     try {
       // Update all unread notifications
       const unreadNotifications = notifications.filter(n => !n.read);
-      
+
       for (const notif of unreadNotifications) {
         await fetch(`http://localhost:5000/notifications/${notif.id}`, {
           method: 'PATCH',
@@ -162,7 +162,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
     if (filter === 'unread') return !notif.read;
     if (filter === 'read') return notif.read;
     return true;
-  });
+  }).sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
