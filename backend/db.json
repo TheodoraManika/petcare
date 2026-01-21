@@ -1612,7 +1612,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "vaccination",
       "notes": "",
-      "status": "pending",
+      "status": "completed",
       "createdAt": "2026-01-20T18:52:56.197Z"
     },
     {
@@ -1644,7 +1644,7 @@
       "time": "13:00 - 14:00",
       "serviceType": "cardiology",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:53:29.413Z"
     },
     {
