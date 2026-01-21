@@ -75,7 +75,7 @@ const VetSearchMap = () => {
   useEffect(() => {
     if (location.state?.filters) {
       const { searchName, selectedArea, locationData: locData, selectedAvailability, selectedSpecialty } = location.state.filters;
-      
+
       setFilters(prev => ({
         ...prev,
         searchName: searchName || '',
@@ -83,11 +83,11 @@ const VetSearchMap = () => {
         specialty: selectedSpecialty || '',
         availability: selectedAvailability || '',
       }));
-      
+
       if (locData) {
         setLocationData(locData);
       }
-      
+
       // Clear the navigation state after loading
       window.history.replaceState({}, document.title);
     }
@@ -130,7 +130,7 @@ const VetSearchMap = () => {
 
             // Get reviews for this vet
             const vetReviews = allReviews.filter(review => Number(review.vetId) === Number(vet.id));
-            
+
             // Calculate average rating from reviews
             let rating = 0;
             if (vetReviews.length > 0) {
@@ -202,34 +202,34 @@ const VetSearchMap = () => {
   // Smart matching function for vet names
   const nameMatch = (vetName, filterValue) => {
     if (!filterValue || !vetName) return false;
-    
+
     const vetNorm = normalizeText(String(vetName || ''));
     const filterNorm = normalizeText(String(filterValue || ''));
-    
+
     // Exact match after normalization
     if (vetNorm === filterNorm) return true;
-    
+
     // Partial match (one contains the other)
     if (vetNorm.includes(filterNorm) || filterNorm.includes(vetNorm)) return true;
-    
+
     return false;
   };
 
   // Smart matching for area filter
   const areaMatch = (vetArea, filterArea) => {
     if (!filterArea || !vetArea) return false;
-    
+
     const vetNorm = normalizeText(String(vetArea || ''));
     const filterNorm = normalizeText(String(filterArea || ''));
-    
+
     // Check if vet area contains any part of the filter area
     const filterParts = filterNorm.split(',').map(p => p.trim());
     const vetParts = vetNorm.split(',').map(p => p.trim());
-    
-    const hasMatch = filterParts.some(filterPart => 
+
+    const hasMatch = filterParts.some(filterPart =>
       vetParts.some(vetPart => vetPart.includes(filterPart) || filterPart.includes(vetPart))
     );
-    
+
     return hasMatch;
   };
 
@@ -292,7 +292,7 @@ const VetSearchMap = () => {
           'ophthalmology': 'Οφθαλμολογία'
         };
         const targetSpecialty = specialtyMap[filters.specialty];
-        if (targetSpecialty && vet.specialty !== targetSpecialty) {
+        if (targetSpecialty && (!vet.specialty || !vet.specialty.includes(targetSpecialty))) {
           return false;
         }
       }
@@ -341,7 +341,7 @@ const VetSearchMap = () => {
         const hasDay = vet.availableDays.some(day =>
           day.toLowerCase() === targetDay.toLowerCase()
         );
-        
+
         if (!hasDay) {
           return false;
         }
@@ -367,9 +367,9 @@ const VetSearchMap = () => {
               'tomorrow': getTomorrowDay()
             };
             const targetDay = availabilityMap[filters.availability] || filters.availability;
-            
+
             // Filter slots by the selected day (case insensitive)
-            slotsToCheck = vet.availabilitySlots.filter(slot => 
+            slotsToCheck = vet.availabilitySlots.filter(slot =>
               slot.day.toLowerCase() === targetDay.toLowerCase()
             );
           }

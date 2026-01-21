@@ -26,15 +26,15 @@ const SearchResultsList = ({
   items = [],
   currentPage = 1,
   totalPages = 1,
-  onPageChange = () => {},
+  onPageChange = () => { },
   itemsPerPage = 5,
   variant = 'citizen',
   renderItem = null,
-  onItemClick = () => {},
+  onItemClick = () => { },
   actionButtonText = 'Προβολή Προφίλ',
-  onActionClick = () => {},
+  onActionClick = () => { },
   showCloseAppointment = false,
-  onCloseAppointment = () => {},
+  onCloseAppointment = () => { },
   currentUser = null,
   showPagination = true
 }) => {
@@ -61,36 +61,36 @@ const SearchResultsList = ({
         </div>
         <div className="result-details">
           <h3 className="result-name">{item.name} {item.lastName || item.surname}</h3>
-        {item.specialty && <p className="result-specialty">{item.specialty}</p>}
-        {item.rating && (
-          <div className="result-rating-info">
-            <Star size={14} fill="#23CED9" color="#23CED9" />
-            <span className="rating-stars">{typeof item.rating === 'number' ? item.rating.toFixed(1) : item.rating}</span>
-            {item.reviewCount && <span className="rating-count">({item.reviewCount} αξιολογήσεις)</span>}
-          </div>
-        )}
-        {item.address && <p className="result-address">{item.address}</p>}
+          {item.specialty && <p className="result-specialty">{item.specialty}</p>}
+          {item.rating && (
+            <div className="result-rating-info">
+              <Star size={14} fill="#FFC107" color="#FFC107" />
+              <span className="rating-stars">{typeof item.rating === 'number' ? item.rating.toFixed(1) : item.rating}</span>
+              {item.reviewCount && <span className="rating-count">({item.reviewCount} αξιολογήσεις)</span>}
+            </div>
+          )}
+          {item.address && <p className="result-address">{item.address}</p>}
+        </div>
+        <div className="result-actions">
+          {actionButtonText && (
+            <button
+              className="result-action-btn"
+              onClick={() => onActionClick(item)}
+            >
+              {actionButtonText}
+            </button>
+          )}
+          {showCloseAppointment && currentUser?.userType === 'owner' && (
+            <button
+              className="result-close-appointment-btn"
+              onClick={() => onCloseAppointment(item)}
+              title="Κλείστε Ραντεβού"
+            >
+              Κλείστε Ραντεβού
+            </button>
+          )}
+        </div>
       </div>
-      <div className="result-actions">
-        {actionButtonText && (
-          <button 
-            className="result-action-btn"
-            onClick={() => onActionClick(item)}
-          >
-            {actionButtonText}
-          </button>
-        )}
-        {showCloseAppointment && currentUser?.userType === 'owner' && (
-          <button 
-            className="result-close-appointment-btn"
-            onClick={() => onCloseAppointment(item)}
-            title="Κλείστε Ραντεβού"
-          >
-            Κλείστε Ραντεβού
-          </button>
-        )}
-      </div>
-    </div>
     );
   };
 
@@ -107,7 +107,7 @@ const SearchResultsList = ({
           </div>
         )}
       </div>
-      
+
       {/* Pagination */}
       {showPagination && totalPages > 1 && (
         <Pagination

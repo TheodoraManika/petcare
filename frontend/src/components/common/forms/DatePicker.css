@@ -21,7 +21,8 @@
   box-shadow: 0 0 0 3px rgba(252, 164, 124, 0.1);
 }
 
-.datepicker--owner .datepicker__input:focus {
+.datepicker--owner .datepicker__input:focus,
+.datepicker--citizen .datepicker__input:focus {
   border-color: #23CED9;
   box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
@@ -135,11 +136,13 @@
   background-color: #fb8a5c;
 }
 
-.datepicker--owner .datepicker__day--selected {
+.datepicker--owner .datepicker__day--selected,
+.datepicker--citizen .datepicker__day--selected {
   background-color: #23CED9;
 }
 
-.datepicker--owner .datepicker__day--selected:hover {
+.datepicker--owner .datepicker__day--selected:hover,
+.datepicker--citizen .datepicker__day--selected:hover {
   background-color: #1ab8c2;
 }
 

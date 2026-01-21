@@ -323,6 +323,10 @@
   transition: all 0.2s ease;
 }
 
+.filter-input:hover {
+  border-color: #23CED9;
+}
+
 .filter-input:focus {
   outline: none;
   border-color: #23CED9;

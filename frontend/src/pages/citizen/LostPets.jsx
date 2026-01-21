@@ -224,7 +224,7 @@ const LostPets = () => {
       }
 
       // Animal type filter (match against the dropdown values: dog, cat, bird, reptile, other)
-      if (filters.animal) {
+      if (filters.animal && filters.animal !== 'all') {
         const petType = (pet.type || '').toLowerCase();
         // Map Greek names to English values
         const typeMatches =
@@ -373,6 +373,7 @@ const LostPets = () => {
 
   // Options for CustomSelect components with icons
   const animalOptions = [
+    { value: 'all', label: 'Επιλέξτε είδος' },
     { value: 'dog', label: 'Σκύλος', icon: <Dog size={16} /> },
     { value: 'cat', label: 'Γάτα', icon: <Cat size={16} /> },
     { value: 'bird', label: 'Πτηνό' },
