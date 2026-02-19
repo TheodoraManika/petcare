@@ -376,9 +376,16 @@ const BookingForm = ({
       return;
     }
 
-    // Validate all bookings
+    // Separate bookings into complete, partial, and empty
+    const completeBookings = [];
+    const isBookingEmpty = (b) => !b.selectedPet && !b.serviceType && !b.selectedSlot;
+
     for (let i = 0; i < bookings.length; i++) {
       const b = bookings[i];
+      // Skip completely empty entries
+      if (isBookingEmpty(b)) continue;
+
+      // Validate partially filled entries
       if (!b.selectedPet) {
         setError(`Παρακαλώ επιλέξτε κατοικίδιο για το ραντεβού ${i + 1}`);
         return;
@@ -397,13 +404,19 @@ const BookingForm = ({
         setError(`Παρακαλώ επιλέξτε ημερομηνία και ώρα για το ραντεβού ${i + 1}`);
         return;
       }
+      completeBookings.push(b);
+    }
+
+    if (completeBookings.length === 0) {
+      setError('Παρακαλώ συμπληρώστε τουλάχιστον ένα ραντεβού');
+      return;
     }
 
     setLoading(true);
 
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const appointmentPromises = bookings.map(async (b) => {
+      const appointmentPromises = completeBookings.map(async (b) => {
         let petName = '';
         let petId = null;
 
@@ -451,7 +464,7 @@ const BookingForm = ({
       // Create notifications for each appointment
       for (let i = 0; i < createdAppointments.length; i++) {
         const apt = createdAppointments[i];
-        const b = bookings[i];
+        const b = completeBookings[i];
 
         let petName = apt.petName;
         if (!petName && b.selectedPet !== 'new') {
@@ -966,7 +979,7 @@ const BookingForm = ({
           <button
             className="booking-form__btn booking-form__btn--primary"
             onClick={handleSubmit}
-            disabled={loading || !selectedVet || bookings.some(b => !b.selectedPet || !b.serviceType || !b.selectedSlot)}
+            disabled={loading || !selectedVet || !bookings.some(b => b.selectedPet && b.serviceType && b.selectedSlot)}
           >
             {loading ? 'Καταχώρηση...' : 'Κλείσιμο Ραντεβού'}
             <Check size={18} />

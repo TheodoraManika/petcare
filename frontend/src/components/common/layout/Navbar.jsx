@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Info, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../Avatar';
 import NotificationPage from '../NotificationPage';
@@ -61,8 +61,7 @@ const Navbar = ({ variant = 'citizen' }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const [isRegisterDropdownOpen, setIsRegisterDropdownOpen] = useState(false);
-  const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
-  const infoRef = useRef(null);
+
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -171,11 +170,7 @@ const Navbar = ({ variant = 'citizen' }) => {
         { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
       ];
 
-  const infoOptions = [
-    { label: 'Για Ιδιοκτήτες', to: ROUTES.owner.information, icon: <Users size={16} /> },
-    { label: 'Για Κτηνίατρους', to: ROUTES.vet.information, icon: <Stethoscope size={16} /> },
-    { label: 'Για Όλους', to: ROUTES.citizen.information, icon: <UserRound size={16} /> },
-  ];
+
 
   return (
     <nav className={`navbar ${isOwner ? 'navbar--owner' : ''}`}>
@@ -232,30 +227,7 @@ const Navbar = ({ variant = 'citizen' }) => {
               </Link>
             ))}
 
-            {/* Information Dropdown */}
-            <div className="navbar__nav-dropdown navbar__info-dropdown" ref={infoRef}>
-              <button
-                className="navbar__nav-link navbar__nav-link--dropdown"
-                aria-haspopup="true"
-              >
-                <Info size={18} />
-                <span>Πληροφορίες</span>
-                <ChevronDown className="navbar__dropdown-chevron" size={16} />
-              </button>
 
-              <div className="navbar__nav-dropdown-menu navbar__info-dropdown-menu">
-                {infoOptions.map((option, index) => (
-                  <Link
-                    key={index}
-                    to={option.to}
-                    className="navbar__nav-dropdown-item navbar__info-option"
-                  >
-                    <span className="navbar__nav-dropdown-icon">{option.icon}</span>
-                    <span>{option.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 

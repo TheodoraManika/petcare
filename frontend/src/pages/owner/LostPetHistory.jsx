@@ -271,6 +271,8 @@ const LostPetHistory = () => {
     fetchDeclarations();
   }, []);
 
+  const currentData = activeTab === 'mine' ? [...declarations, ...lostHistory] : foundByOthers;
+
   // Handle deep linking to specific declaration from notifications
   useEffect(() => {
     if (location.state?.petId && !loading && currentData.length > 0) {
@@ -292,8 +294,6 @@ const LostPetHistory = () => {
     setActiveTab(tab);
     setCurrentPage(1);
   };
-
-  const currentData = activeTab === 'mine' ? [...declarations, ...lostHistory] : foundByOthers;
 
   // Calculate pagination
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
