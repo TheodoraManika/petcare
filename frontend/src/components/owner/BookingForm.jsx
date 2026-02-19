@@ -46,21 +46,33 @@ const BookingForm = ({
     }
   }, [prefilledVet]);
 
-  // Calendar state
+  // Calendar state (shared view but separate selection per booking)
   const [viewMode, setViewMode] = useState('week');
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState(null);
 
-  // Form state
-  const [serviceType, setServiceType] = useState('');
-  const [notes, setNotes] = useState('');
-  const [selectedPet, setSelectedPet] = useState('');
+  // Multi-booking state
+  const [bookings, setBookings] = useState([
+    {
+      id: Date.now(),
+      selectedPet: '',
+      serviceType: '',
+      notes: '',
+      selectedSlot: null,
+      isNewPet: false,
+      newPetName: '',
+      newPetType: ''
+    }
+  ]);
+
   const [userPets, setUserPets] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [bookedSlots, setBookedSlots] = useState([]);
+  const [vetDaysOff, setVetDaysOff] = useState([]);
+
+  // Active booking index for calendar selection
+  const [activeBookingIndex, setActiveBookingIndex] = useState(0);
 
   const serviceOptions = Object.entries(SERVICE_LABELS).map(([value, label]) => ({
     value,
@@ -120,6 +132,13 @@ const BookingForm = ({
         const appointmentsResponse = await fetch(`http://localhost:5000/appointments?vetId=${selectedVet.id}`);
         const appointments = await appointmentsResponse.json();
 
+        // Fetch days off
+        const daysOffResponse = await fetch(`http://localhost:5000/daysOff?vetId=${selectedVet.id}`);
+        if (daysOffResponse.ok) {
+          const daysOffData = await daysOffResponse.json();
+          setVetDaysOff(daysOffData);
+        }
+
         // Extract booked time slots (only pending and confirmed appointments)
         const booked = appointments
           .filter(apt => apt.status === 'pending' || apt.status === 'confirmed')
@@ -138,6 +157,7 @@ const BookingForm = ({
         console.error('Error fetching availability or appointments:', err);
         setVetAvailability([]);
         setBookedSlots([]);
+        setVetDaysOff([]);
       }
     };
     fetchAvailabilityAndBookings();
@@ -164,12 +184,36 @@ const BookingForm = ({
     setSelectedVet(vet);
     setSearchQuery('');
     setShowSearchResults(false);
-    setSelectedSlot(null);
+    setBookings([
+      {
+        id: Date.now(),
+        selectedPet: '',
+        serviceType: '',
+        notes: '',
+        selectedSlot: null,
+        isNewPet: false,
+        newPetName: '',
+        newPetType: ''
+      }
+    ]);
+    setActiveBookingIndex(0);
   };
 
   const handleClearVet = () => {
     setSelectedVet(null);
-    setSelectedSlot(null);
+    setBookings([
+      {
+        id: Date.now(),
+        selectedPet: '',
+        serviceType: '',
+        notes: '',
+        selectedSlot: null,
+        isNewPet: false,
+        newPetName: '',
+        newPetType: ''
+      }
+    ]);
+    setActiveBookingIndex(0);
     setVetAvailability([]);
   };
 
@@ -223,7 +267,8 @@ const BookingForm = ({
   };
 
   // Generate time slots for a day
-  const getTimeSlotsForDay = (date) => {
+  const getTimeSlotsForDay = (date, booking) => {
+    const serviceType = booking?.serviceType;
     // Don't show any slots if no service type is selected
     if (!serviceType) {
       return [];
@@ -243,6 +288,18 @@ const BookingForm = ({
     }
 
     const dateString = date.toISOString().split('T')[0];
+
+    // If this date falls within any "Days Off" range, return no slots
+    const isDayOff = vetDaysOff.some(range => {
+      const start = range.date;
+      const end = range.endDate || range.date; // Use start if no end date
+      return dateString >= start && dateString <= end;
+    });
+
+    if (isDayOff) {
+      return [];
+    }
+
     const slots = [];
 
     // For each availability slot on this day, generate hourly time slots
@@ -275,21 +332,37 @@ const BookingForm = ({
   };
 
   const handleSelectSlot = (slot) => {
-    setSelectedSlot(slot);
+    setBookings(prev => {
+      const newBookings = [...prev];
+      newBookings[activeBookingIndex] = {
+        ...newBookings[activeBookingIndex],
+        selectedSlot: slot
+      };
+      return newBookings;
+    });
   };
 
-  const isSlotSelected = (slot) => {
-    return selectedSlot?.id === slot.id;
+  const isSlotSelected = (slot, bookingIndex) => {
+    return bookings[bookingIndex]?.selectedSlot?.id === slot.id;
   };
 
   const resetForm = () => {
     if (showVetSearch) {
       setSelectedVet(null);
     }
-    setSelectedSlot(null);
-    setServiceType('');
-    setNotes('');
-    setSelectedPet('');
+    setBookings([
+      {
+        id: Date.now(),
+        selectedPet: '',
+        serviceType: '',
+        notes: '',
+        selectedSlot: null,
+        isNewPet: false,
+        newPetName: '',
+        newPetType: ''
+      }
+    ]);
+    setActiveBookingIndex(0);
     setVetAvailability([]);
     setSearchQuery('');
     setError('');
@@ -302,77 +375,113 @@ const BookingForm = ({
       setError('Παρακαλώ επιλέξτε κτηνίατρο');
       return;
     }
-    if (!selectedSlot) {
-      setError('Παρακαλώ επιλέξτε ημερομηνία και ώρα');
-      return;
-    }
-    if (!serviceType) {
-      setError('Παρακαλώ επιλέξτε τύπο υπηρεσίας');
-      return;
-    }
-    if (!selectedPet) {
-      setError('Παρακαλώ επιλέξτε κατοικίδιο');
-      return;
+
+    // Validate all bookings
+    for (let i = 0; i < bookings.length; i++) {
+      const b = bookings[i];
+      if (!b.selectedPet) {
+        setError(`Παρακαλώ επιλέξτε κατοικίδιο για το ραντεβού ${i + 1}`);
+        return;
+      }
+      if (b.selectedPet === 'new') {
+        if (!b.newPetName || !b.newPetType) {
+          setError(`Παρακαλώ συμπληρώστε τα στοιχεία του νέου κατοικιδίου για το ραντεβού ${i + 1}`);
+          return;
+        }
+      }
+      if (!b.serviceType) {
+        setError(`Παρακαλώ επιλέξτε τύπο υπηρεσίας για το ραντεβού ${i + 1}`);
+        return;
+      }
+      if (!b.selectedSlot) {
+        setError(`Παρακαλώ επιλέξτε ημερομηνία και ώρα για το ραντεβού ${i + 1}`);
+        return;
+      }
     }
 
     setLoading(true);
 
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      // Compare both as strings to handle both numeric and string IDs
-      const pet = userPets.find(p => String(p.id) === String(selectedPet));
+      const appointmentPromises = bookings.map(async (b) => {
+        let petName = '';
+        let petId = null;
 
-      const appointmentData = {
-        vetId: selectedVet.id,
-        vetName: `${selectedVet.name} ${selectedVet.lastName || ''}`.trim(),
-        ownerId: currentUser.id,
-        ownerName: currentUser.name || currentUser.username,
-        ownerLastName: currentUser.lastName || '',
-        ownerPhone: currentUser.phone || '',
-        petId: pet?.id,
-        date: selectedSlot.date,
-        time: selectedSlot.displayTime,
-        serviceType,
-        notes,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-      };
+        if (b.selectedPet === 'new') {
+          petName = b.newPetName;
+          // In a real app, you might create the pet record here too
+        } else {
+          const pet = userPets.find(p => String(p.id) === String(b.selectedPet));
+          petName = pet?.name || '';
+          petId = pet?.id;
+        }
 
-      const response = await fetch('http://localhost:5000/appointments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(appointmentData),
+        const appointmentData = {
+          vetId: selectedVet.id,
+          vetName: `${selectedVet.name} ${selectedVet.lastName || ''}`.trim(),
+          ownerId: currentUser.id,
+          ownerName: currentUser.name || currentUser.username,
+          ownerLastName: currentUser.lastName || '',
+          ownerPhone: currentUser.phone || '',
+          petId,
+          petName, // Store pet name for new pets
+          date: b.selectedSlot.date,
+          time: b.selectedSlot.displayTime,
+          serviceType: b.serviceType,
+          notes: b.notes,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+        };
+
+        const response = await fetch('http://localhost:5000/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(appointmentData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create appointment');
+        }
+
+        return await response.json();
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create appointment');
+      const createdAppointments = await Promise.all(appointmentPromises);
+
+      // Create notifications for each appointment
+      for (let i = 0; i < createdAppointments.length; i++) {
+        const apt = createdAppointments[i];
+        const b = bookings[i];
+
+        let petName = apt.petName;
+        if (!petName && b.selectedPet !== 'new') {
+          const pet = userPets.find(p => String(p.id) === String(b.selectedPet));
+          petName = pet?.name || '';
+        }
+
+        const vetNotificationData = {
+          userId: selectedVet.id,
+          userType: 'vet',
+          type: 'new_appointment',
+          title: 'Νέο αίτημα ραντεβού',
+          data: {
+            ownerName: currentUser.name || currentUser.username,
+            appointmentDate: b.selectedSlot.date,
+            appointmentTime: b.selectedSlot.displayTime,
+            petName: petName,
+            appointmentId: apt.id
+          },
+          date: new Date().toISOString(),
+          read: false,
+          createdAt: new Date().toISOString()
+        };
+
+        await fetch('http://localhost:5000/notifications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vetNotificationData)
+        }).catch(err => console.error('Error creating vet notification:', err));
       }
-
-      const createdAppointment = await response.json();
-
-      // Create notification for vet
-      const vetNotificationData = {
-        userId: selectedVet.id,
-        userType: 'vet',
-        type: 'new_appointment',
-        title: 'Νέο αίτημα ραντεβού',
-        data: {
-          ownerName: currentUser.name || currentUser.username,
-          appointmentDate: selectedSlot.date,
-          appointmentTime: selectedSlot.displayTime,
-          petName: pet?.name || '',
-          appointmentId: createdAppointment.id
-        },
-        date: new Date().toISOString(),
-        read: false,
-        createdAt: new Date().toISOString()
-      };
-
-      await fetch('http://localhost:5000/notifications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(vetNotificationData)
-      }).catch(err => console.error('Error creating vet notification:', err));
 
       // Trigger immediate notification badge update
       window.dispatchEvent(new Event('notificationCreated'));
@@ -380,15 +489,15 @@ const BookingForm = ({
       resetForm();
 
       if (onSuccess) {
-        onSuccess('Το ραντεβού σας καταχωρήθηκε με επιτυχία!');
+        onSuccess('Τα ραντεβού σας καταχωρήθηκαν με επιτυχία!');
       } else {
         navigate(ROUTES.owner.appointments, {
-          state: { message: 'Το ραντεβού σας καταχωρήθηκε με επιτυχία!' }
+          state: { message: 'Τα ραντεβού σας καταχωρήθηκαν με επιτυχία!' }
         });
       }
     } catch (err) {
-      console.error('Error creating appointment:', err);
-      setError('Σφάλμα κατά την καταχώρηση του ραντεβού. Παρακαλώ δοκιμάστε ξανά.');
+      console.error('Error creating appointments:', err);
+      setError('Σφάλμα κατά την καταχώρηση των ραντεβού. Παρακαλώ δοκιμάστε ξανά.');
     } finally {
       setLoading(false);
     }
@@ -537,205 +646,311 @@ const BookingForm = ({
           )}
         </div>
 
-        {/* Service Selection Section */}
-        {selectedVet && (
-          <div className="booking-form__section">
-            <h3 className="booking-form__section-title">
-              <FileText size={18} />
-              Επιλογή Υπηρεσίας
-            </h3>
-
-            <div className="booking-form__form-group">
-              <label className="booking-form__label">
-                Τύπος Υπηρεσίας <span className="booking-form__required"> *</span>
-              </label>
-              <CustomSelect
-                value={serviceType}
-                onChange={setServiceType}
-                placeholder="Επιλέξτε υπηρεσία"
-                options={serviceOptions}
-                variant="owner"
-              />
+        {/* Multi-Pet Bookings */}
+        {selectedVet && bookings.map((booking, index) => (
+          <div key={booking.id} className="booking-form__appointment-entry">
+            <div className="booking-form__entry-header">
+              <h4 className="booking-form__entry-title">
+                {bookings.length > 1 ? `Ραντεβού για το ${index + 1}ο Κατοικίδιο` : 'Στοιχεία Ραντεβού'}
+              </h4>
+              {bookings.length > 1 && (
+                <button
+                  className="booking-form__remove-entry-btn"
+                  onClick={() => {
+                    const newBookings = bookings.filter((_, i) => i !== index);
+                    setBookings(newBookings);
+                    if (activeBookingIndex >= newBookings.length) {
+                      setActiveBookingIndex(newBookings.length - 1);
+                    }
+                  }}
+                >
+                  <X size={14} /> Αφαίρεση
+                </button>
+              )}
             </div>
-          </div>
-        )}
 
-        {/* Calendar Section */}
-        {selectedVet && (
-          <div className="booking-form__section">
-            <h3 className="booking-form__section-title">
-              <Calendar size={18} />
-              Επιλογή Ημερομηνίας & Ώρας
-            </h3>
-
-            {!serviceType && (
-              <div className="booking-form__info-message">
-                Παρακαλώ επιλέξτε πρώτα τον τύπο υπηρεσίας για να δείτε τις διαθέσιμες ημερομηνίες και ώρες.
+            {/* Pet selection for this booking */}
+            <div className="booking-form__section">
+              <h3 className="booking-form__section-title">
+                <FileText size={18} />
+                Επιλογή Κατοικιδίου
+              </h3>
+              <div className="booking-form__form-group">
+                <CustomSelect
+                  value={booking.selectedPet}
+                  onChange={(val) => {
+                    setBookings(prev => {
+                      const nb = [...prev];
+                      nb[index] = { ...nb[index], selectedPet: val, isNewPet: val === 'new' };
+                      return nb;
+                    });
+                  }}
+                  placeholder="Επιλέξτε κατοικίδιο"
+                  options={[
+                    ...userPets.map(pet => ({
+                      value: String(pet.id),
+                      label: `${pet.name} (${pet.type})`
+                    })),
+                    { value: 'new', label: '+ Νέο Κατοικίδιο' }
+                  ]}
+                  variant="owner"
+                />
               </div>
-            )}
 
-            {serviceType && (
-              <div className="booking-form__calendar">
-                <div className="booking-form__view-controls">
-                  <div className="booking-form__view-buttons">
-                    <button
-                      className={`booking-form__view-btn ${viewMode === 'day' ? 'booking-form__view-btn--active' : ''}`}
-                      onClick={() => setViewMode('day')}
-                    >
-                      Ημέρα
-                    </button>
-                    <button
-                      className={`booking-form__view-btn ${viewMode === 'week' ? 'booking-form__view-btn--active' : ''}`}
-                      onClick={() => setViewMode('week')}
-                    >
-                      Εβδομάδα
-                    </button>
+              {booking.isNewPet && (
+                <div className="booking-form__new-pet-fields">
+                  <div className="booking-form__form-group">
+                    <label className="booking-form__label">Όνομα Νέου Κατοικιδίου</label>
+                    <input
+                      type="text"
+                      className="booking-form__input"
+                      value={booking.newPetName}
+                      onChange={(e) => {
+                        setBookings(prev => {
+                          const nb = [...prev];
+                          nb[index] = { ...nb[index], newPetName: e.target.value };
+                          return nb;
+                        });
+                      }}
+                      placeholder="π.χ. Rex"
+                    />
                   </div>
-
-                  <div className="booking-form__date-navigation">
-                    <button className="booking-form__nav-btn" onClick={handlePreviousWeek}>
-                      <ChevronLeft size={20} />
-                    </button>
-                    <span className="booking-form__date-range">{formatDateRange()}</span>
-                    <button className="booking-form__nav-btn" onClick={handleNextWeek}>
-                      <ChevronRight size={20} />
-                    </button>
+                  <div className="booking-form__form-group">
+                    <label className="booking-form__label">Είδος</label>
+                    <CustomSelect
+                      value={booking.newPetType}
+                      onChange={(val) => {
+                        setBookings(prev => {
+                          const nb = [...prev];
+                          nb[index] = { ...nb[index], newPetType: val };
+                          return nb;
+                        });
+                      }}
+                      placeholder="Επιλέξτε είδος"
+                      options={[
+                        { value: 'Σκύλος', label: 'Σκύλος' },
+                        { value: 'Γάτα', label: 'Γάτα' },
+                        { value: 'Πτηνό', label: 'Πτηνό' },
+                        { value: 'Άλλο', label: 'Άλλο' }
+                      ]}
+                      variant="owner"
+                    />
                   </div>
                 </div>
+              )}
+            </div>
 
-                {/* Week View */}
-                {viewMode === 'week' && (
-                  <div className="booking-form__week-calendar">
-                    {getWeekDays().map((day, index) => {
-                      const slots = getTimeSlotsForDay(day);
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      const currentDay = new Date(day);
-                      currentDay.setHours(0, 0, 0, 0);
-
-                      const isToday = currentDay.getTime() === today.getTime();
-                      const isPast = currentDay < today;
-
-                      return (
-                        <div key={index} className="booking-form__day-column">
-                          <div className={`booking-form__day-header ${isToday ? 'booking-form__day-header--today' : ''} ${isPast ? 'booking-form__day-header--past' : ''}`}>
-                            <div className="booking-form__day-name">{getDayName(day)}</div>
-                            <div className="booking-form__day-number">{day.getDate()}</div>
-                          </div>
-
-                          <div className="booking-form__day-slots">
-                            {slots.length === 0 ? (
-                              <div className="booking-form__no-slots">
-                                Μη διαθέσιμος
-                              </div>
-                            ) : isPast ? (
-                              <div className="booking-form__no-slots">
-                                Παρελθούσα ημέρα
-                              </div>
-                            ) : (
-                              slots.map(slot => (
-                                <button
-                                  key={slot.id}
-                                  className={`booking-form__slot ${isSlotSelected(slot) ? 'booking-form__slot--selected' : ''}`}
-                                  onClick={() => handleSelectSlot(slot)}
-                                >
-                                  <Clock size={12} />
-                                  {slot.displayTime}
-                                </button>
-                              ))
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Day View */}
-                {viewMode === 'day' && (
-                  <div className="booking-form__day-view">
-                    <h4 className="booking-form__day-title">
-                      Διαθέσιμες ώρες για {selectedDate.getDate()}/{selectedDate.getMonth() + 1}/{selectedDate.getFullYear()}
-                    </h4>
-                    <div className="booking-form__day-slots-grid">
-                      {(() => {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const currentDay = new Date(selectedDate);
-                        currentDay.setHours(0, 0, 0, 0);
-                        const isPast = currentDay < today;
-
-                        if (isPast) {
-                          return <div className="booking-form__no-slots">Παρελθούσα ημέρα</div>;
-                        }
-
-                        const slots = getTimeSlotsForDay(selectedDate);
-                        if (slots.length === 0) {
-                          return <div className="booking-form__no-slots">Ο κτηνίατρος δεν είναι διαθέσιμος αυτή την ημέρα</div>;
-                        }
-
-                        return slots.map(slot => (
-                          <button
-                            key={slot.id}
-                            className={`booking-form__slot booking-form__slot--large ${isSlotSelected(slot) ? 'booking-form__slot--selected' : ''}`}
-                            onClick={() => handleSelectSlot(slot)}
-                          >
-                            <Clock size={16} />
-                            {slot.displayTime}
-                            {isSlotSelected(slot) && <Check size={16} className="booking-form__slot-check" />}
-                          </button>
-                        ));
-                      })()}
-                    </div>
-                  </div>
-                )}
-
-                {selectedSlot && (
-                  <div className="booking-form__selected-slot-info">
-                    <Check size={18} />
-                    Επιλεγμένη ώρα: <strong>{selectedSlot.displayTime}</strong> στις <strong>{new Date(selectedSlot.date).toLocaleDateString('el-GR')}</strong>
-                  </div>
-                )}
+            {/* Service selection for this booking */}
+            <div className="booking-form__section">
+              <h3 className="booking-form__section-title">
+                <FileText size={18} />
+                Επιλογή Υπηρεσίας
+              </h3>
+              <div className="booking-form__form-group">
+                <CustomSelect
+                  value={booking.serviceType}
+                  onChange={(val) => {
+                    setBookings(prev => {
+                      const nb = [...prev];
+                      nb[index] = { ...nb[index], serviceType: val, selectedSlot: null };
+                      return nb;
+                    });
+                  }}
+                  placeholder="Επιλέξτε υπηρεσία"
+                  options={serviceOptions}
+                  variant="owner"
+                />
               </div>
-            )}
-          </div>
-        )}
+            </div>
 
-        {/* Service & Notes Section */}
+            {/* Calendar selection for this booking */}
+            <div className="booking-form__section">
+              <h3 className="booking-form__section-title">
+                <Calendar size={18} />
+                Επιλογή Ημερομηνίας & Ώρας
+              </h3>
+
+              {!booking.serviceType && (
+                <div className="booking-form__info-message">
+                  Παρακαλώ επιλέξτε πρώτα τον τύπο υπηρεσίας για να δείτε τις διαθέσιμες ημερομηνίες και ώρες.
+                </div>
+              )}
+
+              {booking.serviceType && (
+                <div className="booking-form__calendar-wrapper" onClick={() => setActiveBookingIndex(index)}>
+                  <div className={`booking-form__calendar ${activeBookingIndex === index ? 'booking-form__calendar--active' : ''}`}>
+                    <div className="booking-form__view-controls">
+                      <div className="booking-form__view-buttons">
+                        <button
+                          className={`booking-form__view-btn ${viewMode === 'day' ? 'booking-form__view-btn--active' : ''}`}
+                          onClick={() => setViewMode('day')}
+                        >
+                          Ημέρα
+                        </button>
+                        <button
+                          className={`booking-form__view-btn ${viewMode === 'week' ? 'booking-form__view-btn--active' : ''}`}
+                          onClick={() => setViewMode('week')}
+                        >
+                          Εβδομάδα
+                        </button>
+                      </div>
+
+                      <div className="booking-form__date-navigation">
+                        <button className="booking-form__nav-btn" onClick={handlePreviousWeek}>
+                          <ChevronLeft size={20} />
+                        </button>
+                        <span className="booking-form__date-range">{formatDateRange()}</span>
+                        <button className="booking-form__nav-btn" onClick={handleNextWeek}>
+                          <ChevronRight size={20} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Week View */}
+                    {viewMode === 'week' && (
+                      <div className="booking-form__week-calendar">
+                        {getWeekDays().map((day, dayIdx) => {
+                          const slots = getTimeSlotsForDay(day, booking);
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          const currentDay = new Date(day);
+                          currentDay.setHours(0, 0, 0, 0);
+
+                          const isToday = currentDay.getTime() === today.getTime();
+                          const isPast = currentDay < today;
+
+                          return (
+                            <div key={dayIdx} className="booking-form__day-column">
+                              <div className={`booking-form__day-header ${isToday ? 'booking-form__day-header--today' : ''} ${isPast ? 'booking-form__day-header--past' : ''}`}>
+                                <div className="booking-form__day-name">{getDayName(day)}</div>
+                                <div className="booking-form__day-number">{day.getDate()}</div>
+                              </div>
+
+                              <div className="booking-form__day-slots">
+                                {slots.length === 0 ? (
+                                  <div className="booking-form__no-slots">
+                                    Μη διαθέσιμος
+                                  </div>
+                                ) : isPast ? (
+                                  <div className="booking-form__no-slots">
+                                    Παρελθούσα ημέρα
+                                  </div>
+                                ) : (
+                                  slots.map(slot => (
+                                    <button
+                                      key={slot.id}
+                                      className={`booking-form__slot ${isSlotSelected(slot, index) ? 'booking-form__slot--selected' : ''}`}
+                                      onClick={() => {
+                                        setActiveBookingIndex(index);
+                                        handleSelectSlot(slot);
+                                      }}
+                                    >
+                                      <Clock size={12} />
+                                      {slot.displayTime}
+                                    </button>
+                                  ))
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Day View */}
+                    {viewMode === 'day' && (
+                      <div className="booking-form__day-view">
+                        <h4 className="booking-form__day-title">
+                          Διαθέσιμες ώρες για {selectedDate.getDate()}/{selectedDate.getMonth() + 1}/{selectedDate.getFullYear()}
+                        </h4>
+                        <div className="booking-form__day-slots-grid">
+                          {(() => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            const currentDay = new Date(selectedDate);
+                            currentDay.setHours(0, 0, 0, 0);
+                            const isPast = currentDay < today;
+
+                            if (isPast) {
+                              return <div className="booking-form__no-slots">Παρελθούσα ημέρα</div>;
+                            }
+
+                            const slots = getTimeSlotsForDay(selectedDate, booking);
+                            if (slots.length === 0) {
+                              return <div className="booking-form__no-slots">Ο κτηνίατρος δεν είναι διαθέσιμος αυτή την ημέρα</div>;
+                            }
+
+                            return slots.map(slot => (
+                              <button
+                                key={slot.id}
+                                className={`booking-form__slot booking-form__slot--large ${isSlotSelected(slot, index) ? 'booking-form__slot--selected' : ''}`}
+                                onClick={() => {
+                                  setActiveBookingIndex(index);
+                                  handleSelectSlot(slot);
+                                }}
+                              >
+                                <Clock size={16} />
+                                {slot.displayTime}
+                                {isSlotSelected(slot, index) && <Check size={16} className="booking-form__slot-check" />}
+                              </button>
+                            ));
+                          })()}
+                        </div>
+                      </div>
+                    )}
+
+                    {booking.selectedSlot && (
+                      <div className="booking-form__selected-slot-info">
+                        <Check size={18} />
+                        Επιλεγμένη ώρα: <strong>{booking.selectedSlot.displayTime}</strong> στις <strong>{new Date(booking.selectedSlot.date).toLocaleDateString('el-GR')}</strong>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Notes Section for this booking */}
+            <div className="booking-form__section">
+              <h3 className="booking-form__section-title">
+                <FileText size={18} />
+                Σημειώσεις
+              </h3>
+              <div className="booking-form__form-group">
+                <textarea
+                  className="booking-form__textarea"
+                  value={booking.notes}
+                  onChange={(e) => {
+                    setBookings(prev => {
+                      const nb = [...prev];
+                      nb[index] = { ...nb[index], notes: e.target.value };
+                      return nb;
+                    });
+                  }}
+                  placeholder="Περιγράψτε το λόγο της επίσκεψης ή άλλες σημειώσεις..."
+                  rows={3}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+
         {selectedVet && (
-          <div className="booking-form__section">
-            <h3 className="booking-form__section-title">
-              <FileText size={18} />
-              Λεπτομέρειες Ραντεβού
-            </h3>
-
-            <div className="booking-form__form-group">
-              <label className="booking-form__label">
-                Κατοικίδιο <span className="booking-form__required"> *</span>
-              </label>
-              <CustomSelect
-                value={selectedPet}
-                onChange={setSelectedPet}
-                placeholder="Επιλέξτε κατοικίδιο"
-                options={userPets.map(pet => ({
-                  value: String(pet.id),
-                  label: `${pet.name} (${pet.type})`
-                }))}
-                variant="owner"
-              />
-            </div>
-
-            <div className="booking-form__form-group">
-              <label className="booking-form__label">Σημειώσεις (προαιρετικό)</label>
-              <textarea
-                className="booking-form__textarea"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Περιγράψτε το λόγο της επίσκεψης ή άλλες σημειώσεις..."
-                rows={4}
-              />
-            </div>
-          </div>
+          <button
+            className="booking-form__add-pet-btn"
+            onClick={() => setBookings([...bookings, {
+              id: Date.now(),
+              selectedPet: '',
+              serviceType: '',
+              notes: '',
+              selectedSlot: null,
+              isNewPet: false,
+              newPetName: '',
+              newPetType: ''
+            }])}
+          >
+            <Check size={16} /> Προσθήκη άλλου κατοικιδίου
+          </button>
         )}
 
         {/* Actions */}
@@ -751,7 +966,7 @@ const BookingForm = ({
           <button
             className="booking-form__btn booking-form__btn--primary"
             onClick={handleSubmit}
-            disabled={loading || !selectedVet || !selectedSlot || !serviceType || !selectedPet}
+            disabled={loading || !selectedVet || bookings.some(b => !b.selectedPet || !b.serviceType || !b.selectedSlot)}
           >
             {loading ? 'Καταχώρηση...' : 'Κλείσιμο Ραντεβού'}
             <Check size={18} />

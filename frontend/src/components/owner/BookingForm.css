@@ -117,6 +117,119 @@
   border-radius: 12px;
 }
 
+/* Multi-Pet Appointment Entries */
+.booking-form__appointment-entry {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.booking-form__entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.booking-form__entry-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.booking-form__remove-entry-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.booking-form__remove-entry-btn:hover {
+  background: #fee2e2;
+}
+
+.booking-form__new-pet-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+  margin-top: 8px;
+}
+
+.booking-form__input {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.booking-form__input:focus {
+  outline: none;
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
+}
+
+.booking-form__calendar-wrapper {
+  cursor: pointer;
+}
+
+.booking-form__calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.booking-form__calendar--active {
+  border-color: #23CED9;
+  background: #f0fdfe;
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.08);
+}
+
+.booking-form__add-pet-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  background: #fff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.booking-form__add-pet-btn:hover {
+  border-color: #23CED9;
+  color: #23CED9;
+  background: #f0fdfe;
+}
+
 .booking-form__section-title {
   display: flex;
   align-items: center;

@@ -80,7 +80,7 @@ const SearchResultsList = ({
               {actionButtonText}
             </button>
           )}
-          {showCloseAppointment && currentUser?.userType === 'owner' && (
+          {showCloseAppointment && (
             <button
               className="result-close-appointment-btn"
               onClick={() => onCloseAppointment(item)}

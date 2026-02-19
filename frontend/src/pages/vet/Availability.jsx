@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Trash2, Plus } from 'lucide-react';
+import { Calendar, Clock, Trash2, Plus, CalendarOff } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
+import DatePicker from '../../components/common/forms/DatePicker';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './Availability.css';
+
+// Helper to parse DD/MM/YYYY dates that new Date() might fail on
+const parseDateString = (dateStr) => {
+  if (!dateStr) return null;
+  const parts = dateStr.split('/');
+  if (parts.length !== 3) return new Date(dateStr); // Fallback if not DD/MM/YYYY
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1; // 0-indexed months
+  const year = parseInt(parts[2], 10);
+  return new Date(year, month, day);
+};
 
 const Availability = () => {
   const [availabilityData, setAvailabilityData] = useState({
@@ -18,6 +30,10 @@ const Availability = () => {
     sunday: []
   });
 
+  const [daysOffData, setDaysOffData] = useState([]);
+  const [newDayOff, setNewDayOff] = useState('');
+  const [newDayOffEnd, setNewDayOffEnd] = useState('');
+
   const [newSlot, setNewSlot] = useState({
     day: '',
     startTime: '',
@@ -28,6 +44,8 @@ const Availability = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [slotToDelete, setSlotToDelete] = useState({ day: '', index: -1 });
+  const [showDeleteDayOffModal, setShowDeleteDayOffModal] = useState(false);
+  const [dayOffToDelete, setDayOffToDelete] = useState(null);
   const [notification, setNotification] = useState(null);
 
   const dayLabels = {
@@ -92,7 +110,7 @@ const Availability = () => {
         }
 
         const data = await response.json();
-        
+
         // Transform flat array to nested structure by day
         const groupedByDay = {
           monday: [],
@@ -122,11 +140,96 @@ const Availability = () => {
     };
 
     loadAvailability();
+    loadDaysOff();
   }, []);
+
+  const loadDaysOff = async () => {
+    try {
+      const user = getCurrentUser();
+      if (!user) return;
+
+      const response = await fetch(`http://localhost:5000/daysOff?vetId=${user.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        // Sort by date ascending
+        setDaysOffData(data.sort((a, b) => parseDateString(a.date) - parseDateString(b.date)));
+      }
+    } catch (error) {
+      console.error('Error loading days off:', error);
+    }
+  };
+
+  const handleAddDayOff = async () => {
+    if (!newDayOff) return;
+
+    const user = getCurrentUser();
+    if (!user) return;
+
+    // Check if end date is before start date
+    if (newDayOffEnd && parseDateString(newDayOffEnd) < parseDateString(newDayOff)) {
+      setErrorMessage('Η ημερομηνία λήξης δεν μπορεί να είναι πριν την ημερομηνία έναρξης');
+      return;
+    }
+
+    // Check if duplicate (only for single dates for now, could be improved)
+    if (!newDayOffEnd && daysOffData.some(d => d.date === newDayOff && !d.endDate)) {
+      setErrorMessage('Αυτή η ημερομηνία έχει ήδη προστεθεί');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/daysOff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vetId: user.id,
+          date: newDayOff,
+          endDate: newDayOffEnd || null,
+          createdAt: new Date().toISOString()
+        })
+      });
+
+      if (response.ok) {
+        const created = await response.json();
+        setDaysOffData(prev => [...prev, created].sort((a, b) => parseDateString(a.date) - parseDateString(b.date)));
+        setNewDayOff('');
+        setNewDayOffEnd('');
+        setNotification('success-dayoff');
+        setTimeout(() => setNotification(null), 5000);
+      }
+    } catch (error) {
+      console.error('Error adding day off:', error);
+    }
+  };
+
+  const handleDeleteDayOff = (dayOff) => {
+    setDayOffToDelete(dayOff);
+    setShowDeleteDayOffModal(true);
+  };
+
+  const handleConfirmDeleteDayOff = async () => {
+    if (!dayOffToDelete) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/daysOff/${dayOffToDelete.id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setDaysOffData(prev => prev.filter(d => d.id !== dayOffToDelete.id));
+        setShowDeleteDayOffModal(false);
+        setDayOffToDelete(null);
+        setNotification('deleted-dayoff');
+        setTimeout(() => setNotification(null), 5000);
+      }
+    } catch (error) {
+      console.error('Error deleting day off:', error);
+    }
+  };
 
   const handleAddSlot = async () => {
     const user = getCurrentUser();
-    
+
     if (!user) {
       setErrorMessage('Παρακαλώ συνδεθείτε πρώτα');
       return;
@@ -198,10 +301,10 @@ const Availability = () => {
         endTime: '',
         status: ''
       });
-      
+
       // Show success notification
       setNotification('success');
-      
+
       // Auto-hide notification after 5 seconds
       setTimeout(() => {
         setNotification(null);
@@ -227,7 +330,7 @@ const Availability = () => {
       }
 
       const slot = availabilityData[slotToDelete.day][slotToDelete.index];
-      
+
       // If slot has an ID, delete from database
       if (slot.id) {
         const response = await fetch(`http://localhost:5000/availability/${slot.id}`, {
@@ -245,14 +348,14 @@ const Availability = () => {
         ...prev,
         [slotToDelete.day]: prev[slotToDelete.day].filter((_, i) => i !== slotToDelete.index)
       }));
-      
+
       // Close modal and reset
       setShowDeleteModal(false);
       setSlotToDelete({ day: '', index: -1 });
-      
+
       // Show notification
       setNotification('deleted');
-      
+
       // Auto-hide notification after 5 seconds
       setTimeout(() => {
         setNotification(null);
@@ -297,7 +400,7 @@ const Availability = () => {
         {/* Add New Slot Form */}
         <div className="availability__add-form">
           <h2 className="availability__form-title">Προσθήκη Διαθεσιμότητας Ραντεβού</h2>
-          
+
           <div className="availability__form-row">
             <div className="availability__form-field">
               <label className="availability__form-label">Ημέρα</label>
@@ -398,7 +501,7 @@ const Availability = () => {
             </div>
           )}
 
-          <button 
+          <button
             className="availability__add-btn"
             onClick={handleAddSlot}
             disabled={!newSlot.day || !newSlot.startTime || !newSlot.endTime || !newSlot.status}
@@ -411,7 +514,7 @@ const Availability = () => {
         {/* Weekly Schedule */}
         <div className="availability__schedule">
           <h2 className="availability__schedule-title">Εβδομαδιαίο Πρόγραμμα</h2>
-          
+
           <div className="availability__grid">
             {Object.keys(dayLabels).map(day => {
               const slots = availabilityData[day];
@@ -419,8 +522,7 @@ const Availability = () => {
               const sortedSlots = [...slots].sort((a, b) => {
                 return a.start.localeCompare(b.start);
               });
-              const count = getSlotCount(day);
-              
+
               return (
                 <div key={day} className="availability__day-card">
                   <div className="availability__day-header">
@@ -448,7 +550,7 @@ const Availability = () => {
                             <span>{slot.start} - {slot.end}</span>
                           </div>
                           <div className="availability__slot-actions">
-                            <span 
+                            <span
                               className="availability__slot-status"
                               style={{ backgroundColor: statusColors[slot.status] }}
                             >
@@ -470,7 +572,120 @@ const Availability = () => {
             })}
           </div>
         </div>
+
+        {/* Days Off Section */}
+        <div className="availability__days-off">
+          <h2 className="availability__schedule-title">Εξαιρέσεις (Ρεπό / Άδειες)</h2>
+          <div className="availability__days-off-form">
+            <div className="availability__form-row">
+              <div className="availability__form-field">
+                <label className="availability__form-label">Από</label>
+                <DatePicker
+                  name="dayOff"
+                  value={newDayOff}
+                  onChange={(e) => {
+                    setNewDayOff(e.target.value);
+                    setErrorMessage('');
+                  }}
+                  variant="vet"
+                  minDate={new Date()}
+                />
+              </div>
+              <div className="availability__form-field">
+                <label className="availability__form-label">Έως (Προαιρετικό)</label>
+                <DatePicker
+                  name="dayOffEnd"
+                  value={newDayOffEnd}
+                  onChange={(e) => {
+                    setNewDayOffEnd(e.target.value);
+                    setErrorMessage('');
+                  }}
+                  variant="vet"
+                  minDate={newDayOff ? new Date(newDayOff) : new Date()}
+                />
+              </div>
+            </div>
+            <button
+              className="availability__add-day-off-btn availability__add-day-off-btn--orange"
+              onClick={handleAddDayOff}
+              disabled={!newDayOff}
+            >
+              <Plus size={18} />
+              Προσθήκη Εξαίρεσης
+            </button>
+          </div>
+
+          {/* Live Preview */}
+          {newDayOff && (
+            <div className="availability__day-off-preview availability__day-off-item--orange" style={{ marginBottom: '20px', borderStyle: 'dashed' }}>
+              <div className="availability__day-off-info">
+                <CalendarOff size={18} />
+                <span style={{ fontWeight: 600 }}>
+                  Προεπισκόπηση: {parseDateString(newDayOff).toLocaleDateString('el-GR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {newDayOffEnd && ` - ${parseDateString(newDayOffEnd).toLocaleDateString('el-GR', { day: 'numeric', month: 'long', year: 'numeric' })}`}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div className="availability__days-off-list">
+            {daysOffData.length === 0 ? (
+              <div className="availability__empty">
+                <p className="availability__empty-text">Δεν έχουν οριστεί εξαιρέσεις</p>
+              </div>
+            ) : (
+              <div className="availability__day-off-items">
+                {daysOffData.map((dayOff) => {
+                  const startDate = parseDateString(dayOff.date);
+                  const endDate = dayOff.endDate ? parseDateString(dayOff.endDate) : null;
+
+                  const isValidStart = startDate && !isNaN(startDate.getTime());
+                  const isValidEnd = endDate && !isNaN(endDate.getTime());
+
+                  const formatDate = (date) => {
+                    return date.toLocaleDateString('el-GR', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    });
+                  };
+
+                  return (
+                    <div key={dayOff.id} className="availability__day-off-item availability__day-off-item--orange">
+                      <div className="availability__day-off-info">
+                        <CalendarOff size={18} />
+                        <span>
+                          {!isValidStart ? 'Μη έγκυρη ημερομηνία' : (
+                            isValidEnd ? `${formatDate(startDate)} - ${formatDate(endDate)}` : formatDate(startDate)
+                          )}
+                        </span>
+                      </div>
+                      <button
+                        className="availability__slot-delete availability__slot-delete--orange"
+                        onClick={() => handleDeleteDayOff(dayOff)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Days Off Delete Modal */}
+      <ConfirmModal
+        isOpen={showDeleteDayOffModal}
+        title="Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την εξαίρεση;"
+        description="Ο κτηνίατρος θα ξαναγίνει διαθέσιμος βάσει του εβδομαδιαίου προγράμματος."
+        cancelText="Όχι, επιστροφή"
+        confirmText="Ναι, διαγραφή"
+        onCancel={() => setShowDeleteDayOffModal(false)}
+        onConfirm={handleConfirmDeleteDayOff}
+        isDanger={true}
+      />
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
@@ -488,9 +703,15 @@ const Availability = () => {
       <Notification
         isVisible={notification !== null}
         message={
-          notification === 'success' 
-            ? 'Η ώρα προστέθηκε επιτυχώς!' 
-            : 'Η διαθέσιμη ώρα ραντεβού διαγράφτηκε με επιτυχία!'
+          notification === 'success'
+            ? 'Η ώρα προστέθηκε επιτυχώς!'
+            : notification === 'success-dayoff'
+              ? 'Η εξαίρεση προστέθηκε επιτυχώς!'
+              : notification === 'deleted'
+                ? 'Η διαθέσιμη ώρα ραντεβού διαγράφτηκε με επιτυχία!'
+                : notification === 'deleted-dayoff'
+                  ? 'Η εξαίρεση διαγράφτηκε με επιτυχία!'
+                  : 'Ενημέρωση διαθεσιμότητας'
         }
         type={notification === 'success' ? 'success' : 'error'}
       />

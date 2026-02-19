@@ -412,9 +412,13 @@ const VetSearchMap = () => {
   };
 
   const handleCloseAppointment = (vet) => {
-    // Show booking form inline instead of navigating away
-    setBookingVet(vet);
-    setShowBookingForm(true);
+    if (currentUser?.userType === 'owner') {
+      // Show booking form inline instead of navigating away
+      setBookingVet(vet);
+      setShowBookingForm(true);
+    } else {
+      navigate(ROUTES.login, { state: { from: location.pathname } });
+    }
   };
 
   const handleBookingClose = () => {
@@ -492,7 +496,7 @@ const VetSearchMap = () => {
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
       {(!currentUser || currentUser.userType !== 'owner') && (
         <div className="appointment-alert">
-          Για να κλείσετε ραντεβού, μπορείτε να κάνετε <Link to={ROUTES.login}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
+          Για να κλείσετε ραντεβού, μπορείτε να κάνετε <Link to={ROUTES.login} state={{ from: location.pathname }}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
         </div>
       )}
       <div className="vet-search-map-page">

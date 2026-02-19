@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Bell, Check, XCircle, Calendar, PawPrint, Clock } from 'lucide-react';
+import { ROUTES } from '../../utils/constants';
 import './NotificationPage.css';
 
 const NotificationPage = ({ isOpen, onClose, userType }) => {
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState('all'); // all, unread, read
 
@@ -166,6 +169,54 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  const handleNotificationClick = async (notif) => {
+    // Mark as read if unread
+    if (!notif.read) {
+      await markAsRead(notif.id);
+    }
+
+    // Determine navigation path and state
+    let path = '';
+    let state = {};
+
+    switch (notif.type) {
+      case 'appointment_approved':
+        path = ROUTES.owner.appointments;
+        state = { activeTab: 'active', appointmentId: notif.data?.appointmentId };
+        break;
+      case 'appointment_cancelled':
+        path = ROUTES.owner.appointments;
+        state = { activeTab: 'history', appointmentId: notif.data?.appointmentId };
+        break;
+      case 'found_pet':
+        // If we have a relatedId (declaration id in pets/Found_pet), we can try to go to the detail page
+        if (notif.relatedId || notif.data?.petId) {
+          path = `${ROUTES.owner.lostHistory}/${notif.relatedId || notif.data.petId}`;
+        } else {
+          path = ROUTES.owner.lostHistory;
+          state = { activeTab: 'others' };
+        }
+        break;
+      case 'lost_pet':
+        path = ROUTES.owner.lostHistory;
+        state = { activeTab: 'mine', petId: notif.data?.petId };
+        break;
+      case 'new_appointment':
+      case 'appointment_cancelled_by_owner':
+        path = ROUTES.vet.appointments;
+        state = { activeTab: 'calendar', appointmentId: notif.data?.appointmentId };
+        break;
+      default:
+        // Default behavior: just stay on page or go to dashboard
+        break;
+    }
+
+    if (path) {
+      navigate(path, { state });
+      onClose();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -228,7 +279,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
               <div
                 key={notification.id}
                 className={`notification-page__item ${!notification.read ? 'notification-page__item--unread' : ''}`}
-                onClick={() => !notification.read && markAsRead(notification.id)}
+                onClick={() => handleNotificationClick(notification)}
               >
                 <div
                   className="notification-page__icon"

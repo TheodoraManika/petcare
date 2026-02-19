@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import PageLayout from '../../../components/common/layout/PageLayout';
@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,8 +73,10 @@ const LoginPage = () => {
         // Dispatch custom event to notify auth change
         window.dispatchEvent(new Event('loginStatusChanged'));
 
-        // Redirect based on user type
-        if (user.userType === 'vet') {
+        // Redirect based on provided 'from' state or user type
+        if (location.state?.from) {
+          navigate(location.state.from);
+        } else if (user.userType === 'vet') {
           navigate(ROUTES.vet.dashboard);
         } else {
           navigate(ROUTES.owner.dashboard);
@@ -94,7 +97,7 @@ const LoginPage = () => {
           <ArrowLeft size={20} />
           <span>Πίσω</span>
         </Link>
-        
+
         <div className="login-container">
           {/* Logo and Title Section */}
           <div className="login-header">

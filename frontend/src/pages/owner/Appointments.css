@@ -678,6 +678,13 @@
   transform: translateY(-2px);
 }
 
+.owner-appointments__card--highlighted {
+  border-color: #23CED9 !important;
+  box-shadow: 0 0 0 4px rgba(35, 206, 217, 0.2);
+  transform: translateY(-2px) scale(1.02) !important;
+  transition: all 0.5s ease;
+}
+
 .owner-appointments__card-header {
   display: flex;
   justify-content: space-between;

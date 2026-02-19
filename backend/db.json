@@ -1388,7 +1388,7 @@
       "time": "11:00 - 12:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T17:45:24.331Z"
     },
     {
@@ -1484,7 +1484,7 @@
       "time": "15:00 - 16:00",
       "serviceType": "cardiology",
       "notes": "",
-      "status": "pending",
+      "status": "completed",
       "createdAt": "2026-01-20T18:07:01.678Z"
     },
     {
@@ -1596,7 +1596,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:52:41.471Z"
     },
     {
@@ -1612,7 +1612,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "vaccination",
       "notes": "",
-      "status": "pending",
+      "status": "completed",
       "createdAt": "2026-01-20T18:52:56.197Z"
     },
     {
@@ -1644,7 +1644,7 @@
       "time": "13:00 - 14:00",
       "serviceType": "cardiology",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:53:29.413Z"
     },
     {
@@ -1660,7 +1660,7 @@
       "time": "09:00 - 10:00",
       "serviceType": "dental",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:53:41.688Z"
     },
     {
@@ -1676,7 +1676,7 @@
       "time": "13:00 - 14:00",
       "serviceType": "dermatology",
       "notes": "",
-      "status": "pending",
+      "status": "completed",
       "createdAt": "2026-01-20T18:53:59.372Z"
     }
   ],
@@ -1885,7 +1885,7 @@
         "appointmentId": "aeef"
       },
       "date": "2026-01-20T18:09:54.988Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:09:54.988Z"
     },
     {
@@ -1919,7 +1919,7 @@
         "appointmentId": "1c97"
       },
       "date": "2026-01-20T18:52:41.484Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:52:41.484Z"
     },
     {
@@ -2789,5 +2789,28 @@
   ],
   "lost_history": [],
   "Found_pet": [],
-  "lostPets": []
+  "lostPets": [],
+  "daysOff": [
+    {
+      "id": "625f",
+      "vetId": "1",
+      "date": "12/02/2026",
+      "endDate": "17/02/2026",
+      "createdAt": "2026-02-12T17:46:15.863Z"
+    },
+    {
+      "id": "c8d6",
+      "vetId": "1",
+      "date": "05/02/2026",
+      "endDate": "12/02/2026",
+      "createdAt": "2026-02-13T07:24:23.410Z"
+    },
+    {
+      "id": "f1b7",
+      "vetId": "1",
+      "date": "12/02/2026",
+      "endDate": "21/02/2026",
+      "createdAt": "2026-02-19T09:57:05.635Z"
+    }
+  ]
 }

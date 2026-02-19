@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, UserRound, PawPrint, Stethoscope } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
@@ -10,7 +10,8 @@ import './Appointments.css';
 
 const Appointments = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' or 'list'
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'calendar'); // 'calendar' or 'list'
   const [viewMode, setViewMode] = useState('week'); // 'day' or 'week'
   const [selectedDate, setSelectedDate] = useState(new Date()); // Current date
   const [filterStatus, setFilterStatus] = useState('all');
@@ -33,7 +34,7 @@ const Appointments = () => {
         const response = await fetch(`http://localhost:5000/appointments?vetId=${currentUser.id}`);
         if (!response.ok) throw new Error('Failed to fetch appointments');
         const appointmentsData = await response.json();
-        
+
         // Enrich appointments with pet and owner details
         const enrichedAppointments = await Promise.all(
           appointmentsData.map(async (apt) => {
@@ -41,7 +42,7 @@ const Appointments = () => {
               let petName = apt.petName;
               let species = apt.petSpecies;
               let breed = apt.petBreed;
-              
+
               // Fetch pet details from pets collection using petId
               if (apt.petId) {
                 try {
@@ -56,12 +57,12 @@ const Appointments = () => {
                   console.error('Error fetching pet details:', err);
                 }
               }
-              
+
               // Fetch owner details if not already in appointment
               let ownerName = apt.ownerName;
               let ownerLastName = apt.ownerLastName;
               let phone = apt.ownerPhone || apt.phone;
-              
+
               if (!ownerName || !phone) {
                 try {
                   const ownerRes = await fetch(`http://localhost:5000/users/${apt.ownerId}`);
@@ -75,7 +76,7 @@ const Appointments = () => {
                   console.error('Error fetching owner details:', err);
                 }
               }
-              
+
               return {
                 ...apt,
                 petName: petName || '-',
@@ -98,7 +99,7 @@ const Appointments = () => {
             }
           })
         );
-        
+
         setAppointments(enrichedAppointments);
         setError(null);
       } catch (err) {
@@ -112,11 +113,21 @@ const Appointments = () => {
     fetchAppointments();
   }, []);
 
+  // Handle deep linking to specific appointment from notifications
+  useEffect(() => {
+    if (location.state?.appointmentId && !loading && appointments.length > 0) {
+      const apt = appointments.find(a => String(a.id) === String(location.state.appointmentId));
+      if (apt) {
+        setSelectedAppointment(apt);
+      }
+    }
+  }, [location.state, loading, appointments]);
+
   // Auto-update confirmed appointments to completed if their time has passed
   useEffect(() => {
     const updatePastAppointments = async () => {
       const now = new Date();
-      
+
       setAppointments(prevAppointments => {
         const updated = prevAppointments.map(apt => {
           // Only update confirmed or pending appointments that aren't already completed/cancelled
@@ -190,26 +201,26 @@ const Appointments = () => {
 
   const filterAppointments = () => {
     let filtered = filterStatus === 'all' ? appointments : appointments.filter(apt => apt.status === filterStatus);
-    
+
     // Sort by date and time (earliest first)
     return filtered.sort((a, b) => {
       // Parse dates (format: DD/MM/YYYY)
       const [dayA, monthA, yearA] = a.date.split('/').map(Number);
       const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-      
+
       const dateA = new Date(yearA, monthA - 1, dayA);
       const dateB = new Date(yearB, monthB - 1, dayB);
-      
-      // Compare dates
+
+      // Compare dates (descending)
       if (dateA.getTime() !== dateB.getTime()) {
-        return dateA - dateB;
+        return dateB - dateA;
       }
-      
-      // If dates are the same, compare by start time
+
+      // If dates are the same, compare by start time (descending)
       const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
       const timeB = b.time.split(' - ')[0];
-      
-      return timeA.localeCompare(timeB);
+
+      return timeB.localeCompare(timeA);
     });
   };
 
@@ -240,7 +251,7 @@ const Appointments = () => {
     // Convert date to YYYY-MM-DD format to match database storage
     const dateStr = date.toISOString().split('T')[0];
     const filteredAppointments = appointments.filter(apt => apt.date === dateStr);
-    
+
     // Sort by time (earliest first)
     return filteredAppointments.sort((a, b) => {
       const timeA = a.time.split(':')[0]; // Get hour
@@ -313,7 +324,7 @@ const Appointments = () => {
           apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
         )
       );
-      
+
       // Show confirmation notification
       setNotification('confirmed');
       setTimeout(() => {
@@ -381,7 +392,7 @@ const Appointments = () => {
           apt.id === appointmentToReject ? { ...apt, status: 'cancelled' } : apt
         )
       );
-      
+
       // Show cancellation notification
       setNotification('cancelled');
       setTimeout(() => {
@@ -409,7 +420,7 @@ const Appointments = () => {
       // Show only the selected date in day view
       return `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
     }
-    
+
     // Show week range in week view
     const weekDays = getWeekDays();
     const firstDay = weekDays[0];
@@ -423,8 +434,8 @@ const Appointments = () => {
   };
 
   const getMonthName = (date) => {
-    const months = ['Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος', 
-                    'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος'];
+    const months = ['Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
+      'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος'];
     return months[date.getMonth()];
   };
 
@@ -456,7 +467,7 @@ const Appointments = () => {
         {/* Notification Banner */}
         <Notification
           isVisible={notification !== null}
-          message={notification === 'confirmed' 
+          message={notification === 'confirmed'
             ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
             : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
           }
@@ -526,10 +537,10 @@ const Appointments = () => {
                   today.setHours(0, 0, 0, 0);
                   const currentDay = new Date(day);
                   currentDay.setHours(0, 0, 0, 0);
-                  
+
                   const isToday = currentDay.getTime() === today.getTime();
                   const isPast = currentDay < today;
-                  
+
                   return (
                     <div key={index} className="appointments__day-column">
                       <div className={`appointments__day-header ${isToday ? 'appointments__day-header--today' : ''} ${isPast ? 'appointments__day-header--past' : ''}`}>

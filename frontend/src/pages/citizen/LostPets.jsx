@@ -102,6 +102,16 @@ const LostPets = () => {
     fetchLostPets();
   }, []);
 
+  // Handle deep linking to specific pet from notifications
+  useEffect(() => {
+    if (location.state?.petId && !loading && lostPets.length > 0) {
+      const pet = lostPets.find(p => String(p.id) === String(location.state.petId));
+      if (pet) {
+        handleViewDetails(pet);
+      }
+    }
+  }, [location.state, loading, lostPets]);
+
   const handleSelectChange = (name, value) => {
     // Validate microchip input - only numbers, max 15 digits
     if (name === 'microchip') {

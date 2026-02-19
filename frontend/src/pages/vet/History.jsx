@@ -29,11 +29,11 @@ const History = () => {
       const proceduresResponse = await fetch(`http://localhost:5000/medicalProcedures?vetId=${currentUser.id}`);
       if (proceduresResponse.ok) {
         const procedures = await proceduresResponse.json();
-        
+
         // Fetch all pets to get their names
         const petsResponse = await fetch('http://localhost:5000/pets');
         const allPets = petsResponse.ok ? await petsResponse.json() : [];
-        
+
         const visitsArray = procedures.map(proc => {
           const pet = allPets.find(p => p.id == proc.petId);
           return {
@@ -45,6 +45,12 @@ const History = () => {
             type: proc.type,
             description: proc.description || '-'
           };
+        }).sort((a, b) => {
+          const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+          const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+          const dateA = new Date(yearA, monthA - 1, dayA);
+          const dateB = new Date(yearB, monthB - 1, dayB);
+          return dateB - dateA;
         });
         setVisitsData(visitsArray);
       }
@@ -77,11 +83,11 @@ const History = () => {
         const allFoundPets = await foundPetsResponse.json();
         // Only include active declarations (not drafts)
         foundPets = allFoundPets.filter(fp => fp.status === 'active');
-        
+
         // Fetch owner names for found pets
         const ownersResponse = await fetch('http://localhost:5000/users');
         const allUsers = ownersResponse.ok ? await ownersResponse.json() : [];
-        
+
         // Add owner names to foundPets
         foundPets = foundPets.map(fp => {
           const owner = allUsers.find(u => u.id == fp.ownerId);
@@ -150,7 +156,13 @@ const History = () => {
           owner: lp.ownerName || 'Άγνωστος',
           isLostPet: true // Flag to identify lost pet declarations
         }))
-      ];
+      ].sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+        const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+        const dateA = new Date(yearA, monthA - 1, dayA);
+        const dateB = new Date(yearB, monthB - 1, dayB);
+        return dateB - dateA;
+      });
 
       setDeclarationsData(declarationsArray);
     } catch (err) {
@@ -172,7 +184,7 @@ const History = () => {
 
   const currentData = activeTab === 'visits' ? visitsData : declarationsData;
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
-  
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = currentData.slice(startIndex, endIndex);
@@ -217,7 +229,7 @@ const History = () => {
 
         <div className="history__content">
           <p className="history__subtitle">
-            {activeTab === 'visits' 
+            {activeTab === 'visits'
               ? 'Προβολή όλων των ιατρικών πράξεων που έχετε καταχωρήσει'
               : 'Προβολή όλων των δηλώσεων που έχετε καταχωρήσει'}
           </p>
@@ -227,7 +239,7 @@ const History = () => {
               <div key={item.id} className="history__card">
                 <div className="history__card-header">
                   <h3 className="history__card-title">{item.petName}</h3>
-                  <button 
+                  <button
                     className="history__view-btn"
                     onClick={() => handleViewDetails(item.id)}
                   >
@@ -236,7 +248,7 @@ const History = () => {
                   </button>
                 </div>
                 <p className="history__card-microchip">Μικροτσίπ: {item.microchip}</p>
-                
+
                 <div className="history__card-details">
                   <div className="history__card-detail">
                     <span className="history__card-label">Ημερομηνία</span>

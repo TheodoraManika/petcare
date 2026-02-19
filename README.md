@@ -77,7 +77,7 @@ You need to run both the backend (JSON Server) and the frontend (Vite) concurren
     ```bash
     npm run dev
     ```
-    This will start the Vite development server, usually on `http://localhost:5000`.
+    This will start the Vite development server, usually on `http://localhost:5173`.
 
 ## Project Structure
 

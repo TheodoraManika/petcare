@@ -1,25 +1,73 @@
-/* Dashboard Page Styles */
 .dashboard {
-  padding: var(--spacing-md) 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px var(--spacing-lg) 16px;
+}
+
+.dashboard__section {
+  margin-bottom: 48px;
+}
+
+.dashboard__section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 24px;
+  padding-left: 12px;
+  border-left: 4px solid #FCA47C;
+  /* Changed from blue to orange */
+  line-height: 1.2;
+}
+
+/* Second section header also uses the same color for consistency */
+.dashboard__section:nth-child(even) .dashboard__section-title {
+  border-left-color: #F9D779;
+  /* Using a yellow/gold for variety or keeping it orange */
 }
 
 .dashboard__cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-lg);
-  max-width: 1200px;
-  margin: 0 auto;
+}
+
+/* Special grid for Vet section as requested: 2x2 */
+.dashboard__section--vet .dashboard__cards {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  /* Optional: limit width to keep cards from getting too wide in 2-col layout */
 }
 
 .dashboard__header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
   margin-top: 32px;
 }
 
 .dashboard__title {
   font-size: 28px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #111827;
   margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+
+  .dashboard__cards,
+  .dashboard__section--vet .dashboard__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+
+  .dashboard__cards,
+  .dashboard__section--vet .dashboard__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__header {
+    margin-bottom: 24px;
+  }
 }

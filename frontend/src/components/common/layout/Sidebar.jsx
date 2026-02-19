@@ -13,13 +13,9 @@ const Sidebar = ({ variant = 'vet' }) => {
 
   const vetMenuItems = [
     { icon: <House size={20} />, label: 'Αρχική Κτηνιάτρου', route: ROUTES.vet.dashboard },
+    { icon: <BookOpen size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.vet.healthBook },
     { icon: <CirclePlus size={20} />, label: 'Καταγραφή', route: ROUTES.vet.registerpet },
     { icon: <FileText size={20} />, label: 'Ιατρικές Πράξεις', route: ROUTES.vet.operation },
-    { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },
-    { icon: <Clock size={20} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
-    { icon: <BookOpen size={20} />, label: 'Βιβλιάριο Υγείας', route: ROUTES.vet.healthBook },
-    { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
-    { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
     { icon: <AlertCircle size={20} />, label: 'Δήλωση Απώλειας', route: ROUTES.vet.lostPetForm },
     { 
       icon: <PawPrint size={20} />, 
@@ -32,6 +28,10 @@ const Sidebar = ({ variant = 'vet' }) => {
         { icon: <HandHeart size={14} />, label: 'Αναδοχή', route: ROUTES.vet.foster },
       ]
     },
+    { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },
+    { icon: <Clock size={20} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
+    { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
+    { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
   ];
 
   const ownerMenuItems = [

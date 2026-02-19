@@ -13,7 +13,7 @@ const createCustomMarker = (color) => {
       <circle cx="12" cy="12" r="5" fill="white"/>
     </svg>
   `;
-  
+
   const icon = new L.Icon({
     iconUrl: `data:image/svg+xml;base64,${btoa(svgString)}`,
     iconSize: [32, 48],
@@ -21,7 +21,7 @@ const createCustomMarker = (color) => {
     popupAnchor: [0, -48],
     className: 'custom-marker'
   });
-  
+
   return icon;
 };
 
@@ -48,12 +48,12 @@ const MapWithMarkers = ({
   zoom = 12,
   markers = [],
   selectedId = null,
-  onMarkerClick = () => {},
+  onMarkerClick = () => { },
   popupContent = null,
   height = '600px',
   currentUser = null,
-  onViewProfile = () => {},
-  onCloseAppointment = () => {}
+  onViewProfile = () => { },
+  onCloseAppointment = () => { }
 }) => {
   const defaultPopupContent = (marker) => (
     <div className="popup-content">
@@ -82,11 +82,9 @@ const MapWithMarkers = ({
         <button className="popup-profile-btn" onClick={() => onViewProfile(marker)}>
           Προβολή Προφίλ
         </button>
-        {currentUser?.userType === 'owner' && (
-          <button className="popup-close-appointment-btn" onClick={() => onCloseAppointment(marker)}>
-            Κλείστε Ραντεβού
-          </button>
-        )}
+        <button className="popup-close-appointment-btn" onClick={() => onCloseAppointment(marker)}>
+          Κλείστε Ραντεβού
+        </button>
       </div>
     </div>
   );
@@ -95,9 +93,9 @@ const MapWithMarkers = ({
 
   return (
     <div className="map-with-markers" style={{ height }}>
-      <MapContainer 
-        center={center} 
-        zoom={zoom} 
+      <MapContainer
+        center={center}
+        zoom={zoom}
         style={{ width: '100%', height: '100%' }}
         scrollWheelZoom={true}
       >
@@ -105,10 +103,10 @@ const MapWithMarkers = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
+
         {/* Markers */}
         {markers.map((marker) => (
-          <Marker 
+          <Marker
             key={marker.id}
             position={[marker.lat, marker.lon]}
             icon={selectedId === marker.id ? orangeMarker : cyanMarker}

@@ -23,6 +23,13 @@ const HomePage = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedProfileVet, setSelectedProfileVet] = useState(null);
 
+  // User Type Card Expanded State
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleAllFeatures = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   // Hero carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
   const [lostPets, setLostPets] = useState([]);
@@ -37,7 +44,7 @@ const HomePage = () => {
         setLoadingVets(true);
         const response = await fetch('http://localhost:5000/users?role=vet');
         if (!response.ok) throw new Error('Failed to fetch vets');
-        
+
         const vets = await response.json();
         // Transform vets data and get reviews
         const transformedVets = await Promise.all(vets.map(async (vet) => {
@@ -45,10 +52,10 @@ const HomePage = () => {
             // Fetch reviews for this vet
             const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${vet.id}`);
             const reviews = await reviewsResponse.json();
-            const avgRating = reviews.length > 0 
+            const avgRating = reviews.length > 0
               ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
               : 0;
-            
+
             return {
               id: vet.id,
               name: `${vet.name || 'Κτηνίατρος'} ${vet.lastName || ''}`.trim(),
@@ -71,7 +78,7 @@ const HomePage = () => {
             };
           }
         }));
-        
+
         // Sort by rating and take top 9
         const sorted = transformedVets.sort((a, b) => b.rating - a.rating).slice(0, 9);
         setTopVets(sorted);
@@ -92,11 +99,11 @@ const HomePage = () => {
         setLoadingLostPets(true);
         const response = await fetch('http://localhost:5000/pets');
         if (!response.ok) throw new Error('Failed to fetch pet alerts');
-        
+
         const data = await response.json();
         // Filter only lost pets (petStatus === 1)
         const lostPetsData = data.filter(pet => pet.petStatus === 1);
-        
+
         // Transform data to match carousel format
         const transformedPets = lostPetsData.map(pet => ({
           id: pet.id,
@@ -196,20 +203,20 @@ const HomePage = () => {
       // Fetch full vet details from database
       const vetResponse = await fetch(`http://localhost:5000/users/${vet.id}`);
       if (!vetResponse.ok) throw new Error('Failed to fetch vet details');
-      
+
       const fullVetData = await vetResponse.json();
-      
+
       // Fetch reviews for this vet
       const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${vet.id}`);
       const reviews = await reviewsResponse.json();
-      
+
       // Combine vet data with reviews
       const vetWithReviews = {
         ...fullVetData,
         reviews: reviews,
         reviewCount: reviews.length
       };
-      
+
       setSelectedProfileVet(vetWithReviews);
       setShowProfileModal(true);
     } catch (error) {
@@ -319,98 +326,12 @@ const HomePage = () => {
         {/* Lost Pets Hero Section */}
         <section className="lost-pets-hero">
           <div className="lost-pets-hero__container">
-            {/* Left Side - Carousel */}
-            <div className="lost-pets-hero__carousel">
-              <div className="carousel-header">
-                <span>Πρόσφατα Χαμένα Κατοικίδια</span>
-              </div>
-
-              <div className="carousel-wrapper">
-                <button
-                  className="carousel-nav carousel-nav--prev"
-                  onClick={prevSlide}
-                  aria-label="Προηγούμενο"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-
-                <div className="carousel-track">
-                  {lostPets.map((pet, index) => (
-                    <div
-                      key={pet.id}
-                      className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
-                      style={{ transform: `translateX(${(index - currentSlide) * 100}%)` }}
-                    >
-                      <div className="carousel-card" onClick={() => handlePetClick(pet)}>
-                        <div className="carousel-card__image">
-                          {getPetIcon(pet.type)}
-                        </div>
-                        <div className="carousel-card__info">
-                          <h3 className="carousel-card__name">{pet.name}</h3>
-                          <p className="carousel-card__breed">{pet.type} • {pet.breed}</p>
-                          <div className="carousel-card__location">
-                            <MapPin size={14} />
-                            <span>{pet.area}</span>
-                          </div>
-                          <span className="carousel-card__date">Χάθηκε: {pet.dateLost}</span>
-                          <span
-                            className="carousel-card__cta"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleFoundPetClick(pet);
-                            }}
-                          >
-                            Το βρήκα
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  className="carousel-nav carousel-nav--next"
-                  onClick={nextSlide}
-                  aria-label="Επόμενο"
-                >
-                  <ChevronRight size={24} />
-                </button>
-              </div>
-
-              {/* Carousel Indicators */}
-              <div className="carousel-indicators">
-                {lostPets.map((_, index) => (
-                  <button
-                    key={index}
-                    className={`carousel-indicator ${index === currentSlide ? 'active' : ''}`}
-                    onClick={() => goToSlide(index)}
-                    aria-label={`Μετάβαση στο slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Right Side - Hero Text */}
+            {/* Hero Text */}
             <div className="lost-pets-hero__text">
               <h1 className="hero-title">Πλατφόρμα Διαχείρισης Κατοικιδίων</h1>
               <p className="hero-description">
                 Ολοκληρωμένη πλατφόρμα για τη διαχείριση της υγείας των κατοικιδίων σας, την αναζήτηση επαγγελματιών κτηνιάτρων και την καταγραφή ιατρικών πράξεων.
               </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Found Pet Actions - moved below hero */}
-        <section className="found-actions-section">
-          <div className="found-actions-container">
-            <div className="found-actions-text">
-              <h2 className="hero-search-title">Βρήκατε κάποιο ζωάκι;</h2>
-              <p className="hero-search-subtitle">Βοηθήστε να επιστρέψει στην οικογένειά του</p>
-            </div>
-            <div className="found-actions-buttons">
-              <button className="found-action-btn primary-btn" onClick={handleReportQuick}>
-                Δήλωση Εύρεσης Kατοικιδίου
-              </button>
             </div>
           </div>
         </section>
@@ -427,18 +348,27 @@ const HomePage = () => {
                 >
                   <Info size={18} />
                 </button>
-                <div className={`card-icon ${userType.color}-icon`}>
-                  {userType.icon}
+                <div className="card-header" onClick={toggleAllFeatures}>
+                  <div className={`card-icon ${userType.color}-icon`}>
+                    {userType.icon}
+                  </div>
+                  <div className="card-title-group">
+                    <h3 className="card-title">{userType.title}</h3>
+                    <div className={`card-toggle-icon ${isExpanded ? 'active' : ''}`}>
+                      <ChevronDown size={18} />
+                    </div>
+                  </div>
                 </div>
-                <h3 className="card-title">{userType.title}</h3>
-                <ul className="card-features">
-                  {userType.features.map((feature, idx) => (
-                    <li key={idx}>
-                      <span className={`feature-dot ${userType.color}-dot`}></span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                <div className={`card-features-dropdown ${isExpanded ? 'expanded' : ''}`}>
+                  <ul className="card-features">
+                    {userType.features.map((feature, idx) => (
+                      <li key={idx}>
+                        <span className={`feature-dot ${userType.color}-dot`}></span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <div className="card-auth-buttons">
                   <button
                     className={`card-auth-btn card-auth-btn--signin ${userType.color}-signin`}
@@ -459,8 +389,114 @@ const HomePage = () => {
             ))}
           </div>
         </section>
+
+        {/* Found Pet Actions - moved below hero */}
+        <section className="found-actions-section">
+          <div className="found-actions-container">
+            <div className="found-actions-header">
+              <div className="found-actions-text">
+                <div className="title-with-info">
+                  <h2 className="hero-search-title">Βρήκατε κάποιο ζωάκι;</h2>
+                  <button
+                    className="info-icon-btn"
+                    onClick={() => navigate('/citizen/information')}
+                    aria-label="Πληροφορίες"
+                  >
+                    <Info size={18} />
+                  </button>
+                </div>
+                <p className="hero-search-subtitle">Βοηθήστε να επιστρέψει στην οικογένειά του</p>
+              </div>
+              <button className="found-action-btn primary-btn" onClick={handleReportQuick}>
+                Δήλωση Εύρεσης Kατοικιδίου
+              </button>
+            </div>
+
+            <div className="found-actions-content">
+              <div className="lost-pets-carousel-section">
+                <div className="carousel-title">Πρόσφατα Χαμένα Κατοικίδια</div>
+                <div className="lost-pets-hero__carousel">
+
+                  <div className="carousel-wrapper">
+                    <button
+                      className="carousel-nav carousel-nav--prev"
+                      onClick={prevSlide}
+                      aria-label="Προηγούμενο"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+
+                    <div className="carousel-track">
+                      {lostPets.map((pet, index) => (
+                        <div
+                          key={pet.id}
+                          className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
+                          style={{ transform: `translateX(${(index - currentSlide) * 100}%)` }}
+                        >
+                          <div className="carousel-card" onClick={() => handlePetClick(pet)}>
+                            <div className="carousel-card__image">
+                              {getPetIcon(pet.type)}
+                            </div>
+                            <div className="carousel-card__info">
+                              <h3 className="carousel-card__name">{pet.name}</h3>
+                              <p className="carousel-card__breed">{pet.type} • {pet.breed}</p>
+                              <div className="carousel-card__location">
+                                <MapPin size={14} />
+                                <span>{pet.area}</span>
+                              </div>
+                              <span className="carousel-card__date">Χάθηκε: {pet.dateLost}</span>
+                              <span
+                                className="carousel-card__cta"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleFoundPetClick(pet);
+                                }}
+                              >
+                                Το βρήκα
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      className="carousel-nav carousel-nav--next"
+                      onClick={nextSlide}
+                      aria-label="Επόμενο"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+                  </div>
+
+                  {/* Carousel Indicators */}
+                  <div className="carousel-indicators">
+                    {lostPets.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`carousel-indicator ${index === currentSlide ? 'active' : ''}`}
+                        onClick={() => goToSlide(index)}
+                        aria-label={`Μετάβαση στο slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         {/* Top Rated Vets Section */}
         <section className="vet-section">
+          <div className="vet-section-main-title">
+            <h2>Αναζήτηση Κτηνιάτρων</h2>
+            <button
+              className="info-icon-btn"
+              onClick={() => navigate('/vet/information')}
+              aria-label="Πληροφορίες"
+            >
+              <Info size={18} />
+            </button>
+          </div>
           <div className="hero-search-box">
             <div className="search-container">
               <div className="search-column">
@@ -540,7 +576,7 @@ const HomePage = () => {
                 }
               })}
             >
-              Αναζήτηση
+              Αναζήτηση Κτηνιάτρων
             </button>
           </div>
           <div className="vets-section__title">

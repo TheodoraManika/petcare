@@ -31,13 +31,13 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
   const displayedReviews = showAllReviews ? reviewsList : reviewsList.slice(0, visibleReviews);
 
   const displayName = vet.lastName ? `${vet.name} ${vet.lastName}` : vet.name;
-  
+
   // Calculate average rating from reviews if not provided
   let averageRating = vet.rating || 0;
   if (!vet.rating && reviewsList.length > 0) {
     averageRating = reviewsList.reduce((sum, review) => sum + (Number(review.rating) || 0), 0) / reviewsList.length;
   }
-  
+
   // Map database fields to component expectations
   const vetSpec = vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος';
   const vetClinicName = vet.clinicName || 'Δεν διατίθεται';
@@ -78,21 +78,23 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                 </span>
               </div>
             </div>
-            {isOwner && (
-              <button
-                className="book-appointment-btn"
-                onClick={() => {
+            <button
+              className="book-appointment-btn"
+              onClick={() => {
+                if (isOwner) {
                   onClose();
                   if (onBook) {
                     onBook(vet);
                   } else {
                     navigate(ROUTES.owner.appointments, { state: { vet } });
                   }
-                }}
-              >
-                Κλείστε Ραντεβού
-              </button>
-            )}
+                } else {
+                  navigate(ROUTES.login, { state: { from: window.location.pathname } });
+                }
+              }}
+            >
+              Κλείστε Ραντεβού
+            </button>
           </div>
         </div>
 

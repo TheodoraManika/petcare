@@ -14,7 +14,7 @@ const Appointments = () => {
   const location = useLocation();
 
   // Appointments state
-  const [activeTab, setActiveTab] = useState('active');
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'active');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -141,6 +141,23 @@ const Appointments = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Handle deep linking to specific appointment from notifications
+  useEffect(() => {
+    if (location.state?.appointmentId && !loading && appointments.length > 0) {
+      // Small delay to ensure the list is rendered and pagination might need to be adjusted
+      // But since we are on the correct tab (active/history), we just need to find it
+      const element = document.getElementById(`appointment-${location.state.appointmentId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Optionally highlight the card
+        element.classList.add('owner-appointments__card--highlighted');
+        setTimeout(() => {
+          element.classList.remove('owner-appointments__card--highlighted');
+        }, 3000);
+      }
+    }
+  }, [location.state, loading, appointments]);
 
   const handleBookingSuccess = (message) => {
     setSuccessMessage(message);
@@ -475,7 +492,7 @@ const Appointments = () => {
 
         <div className="owner-appointments__content">
           {displayedAppointments.map((appointment) => (
-            <div key={appointment.id} className="owner-appointments__card">
+            <div key={appointment.id} id={`appointment-${appointment.id}`} className="owner-appointments__card">
               <div className="owner-appointments__card-header">
                 <div className="owner-appointments__card-title">
 

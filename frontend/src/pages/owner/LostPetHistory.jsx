@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Eye, Edit2, X, PawPrint, CheckCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
@@ -8,7 +8,8 @@ import './LostPetHistory.css';
 
 const LostPetHistory = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('mine');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'mine');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedDeclaration, setSelectedDeclaration] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +38,7 @@ const LostPetHistory = () => {
         // "Δικές μου" (Mine tab) = YOUR lost pet declarations where:
         // 1. You are the owner AND nobody else found it yet (still lost or you found it yourself)
         // 2. Basically: pets you own where either no finder is set OR you are the finder
-        const mine = allLostPets.filter(pet => 
+        const mine = allLostPets.filter(pet =>
           pet.ownerId == currentUser.id && (
             !pet.finderId || // No finder set yet (still lost)
             pet.finderId == currentUser.id || // You found your own pet
@@ -45,10 +46,10 @@ const LostPetHistory = () => {
             pet.finderName === currentUser.name // You are listed as finder
           )
         );
-        
+
         // "Από άλλους" (Others tab) = Someone ELSE found YOUR lost pet
         // Pet belongs to you BUT someone else is marked as the finder
-        const others = allLostPets.filter(pet => 
+        const others = allLostPets.filter(pet =>
           pet.ownerId == currentUser.id && (
             (pet.finderId && pet.finderId != currentUser.id) || // Someone else's ID as finder
             (pet.finderName && pet.finderName !== currentUser.name) // Someone else's name as finder
@@ -60,13 +61,13 @@ const LostPetHistory = () => {
           // Helper function to parse dates in DD/MM/YYYY or ISO format
           const parseDate = (dateStr) => {
             if (!dateStr) return new Date().toLocaleDateString('el-GR');
-            
+
             // Try to parse ISO format first
             if (dateStr.includes('T') || dateStr.includes('-')) {
               const parsed = new Date(dateStr);
               return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
             }
-            
+
             // Try to parse DD/MM/YYYY format
             if (dateStr.includes('/')) {
               const parts = dateStr.split('/');
@@ -75,23 +76,23 @@ const LostPetHistory = () => {
                 return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
               }
             }
-            
+
             return dateStr;
           };
 
           // Determine if this is a found pet (by user themselves) or still lost
           const isFoundByMe = (pet.finderId == currentUser.id) || (pet.finderName === currentUser.name);
-          
+
           return {
             id: pet.id,
             type: isFoundByMe ? 'found_by_me' : 'own_lost_pet',
             petName: pet.petName || pet.name,
             petType: pet.type,
-            date: pet.dateFound 
+            date: pet.dateFound
               ? parseDate(pet.dateFound)
-              : pet.lostDate 
-              ? parseDate(pet.lostDate)
-              : new Date().toLocaleDateString('el-GR'),
+              : pet.lostDate
+                ? parseDate(pet.lostDate)
+                : new Date().toLocaleDateString('el-GR'),
             location: pet.location || pet.lostLocation || pet.lostLocation,
             description: pet.description,
             status: pet.status || 'submitted',
@@ -106,13 +107,13 @@ const LostPetHistory = () => {
           // Helper function to parse dates in DD/MM/YYYY or ISO format
           const parseDate = (dateStr) => {
             if (!dateStr) return new Date().toLocaleDateString('el-GR');
-            
+
             // Try to parse ISO format first
             if (dateStr.includes('T') || dateStr.includes('-')) {
               const parsed = new Date(dateStr);
               return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
             }
-            
+
             // Try to parse DD/MM/YYYY format
             if (dateStr.includes('/')) {
               const parts = dateStr.split('/');
@@ -121,7 +122,7 @@ const LostPetHistory = () => {
                 return isNaN(parsed) ? 'Άγνωστη' : parsed.toLocaleDateString('el-GR');
               }
             }
-            
+
             return dateStr;
           };
 
@@ -147,21 +148,21 @@ const LostPetHistory = () => {
         const foundPetResponse = await fetch('http://localhost:5000/Found_pet');
         if (foundPetResponse.ok) {
           const allFoundPets = await foundPetResponse.json();
-          
+
           // Split Found_pet into categories:
           // For "Δικές μου": Include both active AND draft findings by current user
           // For "Από άλλους": Only active findings by others (no drafts)
-          
-          const myFindings = allFoundPets.filter(pet => 
+
+          const myFindings = allFoundPets.filter(pet =>
             pet.foundByUserId == currentUser.id // All findings by current user (active + draft)
           );
-          
-          const othersFoundMyPets = allFoundPets.filter(pet => 
-            pet.ownerId == currentUser.id && 
+
+          const othersFoundMyPets = allFoundPets.filter(pet =>
+            pet.ownerId == currentUser.id &&
             pet.foundByUserId != currentUser.id &&
             pet.status === 'active' // Only active findings by others (no drafts)
           );
-          
+
           const parseDate = (dateStr) => {
             if (!dateStr) return new Date().toLocaleDateString('el-GR');
             if (dateStr.includes('T') || dateStr.includes('-')) {
@@ -212,7 +213,7 @@ const LostPetHistory = () => {
             contactEmail: pet.foundByUserEmail,
             status: 'submitted',
           }));
-          
+
           // Add to respective arrays
           setDeclarations([...mineTransformed, ...myFindingsTransformed]);
           setFoundByOthers([...othersTransformed, ...othersFoundMyPetsTransformed]);
@@ -227,7 +228,7 @@ const LostPetHistory = () => {
           const allLostHistory = await lostHistoryResponse.json();
           // Filter to only show this user's pets from lost_history
           const userLostHistory = allLostHistory.filter(pet => pet.ownerId == currentUser.id);
-          
+
           const historyTransformed = userLostHistory.map(pet => {
             const parseDate = (dateStr) => {
               if (!dateStr) return new Date().toLocaleDateString('el-GR');
@@ -270,6 +271,20 @@ const LostPetHistory = () => {
     fetchDeclarations();
   }, []);
 
+  // Handle deep linking to specific declaration from notifications
+  useEffect(() => {
+    if (location.state?.petId && !loading && currentData.length > 0) {
+      const element = document.getElementById(`declaration-${location.state.petId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('lost-pet-history__card--highlighted');
+        setTimeout(() => {
+          element.classList.remove('lost-pet-history__card--highlighted');
+        }, 3000);
+      }
+    }
+  }, [location.state, loading, currentData]);
+
   const breadcrumbItems = [
   ];
 
@@ -279,7 +294,7 @@ const LostPetHistory = () => {
   };
 
   const currentData = activeTab === 'mine' ? [...declarations, ...lostHistory] : foundByOthers;
-  
+
   // Calculate pagination
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -373,57 +388,102 @@ const LostPetHistory = () => {
             </div>
           ) : (
             paginatedData.map((declaration) => (
-            <div key={declaration.id} className="lost-pet-history__card">
-              <div className="lost-pet-history__icon">
-                <PawPrint size={24} />
-              </div>
-
-              <div className="lost-pet-history__card-info">
-                <div className="lost-pet-history__card-header">
-                  <h3 className="lost-pet-history__card-title">
-                    {declaration.type === 'found_by_other' 
-                      ? 'Δήλωση Εύρεσης από Χρήστη' 
-                      : declaration.type === 'own_lost_pet'
-                      ? 'Δήλωση Απώλειας Κατοικιδίου'
-                      : 'Δήλωση Απώλειας Κατοικιδίου'}
-                  </h3>
-                  <span className="lost-pet-history__card-subtitle">
-                    {declaration.petType || declaration.petSpecies}
-                  </span>
-                  <span className="lost-pet-history__card-name">{declaration.petName}</span>
+              <div key={declaration.id} id={`declaration-${declaration.id}`} className="lost-pet-history__card">
+                <div className="lost-pet-history__icon">
+                  <PawPrint size={24} />
                 </div>
 
-                <div className="lost-pet-history__card-details">
-                  {activeTab === 'mine' ? (
-                    <>
-                      <div>
-                        <span className="lost-pet-history__label">Ημερομηνία</span>
-                        <p className="lost-pet-history__value">{declaration.date}</p>
-                      </div>
-                      <div>
-                        <span className="lost-pet-history__label">Τοποθεσία</span>
-                        <p className="lost-pet-history__value">{declaration.location}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <span className="lost-pet-history__label">Ημερομηνία Εύρεσης</span>
-                        <p className="lost-pet-history__value">{declaration.date}</p>
-                      </div>
-                      <div>
-                        <span className="lost-pet-history__label">Τοποθεσία Εύρεσης</span>
-                        <p className="lost-pet-history__value">{declaration.location}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+                <div className="lost-pet-history__card-info">
+                  <div className="lost-pet-history__card-header">
+                    <h3 className="lost-pet-history__card-title">
+                      {declaration.type === 'found_by_other'
+                        ? 'Δήλωση Εύρεσης από Χρήστη'
+                        : declaration.type === 'own_lost_pet'
+                          ? 'Δήλωση Απώλειας Κατοικιδίου'
+                          : 'Δήλωση Απώλειας Κατοικιδίου'}
+                    </h3>
+                    <span className="lost-pet-history__card-subtitle">
+                      {declaration.petType || declaration.petSpecies}
+                    </span>
+                    <span className="lost-pet-history__card-name">{declaration.petName}</span>
+                  </div>
 
-              <div className="lost-pet-history__card-actions">
-                <div className="lost-pet-history__buttons">
-                  {activeTab === 'mine' ? (
-                    <>
+                  <div className="lost-pet-history__card-details">
+                    {activeTab === 'mine' ? (
+                      <>
+                        <div>
+                          <span className="lost-pet-history__label">Ημερομηνία</span>
+                          <p className="lost-pet-history__value">{declaration.date}</p>
+                        </div>
+                        <div>
+                          <span className="lost-pet-history__label">Τοποθεσία</span>
+                          <p className="lost-pet-history__value">{declaration.location}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <span className="lost-pet-history__label">Ημερομηνία Εύρεσης</span>
+                          <p className="lost-pet-history__value">{declaration.date}</p>
+                        </div>
+                        <div>
+                          <span className="lost-pet-history__label">Τοποθεσία Εύρεσης</span>
+                          <p className="lost-pet-history__value">{declaration.location}</p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="lost-pet-history__card-actions">
+                  <div className="lost-pet-history__buttons">
+                    {activeTab === 'mine' ? (
+                      <>
+                        <button
+                          className="lost-pet-history__btn lost-pet-history__btn--view"
+                          onClick={() => handleView(declaration.id)}
+                        >
+                          <Eye size={16} />
+                          Προβολή
+                        </button>
+                        {declaration.status === 'draft' && (
+                          <button
+                            className="lost-pet-history__btn lost-pet-history__btn--edit"
+                            onClick={() => handleEdit(declaration.id)}
+                            title="Επεξεργασία"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                        )}
+
+                        {(declaration.type === 'own_lost_pet' || declaration.type === 'loss') && declaration.status === 'submitted' && (
+                          <button
+                            className="lost-pet-history__btn lost-pet-history__btn--found"
+                            onClick={() => handleFound(declaration.id)}
+                          >
+                            <CheckCircle size={16} />
+                            Βρέθηκε
+                          </button>
+                        )}
+
+                        {declaration.status === 'found' && (
+                          <div className="lost-pet-history__found-message">
+                            <CheckCircle size={16} />
+                            Το κατοικίδιο βρέθηκε!
+                          </div>
+                        )}
+
+                        {declaration.status === 'draft' && (
+                          <button
+                            className="lost-pet-history__btn lost-pet-history__btn--delete"
+                            onClick={() => handleDelete(declaration)}
+                            title="Διαγραφή"
+                          >
+                            <X size={16} />
+                          </button>
+                        )}
+                      </>
+                    ) : (
                       <button
                         className="lost-pet-history__btn lost-pet-history__btn--view"
                         onClick={() => handleView(declaration.id)}
@@ -431,60 +491,15 @@ const LostPetHistory = () => {
                         <Eye size={16} />
                         Προβολή
                       </button>
-                      {declaration.status === 'draft' && (
-                        <button
-                          className="lost-pet-history__btn lost-pet-history__btn--edit"
-                          onClick={() => handleEdit(declaration.id)}
-                          title="Επεξεργασία"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                      )}
-
-                      {(declaration.type === 'own_lost_pet' || declaration.type === 'loss') && declaration.status === 'submitted' && (
-                        <button
-                          className="lost-pet-history__btn lost-pet-history__btn--found"
-                          onClick={() => handleFound(declaration.id)}
-                        >
-                          <CheckCircle size={16} />
-                          Βρέθηκε
-                        </button>
-                      )}
-
-                      {declaration.status === 'found' && (
-                        <div className="lost-pet-history__found-message">
-                          <CheckCircle size={16} />
-                          Το κατοικίδιο βρέθηκε!
-                        </div>
-                      )}
-
-                      {declaration.status === 'draft' && (
-                        <button
-                          className="lost-pet-history__btn lost-pet-history__btn--delete"
-                          onClick={() => handleDelete(declaration)}
-                          title="Διαγραφή"
-                        >
-                          <X size={16} />
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <button
-                      className="lost-pet-history__btn lost-pet-history__btn--view"
-                      onClick={() => handleView(declaration.id)}
-                    >
-                      <Eye size={16} />
-                      Προβολή
-                    </button>
+                    )}
+                  </div>
+                  {activeTab === 'mine' && (
+                    <div className="lost-pet-history__status-section">
+                      {getStatusBadge(declaration.status)}
+                    </div>
                   )}
                 </div>
-                {activeTab === 'mine' && (
-                  <div className="lost-pet-history__status-section">
-                    {getStatusBadge(declaration.status)}
-                  </div>
-                )}
               </div>
-            </div>
             ))
           )}
         </div>

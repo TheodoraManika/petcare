@@ -76,6 +76,13 @@
   transform: translateY(-2px);
 }
 
+.lost-pet-history__card--highlighted {
+  border-color: #23CED9 !important;
+  box-shadow: 0 0 0 4px rgba(35, 206, 217, 0.2);
+  transform: translateY(-2px) scale(1.01) !important;
+  transition: all 0.5s ease;
+}
+
 .lost-pet-history__icon {
   display: flex;
   align-items: center;
