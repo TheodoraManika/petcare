@@ -104,7 +104,7 @@
   flex: 1;
   overflow: hidden;
   position: relative;
-  height: 200px;
+  height: 240px;
   border-radius: 12px;
 }
 
@@ -124,29 +124,37 @@
 
 .carousel-card {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 20px;
-  padding: 24px;
+  padding: 32px 40px;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 2px solid #E5E7EB;
   height: 100%;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.carousel-card__main {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .carousel-card:hover {
   border-color: #23CED9;
-  box-shadow: 0 8px 24px rgba(35, 206, 217, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(35, 206, 217, 0.12);
+  transform: translateY(-4px);
 }
 
 .carousel-card__image {
-  width: 110px;
-  height: 110px;
+  width: 140px;
+  height: 140px;
   background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
-  border: 3px solid #23CED9;
-  border-radius: 16px;
+  border: 4px solid #23CED9;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -162,9 +170,9 @@
 }
 
 .carousel-card__name {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: 26px;
+  font-weight: 800;
+  color: #111827;
   margin: 0;
 }
 
@@ -189,17 +197,23 @@
   margin-top: 4px;
 }
 
-.carousel-card__cta {
-  font-size: 12px;
-  color: #23CED9;
-  font-weight: 600;
-  margin-top: 8px;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
+.carousel-card__action-btn {
+  padding: 12px 28px;
+  background: #23CED9;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.carousel-card:hover .carousel-card__cta {
-  opacity: 1;
+.carousel-card__action-btn:hover {
+  background: #1ebbc5;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
 }
 
 /* Carousel Navigation */

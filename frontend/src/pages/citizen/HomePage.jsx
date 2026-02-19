@@ -434,27 +434,29 @@ const HomePage = () => {
                           style={{ transform: `translateX(${(index - currentSlide) * 100}%)` }}
                         >
                           <div className="carousel-card" onClick={() => handlePetClick(pet)}>
-                            <div className="carousel-card__image">
-                              {getPetIcon(pet.type)}
-                            </div>
-                            <div className="carousel-card__info">
-                              <h3 className="carousel-card__name">{pet.name}</h3>
-                              <p className="carousel-card__breed">{pet.type} • {pet.breed}</p>
-                              <div className="carousel-card__location">
-                                <MapPin size={14} />
-                                <span>{pet.area}</span>
+                            <div className="carousel-card__main">
+                              <div className="carousel-card__image">
+                                {getPetIcon(pet.type)}
                               </div>
-                              <span className="carousel-card__date">Χάθηκε: {pet.dateLost}</span>
-                              <span
-                                className="carousel-card__cta"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleFoundPetClick(pet);
-                                }}
-                              >
-                                Το βρήκα
-                              </span>
+                              <div className="carousel-card__info">
+                                <h3 className="carousel-card__name">{pet.name}</h3>
+                                <p className="carousel-card__breed">{pet.type} • {pet.breed}</p>
+                                <div className="carousel-card__location">
+                                  <MapPin size={14} />
+                                  <span>{pet.area}</span>
+                                </div>
+                                <span className="carousel-card__date">Χάθηκε: {pet.dateLost}</span>
+                              </div>
                             </div>
+                            <button
+                              className="carousel-card__action-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleFoundPetClick(pet);
+                              }}
+                            >
+                              Το βρήκα
+                            </button>
                           </div>
                         </div>
                       ))}
