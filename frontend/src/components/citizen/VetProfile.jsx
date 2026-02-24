@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, MapPin, Phone, IdCard, Briefcase, GraduationCap, X, Hospital } from 'lucide-react';
 import Avatar from '../common/Avatar';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate } from '../../utils/constants';
 import './VetProfile.css';
 
 const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
@@ -177,11 +177,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                       <span className="review-author">{review.ownerName || review.author || 'Anonymous'}</span>
                       {review.reviewedAt && (
                         <span className="review-date">
-                          {new Date(review.reviewedAt).toLocaleDateString('el-GR', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
+                          {formatDate(review.reviewedAt)}
                         </span>
                       )}
                     </div>

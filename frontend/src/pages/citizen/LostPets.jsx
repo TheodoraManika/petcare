@@ -8,7 +8,7 @@ import LocationPicker from '../../components/common/forms/LocationPicker';
 import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
 import Pagination from '../../components/common/layout/Pagination';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate } from '../../utils/constants';
 import './LostPets.css';
 import FoundPetForm from './FoundPetForm';
 
@@ -577,7 +577,7 @@ const LostPets = () => {
                     <MapPin size={12} style={{ display: 'inline', marginRight: '4px' }} />
                     {pet.area}
                   </p>
-                  <p className="popup-date">Χάθηκε: {pet.dateLost}</p>
+                  <p className="popup-date">Χάθηκε: {formatDate(pet.dateLost)}</p>
                   <div className="popup-actions">
                     <button className="popup-details-btn" onClick={() => handleViewDetails(pet)}>
                       Προβολή
@@ -635,7 +635,7 @@ const LostPets = () => {
                             <MapPin size={14} />
                             <span>{pet.area}</span>
                           </div>
-                          <p className="pet-card-date">Χάθηκε: {pet.dateLost}</p>
+                          <p className="pet-card-date">Χάθηκε: {formatDate(pet.dateLost)}</p>
                         </div>
                         <div className="pet-card-actions">
                           <button
@@ -686,7 +686,7 @@ const LostPets = () => {
                   <p className="modal-pet-breed">{detailPet.type} - {detailPet.breed}</p>
                   <div className="modal-pet-status">
                     <AlertCircle size={16} />
-                    <span>Χάθηκε: {detailPet.dateLost}</span>
+                    <span>Χάθηκε: {formatDate(detailPet.dateLost)}</span>
                   </div>
                 </div>
               </div>

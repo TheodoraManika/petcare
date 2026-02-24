@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Bell, Check, XCircle, Calendar, PawPrint, Clock } from 'lucide-react';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate as formatDateUtil } from '../../utils/constants';
 import './NotificationPage.css';
 
 const NotificationPage = ({ isOpen, onClose, userType }) => {
@@ -93,7 +93,7 @@ const NotificationPage = ({ isOpen, onClose, userType }) => {
     if (diffHours < 24) return `Πριν ${diffHours} ${diffHours === 1 ? 'ώρα' : 'ώρες'}`;
     if (diffDays < 7) return `Πριν ${diffDays} ${diffDays === 1 ? 'μέρα' : 'μέρες'}`;
 
-    return date.toLocaleDateString('el-GR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return formatDateUtil(dateString);
   };
 
   const markAsRead = async (id) => {

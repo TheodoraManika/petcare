@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Eye, Edit2, X, PawPrint, CheckCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate } from '../../utils/constants';
 import './LostPetHistory.css';
 
 const LostPetHistory = () => {
@@ -413,7 +413,7 @@ const LostPetHistory = () => {
                       <>
                         <div>
                           <span className="lost-pet-history__label">Ημερομηνία</span>
-                          <p className="lost-pet-history__value">{declaration.date}</p>
+                          <p className="lost-pet-history__value">{formatDate(declaration.date)}</p>
                         </div>
                         <div>
                           <span className="lost-pet-history__label">Τοποθεσία</span>
@@ -424,7 +424,7 @@ const LostPetHistory = () => {
                       <>
                         <div>
                           <span className="lost-pet-history__label">Ημερομηνία Εύρεσης</span>
-                          <p className="lost-pet-history__value">{declaration.date}</p>
+                          <p className="lost-pet-history__value">{formatDate(declaration.date)}</p>
                         </div>
                         <div>
                           <span className="lost-pet-history__label">Τοποθεσία Εύρεσης</span>
@@ -530,7 +530,7 @@ const LostPetHistory = () => {
                 </div>
                 <div className="lost-pet-history__modal-row">
                   <span className="lost-pet-history__modal-label">Ημερομηνία Εξαφάνισης:</span>
-                  <span className="lost-pet-history__modal-value">{selectedDeclaration.date}</span>
+                  <span className="lost-pet-history__modal-value">{formatDate(selectedDeclaration.date)}</span>
                 </div>
                 <div className="lost-pet-history__modal-row">
                   <span className="lost-pet-history__modal-label">Τοποθεσία Εξαφάνισης:</span>

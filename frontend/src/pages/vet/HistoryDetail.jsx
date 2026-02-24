@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart, MapPin, SearchX } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate } from '../../utils/constants';
 import './HistoryDetail.css';
 
 const HistoryDetail = () => {
@@ -236,15 +236,6 @@ const HistoryDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '-';
-    if (dateStr.includes('-')) {
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
-    }
-    return dateStr;
   };
 
   // Get title based on declaration type

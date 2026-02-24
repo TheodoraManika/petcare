@@ -5,7 +5,7 @@ import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
-import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
+import { ROUTES, SERVICE_LABELS, formatDate } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
@@ -767,7 +767,7 @@ const Appointments = () => {
                   <div className="appointments__list-card-footer">
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Ημερομηνία:</span>
-                      <span>{apt.date}</span>
+                      <span>{formatDate(apt.date)}</span>
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Ώρα:</span>
@@ -816,7 +816,7 @@ const Appointments = () => {
                     <Calendar size={16} color="#101828" />
                     <div>
                       <div>Ημερομηνία</div>
-                      <div>{selectedAppointment.date}</div>
+                      <div>{formatDate(selectedAppointment.date)}</div>
                     </div>
                   </div>
                   <div className="appointments__modal-time">

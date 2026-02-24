@@ -4,7 +4,7 @@ import { Eye, Edit2, Trash2, AlertCircle, Printer, Download, CheckCircle, Chevro
 import PageLayout from '../../components/common/layout/PageLayout';
 import Notification from '../../components/common/modals/Notification';
 import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate } from '../../utils/constants';
 import './LostPetHistoryDetail.css';
 
 const LostPetHistoryDetail = () => {
@@ -416,7 +416,7 @@ const LostPetHistoryDetail = () => {
                                     {isFoundByOther ? 'Ημερομηνία Εύρεσης' : 'Ημερομηνία Εξαφάνισης'}
                                     <span className="lost-pet-detail__required">*</span>
                                 </span>
-                                <p className="lost-pet-detail__value">{declaration.date}</p>
+                                <p className="lost-pet-detail__value">{formatDate(declaration.date)}</p>
                             </div>
 
                             {!isFoundByOther && (

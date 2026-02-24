@@ -1909,7 +1909,7 @@
         "appointmentId": "5393"
       },
       "date": "2026-01-20T18:01:12.074Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:01:12.074Z"
     },
     {
@@ -2266,7 +2266,7 @@
         "appointmentId": "1c97"
       },
       "date": "2026-01-20T18:55:57.498Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:55:57.498Z"
     },
     {
@@ -2317,7 +2317,7 @@
         "appointmentId": "3bca"
       },
       "date": "2026-01-20T19:22:52.525Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T19:22:52.525Z"
     },
     {
@@ -2385,7 +2385,7 @@
         "appointmentId": "4e7e"
       },
       "date": "2026-01-20T19:24:02.641Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T19:24:02.641Z"
     },
     {
@@ -2436,7 +2436,7 @@
         "appointmentId": "2692"
       },
       "date": "2026-01-20T19:25:23.831Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T19:25:23.832Z"
     },
     {
@@ -2504,7 +2504,7 @@
         "appointmentId": "e29c"
       },
       "date": "2026-02-24T18:30:58.918Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-02-24T18:30:58.918Z"
     },
     {
@@ -2525,23 +2525,6 @@
       "createdAt": "2026-02-24T18:30:58.927Z"
     },
     {
-      "id": "a940",
-      "userId": "6762",
-      "userType": "owner",
-      "type": "appointment_cancelled",
-      "title": "Το ραντεβού σας ακυρώθηκε",
-      "data": {
-        "vetName": "Πηνελόπη Μαθιουδάκη",
-        "appointmentDate": "2026-02-25",
-        "appointmentTime": "10:00 - 11:00",
-        "petName": "Βιολέτα",
-        "appointmentId": "01dc"
-      },
-      "date": "2026-02-24T18:32:10.186Z",
-      "read": false,
-      "createdAt": "2026-02-24T18:32:10.186Z"
-    },
-    {
       "id": "b22d",
       "userId": "6762",
       "userType": "owner",
@@ -2555,7 +2538,7 @@
         "appointmentId": "e29c"
       },
       "date": "2026-02-24T18:32:19.741Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-02-24T18:32:19.741Z"
     },
     {

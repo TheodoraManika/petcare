@@ -6,7 +6,7 @@ import Pagination from '../../components/common/layout/Pagination';
 import BookingForm from '../../components/owner/BookingForm';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
-import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
+import { ROUTES, SERVICE_LABELS, formatDate } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
@@ -522,7 +522,7 @@ const Appointments = () => {
                 </div>
                 <div className="owner-appointments__detail">
                   <span className="owner-appointments__detail-label">Ημερομηνία</span>
-                  <span className="owner-appointments__detail-value">{appointment.date}</span>
+                  <span className="owner-appointments__detail-value">{formatDate(appointment.date)}</span>
                 </div>
                 <div className="owner-appointments__detail">
                   <span className="owner-appointments__detail-label">Ώρα</span>
