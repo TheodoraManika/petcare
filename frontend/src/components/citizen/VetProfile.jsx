@@ -173,7 +173,18 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                     <div className="review-stars">
                       {renderStars(review.rating || 0)}
                     </div>
-                    <span className="review-author">{review.author}</span>
+                    <div className="review-meta">
+                      <span className="review-author">{review.ownerName || review.author || 'Anonymous'}</span>
+                      {review.reviewedAt && (
+                        <span className="review-date">
+                          {new Date(review.reviewedAt).toLocaleDateString('el-GR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="review-comment">{review.comment}</p>
                 </div>

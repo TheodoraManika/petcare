@@ -120,6 +120,27 @@ const VetSearchMap = () => {
         const allReviews = await reviewsResponse.json();
         console.log('Fetched reviews:', allReviews);
 
+        // Fetch owner details for all reviews
+        const reviewsWithOwners = await Promise.all(allReviews.map(async (review) => {
+          try {
+            const ownerResponse = await fetch(`http://localhost:5000/users/${review.ownerId}`);
+            const owner = await ownerResponse.json();
+            return {
+              ...review,
+              ownerName: `${owner.name || ''} ${owner.lastName || ''}`.trim() || 'Anonymous'
+            };
+          } catch (err) {
+            console.error(`Error fetching owner ${review.ownerId}:`, err);
+            return {
+              ...review,
+              ownerName: 'Anonymous'
+            };
+          }
+        }));
+
+        // Sort reviews by date (newest first)
+        reviewsWithOwners.sort((a, b) => new Date(b.reviewedAt) - new Date(a.reviewedAt));
+
         // Filter only vet users and add default coordinates and availability
         const vetUsers = users
           .filter(user => user.userType === 'vet')
@@ -129,7 +150,7 @@ const VetSearchMap = () => {
             const availableDays = [...new Set(vetAvailability.map(a => a.day))];
 
             // Get reviews for this vet
-            const vetReviews = allReviews.filter(review => Number(review.vetId) === Number(vet.id));
+            const vetReviews = reviewsWithOwners.filter(review => Number(review.vetId) === Number(vet.id));
 
             // Calculate average rating from reviews
             let rating = 0;

@@ -210,10 +210,31 @@ const HomePage = () => {
       const reviewsResponse = await fetch(`http://localhost:5000/reviews?vetId=${vet.id}`);
       const reviews = await reviewsResponse.json();
 
+      // Fetch owner details for each review
+      const reviewsWithOwners = await Promise.all(reviews.map(async (review) => {
+        try {
+          const ownerResponse = await fetch(`http://localhost:5000/users/${review.ownerId}`);
+          const owner = await ownerResponse.json();
+          return {
+            ...review,
+            ownerName: `${owner.name || ''} ${owner.lastName || ''}`.trim() || 'Anonymous'
+          };
+        } catch (err) {
+          console.error(`Error fetching owner ${review.ownerId}:`, err);
+          return {
+            ...review,
+            ownerName: 'Anonymous'
+          };
+        }
+      }));
+
+      // Sort reviews by date (newest first)
+      reviewsWithOwners.sort((a, b) => new Date(b.reviewedAt) - new Date(a.reviewedAt));
+
       // Combine vet data with reviews
       const vetWithReviews = {
         ...fullVetData,
-        reviews: reviews,
+        reviews: reviewsWithOwners,
         reviewCount: reviews.length
       };
 
