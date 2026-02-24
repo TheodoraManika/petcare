@@ -119,6 +119,8 @@ const Appointments = () => {
       const apt = appointments.find(a => String(a.id) === String(location.state.appointmentId));
       if (apt) {
         setSelectedAppointment(apt);
+        // Clear the navigation state to prevent reopening
+        window.history.replaceState({}, document.title);
       }
     }
   }, [location.state, loading, appointments]);
@@ -832,6 +834,10 @@ const Appointments = () => {
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Όνομα:</span>
                     <span>{selectedAppointment.ownerName}</span>
+                  </div>
+                  <div className="appointments__modal-info">
+                    <span className="appointments__modal-label">Επίθετο:</span>
+                    <span>{selectedAppointment.ownerLastName}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Τηλέφωνο:</span>

@@ -10,6 +10,7 @@ import {
   Star,
   Stethoscope,
   FileText,
+  PawPrint,
   Check,
   X,
   ArrowLeft
@@ -40,7 +41,6 @@ const BookingForm = ({
   useEffect(() => {
     if (prefilledVet) {
       setSelectedVet(prefilledVet);
-      setSelectedSlot(null);
       setSearchQuery('');
       setShowSearchResults(false);
     }
@@ -685,7 +685,7 @@ const BookingForm = ({
             {/* Pet selection for this booking */}
             <div className="booking-form__section">
               <h3 className="booking-form__section-title">
-                <FileText size={18} />
+                <PawPrint size={18} />
                 Επιλογή Κατοικιδίου
               </h3>
               <div className="booking-form__form-group">

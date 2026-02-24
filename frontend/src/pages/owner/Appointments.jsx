@@ -509,7 +509,7 @@ const Appointments = () => {
                 )}
               </div>
 
-              <p className="owner-appointments__pet">Κατοικίδιο: {appointment.petName} ({appointment.petSpecies})</p>
+              <p className="owner-appointments__pet">Κατοικίδιο: {appointment.petName}{appointment.petSpecies ? ` (${appointment.petSpecies})` : ''}</p>
 
               <div className="owner-appointments__details">
                 <div className="owner-appointments__detail">
