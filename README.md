@@ -1,10 +1,10 @@
 # PetCare
 
-Μανίκα Θεοδώρα  1115202100267
-Καμπιώτη Δέσποινα 1115202100285
-Κατράκης Κωνσταντίνος 1115201800279
+- Μανίκα Θεοδώρα  1115202100267
+- Καμπιώτη Δέσποινα 1115202100285
+- Κατράκης Κωνσταντίνος 1115201800279
 
-[Github link](https://github.com/TheodoraManika/petcare)
+[Github link to project](https://github.com/TheodoraManika/petcare)
 
 PetCare is a comprehensive web application designed to connect pet owners, veterinarians, and citizens. It facilitates pet adoption, helps track lost and found pets, and manages veterinary appointments.
 
@@ -78,6 +78,19 @@ You need to run both the backend (JSON Server) and the frontend (Vite) concurren
     npm run dev
     ```
     This will start the Vite development server, usually on `http://localhost:5173`.
+
+### Test user accounts
+
+- **Pet Owners (7 existing accounts)**:
+    - Email: `owner1@petcare.gr` - `owner7@petcare.gr`
+    - Password: `password123` (same for all)
+
+- **Vets (10 existing accounts)**:
+    - Email: `vet1@petcare.gr` - `vet10@petcare.gr`
+    - Password: `password123` (same for all)
+
+*Note: To switch between users, simply change the number in the email 
+(e.g. vet2@petcare.gr, owner5@petcare.gr).*
 
 ## Project Structure
 
