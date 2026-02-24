@@ -61,17 +61,20 @@ const HistoryDetail = () => {
             },
             transfer: {
               currentOwner: {
-                name: transfer.currentOwnerName?.split(' ')[0] || '-',
-                surname: transfer.currentOwnerName?.split(' ')[1] || '-',
-                afm: transfer.currentOwnerAfm || '-'
+                name: transfer.currentOwnerName || '-',
+                surname: transfer.currentOwnerSurname || '-',
+                afm: transfer.currentOwnerAfm || '-',
+                email: transfer.currentOwnerEmail || '-'
               },
               newOwner: {
-                name: transfer.newOwnerName?.split(' ')[0] || '-',
-                surname: transfer.newOwnerName?.split(' ')[1] || '-',
-                afm: transfer.newOwnerAfm || '-'
+                name: transfer.newOwnerName || '-',
+                surname: transfer.newOwnerSurname || '-',
+                afm: transfer.newOwnerAfm || '-',
+                email: transfer.newOwnerEmail || '-'
               },
               transferDate: formatDate(transfer.transferDate),
-              transferReason: transfer.transferReason || '-'
+              transferReason: transfer.transferReason || '-',
+              notes: transfer.notes
             }
           };
           operationType = 'transfer';
@@ -96,15 +99,17 @@ const HistoryDetail = () => {
             },
             adoption: {
               owner: {
-                name: adoption.adoptingOwnerName?.split(' ')[0] || '-',
-                surname: adoption.adoptingOwnerName?.split(' ')[1] || '-',
-                afm: adoption.adoptingOwnerAfm || '-'
+                name: adoption.adoptingOwnerName || '-',
+                surname: adoption.adoptingOwnerSurname || '-',
+                afm: adoption.adoptingOwnerAfm || '-',
+                email: adoption.adoptingOwnerEmail || '-'
               },
               adoptionDate: formatDate(adoption.adoptionDate),
-              shelterName: adoption.shelterName || '-',
-              hasGarden: adoption.hasGarden ? 'Ναι' : 'Όχι',
-              hasOtherPets: adoption.hasOtherPets ? 'Ναι' : 'Όχι',
-              hasPetExperience: adoption.hasPetExperience ? 'Ναι' : 'Όχι'
+              shelterName: adoption.adoptionReason || '-',
+              hasGarden: adoption.shelterOwner === 'yes' ? 'Ναι' : 'Όχι',
+              hasOtherPets: adoption.liveWithOtherPets === 'yes' ? 'Ναι' : 'Όχι',
+              hasPetExperience: adoption.existingPets === 'yes' ? 'Ναι' : 'Όχι',
+              notes: adoption.notes
             }
           };
           operationType = 'adoption';
@@ -129,15 +134,17 @@ const HistoryDetail = () => {
             },
             adoption: {
               owner: {
-                name: foster.fosterParentName?.split(' ')[0] || '-',
-                surname: foster.fosterParentName?.split(' ')[1] || '-',
-                afm: foster.fosterParentAfm || '-'
+                name: foster.fosterParentName || '-',
+                surname: foster.fosterParentSurname || '-',
+                afm: foster.fosterParentAfm || '-',
+                email: foster.fosterParentEmail || '-'
               },
               adoptionDate: formatDate(foster.fosterDate),
-              shelterName: foster.shelterName || '-',
-              hasGarden: foster.hasGarden ? 'Ναι' : 'Όχι',
-              hasOtherPets: foster.hasOtherPets ? 'Ναι' : 'Όχι',
-              hasPetExperience: foster.hasPetExperience ? 'Ναι' : 'Όχι'
+              shelterName: foster.fosterReason || '-',
+              hasGarden: foster.shelterOwner === 'yes' ? 'Ναι' : 'Όχι',
+              hasOtherPets: foster.liveWithOtherPets === 'yes' ? 'Ναι' : 'Όχι',
+              hasPetExperience: foster.existingPets === 'yes' ? 'Ναι' : 'Όχι',
+              notes: foster.notes
             }
           };
           operationType = 'foster';
@@ -415,6 +422,10 @@ const HistoryDetail = () => {
                       <span className="history-detail__info-label">ΑΦΜ</span>
                       <span className="history-detail__info-value">{detailData.transfer.currentOwner.afm}</span>
                     </div>
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Email</span>
+                      <span className="history-detail__info-value">{detailData.transfer.currentOwner.email}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -435,6 +446,10 @@ const HistoryDetail = () => {
                     <div className="history-detail__info-item">
                       <span className="history-detail__info-label">ΑΦΜ</span>
                       <span className="history-detail__info-value">{detailData.transfer.newOwner.afm}</span>
+                    </div>
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Email</span>
+                      <span className="history-detail__info-value">{detailData.transfer.newOwner.email}</span>
                     </div>
                   </div>
                 </div>
@@ -484,6 +499,10 @@ const HistoryDetail = () => {
                   <div className="history-detail__info-item">
                     <span className="history-detail__info-label">ΑΦΜ</span>
                     <span className="history-detail__info-value">{detailData.adoption.owner.afm}</span>
+                  </div>
+                  <div className="history-detail__info-item">
+                    <span className="history-detail__info-label">Email</span>
+                    <span className="history-detail__info-value">{detailData.adoption.owner.email}</span>
                   </div>
                 </div>
               </div>

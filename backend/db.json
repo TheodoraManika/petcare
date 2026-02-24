@@ -1680,9 +1680,84 @@
       "createdAt": "2026-01-20T18:53:59.372Z"
     }
   ],
-  "transfers": [],
-  "adoptions": [],
-  "fosters": [],
+  "transfers": [
+    {
+      "id": "1771953120028",
+      "petId": "41",
+      "petName": "Μίνι",
+      "microchip": "900222333444555",
+      "vetId": "1",
+      "vetName": "Αναστασία Μιχαηλίδου",
+      "currentOwnerId": "ef39",
+      "currentOwnerName": "Γιάννης",
+      "currentOwnerSurname": "Παπανδρέου",
+      "currentOwnerAfm": "123456789",
+      "currentOwnerPhone": "6985339659",
+      "currentOwnerEmail": "owner1@petcare.gr",
+      "newOwnerName": "Πέτρος",
+      "newOwnerSurname": "Αντωνίου",
+      "newOwnerAfm": "102937563",
+      "newOwnerPhone": "6937550174",
+      "newOwnerEmail": "owner2@petcare.gr",
+      "newOwnerAddress": "Ιουστινιανού 12",
+      "newOwnerCity": "Αθήνα",
+      "newOwnerPostalCode": "10550",
+      "transferDate": "24/02/2026",
+      "transferReason": "Μετακόμιση στο Εξωτερικό",
+      "notes": "Μεταβίβαση σε φίλο του ιδιοκτήτη",
+      "createdAt": "2026-02-24T17:12:00.028Z"
+    }
+  ],
+  "adoptions": [
+    {
+      "id": "1771954206411",
+      "petId": "42",
+      "petName": "Μπρούνο",
+      "microchip": "900333444555666",
+      "vetId": "1",
+      "vetName": "Αναστασία Μιχαηλίδου",
+      "adoptingOwnerName": "Πέτρος",
+      "adoptingOwnerSurname": "Αντωνίου",
+      "adoptingOwnerAfm": "102937563",
+      "adoptingOwnerPhone": "6937550174",
+      "adoptingOwnerEmail": "owner2@petcare.gr",
+      "adoptingOwnerAddress": "Ιουστινιανού 12",
+      "adoptingOwnerCity": "Αθήνα",
+      "adoptingOwnerPostalCode": "10550",
+      "adoptionDate": "03/02/2026",
+      "adoptionReason": "Φιλοζωική Αθήνας ",
+      "shelterOwner": "yes",
+      "liveWithOtherPets": "yes",
+      "existingPets": "yes",
+      "notes": "Μεγάλη εμπειρία με κατοικίδια της ίδιας ράτσας",
+      "createdAt": "2026-02-24T17:30:06.411Z"
+    }
+  ],
+  "fosters": [
+    {
+      "id": "1771954379043",
+      "petId": "46",
+      "petName": "Χιονάτη",
+      "microchip": "900777888999000",
+      "vetId": "1",
+      "vetName": "Αναστασία Μιχαηλίδου",
+      "fosterParentName": "Μαρία",
+      "fosterParentSurname": "Χαραλαμποπούλου",
+      "fosterParentAfm": "123068496",
+      "fosterParentPhone": "6954967105",
+      "fosterParentEmail": "owner6@petcare.gr",
+      "fosterParentAddress": "Αγίας Άννας 12",
+      "fosterParentCity": "Πάτρα",
+      "fosterParentPostalCode": "26504",
+      "fosterDate": "13/02/2026",
+      "fosterReason": "Φιλοζωική Πατρών",
+      "shelterOwner": "no",
+      "liveWithOtherPets": "yes",
+      "existingPets": "yes",
+      "notes": "",
+      "createdAt": "2026-02-24T17:32:59.043Z"
+    }
+  ],
   "notifications": [
     {
       "id": "a47c",

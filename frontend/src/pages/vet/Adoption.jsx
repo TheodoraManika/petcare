@@ -235,6 +235,7 @@ const Adoption = () => {
         vetId: currentUser.id,
         vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
         adoptingOwnerName: formData.ownerName,
+        adoptingOwnerSurname: formData.ownerSurname,
         adoptingOwnerAfm: formData.ownerAfm,
         adoptingOwnerPhone: formData.ownerPhone,
         adoptingOwnerEmail: formData.ownerEmail,

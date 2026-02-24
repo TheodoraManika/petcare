@@ -238,6 +238,7 @@ const Foster = () => {
         vetId: currentUser.id,
         vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
         fosterParentName: formData.fosterParentName,
+        fosterParentSurname: formData.fosterParentSurname,
         fosterParentAfm: formData.fosterParentAfm,
         fosterParentPhone: formData.fosterParentPhone,
         fosterParentEmail: formData.fosterParentEmail,
