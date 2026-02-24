@@ -13,9 +13,6 @@ import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Transfer.css';
 
-// Mock lost pets database
-
-
 const Transfer = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
@@ -85,7 +82,7 @@ const Transfer = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        microchipNumber: pet.microchip,
+        microchipNumber: pet.microchipId || pet.microchip,
       }));
       setFoundPet(pet);
     } else {
@@ -186,34 +183,34 @@ const Transfer = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15
+          (formData.microchipNumber || '').trim() !== '' &&
+          (formData.microchipNumber || '').length === 15
         );
       case 2:
         return (
-          formData.currentOwnerAfm.trim() !== '' &&
-          formData.currentOwnerAfm.length === 9 &&
-          formData.currentOwnerName.trim() !== '' &&
-          formData.currentOwnerSurname.trim() !== '' &&
-          formData.currentOwnerPhone.trim() !== '' &&
-          formData.currentOwnerEmail.trim() !== ''
+          (formData.currentOwnerAfm || '').trim() !== '' &&
+          (formData.currentOwnerAfm || '').length === 9 &&
+          (formData.currentOwnerName || '').trim() !== '' &&
+          (formData.currentOwnerSurname || '').trim() !== '' &&
+          (formData.currentOwnerPhone || '').trim() !== '' &&
+          (formData.currentOwnerEmail || '').trim() !== ''
         );
       case 3:
         return (
-          formData.newOwnerAfm.trim() !== '' &&
-          formData.newOwnerAfm.length === 9 &&
-          formData.newOwnerName.trim() !== '' &&
-          formData.newOwnerSurname.trim() !== '' &&
-          formData.newOwnerPhone.trim() !== '' &&
-          formData.newOwnerEmail.trim() !== '' &&
-          formData.newOwnerAddress.trim() !== '' &&
-          formData.newOwnerCity.trim() !== '' &&
-          formData.newOwnerPostalCode.trim() !== ''
+          (formData.newOwnerAfm || '').trim() !== '' &&
+          (formData.newOwnerAfm || '').length === 9 &&
+          (formData.newOwnerName || '').trim() !== '' &&
+          (formData.newOwnerSurname || '').trim() !== '' &&
+          (formData.newOwnerPhone || '').trim() !== '' &&
+          (formData.newOwnerEmail || '').trim() !== '' &&
+          (formData.newOwnerAddress || '').trim() !== '' &&
+          (formData.newOwnerCity || '').trim() !== '' &&
+          (formData.newOwnerPostalCode || '').trim() !== ''
         );
       case 4:
         return (
-          formData.transferDate.trim() !== '' &&
-          formData.transferReason.trim() !== ''
+          (formData.transferDate || '').trim() !== '' &&
+          (formData.transferReason || '').trim() !== ''
         );
       default:
         return false;

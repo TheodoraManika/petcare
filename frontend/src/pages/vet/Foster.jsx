@@ -81,7 +81,7 @@ const Foster = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        microchipNumber: pet.microchip,
+        microchipNumber: pet.microchipId || pet.microchip,
         petName: pet.name,
         species: pet.type,
         age: pet.age || '',
@@ -163,29 +163,28 @@ const Foster = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15 &&
-          formData.microchipNumber.length === 15
+          (formData.microchipNumber || '').trim() !== '' &&
+          (formData.microchipNumber || '').length === 15
         );
       case 2:
         return (
-          formData.fosterParentAfm.trim() !== '' &&
-          formData.fosterParentAfm.length === 9 &&
-          formData.fosterParentName.trim() !== '' &&
-          formData.fosterParentSurname.trim() !== '' &&
-          formData.fosterParentPhone.trim() !== '' &&
-          formData.fosterParentEmail.trim() !== '' &&
-          formData.fosterParentAddress.trim() !== '' &&
-          formData.fosterParentCity.trim() !== '' &&
-          formData.fosterParentPostalCode.trim() !== ''
+          (formData.fosterParentAfm || '').trim() !== '' &&
+          (formData.fosterParentAfm || '').length === 9 &&
+          (formData.fosterParentName || '').trim() !== '' &&
+          (formData.fosterParentSurname || '').trim() !== '' &&
+          (formData.fosterParentPhone || '').trim() !== '' &&
+          (formData.fosterParentEmail || '').trim() !== '' &&
+          (formData.fosterParentAddress || '').trim() !== '' &&
+          (formData.fosterParentCity || '').trim() !== '' &&
+          (formData.fosterParentPostalCode || '').trim() !== ''
         );
       case 3:
         return (
-          formData.fosterDate.trim() !== '' &&
-          formData.fosterReason.trim() !== '' &&
-          formData.shelterOwner.trim() !== '' &&
-          formData.liveWithOtherPets.trim() !== '' &&
-          formData.existingPets.trim() !== ''
+          (formData.fosterDate || '').trim() !== '' &&
+          (formData.fosterReason || '').trim() !== '' &&
+          (formData.shelterOwner || '').trim() !== '' &&
+          (formData.liveWithOtherPets || '').trim() !== '' &&
+          (formData.existingPets || '').trim() !== ''
         );
       default:
         return false;

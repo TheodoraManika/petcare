@@ -15,9 +15,6 @@ import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
 
-// Mock lost pets database
-
-
 const Adoption = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
@@ -82,7 +79,7 @@ const Adoption = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        microchipNumber: pet.microchip,
+        microchipNumber: pet.microchipId || pet.microchip,
         petName: pet.name,
         species: pet.type,
       }));
@@ -163,28 +160,28 @@ const Adoption = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15
+          (formData.microchipNumber || '').trim() !== '' &&
+          (formData.microchipNumber || '').length === 15
         );
       case 2:
         return (
-          formData.ownerAfm.trim() !== '' &&
-          formData.ownerAfm.length === 9 &&
-          formData.ownerName.trim() !== '' &&
-          formData.ownerSurname.trim() !== '' &&
-          formData.ownerPhone.trim() !== '' &&
-          formData.ownerEmail.trim() !== '' &&
-          formData.ownerAddress.trim() !== '' &&
-          formData.ownerCity.trim() !== '' &&
-          formData.ownerPostalCode.trim() !== ''
+          (formData.ownerAfm || '').trim() !== '' &&
+          (formData.ownerAfm || '').length === 9 &&
+          (formData.ownerName || '').trim() !== '' &&
+          (formData.ownerSurname || '').trim() !== '' &&
+          (formData.ownerPhone || '').trim() !== '' &&
+          (formData.ownerEmail || '').trim() !== '' &&
+          (formData.ownerAddress || '').trim() !== '' &&
+          (formData.ownerCity || '').trim() !== '' &&
+          (formData.ownerPostalCode || '').trim() !== ''
         );
       case 3:
         return (
-          formData.adoptionDate.trim() !== '' &&
-          formData.adoptionReason.trim() !== '' &&
-          formData.shelterOwner.trim() !== '' &&
-          formData.liveWithOtherPets.trim() !== '' &&
-          formData.existingPets.trim() !== ''
+          (formData.adoptionDate || '').trim() !== '' &&
+          (formData.adoptionReason || '').trim() !== '' &&
+          (formData.shelterOwner || '').trim() !== '' &&
+          (formData.liveWithOtherPets || '').trim() !== '' &&
+          (formData.existingPets || '').trim() !== ''
         );
       default:
         return false;
