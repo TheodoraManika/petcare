@@ -1,22 +1,37 @@
 # PetCare
 
-- Μανίκα Θεοδώρα  1115202100267
-- Καμπιώτη Δέσποινα 1115202100285
-- Κατράκης Κωνσταντίνος 1115201800279
+## Contributors
+- Manika Theodora
+- Kampioti Despoina 
+- Katrakis Konstantinos 
 
 [Github link to project](https://github.com/TheodoraManika/petcare)
 
-PetCare is a comprehensive web application designed to connect pet owners, veterinarians, and citizens. It facilitates pet adoption, helps track lost and found pets, and manages veterinary appointments.
+PetCare was developed for the Human-Computer Interaction course in the Department of Informatics and Telecommunications at NKUA. It redesigns and implements the user interface for the pet.gov.gr portal, aiming to deliver a modern “pet health registration and monitoring” hub that serves pet owners, veterinarians, and citizens with personalized information and streamlined workflows across key services.
 
 ## Features
 
-- **Pet Adoption**: Browse pets available for adoption from veterinarians.
-- **Lost & Found**: Report lost pets or register found pets to help reunite them with their owners.
-- **Appointments**: Book and manage appointments with veterinarians.
-- **User Roles**: Specialized interfaces for:
-  - **Pet Owners**: Manage pets, appointments, and report lost pets.
-  - **Veterinarians**: Manage adoptions, appointments, and medical records.
-  - **Citizens**: Report found pets and browse adoptions.
+### Pet Owners
+- Personalized guidance on platform procedures and next steps.
+- View and print pet health records.
+- Declarations for lost pets with draft/submitted states.
+- Declarations for found pets and declaration history.
+- Vet search with filters (area, availability, profile) and detailed profiles.
+- Appointment scheduling, confirmation/cancellation flow, and history tracking.
+- Vet reviews and ratings.
+
+### Veterinarians
+- Guided onboarding and profile creation (credentials, experience, clinic info).
+- Pet identity registration and life events (loss, found, transfer, adoption, foster).
+- Medical procedure logging and visit history.
+- Availability management for appointments.
+- Appointment requests with approve/decline flow and notifications.
+- Review management.
+
+### Citizens (Public)
+- Browse lost pets without authentication.
+- Submit found pet reports with location, photos, and finder details.
+- View veterinarians' profiles, reviews and ratings.
 
 ## Tech Stack
 
@@ -28,8 +43,11 @@ PetCare is a comprehensive web application designed to connect pet owners, veter
 - **Lucide React**: For modern iconography.
 
 ### Backend
-- **JSON Server**: A full fake REST API for prototyping and development.
-- **Node.js**: Runtime environment for the backend scripts.
+- **JSON Server**: Fake REST API for prototyping and demo data.
+- **Node.js**: Runtime environment for backend scripts.
+
+## Project Scope
+This project focuses on the frontend experience. The backend is mocked for demonstration and development purposes, following the assignment’s requirement to design and implement the interface from scratch. It runs on JSON Server and serves data from a local `db.json`, enabling CRUD operations during development without a full backend.
 
 ## Getting Started
 
@@ -98,7 +116,6 @@ You need to run both the backend (JSON Server) and the frontend (Vite) concurren
 petcare/
 ├── backend/          # Backend logic and mock database
 │   ├── db.json       # JSON database
-│   └── uploads/      # Image uploads
 ├── frontend/         # React frontend application
 │   ├── src/
 │   │   ├── components/
