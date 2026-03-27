@@ -976,7 +976,7 @@
 .owner-appointments__filters .custom-select__trigger:focus,
 .owner-appointments__filters .custom-select__trigger--open {
   border-color: transparent;
-  box-shadow: no2ne;
+  box-shadow: none;
 }
 
 @media (max-width: 768px) {
