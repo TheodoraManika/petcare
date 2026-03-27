@@ -303,28 +303,6 @@ const Register = () => {
       setShowConfirmModal(false);
       setShowSuccess(true);
       
-      // Reset form after successful submission
-      setTimeout(() => {
-        setShowSuccess(false);
-        setFormData({
-          microchipNumber: '',
-          species: '',
-          breed: '',
-          ownerName: '',
-          gender: '',
-          birthDate: '',
-          color: '',
-          weight: '',
-          ownerLastName: '',
-          ownerPhone: '',
-          ownerEmail: '',
-          ownerAddress: '',
-          ownerAddressLat: '',
-          ownerAddressLon: '',
-          afm: '',
-        });
-      }, 3000);
-      
     } catch (error) {
       console.error('Error registering pet:', error);
       setNotification({
