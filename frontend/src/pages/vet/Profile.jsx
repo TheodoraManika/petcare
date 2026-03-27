@@ -54,6 +54,27 @@ const Profile = () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     if (currentUser) {
+      const normalizeSpecialties = (value) => {
+        if (!value) return [];
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') {
+          return value
+            .split(',')
+            .map(item => item.trim())
+            .filter(Boolean);
+        }
+        return [];
+      };
+
+      const dedupeSpecialties = (items) => {
+        const seen = new Set();
+        return items.filter((item) => {
+          if (seen.has(item)) return false;
+          seen.add(item);
+          return true;
+        });
+      };
+
       const userData = {
         firstName: currentUser.name || '',
         lastName: currentUser.lastName || '',
@@ -61,7 +82,7 @@ const Profile = () => {
         phone: currentUser.phone || '',
         afm: currentUser.afm || '',
         vetLicense: currentUser.licenseNumber || '',
-        specialties: currentUser.specialization ? [currentUser.specialization] : [],
+        specialties: dedupeSpecialties(normalizeSpecialties(currentUser.specialization || currentUser.specialties)),
         yearsOfExperience: currentUser.experience || '',
         clinicName: currentUser.clinicName || '',
         address: currentUser.clinicAddress || '',
@@ -156,13 +177,14 @@ const Profile = () => {
   };
 
   const handleSpecialtiesChange = (selectedSpecialties) => {
+    const uniqueSpecialties = Array.from(new Set(selectedSpecialties));
     setFormData(prev => ({
       ...prev,
-      specialties: selectedSpecialties
+      specialties: uniqueSpecialties
     }));
 
     // Clear error when specialties are selected
-    if (errors.specialties && selectedSpecialties.length > 0) {
+    if (errors.specialties && uniqueSpecialties.length > 0) {
       setErrors(prev => ({
         ...prev,
         specialties: ''
@@ -232,7 +254,6 @@ const Profile = () => {
       }, 5000);
     } catch (error) {
       console.error('Error deleting account:', error);
-      // You might want to show an error message to the user here
       setShowDeleteModal(false);
     }
   };
@@ -313,7 +334,9 @@ const Profile = () => {
         afm: formData.afm,
         licenseNumber: formData.vetLicense,
         licenseType: formData.licenseType,
-        specialization: Array.isArray(formData.specialties) ? formData.specialties.join(', ') : formData.specialties,
+        specialization: Array.isArray(formData.specialties)
+          ? Array.from(new Set(formData.specialties)).join(', ')
+          : formData.specialties,
         experience: formData.yearsOfExperience,
         education: formData.university,
         biography: formData.bio,
@@ -350,7 +373,9 @@ const Profile = () => {
         afm: formData.afm,
         licenseNumber: formData.vetLicense,
         licenseType: formData.licenseType,
-        specialization: formData.specialties,
+        specialization: Array.isArray(formData.specialties)
+          ? Array.from(new Set(formData.specialties))
+          : formData.specialties,
         experience: formData.yearsOfExperience,
         education: formData.university,
         biography: formData.bio,
