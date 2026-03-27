@@ -62,11 +62,13 @@ const SearchResultsList = ({
         <div className="result-details">
           <h3 className="result-name">{item.name} {item.lastName || item.surname}</h3>
           {item.specialty && <p className="result-specialty">{item.specialty}</p>}
-          {item.rating && (
+          {item.rating !== undefined && item.rating !== null && (
             <div className="result-rating-info">
               <Star size={14} fill="#FFC107" color="#FFC107" />
               <span className="rating-stars">{typeof item.rating === 'number' ? item.rating.toFixed(1) : item.rating}</span>
-              {item.reviewCount && <span className="rating-count">({item.reviewCount} αξιολογήσεις)</span>}
+              {(item.reviewCount !== undefined && item.reviewCount !== null) && (
+                <span className="rating-count">({item.reviewCount} αξιολογήσεις)</span>
+              )}
             </div>
           )}
           {item.address && <p className="result-address">{item.address}</p>}
