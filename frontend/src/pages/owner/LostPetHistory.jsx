@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Eye, Edit2, X, PawPrint, CheckCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
+import CustomSelect from '../../components/common/forms/CustomSelect';
 import { ROUTES, formatDate } from '../../utils/constants';
 import './LostPetHistory.css';
 
@@ -17,6 +18,7 @@ const LostPetHistory = () => {
   const [declarations, setDeclarations] = useState([]);
   const [foundByOthers, setFoundByOthers] = useState([]);
   const [lostHistory, setLostHistory] = useState([]);
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(true);
 
   // Fetch lost pet declarations from database
@@ -272,6 +274,21 @@ const LostPetHistory = () => {
   }, []);
 
   const currentData = activeTab === 'mine' ? [...declarations, ...lostHistory] : foundByOthers;
+  const sortedData = [...currentData].sort((a, b) => {
+    const parseDateValue = (dateStr) => {
+      if (!dateStr) return 0;
+      if (dateStr.includes('/')) {
+        const [day, month, year] = dateStr.split('/').map(Number);
+        return new Date(year, (month || 1) - 1, day || 1).getTime();
+      }
+      const parsed = new Date(dateStr).getTime();
+      return Number.isNaN(parsed) ? 0 : parsed;
+    };
+
+    const dateA = parseDateValue(a.date);
+    const dateB = parseDateValue(b.date);
+    return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+  });
 
   // Handle deep linking to specific declaration from notifications
   useEffect(() => {
@@ -299,7 +316,7 @@ const LostPetHistory = () => {
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = currentData.slice(startIndex, endIndex);
+  const paginatedData = sortedData.slice(startIndex, endIndex);
 
   const getStatusBadge = (status) => {
     const statusConfig = {
@@ -359,7 +376,24 @@ const LostPetHistory = () => {
       <div className="lost-pet-history">
         <div className="lost-pet-history__header">
           <h1 className="lost-pet-history__title">Ιστορικό Δηλώσεων</h1>
-          <p className="lost-pet-history__subtitle">Προβολή και διαχείριση των δηλώσεων απώλειας και εύρεσης</p>
+          <div className="lost-pet-history__subtitle-row">
+            <p className="lost-pet-history__subtitle">Προβολή και διαχείριση των δηλώσεων απώλειας και εύρεσης</p>
+            <div className="lost-pet-history__filters">
+              <span className="lost-pet-history__sort-label">Ταξινόμηση:</span>
+              <div className="lost-pet-history__sort-control">
+                <CustomSelect
+                  name="lost-pet-history-sort"
+                  value={sortOrder}
+                  onChange={(value) => { setSortOrder(value); setCurrentPage(1); }}
+                  options={[
+                    { value: 'desc', label: 'Πιο πρόσφατα' },
+                    { value: 'asc', label: 'Παλαιότερα' }
+                  ]}
+                  variant="owner"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="lost-pet-history__tabs">

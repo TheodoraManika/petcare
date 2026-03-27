@@ -5,6 +5,7 @@ import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
+import CustomSelect from '../../components/common/forms/CustomSelect';
 import { ROUTES, SERVICE_LABELS, formatDate } from '../../utils/constants';
 import './Appointments.css';
 
@@ -20,6 +21,7 @@ const Appointments = () => {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [appointmentToReject, setAppointmentToReject] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState('desc');
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -202,27 +204,29 @@ const Appointments = () => {
   };
 
   const filterAppointments = () => {
-    let filtered = filterStatus === 'all' ? appointments : appointments.filter(apt => apt.status === filterStatus);
+    const filtered = filterStatus === 'all'
+      ? [...appointments]
+      : appointments.filter(apt => apt.status === filterStatus);
 
-    // Sort by date and time (earliest first)
-    return filtered.sort((a, b) => {
-      // Parse dates (format: DD/MM/YYYY)
-      const [dayA, monthA, yearA] = a.date.split('/').map(Number);
-      const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-
-      const dateA = new Date(yearA, monthA - 1, dayA);
-      const dateB = new Date(yearB, monthB - 1, dayB);
-
-      // Compare dates (descending)
-      if (dateA.getTime() !== dateB.getTime()) {
-        return dateB - dateA;
+    const getAppointmentStart = (apt) => {
+      let dateObj;
+      if (apt.date && apt.date.includes('/')) {
+        const [day, month, year] = apt.date.split('/').map(Number);
+        dateObj = new Date(year, month - 1, day);
+      } else {
+        dateObj = new Date(apt.date);
       }
 
-      // If dates are the same, compare by start time (descending)
-      const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
-      const timeB = b.time.split(' - ')[0];
+      const timeStr = apt.time?.split(' - ')[0] || '00:00';
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      dateObj.setHours(hours || 0, minutes || 0, 0, 0);
+      return dateObj;
+    };
 
-      return timeB.localeCompare(timeA);
+    return filtered.sort((a, b) => {
+      const dateA = getAppointmentStart(a).getTime();
+      const dateB = getAppointmentStart(b).getTime();
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
   };
 
@@ -675,36 +679,53 @@ const Appointments = () => {
           <div className="appointments__list-view">
             {/* Filters */}
             <div className="appointments__filters">
-              <button
-                className={`appointments__filter ${filterStatus === 'all' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('all'); setCurrentPage(1); }}
-              >
-                Όλα
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'confirmed' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('confirmed'); setCurrentPage(1); }}
-              >
-                Επιβεβαιωμένα
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'pending' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('pending'); setCurrentPage(1); }}
-              >
-                Εκκρεμή
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'completed' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('completed'); setCurrentPage(1); }}
-              >
-                Ολοκληρωμένα
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'cancelled' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('cancelled'); setCurrentPage(1); }}
-              >
-                Ακυρωμένα
-              </button>
+              <div className="appointments__filters-left">
+                <button
+                  className={`appointments__filter ${filterStatus === 'all' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('all'); setCurrentPage(1); }}
+                >
+                  Όλα
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'confirmed' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('confirmed'); setCurrentPage(1); }}
+                >
+                  Επιβεβαιωμένα
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'pending' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('pending'); setCurrentPage(1); }}
+                >
+                  Εκκρεμή
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'completed' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('completed'); setCurrentPage(1); }}
+                >
+                  Ολοκληρωμένα
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'cancelled' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('cancelled'); setCurrentPage(1); }}
+                >
+                  Ακυρωμένα
+                </button>
+              </div>
+              <div className="appointments__filters-right">
+                <span className="appointments__sort-label">Ταξινόμηση:</span>
+                <div className="appointments__sort-control">
+                  <CustomSelect
+                    name="appointments-sort"
+                    value={sortOrder}
+                    onChange={(value) => { setSortOrder(value); setCurrentPage(1); }}
+                    options={[
+                      { value: 'desc', label: 'Πιο πρόσφατα' },
+                      { value: 'asc', label: 'Παλαιότερα' }
+                    ]}
+                    variant="vet"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Appointment Cards */}

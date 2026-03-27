@@ -21,6 +21,32 @@
   margin: 0;
 }
 
+.owner-appointments__subtitle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.owner-appointments__filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.owner-appointments__sort-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.owner-appointments__sort-control {
+  min-width: 180px;
+}
+
 /* Success Message */
 .owner-appointments__success {
   display: flex;
@@ -629,11 +655,19 @@
   transform: none;
 }
 
+.owner-appointments__tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
 .owner-appointments__tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid #e5e7eb;
 }
 
 .owner-appointments__tab {
@@ -928,6 +962,23 @@
   border-radius: 8px;
 }
 
+.owner-appointments__filters .custom-select__trigger {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.owner-appointments__filters .custom-select__trigger:hover {
+  border-color: transparent;
+  background: transparent;
+}
+
+.owner-appointments__filters .custom-select__trigger:focus,
+.owner-appointments__filters .custom-select__trigger--open {
+  border-color: transparent;
+  box-shadow: no2ne;
+}
+
 @media (max-width: 768px) {
   .owner-appointments {
     padding: 16px;
@@ -935,6 +986,10 @@
 
   .owner-appointments__details {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .owner-appointments__tabs-row {
     gap: 12px;
   }
 

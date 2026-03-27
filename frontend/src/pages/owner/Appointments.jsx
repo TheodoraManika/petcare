@@ -6,6 +6,7 @@ import Pagination from '../../components/common/layout/Pagination';
 import BookingForm from '../../components/owner/BookingForm';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
+import CustomSelect from '../../components/common/forms/CustomSelect';
 import { ROUTES, SERVICE_LABELS, formatDate } from '../../utils/constants';
 import './Appointments.css';
 
@@ -28,6 +29,7 @@ const Appointments = () => {
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const [notification, setNotification] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -238,11 +240,24 @@ const Appointments = () => {
   });
 
   const displayAppointments = activeTab === 'active' ? activeAppointmentsData : historyAppointmentsData;
+  const sortedAppointments = [...displayAppointments].sort((a, b) => {
+    const getAppointmentStart = (apt) => {
+      const dateObj = apt.date ? new Date(apt.date) : new Date(0);
+      const timeStr = apt.time?.split(' - ')[0] || '00:00';
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      dateObj.setHours(hours || 0, minutes || 0, 0, 0);
+      return dateObj.getTime();
+    };
+
+    const dateA = getAppointmentStart(a);
+    const dateB = getAppointmentStart(b);
+    return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+  });
 
   // Pagination logic
   const totalPages = Math.ceil(displayAppointments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedAppointments = displayAppointments.slice(startIndex, startIndex + itemsPerPage);
+  const displayedAppointments = sortedAppointments.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -436,7 +451,9 @@ const Appointments = () => {
       <div className="owner-appointments">
         <div className="owner-appointments__header">
           <h1 className="owner-appointments__title">Τα Ραντεβού μου</h1>
-          <p className="owner-appointments__subtitle">Διαχείριση και παρακολούθηση ραντεβού</p>
+          <div className="owner-appointments__subtitle-row">
+            <p className="owner-appointments__subtitle">Διαχείριση και παρακολούθηση ραντεβού</p>
+          </div>
         </div>
 
         {successMessage && (
@@ -475,19 +492,36 @@ const Appointments = () => {
         </div>
 
         {/* Appointments List */}
-        <div className="owner-appointments__tabs">
-          <button
-            className={`owner-appointments__tab ${activeTab === 'active' ? 'owner-appointments__tab--active' : ''}`}
-            onClick={() => { setActiveTab('active'); setCurrentPage(1); }}
-          >
-            Ενεργά ({activeAppointmentsData.length})
-          </button>
-          <button
-            className={`owner-appointments__tab ${activeTab === 'history' ? 'owner-appointments__tab--active' : ''}`}
-            onClick={() => { setActiveTab('history'); setCurrentPage(1); }}
-          >
-            Ιστορικό ({historyAppointmentsData.length})
-          </button>
+        <div className="owner-appointments__tabs-row">
+          <div className="owner-appointments__tabs">
+            <button
+              className={`owner-appointments__tab ${activeTab === 'active' ? 'owner-appointments__tab--active' : ''}`}
+              onClick={() => { setActiveTab('active'); setCurrentPage(1); }}
+            >
+              Ενεργά ({activeAppointmentsData.length})
+            </button>
+            <button
+              className={`owner-appointments__tab ${activeTab === 'history' ? 'owner-appointments__tab--active' : ''}`}
+              onClick={() => { setActiveTab('history'); setCurrentPage(1); }}
+            >
+              Ιστορικό ({historyAppointmentsData.length})
+            </button>
+          </div>
+          <div className="owner-appointments__filters">
+            <span className="owner-appointments__sort-label">Ταξινόμηση:</span>
+            <div className="owner-appointments__sort-control">
+              <CustomSelect
+                name="owner-appointments-sort"
+                value={sortOrder}
+                onChange={(value) => { setSortOrder(value); setCurrentPage(1); }}
+                options={[
+                  { value: 'desc', label: 'Πιο πρόσφατα' },
+                  { value: 'asc', label: 'Παλαιότερα' }
+                ]}
+                variant="owner"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="owner-appointments__content">

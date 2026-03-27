@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
+import CustomSelect from '../../components/common/forms/CustomSelect';
 import { ROUTES } from '../../utils/constants';
 import './History.css';
 
@@ -12,6 +13,7 @@ const History = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [visitsData, setVisitsData] = useState([]);
   const [declarationsData, setDeclarationsData] = useState([]);
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(false);
   const itemsPerPage = 5;
 
@@ -183,11 +185,18 @@ const History = () => {
   };
 
   const currentData = activeTab === 'visits' ? visitsData : declarationsData;
+  const sortedData = [...currentData].sort((a, b) => {
+    const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+    const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+    const dateA = new Date(yearA, monthA - 1, dayA).getTime();
+    const dateB = new Date(yearB, monthB - 1, dayB).getTime();
+    return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+  });
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = currentData.slice(startIndex, endIndex);
+  const currentItems = sortedData.slice(startIndex, endIndex);
 
   const handleViewDetails = (id) => {
     navigate(`${ROUTES.vet.history}/${id}`);
@@ -228,11 +237,29 @@ const History = () => {
         </div>
 
         <div className="history__content">
-          <p className="history__subtitle">
-            {activeTab === 'visits'
-              ? 'Προβολή όλων των ιατρικών πράξεων που έχετε καταχωρήσει'
-              : 'Προβολή όλων των δηλώσεων που έχετε καταχωρήσει'}
-          </p>
+          <div className="history__subtitle-row">
+            <p className="history__subtitle">
+              {activeTab === 'visits'
+                ? 'Προβολή όλων των ιατρικών πράξεων που έχετε καταχωρήσει'
+                : 'Προβολή όλων των δηλώσεων που έχετε καταχωρήσει'}
+            </p>
+
+            <div className="history__filters">
+              <span className="history__sort-label">Ταξινόμηση:</span>
+              <div className="history__sort-control">
+                <CustomSelect
+                  name="history-sort"
+                  value={sortOrder}
+                  onChange={(value) => { setSortOrder(value); setCurrentPage(1); }}
+                  options={[
+                    { value: 'desc', label: 'Πιο πρόσφατα' },
+                    { value: 'asc', label: 'Παλαιότερα' }
+                  ]}
+                  variant="vet"
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="history__cards">
             {currentItems.map((item) => (

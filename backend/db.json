@@ -1580,7 +1580,7 @@
       "time": "10:00 - 11:00",
       "serviceType": "vaccination",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-01-20T18:10:31.816Z"
     },
     {
@@ -1727,7 +1727,7 @@
       "time": "10:00 - 11:00",
       "serviceType": "checkup",
       "notes": "",
-      "status": "confirmed",
+      "status": "completed",
       "createdAt": "2026-02-24T18:30:58.891Z"
     },
     {
@@ -1780,6 +1780,40 @@
       "notes": "",
       "status": "pending",
       "createdAt": "2026-02-24T18:39:12.579Z"
+    },
+    {
+      "id": "80c6",
+      "vetId": "7",
+      "vetName": "Παύλος Χαραλάμπους",
+      "ownerId": "6762",
+      "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
+      "ownerPhone": "6927456011",
+      "petId": "43",
+      "petName": "Γκάρφιλντ",
+      "date": "2026-03-29",
+      "time": "10:00 - 11:00",
+      "serviceType": "checkup",
+      "notes": "",
+      "status": "confirmed",
+      "createdAt": "2026-03-26T18:29:39.351Z"
+    },
+    {
+      "id": "dd1f",
+      "vetId": "7",
+      "vetName": "Παύλος Χαραλάμπους",
+      "ownerId": "6762",
+      "ownerName": "Λάκης",
+      "ownerLastName": "Λαλάκης",
+      "ownerPhone": "6927456011",
+      "petId": null,
+      "petName": "Μόλι",
+      "date": "2026-03-29",
+      "time": "10:00 - 11:00",
+      "serviceType": "checkup",
+      "notes": "Πρώτη επίσκεψη",
+      "status": "pending",
+      "createdAt": "2026-03-26T18:29:39.352Z"
     }
   ],
   "transfers": [
@@ -2574,6 +2608,57 @@
       "date": "2026-02-24T18:39:12.595Z",
       "read": true,
       "createdAt": "2026-02-24T18:39:12.595Z"
+    },
+    {
+      "id": "f1df",
+      "userId": "7",
+      "userType": "vet",
+      "type": "new_appointment",
+      "title": "Νέο αίτημα ραντεβού",
+      "data": {
+        "ownerName": "Λάκης",
+        "appointmentDate": "2026-03-29",
+        "appointmentTime": "10:00 - 11:00",
+        "petName": "Γκάρφιλντ",
+        "appointmentId": "80c6"
+      },
+      "date": "2026-03-26T18:29:39.375Z",
+      "read": true,
+      "createdAt": "2026-03-26T18:29:39.375Z"
+    },
+    {
+      "id": "4f20",
+      "userId": "7",
+      "userType": "vet",
+      "type": "new_appointment",
+      "title": "Νέο αίτημα ραντεβού",
+      "data": {
+        "ownerName": "Λάκης",
+        "appointmentDate": "2026-03-29",
+        "appointmentTime": "10:00 - 11:00",
+        "petName": "Μόλι",
+        "appointmentId": "dd1f"
+      },
+      "date": "2026-03-26T18:29:39.383Z",
+      "read": false,
+      "createdAt": "2026-03-26T18:29:39.383Z"
+    },
+    {
+      "id": "03f4",
+      "userId": "6762",
+      "userType": "owner",
+      "type": "appointment_approved",
+      "title": "Το ραντεβού σας εγκρίθηκε",
+      "data": {
+        "vetName": "Παύλος Χαραλάμπους",
+        "appointmentDate": "2026-03-29",
+        "appointmentTime": "10:00 - 11:00",
+        "petName": "Γκάρφιλντ",
+        "appointmentId": "80c6"
+      },
+      "date": "2026-03-26T18:31:25.466Z",
+      "read": true,
+      "createdAt": "2026-03-26T18:31:25.466Z"
     }
   ],
   "pets": [

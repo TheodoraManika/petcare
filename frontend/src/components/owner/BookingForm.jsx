@@ -12,8 +12,8 @@ import {
   FileText,
   PawPrint,
   Check,
-  X,
-  ArrowLeft
+  Plus,
+  X
 } from 'lucide-react';
 import CustomSelect from '../common/forms/CustomSelect';
 import ConfirmModal from '../common/modals/ConfirmModal';
@@ -962,7 +962,7 @@ const BookingForm = ({
               newPetType: ''
             }])}
           >
-            <Check size={16} /> Προσθήκη άλλου κατοικιδίου
+            <Plus size={16} /> Προσθήκη άλλου κατοικιδίου
           </button>
         )}
 

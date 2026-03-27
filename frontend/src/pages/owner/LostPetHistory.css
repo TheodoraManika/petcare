@@ -18,7 +18,33 @@
 .lost-pet-history__subtitle {
   font-size: 14px;
   color: #6b7280;
+  margin: 0;
+}
+
+.lost-pet-history__subtitle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   margin-bottom: 24px;
+}
+
+.lost-pet-history__filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.lost-pet-history__sort-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.lost-pet-history__sort-control {
+  min-width: 180px;
 }
 
 /* Tabs */
