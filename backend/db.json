@@ -704,6 +704,24 @@
       "date": "17/01/2026",
       "description": "",
       "createdAt": "20/1/2026"
+    },
+    {
+      "id": "6ed6",
+      "petId": "47",
+      "vetId": "1",
+      "type": "Τοποθέτηση microchip",
+      "date": "30/09/2025",
+      "description": "Τοποθέτηση microchip και πρώτος ιατρικός έλεγχος",
+      "createdAt": "27/3/2026"
+    },
+    {
+      "id": "b48a",
+      "petId": "f806",
+      "vetId": "1",
+      "type": "Τοποθέτηση microchip",
+      "date": "26/01/2026",
+      "description": "Καταγραφή κατοικιδίου και τοποθέτηση microchip",
+      "createdAt": "27/3/2026"
     }
   ],
   "availability": [
@@ -1372,6 +1390,15 @@
       "endTime": "14:00",
       "serviceType": "dermatology",
       "createdAt": "2026-01-19T13:49:10.117Z"
+    },
+    {
+      "id": "f5bb",
+      "vetId": "1",
+      "day": "tuesday",
+      "startTime": "09:00",
+      "endTime": "21:00",
+      "serviceType": "microchip",
+      "createdAt": "2026-03-27T16:23:25.836Z"
     }
   ],
   "appointments": [
@@ -3178,20 +3205,6 @@
       "date": "12/02/2026",
       "endDate": "17/02/2026",
       "createdAt": "2026-02-12T17:46:15.863Z"
-    },
-    {
-      "id": "c8d6",
-      "vetId": "1",
-      "date": "05/02/2026",
-      "endDate": "12/02/2026",
-      "createdAt": "2026-02-13T07:24:23.410Z"
-    },
-    {
-      "id": "f1b7",
-      "vetId": "1",
-      "date": "12/02/2026",
-      "endDate": "21/02/2026",
-      "createdAt": "2026-02-19T09:57:05.635Z"
     }
   ]
 }

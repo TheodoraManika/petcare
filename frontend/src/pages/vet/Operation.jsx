@@ -184,18 +184,6 @@ const Operation = () => {
       setShowConfirmModal(false);
       setShowSuccess(true);
 
-      // Reset form after successful submission
-      setTimeout(() => {
-        setShowSuccess(false);
-        setFormData({
-          petSearch: '',
-          operationType: '',
-          operationDate: '',
-          description: ''
-        });
-        setFoundPetDetails(null);
-      }, 3000);
-
     } catch (error) {
       console.error('Error recording medical operation:', error);
       setNotification({
@@ -297,6 +285,7 @@ const Operation = () => {
                 options={[
                   { value: 'Εμβολιασμός', label: 'Εμβολιασμός' },
                   { value: 'Γενική Εξέταση', label: 'Γενική Εξέταση' },
+                  { value: 'Τοποθέτηση microchip', label: 'Τοποθέτηση microchip' },
                   { value: 'Χειρουργείο', label: 'Χειρουργείο' },
                   { value: 'Θεραπεία', label: 'Θεραπεία' },
                   { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },

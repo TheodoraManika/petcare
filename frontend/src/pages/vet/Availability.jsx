@@ -67,6 +67,7 @@ const Availability = () => {
     ophthalmology: 'Οφθαλμολογική',
     cardiology: 'Καρδιολογική',
     dermatology: 'Δερματολογική',
+    microchip: 'Τοποθέτηση chip',
     other: 'Όλες οι υπηρεσίες'
   };
 
@@ -79,6 +80,7 @@ const Availability = () => {
     ophthalmology: '#FCA47C',
     cardiology: '#FCA47C',
     dermatology: '#FCA47C',
+    microchip: '#FCA47C',
     other: '#FCA47C'
   };
 
@@ -482,6 +484,7 @@ const Availability = () => {
                 options={[
                   { value: 'vaccination', label: 'Εμβολιασμός' },
                   { value: 'checkup', label: 'Γενική Εξέταση' },
+                  { value: 'microchip', label: 'Τοποθέτηση microchip' },
                   { value: 'surgery', label: 'Χειρουργείο' },
                   { value: 'treatment', label: 'Θεραπεία' },
                   { value: 'dental', label: 'Οδοντιατρική' },

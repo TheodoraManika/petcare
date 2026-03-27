@@ -54,6 +54,7 @@ export const ROUTES = {
 export const SERVICE_LABELS = {
   vaccination: 'Εμβολιασμός',
   checkup: 'Γενική Εξέταση',
+  microchip: 'Τοποθέτηση microchip',
   surgery: 'Χειρουργείο',
   treatment: 'Θεραπεία',
   dental: 'Οδοντιατρική',
