@@ -1841,6 +1841,40 @@
       "notes": "Πρώτη επίσκεψη",
       "status": "pending",
       "createdAt": "2026-03-26T18:29:39.352Z"
+    },
+    {
+      "id": "5885",
+      "vetId": "1",
+      "vetName": "Αναστασία Μιχαηλίδου",
+      "ownerId": "0987",
+      "ownerName": "Μαρία",
+      "ownerLastName": "Χαραλαμποπούλου",
+      "ownerPhone": "6954967105",
+      "petId": "46",
+      "petName": "Χιονάτη",
+      "date": "2026-04-09",
+      "time": "10:00 - 11:00",
+      "serviceType": "checkup",
+      "notes": "",
+      "status": "pending",
+      "createdAt": "2026-03-27T17:28:42.037Z"
+    },
+    {
+      "id": "321c",
+      "vetId": "1",
+      "vetName": "Αναστασία Μιχαηλίδου",
+      "ownerId": "0987",
+      "ownerName": "Μαρία",
+      "ownerLastName": "Χαραλαμποπούλου",
+      "ownerPhone": "6954967105",
+      "petId": "46",
+      "petName": "Χιονάτη",
+      "date": "2026-04-11",
+      "time": "13:00 - 14:00",
+      "serviceType": "cardiology",
+      "notes": "",
+      "status": "pending",
+      "createdAt": "2026-03-27T17:34:26.335Z"
     }
   ],
   "transfers": [
@@ -2259,7 +2293,7 @@
         "appointmentId": "c053"
       },
       "date": "2026-01-20T18:55:21.908Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:55:21.908Z"
     },
     {
@@ -2344,7 +2378,7 @@
         "appointmentId": "b7e6"
       },
       "date": "2026-01-20T18:58:51.461Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T18:58:51.461Z"
     },
     {
@@ -2395,7 +2429,7 @@
         "appointmentId": "e186"
       },
       "date": "2026-01-20T19:22:56.853Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T19:22:56.853Z"
     },
     {
@@ -2514,7 +2548,7 @@
         "appointmentId": "25b0"
       },
       "date": "2026-01-20T19:25:45.050Z",
-      "read": false,
+      "read": true,
       "createdAt": "2026-01-20T19:25:45.050Z"
     },
     {
@@ -2686,6 +2720,40 @@
       "date": "2026-03-26T18:31:25.466Z",
       "read": true,
       "createdAt": "2026-03-26T18:31:25.466Z"
+    },
+    {
+      "id": "8cab",
+      "userId": "1",
+      "userType": "vet",
+      "type": "new_appointment",
+      "title": "Νέο αίτημα ραντεβού",
+      "data": {
+        "ownerName": "Μαρία",
+        "appointmentDate": "2026-04-09",
+        "appointmentTime": "10:00 - 11:00",
+        "petName": "Χιονάτη",
+        "appointmentId": "5885"
+      },
+      "date": "2026-03-27T17:28:42.054Z",
+      "read": false,
+      "createdAt": "2026-03-27T17:28:42.054Z"
+    },
+    {
+      "id": "239e",
+      "userId": "1",
+      "userType": "vet",
+      "type": "new_appointment",
+      "title": "Νέο αίτημα ραντεβού",
+      "data": {
+        "ownerName": "Μαρία",
+        "appointmentDate": "2026-04-11",
+        "appointmentTime": "13:00 - 14:00",
+        "petName": "Χιονάτη",
+        "appointmentId": "321c"
+      },
+      "date": "2026-03-27T17:34:26.354Z",
+      "read": false,
+      "createdAt": "2026-03-27T17:34:26.354Z"
     }
   ],
   "pets": [

@@ -24,6 +24,7 @@ const BookingForm = ({
   vet: prefilledVet = null,
   onClose,
   onSuccess,
+  onCancel,
   inline = false,
   showVetSearch = true
 }) => {
@@ -523,6 +524,9 @@ const BookingForm = ({
   const handleConfirmCancel = () => {
     resetForm();
     setShowCancelModal(false);
+    if (onCancel) {
+      onCancel();
+    }
     if (onClose) {
       onClose();
     }

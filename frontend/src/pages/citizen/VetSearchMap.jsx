@@ -10,6 +10,7 @@ import SearchSidebar from '../../components/citizen/SearchSidebar';
 import SearchResultsList from '../../components/citizen/SearchResultsList';
 import BookingForm from '../../components/owner/BookingForm';
 import VetProfileModal from '../../components/citizen/VetProfile';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './VetSearchMap.css';
 
@@ -65,7 +66,7 @@ const VetSearchMap = () => {
   // Booking form state
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingVet, setBookingVet] = useState(null);
-  const [bookingSuccess, setBookingSuccess] = useState('');
+  const [notification, setNotification] = useState(null);
 
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -450,9 +451,15 @@ const VetSearchMap = () => {
   const handleBookingSuccess = (message) => {
     setShowBookingForm(false);
     setBookingVet(null);
-    setBookingSuccess(message);
-    // Clear success message after 5 seconds
-    setTimeout(() => setBookingSuccess(''), 5000);
+    setNotification({ type: 'success', message: message || 'Τα ραντεβού σας καταχωρήθηκαν με επιτυχία!' });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
+  const handleBookingCancel = () => {
+    setShowBookingForm(false);
+    setBookingVet(null);
+    setNotification({ type: 'error', message: 'Η διαδικασία ακυρώθηκε.' });
+    setTimeout(() => setNotification(null), 5000);
   };
 
   // Calculate map center
@@ -607,15 +614,11 @@ const VetSearchMap = () => {
         <main className={`map-container ${showBookingForm ? 'has-booking-form' : ''}`}>
           {showBookingForm ? (
             <>
-              {bookingSuccess && (
-                <div className="booking-success-message">
-                  {bookingSuccess}
-                </div>
-              )}
               <BookingForm
                 vet={bookingVet}
                 onClose={handleBookingClose}
                 onSuccess={handleBookingSuccess}
+                onCancel={handleBookingCancel}
                 inline={true}
                 showVetSearch={false}
               />
@@ -640,12 +643,6 @@ const VetSearchMap = () => {
                   </button>
                 </div>
               </div>
-
-              {bookingSuccess && (
-                <div className="booking-success-message">
-                  {bookingSuccess}
-                </div>
-              )}
 
               {error ? (
                 <div className="error-message">
@@ -691,6 +688,12 @@ const VetSearchMap = () => {
             </>
           )}
         </main>
+
+        <Notification
+          isVisible={!!notification}
+          message={notification?.message}
+          type={notification?.type}
+        />
 
         <VetProfileModal
           isOpen={showProfileModal}
