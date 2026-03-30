@@ -139,14 +139,24 @@ const HealthBook = () => {
         examinations: medicalHistory.filter(p => p.mappedType !== 'vaccination' && p.mappedType !== 'surgery').length
       };
 
-      // Get pet type icon
-      const petSpecies = pet.type || 'dog';
-      const icon = petSpecies.toLowerCase().includes('cat') ? 'cat' : 'dog';
+      // Normalize species for icon and label
+      const normalizeSpecies = (species) => {
+        const value = String(species || '').toLowerCase();
+        if (value.includes('cat') || value.includes('γάτα')) return 'cat';
+        if (value.includes('dog') || value.includes('σκύλος')) return 'dog';
+        if (value.includes('bird') || value.includes('πτηνό')) return 'bird';
+        if (value.includes('reptile') || value.includes('ερπετό')) return 'reptile';
+        return 'dog';
+      };
+
+      const petSpecies = pet.type || '';
+      const speciesKey = normalizeSpecies(petSpecies);
+      const icon = speciesKey === 'cat' ? 'cat' : 'dog';
 
       // Build pet data object
       const transformedPetData = {
         name: pet.name,
-        type: petSpecies === 'cat' ? 'Γάτα' : 'Σκύλος',
+        type: speciesKey === 'cat' ? 'Γάτα' : 'Σκύλος',
         breed: pet.breed,
         gender: pet.gender === 'male' ? 'Αρσενικό' : 'Θηλυκό',
         birthDate: formatDateForDisplay(pet.birthDate),
@@ -155,7 +165,7 @@ const HealthBook = () => {
         ownerName: owner ? `${owner.name} ${owner.lastName || ''}`.trim() : 'Άγνωστος',
         ownerPhone: owner?.phone || '-',
         icon: icon,
-        image: pet.image || null, // Include pet image
+        image: pet.imageUrl || pet.image || null, // Include pet image
         medicalHistory: medicalHistory,
         stats: stats
       };
