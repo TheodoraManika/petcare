@@ -63,6 +63,7 @@ const HealthBook = () => {
           color: pet.color || '-',
           weight: pet.weight || '-',
           icon: pet.type === 'Σκύλος' ? 'dog' : pet.type === 'Γάτα' ? 'cat' : 'pet',
+          image: pet.image || null, // Include pet image
           // Pet is considered 'lost' when status is 'lost' AND petStatus is 1
           status: (pet.status === 'active' && pet.petStatus === 1) ? 'lost' : 'safe'
         }));

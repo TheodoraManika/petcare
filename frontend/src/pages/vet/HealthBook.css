@@ -130,6 +130,14 @@
   background: rgba(252, 164, 124, 0.1);
   color: #FCA47C;
   margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.health-book__pet-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
   transition: all 0.2s ease;
 }
 

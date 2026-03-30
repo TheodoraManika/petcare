@@ -155,6 +155,7 @@ const HealthBook = () => {
         ownerName: owner ? `${owner.name} ${owner.lastName || ''}`.trim() : 'Άγνωστος',
         ownerPhone: owner?.phone || '-',
         icon: icon,
+        image: pet.image || null, // Include pet image
         medicalHistory: medicalHistory,
         stats: stats
       };
@@ -272,7 +273,17 @@ const HealthBook = () => {
                 <div className="health-book__content">
                   <div className="health-book__sidebar">
                     <div className="health-book__pet-card">
-                      <div className="health-book__pet-icon">{getPetIcon(petData.icon)}</div>
+                      <div className="health-book__pet-icon">
+                        {petData.image ? (
+                          <img 
+                            src={petData.image} 
+                            alt={petData.name}
+                            className="health-book__pet-image"
+                          />
+                        ) : (
+                          getPetIcon(petData.icon)
+                        )}
+                      </div>
                       <h2 className="health-book__pet-name">{petData.name}</h2>
                       
                       <div className="health-book__pet-info">

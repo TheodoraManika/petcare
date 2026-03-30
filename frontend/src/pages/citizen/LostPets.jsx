@@ -620,7 +620,15 @@ const LostPets = () => {
                           onClick={() => handleViewDetails(pet)}
                           title="Προβολή λεπτομερειών"
                         >
-                          {getPetIcon(pet.type)}
+                          {pet.image ? (
+                            <img 
+                              src={pet.image} 
+                              alt={pet.name}
+                              className="pet-card-img"
+                            />
+                          ) : (
+                            getPetIcon(pet.type)
+                          )}
                         </div>
                         <div className="pet-card-content">
                           <h3
@@ -679,7 +687,15 @@ const LostPets = () => {
 
               <div className="modal-header">
                 <div className="modal-pet-image">
-                  {getPetIcon(detailPet.type, 50)}
+                  {detailPet.image ? (
+                    <img 
+                      src={detailPet.image} 
+                      alt={detailPet.name}
+                      className="modal-pet-img"
+                    />
+                  ) : (
+                    getPetIcon(detailPet.type, 50)
+                  )}
                 </div>
                 <div className="modal-pet-identity">
                   <h2 className="modal-pet-name">{detailPet.name}</h2>

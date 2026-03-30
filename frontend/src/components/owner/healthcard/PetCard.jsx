@@ -77,7 +77,15 @@ const PetCard = ({ pet, onClick, onFound }) => {
     >
       <div className="owner-pet-card__header">
         <div className="owner-pet-card__icon">
-          {getPetIcon(pet.icon)}
+          {pet.image ? (
+            <img 
+              src={pet.image} 
+              alt={pet.name}
+              className="owner-pet-card__image"
+            />
+          ) : (
+            getPetIcon(pet.icon)
+          )}
         </div>
         {pet.status === 'lost' && (
           <span className="owner-pet-card__status-badge">ΧΑΜΕΝΟ</span>

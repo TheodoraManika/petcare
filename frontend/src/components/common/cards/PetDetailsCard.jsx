@@ -61,7 +61,17 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
 
             <div className="pet-card__container">
                 <div className="pet-card__image">
-                    {hasPetName ? getPetIcon(petSpecies) : <PawPrint size={50} color="#23CED9" />}
+                    {petData.image ? (
+                        <img 
+                            src={petData.image} 
+                            alt={petName || 'Pet'}
+                            className="pet-card__pet-image"
+                        />
+                    ) : hasPetName ? (
+                        getPetIcon(petSpecies)
+                    ) : (
+                        <PawPrint size={50} color="#23CED9" />
+                    )}
                 </div>
 
                 <div className="pet-card__content">
