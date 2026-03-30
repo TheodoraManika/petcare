@@ -161,6 +161,14 @@
   flex-shrink: 0;
 }
 
+.carousel-card__photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+}
+
 .carousel-card__info {
   flex: 1;
   display: flex;
