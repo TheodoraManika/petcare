@@ -420,14 +420,20 @@ const BookingForm = ({
       const appointmentPromises = completeBookings.map(async (b) => {
         let petName = '';
         let petId = null;
+        let petSpecies = '';
+        let petBreed = '';
 
         if (b.selectedPet === 'new') {
           petName = b.newPetName;
+          petSpecies = b.newPetType || '';
+          petBreed = b.newPetBreed || '';
           // In a real app, you might create the pet record here too
         } else {
           const pet = userPets.find(p => String(p.id) === String(b.selectedPet));
           petName = pet?.name || '';
           petId = pet?.id;
+          petSpecies = pet?.type || '';
+          petBreed = pet?.breed || '';
         }
 
         const appointmentData = {
@@ -439,6 +445,8 @@ const BookingForm = ({
           ownerPhone: currentUser.phone || '',
           petId,
           petName, // Store pet name for new pets
+          petSpecies, // Store pet species/type
+          petBreed, // Store pet breed
           date: b.selectedSlot.date,
           time: b.selectedSlot.displayTime,
           serviceType: b.serviceType,

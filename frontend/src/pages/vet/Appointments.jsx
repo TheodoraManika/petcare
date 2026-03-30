@@ -325,11 +325,18 @@ const Appointments = () => {
       window.dispatchEvent(new Event('notificationCreated'));
 
       // Update local state
-      setAppointments(prevAppointments =>
-        prevAppointments.map(apt =>
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt =>
           apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
-        )
-      );
+        );
+        
+        // Update selectedAppointment if it's the one being confirmed
+        if (selectedAppointment && selectedAppointment.id === appointmentId) {
+          setSelectedAppointment({ ...selectedAppointment, status: 'confirmed' });
+        }
+        
+        return updated;
+      });
 
       // Show confirmation notification
       setNotification('confirmed');
@@ -393,11 +400,18 @@ const Appointments = () => {
       window.dispatchEvent(new Event('notificationCreated'));
 
       // Update local state
-      setAppointments(prevAppointments =>
-        prevAppointments.map(apt =>
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt =>
           apt.id === appointmentToReject ? { ...apt, status: 'cancelled' } : apt
-        )
-      );
+        );
+        
+        // Update selectedAppointment if it's the one being cancelled
+        if (selectedAppointment && selectedAppointment.id === appointmentToReject) {
+          setSelectedAppointment({ ...selectedAppointment, status: 'cancelled' });
+        }
+        
+        return updated;
+      });
 
       // Show cancellation notification
       setNotification('cancelled');
