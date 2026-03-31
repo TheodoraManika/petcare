@@ -164,6 +164,21 @@ const VetSearchMap = () => {
 
             console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays, 'reviews:', vetReviews.length, 'rating:', rating);
 
+            // Deterministic coordinates if not in DB
+            const getDeterministicCoords = (id, baseLat = 37.9838, baseLon = 23.7275) => {
+              let hash = 0;
+              const strId = String(id);
+              for (let i = 0; i < strId.length; i++) {
+                hash = ((hash << 5) - hash) + strId.charCodeAt(i);
+                hash |= 0;
+              }
+              const latOffset = ((Math.abs(hash) % 1000) / 1000 * 0.3) - 0.15;
+              const lonOffset = ((Math.abs(hash * 13) % 1000) / 1000 * 0.3) - 0.15;
+              return { lat: baseLat + latOffset, lon: baseLon + lonOffset };
+            };
+
+            const fallbackCoords = getDeterministicCoords(vet.id);
+
             return {
               ...vet,
               name: vet.name || 'Άγνωστος',
@@ -172,8 +187,8 @@ const VetSearchMap = () => {
               rating: rating,
               reviewCount: vetReviews.length,
               reviews: vetReviews,
-              lat: 37.9838 + (Math.random() * 0.3 - 0.15), // Random latitude around Athens
-              lon: 23.7275 + (Math.random() * 0.3 - 0.15), // Random longitude around Athens
+              lat: vet.locationLat ? parseFloat(vet.locationLat) : fallbackCoords.lat,
+              lon: vet.locationLon ? parseFloat(vet.locationLon) : fallbackCoords.lon,
               position: { top: `${30 + (index * 10)}%`, left: `${40 + (index * 8)}%` },
               availableDays: availableDays,
               availabilitySlots: vetAvailability
