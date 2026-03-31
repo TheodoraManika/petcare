@@ -262,7 +262,7 @@ const Navbar = ({ variant = 'citizen' }) => {
                   <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--users">
                     <Users size={16} />
                   </span>
-                  Πολίτης
+                  Γενικά
                 </button>
               </div>
             </div>

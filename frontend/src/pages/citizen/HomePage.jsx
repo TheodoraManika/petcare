@@ -531,7 +531,7 @@ const HomePage = () => {
             <h2>Αναζήτηση Κτηνιάτρων</h2>
             <button
               className="info-icon-btn"
-              onClick={() => navigate('/vet/information')}
+              onClick={() => navigate(ROUTES.citizen.information)}
               aria-label="Πληροφορίες"
             >
               <Info size={18} />

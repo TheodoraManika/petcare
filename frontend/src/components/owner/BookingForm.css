@@ -259,15 +259,19 @@
   border: 2px solid #23CED9;
 }
 
-.booking-form__vet-avatar-container {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.booking-form__vet-avatar {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: 2px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  background: #23CED9;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .booking-form__vet-info {
@@ -398,13 +402,18 @@
   background: rgba(161, 204, 166, 0.15);
 }
 
-.booking-form__result-avatar-container {
-  flex-shrink: 0;
+.booking-form__result-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #23CED9;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
 .booking-form__result-info {
@@ -518,53 +527,6 @@
   text-align: center;
 }
 
-/* Availability Legend */
-.booking-form__availability-legend {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  padding: 12px;
-  background: #f9fafb;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.booking-form__legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.booking-form__legend-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  display: inline-block;
-}
-
-.booking-form__legend-color--many {
-  background: #E8F8FA;
-  border: 1px solid #9BE5EA;
-}
-
-.booking-form__legend-color--few {
-  background: #FFF0E8;
-  border: 1px solid #FDD1C1;
-}
-
-.booking-form__legend-color--none {
-  background: #FEF2F2;
-  border: 1px solid #FECACA;
-}
-
-.booking-form__legend-text {
-  font-size: 13px;
-  color: #4b5563;
-  font-weight: 500;
-}
-
 /* Week Calendar */
 .booking-form__week-calendar {
   display: grid;
@@ -582,45 +544,11 @@
 .booking-form__day-header {
   padding: 10px 6px;
   text-align: center;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  transition: background 0.2s ease;
-}
-
-/* Column background colors */
-.booking-form__day-column--many {
-  background-color: #E8F8FA;
-  border-color: #9BE5EA;
-}
-.booking-form__day-column--many .booking-form__day-header {
-  background-color: transparent;
-  border-bottom: 1px solid #9BE5EA;
-}
-
-.booking-form__day-column--few {
-  background-color: #FFF0E8;
-  border-color: #FDD1C1;
-}
-.booking-form__day-column--few .booking-form__day-header {
-  background-color: transparent;
-  border-bottom: 1px solid #FDD1C1;
-}
-
-.booking-form__day-column--none {
-  background-color: #FEF2F2;
-  border-color: #FECACA;
-}
-.booking-form__day-column--none .booking-form__day-header {
-  background-color: transparent;
-  border-bottom: 1px solid #FECACA;
-}
-
-.booking-form__day-column--today {
-  border: 2px solid #23CED9;
+  background: linear-gradient(135deg, #23cdd940 0%, #a1cca640 100%);
 }
 
 .booking-form__day-header--today {
-  background: #23CED9 !important;
+  background: #23CED9;
   color: white;
 }
 
