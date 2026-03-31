@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell, Info } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, PawPrint, Users, Stethoscope, Bell, Info } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../Avatar';
 import NotificationPage from '../NotificationPage';
@@ -304,7 +304,7 @@ const Navbar = ({ variant = 'citizen' }) => {
                       setIsRegisterDropdownOpen(false);
                     }}
                   >
-                    <Users size={20} color="#23CED9" />
+                    <PawPrint size={20} color="#23CED9" />
                     <span>Ως Ιδιοκτήτης</span>
                   </button>
 
