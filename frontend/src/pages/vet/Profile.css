@@ -50,14 +50,10 @@
   align-items: center;
   justify-content: center;
   color: white;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.2s ease;
   cursor: pointer;
   backdrop-filter: blur(2px);
-}
-
-.profile__avatar-container:hover .profile__avatar-overlay {
-  opacity: 1;
 }
 
 .profile__avatar-label {
