@@ -122,7 +122,31 @@
 }
 
 .history-detail__section--pet {
+  background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+  padding: 24px;
+  border-radius: 12px;
   margin-bottom: 32px;
+}
+
+.history-detail__section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.history-detail__pet-icon {
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #FCA47C;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #FCA47C;
 }
 
 .history-detail__section-icon {

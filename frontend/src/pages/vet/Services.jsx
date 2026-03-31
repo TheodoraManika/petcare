@@ -187,11 +187,6 @@ const VetServices = () => {
             </button>
           </div>
         </div>
-
-        <div className="vet-services__info">
-          <AlertCircle size={20} />
-          <p>Οι τιμές που ορίζετε θα εμφανίζονται στους ιδιοκτήτες κατά την αναζήτηση και την κράτηση ραντεβού.</p>
-        </div>
       </div>
     </PageLayout>
   );

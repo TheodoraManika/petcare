@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart, MapPin, SearchX } from 'lucide-react';
+import { Printer, Download, User, PawPrint, HandHeart, ArrowRightLeft, ArrowLeft, Heart, MapPin, CircleAlert } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import { ROUTES, formatDate } from '../../utils/constants';
-import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import './HistoryDetail.css';
 
 const HistoryDetail = () => {
@@ -37,8 +36,7 @@ const HistoryDetail = () => {
             name: pet.name || '-',
             species: pet.type || '-',
             breed: pet.breed || '-',
-            microchip: procedure.microchip || pet.microchipId || '-',
-            image: pet.image || pet.imageUrl || null
+            microchip: procedure.microchip || pet.microchipId || '-'
           },
           procedure: procedure
         };
@@ -59,8 +57,7 @@ const HistoryDetail = () => {
               name: transfer.petName || pet.name || '-',
               species: pet.type || '-',
               breed: pet.breed || '-',
-              microchip: transfer.microchip || pet.microchipId || '-',
-              image: pet.image || pet.imageUrl || null
+              microchip: transfer.microchip || pet.microchipId || '-'
             },
             transfer: {
               currentOwner: {
@@ -98,8 +95,7 @@ const HistoryDetail = () => {
               name: adoption.petName || pet.name || '-',
               species: pet.type || '-',
               breed: pet.breed || '-',
-              microchip: adoption.microchip || pet.microchipId || '-',
-              image: pet.image || pet.imageUrl || null
+              microchip: adoption.microchip || pet.microchipId || '-'
             },
             adoption: {
               owner: {
@@ -134,8 +130,7 @@ const HistoryDetail = () => {
               name: foster.petName || pet.name || '-',
               species: pet.type || '-',
               breed: pet.breed || '-',
-              microchip: foster.microchip || pet.microchipId || '-',
-              image: pet.image || pet.imageUrl || null
+              microchip: foster.microchip || pet.microchipId || '-'
             },
             adoption: {
               owner: {
@@ -177,8 +172,7 @@ const HistoryDetail = () => {
               name: foundPet.name || 'Άγνωστο',
               species: foundPet.type || '-',
               breed: foundPet.breed || '-',
-              microchip: foundPet.microchipId || '-',
-              image: foundPet.imageUrl || foundPet.image || null
+              microchip: foundPet.microchipId || '-'
             },
             foundPet: {
               foundDate: formatDate(foundPet.foundAt || foundPet.foundDate),
@@ -213,8 +207,7 @@ const HistoryDetail = () => {
               name: lostPet.petName || 'Άγνωστο',
               species: lostPet.type || '-',
               breed: lostPet.breed || '-',
-              microchip: lostPet.microchipNumber || '-',
-              image: lostPet.imageUrl || lostPet.image || null
+              microchip: lostPet.microchipNumber || '-'
             },
             lostPet: {
               lostDate: formatDate(lostPet.lostDate),
@@ -266,7 +259,7 @@ const HistoryDetail = () => {
       case 'Δήλωση Εύρεσης':
         return <MapPin size={24} className="history-detail__icon" />;
       case 'Δήλωση Απώλειας':
-        return <SearchX size={24} className="history-detail__icon" />;
+        return <CircleAlert size={24} className="history-detail__icon" />;
       default:
         return <HandHeart size={24} className="history-detail__icon" />;
     }
@@ -337,14 +330,44 @@ const HistoryDetail = () => {
           </div>
 
           <div className="history-detail__section history-detail__section--pet">
-            <PetDetailsCard 
-              petData={{
-                ...detailData.pet,
-                type: detailData.pet.species,
-                microchipId: detailData.pet.microchip
-              }} 
-              variant="vet" 
-            />
+            <div className="history-detail__section-header">
+              <div className="history-detail__pet-icon">
+                <PawPrint size={24} />
+              </div>
+              <h2 className="history-detail__section-title">Στοιχεία Κατοικιδίου</h2>
+            </div>
+            <div className="history-detail__info-grid">
+              <div className="history-detail__info-item">
+                <span className="history-detail__info-label">Όνομα</span>
+                <span className="history-detail__info-value">{detailData.pet.name}</span>
+              </div>
+              <div className="history-detail__info-item">
+                <span className="history-detail__info-label">Είδος Ζώου</span>
+                <span className="history-detail__info-value">{detailData.pet.species}</span>
+              </div>
+              <div className="history-detail__info-item">
+                <span className="history-detail__info-label">Ράτσα</span>
+                <span className="history-detail__info-value">{detailData.pet.breed}</span>
+              </div>
+              <div className="history-detail__info-item">
+                <span className="history-detail__info-label">Αριθμός Μικροτσίπ</span>
+                <span className="history-detail__info-value">{detailData.pet.microchip}</span>
+              </div>
+              {(detailData.declarationType === 'Υιοθεσία' || detailData.declarationType === 'Αναδοχή') && detailData.pet.age && (
+                <>
+                  <div className="history-detail__info-item">
+                    <span className="history-detail__info-label">Ηλικία</span>
+                    <span className="history-detail__info-value">{detailData.pet.age} έτη</span>
+                  </div>
+                  {detailData.pet.gender && (
+                    <div className="history-detail__info-item">
+                      <span className="history-detail__info-label">Φύλο</span>
+                      <span className="history-detail__info-value">{detailData.pet.gender}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
 
           {/* ΙΑΤΡΙΚΗ ΠΡΑΞΗ */}

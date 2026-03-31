@@ -253,6 +253,35 @@
   margin: 0;
 }
 
+.service-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.service-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.service-row:last-child {
+  border-bottom: none;
+}
+
+.service-name {
+  font-size: 1rem;
+  color: #5a6c7d;
+}
+
+.service-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
 /* Reviews Section */
 .reviews-section {
   padding: 2rem;

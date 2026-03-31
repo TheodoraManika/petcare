@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, MapPin, Phone, IdCard, Briefcase, GraduationCap, X, Hospital } from 'lucide-react';
 import Avatar from '../common/Avatar';
-import { ROUTES, formatDate } from '../../utils/constants';
+import { ROUTES, formatDate, SERVICE_LABELS } from '../../utils/constants';
 import './VetProfile.css';
 
 const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
@@ -50,6 +50,24 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
   const vetExperience = vet.experience || 'Δεν διατίθεται';
   const vetLicenseNumber = vet.licenseNumber || 'Δεν διατίθεται';
   const vetBiography = vet.biography || 'Κανένα βιογραφικό διαθέσιμο';
+  const vetServices = Array.isArray(vet.services) ? vet.services : [];
+
+  const getServiceName = (service) => {
+    if (!service) return 'Υπηρεσία';
+    return (
+      service.name ||
+      SERVICE_LABELS[service.id] ||
+      SERVICE_LABELS[service.serviceType] ||
+      'Υπηρεσία'
+    );
+  };
+
+  const getServicePrice = (service) => {
+    if (!service || service.price === undefined || service.price === null || service.price === '') {
+      return '-';
+    }
+    return `${service.price}€`;
+  };
 
   return (
     <div className="vet-profile-overlay" onClick={onClose}>
@@ -162,6 +180,22 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
           <div className="biography-section">
             <h2 className="section-title">Βιογραφικό</h2>
             <p className="biography-content">{vetBiography}</p>
+          </div>
+
+          <div className="biography-section">
+            <h2 className="section-title">Τιμοκατάλογος υπηρεσιών</h2>
+            {vetServices.length > 0 ? (
+              <div className="service-list">
+                {vetServices.map((service, index) => (
+                  <div key={service.id || `${service.name}-${index}`} className="service-row">
+                    <span className="service-name">{getServiceName(service)}</span>
+                    <span className="service-price">{getServicePrice(service)}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="biography-content">Δεν υπάρχει διαθέσιμος τιμοκατάλογος υπηρεσιών.</p>
+            )}
           </div>
 
           {/* Reviews Section */}

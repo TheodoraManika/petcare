@@ -195,24 +195,6 @@
   transform: none;
 }
 
-.vet-services__info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 24px;
-  padding: 16px 20px;
-  background-color: rgba(252, 164, 124, 0.1);
-  border: 1px solid rgba(252, 164, 124, 0.25);
-  border-radius: 8px;
-  color: #c2410c;
-  font-size: 14px;
-}
-
-.vet-services__info svg {
-  color: #FCA47C;
-  flex-shrink: 0;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .vet-services__list-header {
