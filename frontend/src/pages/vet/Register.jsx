@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Send } from 'lucide-react';
+import { AlertCircle, Send, Camera, X } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
 import CustomSelect from '../../components/common/forms/CustomSelect';
@@ -37,6 +37,7 @@ const Register = () => {
     ownerAddressLat: '',
     ownerAddressLon: '',
     afm: '',
+    petImage: null,
   });
 
   // Helper function to filter only Greek and English letters and spaces
@@ -151,6 +152,36 @@ const Register = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα Αρχείου',
+          message: 'Η εικόνα πρέπει να είναι μικρότερη από 5MB.'
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          petImage: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      petImage: null
+    }));
+  };
+
   const handleSelectChange = (name, value) => {
     setFormData(prev => ({
       ...prev,
@@ -180,6 +211,7 @@ const Register = () => {
       ownerAddressLat: '',
       ownerAddressLon: '',
       afm: '',
+      petImage: null,
     });
     setMicrochipError('');
     setAfmError('');
@@ -280,6 +312,7 @@ const Register = () => {
         // Status fields
         petStatus: 0,
         status: 'active',
+        image: formData.petImage || null,
         imageUrl: null,
         createdAt: new Date().toISOString()
       };
@@ -373,6 +406,7 @@ const Register = () => {
     { label: 'Email', value: formData.ownerEmail },
     { label: 'Διεύθυνση', value: formData.ownerAddress },
     { label: 'ΑΦΜ', value: formData.afm },
+    { label: 'Φωτογραφία', value: formData.petImage ? 'Έχει επιλεγεί' : 'Δεν έχει επιλεγεί' },
   ];
 
   const breadcrumbItems = [];
@@ -541,6 +575,40 @@ const Register = () => {
                     required
                   />
                   <span className="register__field-note">Επιτρέπονται ελληνικοί/λατινικοί χαρακτήρες και κενά.</span>
+                </div>
+              </div>
+
+              {/* Pet Photo Section */}
+              <div className="register__field">
+                <label className="register__label">Φωτογραφία Κατοικιδίου</label>
+                <div className="register__photo-upload">
+                  {formData.petImage ? (
+                    <div className="register__photo-preview">
+                      <img src={formData.petImage} alt="Preview" className="register__preview-image" />
+                      <button 
+                        type="button" 
+                        className="register__remove-photo"
+                        onClick={handleRemoveImage}
+                        aria-label="Αφαίρεση φωτογραφίας"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="register__upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="register__file-input"
+                      />
+                      <div className="register__upload-placeholder">
+                        <Camera size={32} />
+                        <span>Προσθήκη Φωτογραφίας</span>
+                        <span className="register__upload-note">Μέγιστο μέγεθος 5MB</span>
+                      </div>
+                    </label>
+                  )}
                 </div>
               </div>
 

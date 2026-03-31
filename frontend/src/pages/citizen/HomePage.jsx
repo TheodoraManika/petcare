@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope, Bird } from 'lucide-react';
+import { FileText, Search, Calendar, PawPrint, ChevronDown, MapPin, ChevronLeft, ChevronRight, Dog, Cat, Star, Info, LogIn, UserPlus, Stethoscope, Bird, UserRound } from 'lucide-react';
 import { ROUTES } from '../../utils/constants';
 import PageLayout from '../../components/common/layout/PageLayout';
 import CustomSelect from '../../components/common/forms/CustomSelect';
 import LocationPicker from '../../components/common/forms/LocationPicker';
 import Notification from '../../components/common/modals/Notification';
 import VetProfileModal from '../../components/citizen/VetProfile';
+import Avatar from '../../components/common/Avatar';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -63,7 +64,8 @@ const HomePage = () => {
               initials: vet.name && vet.lastName ? `${vet.name[0]}${vet.lastName[0]}` : (vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??'),
               area: vet.clinicCity || 'Άγνωστη τοποθεσία',
               rating: parseFloat(avgRating),
-              reviews: reviews.length
+              reviews: reviews.length,
+              avatar: vet.avatar || null
             };
           } catch (err) {
             console.error(`Error fetching reviews for vet ${vet.id}:`, err);
@@ -74,7 +76,8 @@ const HomePage = () => {
               initials: vet.name && vet.lastName ? `${vet.name[0]}${vet.lastName[0]}` : (vet.name ? vet.name.split(' ').map(n => n[0]).join('') : '??'),
               area: vet.clinicCity || 'Άγνωστη τοποθεσία',
               rating: 0,
-              reviews: 0
+              reviews: 0,
+              avatar: vet.avatar || null
             };
           }
         }));
@@ -638,7 +641,13 @@ const HomePage = () => {
                     <div className="vet-carousel-slide-inner">
                       {slide.map((vet, vetIdx) => (
                         <div key={`${sIdx}-${vetIdx}`} className="vet-carousel-card" onClick={() => handleVetClick(vet)}>
-                          <div className="vet-card__avatar-circle orange-icon">{vet.initials}</div>
+                          <div className="vet-card__avatar-wrapper">
+                            <Avatar
+                              src={vet.avatar}
+                              name={vet.name}
+                              size="lg"
+                            />
+                          </div>
                           <h3 className="card-title">{vet.name}</h3>
                           <p className="vet-card__specialty-text">{vet.specialty}</p>
                           <div className="vet-card__location-info">

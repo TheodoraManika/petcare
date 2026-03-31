@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, X } from 'lucide-react';
 import Pagination from '../common/layout/Pagination';
+import Avatar from '../common/Avatar';
 import './SearchResultsList.css';
 
 /**
@@ -55,9 +56,12 @@ const SearchResultsList = ({
     return (
       <div key={item.id} className="result-item">
         <div className="result-avatar">
-          <span className="avatar-initials">
-            {getInitials(item.name, item.lastName || item.surname)}
-          </span>
+          <Avatar
+            src={item.avatar}
+            name={item.name}
+            lastName={item.lastName || item.surname}
+            size="md"
+          />
         </div>
         <div className="result-details">
           <h3 className="result-name">{item.name} {item.lastName || item.surname}</h3>

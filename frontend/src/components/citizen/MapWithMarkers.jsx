@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, MapPin, Stethoscope } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import Avatar from '../common/Avatar';
 import './MapWithMarkers.css';
 
 // Create custom SVG markers
@@ -59,7 +60,12 @@ const MapWithMarkers = ({
     <div className="popup-content">
       <div className="popup-container">
         <div className="popup-avatar">
-          <Stethoscope size={24} color="#FCA47C" />
+          <Avatar
+            src={marker.avatar}
+            name={marker.name}
+            lastName={marker.lastName || marker.surname}
+            size="sm"
+          />
         </div>
         <div className="popup-info">
           <h4 className="popup-name">{marker.name} {marker.lastName || marker.surname}</h4>

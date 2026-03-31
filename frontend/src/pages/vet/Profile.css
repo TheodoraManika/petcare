@@ -23,6 +23,117 @@
   gap: 12px;
 }
 
+/* Avatar Section */
+.profile__avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding: 24px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.profile__avatar-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile__avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.profile__avatar-container:hover .profile__avatar-overlay {
+  opacity: 1;
+}
+
+.profile__avatar-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.profile__avatar-label span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profile__avatar-input {
+  display: none;
+}
+
+.profile__avatar-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.profile__avatar-remove:hover {
+  transform: scale(1.1);
+  background-color: #dc2626;
+}
+
+.profile__avatar-info {
+  flex: 1;
+}
+
+.profile__avatar-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.profile__avatar-type {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.profile__error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  color: #ef4444;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
 .profile__btn {
   display: flex;
   align-items: center;

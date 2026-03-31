@@ -38,15 +38,10 @@
   width: 64px;
   height: 64px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #23CED9 0%, #FCA47C 50%, #F9D779 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-weight: 600;
-  color: #ffffff;
-  font-size: 16px;
-  box-shadow: 0 2px 8px rgba(252, 164, 124, 0.3);
 }
 
 .avatar-initials {

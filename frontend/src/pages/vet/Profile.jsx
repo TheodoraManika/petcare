@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2, AlertCircle } from 'lucide-react';
+import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2, AlertCircle, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
 import MultiSelect from '../../components/common/forms/MultiSelect';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Avatar from '../../components/common/Avatar';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -15,6 +16,7 @@ const Profile = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -44,6 +46,7 @@ const Profile = () => {
     city: '',
     university: '',
     bio: '',
+    avatar: null,
   });
 
   // Working copy for editing
@@ -89,6 +92,7 @@ const Profile = () => {
         city: currentUser.clinicCity || '',
         university: currentUser.education || '',
         bio: currentUser.biography || '',
+        avatar: currentUser.avatar || null,
       };
 
       setOriginalData(userData);
@@ -174,6 +178,32 @@ const Profile = () => {
         [name]: ''
       }));
     }
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Η εικόνα πρέπει να είναι μικρότερη από 5MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          avatar: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    setFormData(prev => ({
+      ...prev,
+      avatar: null
+    }));
   };
 
   const handleSpecialtiesChange = (selectedSpecialties) => {
@@ -343,6 +373,7 @@ const Profile = () => {
         clinicName: formData.clinicName,
         clinicAddress: formData.address,
         clinicCity: formData.city,
+        avatar: formData.avatar,
       };
 
       console.log('Saving vet profile:', updatedUser);
@@ -382,6 +413,7 @@ const Profile = () => {
         clinicName: formData.clinicName,
         clinicAddress: formData.address,
         clinicCity: formData.city,
+        avatar: formData.avatar,
       }));
 
       // Update original data to reflect saved changes
@@ -477,6 +509,52 @@ const Profile = () => {
             )}
           </div>
         </div>
+
+        <div className="profile__avatar-section">
+          <div className="profile__avatar-container">
+            <Avatar
+              src={formData.avatar}
+              name={formData.firstName}
+              lastName={formData.lastName}
+              size="xl"
+            />
+            {isEditing && (
+              <div className="profile__avatar-overlay">
+                <label className="profile__avatar-label">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="profile__avatar-input"
+                  />
+                  <Camera size={24} />
+                  <span>Αλλαγή</span>
+                </label>
+                {formData.avatar && (
+                  <button 
+                    type="button" 
+                    className="profile__avatar-remove"
+                    onClick={handleRemoveAvatar}
+                    title="Αφαίρεση φωτογραφίας"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="profile__avatar-info">
+            <h2 className="profile__avatar-name">{formData.firstName} {formData.lastName}</h2>
+            <p className="profile__avatar-type">Κτηνίατρος</p>
+          </div>
+        </div>
+
+        {error && (
+          <div className="profile__error-banner">
+            <AlertCircle size={20} />
+            <span>{error}</span>
+          </div>
+        )}
 
         <form className="profile__form" onSubmit={handleSubmit}>
           <div className="profile__grid">
