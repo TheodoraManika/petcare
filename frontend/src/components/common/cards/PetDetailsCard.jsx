@@ -26,6 +26,7 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
     const petWeight = petData.weight;
     const petGender = petData.gender;
     const petBirthDate = petData.birthDate;
+    const petImage = petData.imageUrl || petData.image;
 
     // Translation helpers
     const translateSpecies = (species) => {
@@ -61,9 +62,9 @@ const PetDetailsCard = ({ petData, onClear, variant = 'citizen' }) => {
 
             <div className="pet-card__container">
                 <div className="pet-card__image">
-                    {petData.image ? (
+                    {petImage ? (
                         <img 
-                            src={petData.image} 
+                            src={petImage} 
                             alt={petName || 'Pet'}
                             className="pet-card__pet-image"
                         />

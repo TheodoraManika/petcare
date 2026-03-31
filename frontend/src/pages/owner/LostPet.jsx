@@ -16,6 +16,7 @@ const OwnerLostPet = () => {
   const navigate = useNavigate();
   const [userPets, setUserPets] = useState([]);
   const [petsLoading, setPetsLoading] = useState(true);
+  const [selectedPetDetails, setSelectedPetDetails] = useState(null);
 
   // Fetch owner's pets from database
   useEffect(() => {
@@ -38,7 +39,11 @@ const OwnerLostPet = () => {
           name: pet.name,
           type: pet.type || 'Σκύλος',
           breed: pet.breed || '',
-          image: pet.image || '🐾'
+          color: pet.color || pet.petColor || '',
+          weight: pet.weight || '',
+          gender: pet.gender || '',
+          birthDate: pet.birthDate || '',
+          image: pet.imageUrl || pet.image || ''
         }));
 
         setUserPets(formattedPets);
@@ -102,6 +107,7 @@ const OwnerLostPet = () => {
     // Auto-populate pet info when a pet is selected
     const selectedPetData = userPets.find(pet => pet.value === value);
     if (selectedPetData) {
+      setSelectedPetDetails(selectedPetData);
       setFormData(prev => ({
         ...prev,
         selectedPet: value,
@@ -371,15 +377,11 @@ const OwnerLostPet = () => {
             </div>
 
             {/* Pet Info Card - Shows when a pet is selected */}
-            {formData.selectedPet && (
+            {formData.selectedPet && selectedPetDetails && (
               <PetDetailsCard
-                petData={{
-                  petName: formData.petName,
-                  species: formData.petType,
-                  breed: formData.breed,
-                  microchip: formData.microchipNumber
-                }}
+                petData={selectedPetDetails}
                 onClear={() => {
+                  setSelectedPetDetails(null);
                   setFormData(prev => ({
                     ...prev,
                     selectedPet: '',
