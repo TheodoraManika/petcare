@@ -239,7 +239,7 @@ const Navbar = ({ variant = 'citizen' }) => {
                   className="navbar__nav-dropdown-item"
                   onClick={() => navigate(ROUTES.owner.information)}
                 >
-                  <span className="navbar__nav-dropdown-icon">
+                  <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--paw">
                     <PawPrint size={16} />
                   </span>
                   Ιδιοκτήτης
@@ -249,7 +249,7 @@ const Navbar = ({ variant = 'citizen' }) => {
                   className="navbar__nav-dropdown-item"
                   onClick={() => navigate(ROUTES.vet.information)}
                 >
-                  <span className="navbar__nav-dropdown-icon">
+                  <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--stetho">
                     <Stethoscope size={16} />
                   </span>
                   Κτηνίατρος
@@ -259,7 +259,7 @@ const Navbar = ({ variant = 'citizen' }) => {
                   className="navbar__nav-dropdown-item"
                   onClick={() => navigate(ROUTES.citizen.information)}
                 >
-                  <span className="navbar__nav-dropdown-icon">
+                  <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--users">
                     <Users size={16} />
                   </span>
                   Πολίτης
