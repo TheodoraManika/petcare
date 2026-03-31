@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff, Stethoscope, ChevronLeft, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Stethoscope, ChevronLeft, AlertCircle, Camera, X } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import PageLayout from '../../../components/common/layout/PageLayout';
 import MultiSelect from '../../../components/common/forms/MultiSelect';
@@ -29,7 +29,9 @@ const VetRegisterPage = () => {
     phone: '',
     password: '',
     confirmPassword: '',
+    avatar: null,
   });
+  const [imagePreview, setImagePreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
@@ -171,6 +173,35 @@ const VetRegisterPage = () => {
     }
     
     setError('');
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Η εικόνα πρέπει να είναι μικρότερη από 5MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        setFormData(prev => ({
+          ...prev,
+          avatar: base64String
+        }));
+        setImagePreview(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      avatar: null
+    }));
+    setImagePreview(null);
   };
 
   const validateStep = (step) => {
@@ -317,7 +348,7 @@ const VetRegisterPage = () => {
         clinicAddress: formData.clinicAddress,
         clinicCity: formData.clinicCity,
         clinicPostalCode: formData.clinicPostalCode,
-        avatar: null,
+        avatar: formData.avatar,
         createdAt: new Date().toLocaleDateString('el-GR'),
       };
 
@@ -451,6 +482,7 @@ const VetRegisterPage = () => {
       { label: 'ΤΚ', value: formData.clinicPostalCode },
       { label: 'Email', value: formData.email },
       { label: 'Τηλέφωνο', value: formData.phone },
+      { label: 'Φωτογραφία', value: formData.avatar ? 'Έχει επιλεγεί' : 'Δεν έχει επιλεγεί' },
     ];
   };
 
@@ -545,6 +577,40 @@ const VetRegisterPage = () => {
                     <span>{afmError}</span>
                   </div>
                 )}
+              </div>
+
+              {/* Photo Upload Section */}
+              <div className="vet-register-form-group">
+                <label className="vet-register-label">Φωτογραφία Προφίλ</label>
+                <div className="vet-register-photo-upload">
+                  {imagePreview ? (
+                    <div className="vet-register-photo-preview">
+                      <img src={imagePreview} alt="Preview" className="vet-register-preview-image" />
+                      <button 
+                        type="button" 
+                        className="vet-register-remove-photo"
+                        onClick={handleRemoveImage}
+                        aria-label="Αφαίρεση φωτογραφίας"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="vet-register-upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="vet-register-file-input"
+                      />
+                      <div className="vet-register-upload-placeholder">
+                        <Camera size={32} />
+                        <span>Προσθήκη Φωτογραφίας</span>
+                        <span className="vet-register-upload-note">Μέγιστο μέγεθος 5MB</span>
+                      </div>
+                    </label>
+                  )}
+                </div>
               </div>
             </div>
           )}
