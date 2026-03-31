@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint, BookOpen } from 'lucide-react';
+import { FileText, Calendar, Star, Clock, AlertCircle, CheckCircle, History, CirclePlus, PawPrint, BookOpen, Stethoscope } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import { DashboardCard } from '../../components/vet/dashboard';
 import { ROUTES } from '../../utils/constants';
@@ -73,6 +73,13 @@ const Dashboard = () => {
       onClick: () => navigate(ROUTES.vet.availability),
     },
     {
+      id: 'vet-services',
+      title: 'Υπηρεσίες & Τιμοκατάλογος',
+      description: 'Επιλογή παρεχόμενων υπηρεσιών και τιμών',
+      icon: <Stethoscope />,
+      onClick: () => navigate(ROUTES.vet.services),
+    },
+    {
       id: 'vet-reviews',
       title: 'Αξιολογήσεις',
       description: 'Προβολή αξιολογήσεων πελατών',
@@ -103,7 +110,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section className="dashboard__section dashboard__section--vet">
+        <section className="dashboard__section">
           <h2 className="dashboard__section-title">Ενέργειες για τον Κτηνίατρο</h2>
           <div className="dashboard__cards">
             {vetCards.map((card) => (

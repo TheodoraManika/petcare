@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Download, Dog, Cat, AlertCircle } from 'lucide-react';
+import { Search, Download, Dog, Cat, AlertCircle, FileText, CircleAlert, PawPrint, ArrowLeftRight, Heart, HandHeart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
 import MedicalEventCard from '../../components/owner/healthcard/MedicalEventCard';
 import StatCard from '../../components/owner/healthcard/StatCard';
@@ -7,6 +8,7 @@ import { ROUTES } from '../../utils/constants';
 import './HealthBook.css';
 
 const HealthBook = () => {
+  const navigate = useNavigate();
   const [microchipNumber, setMicrochipNumber] = useState('');
   const [petData, setPetData] = useState(null);
   const [searchAttempted, setSearchAttempted] = useState(false);
@@ -279,8 +281,9 @@ const HealthBook = () => {
         {!isLoading && searchAttempted && (
           <>
             {petData ? (
-              <div className="health-book__results">
-                <div className="health-book__content">
+              <>
+                <div className="health-book__results">
+                  <div className="health-book__content">
                   <div className="health-book__sidebar">
                     <div className="health-book__pet-card">
                       <div className="health-book__pet-icon">
@@ -335,10 +338,52 @@ const HealthBook = () => {
                         <Download size={18} />
                         Εκτύπωση Βιβλιαρίου
                       </button>
+
                     </div>
                   </div>
 
                   <div className="health-book__main">
+                    <div className="health-book__quick-actions-box">
+                      <p className="health-book__quick-actions-title">Γρήγορες Ενέργειες:</p>
+                      <div className="health-book__quick-actions-grid">
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--operation"
+                          onClick={() => navigate(ROUTES.vet.operation, { state: { microchip: petData.microchip } })}
+                        >
+                          <FileText size={16} />
+                          Ιατρικές Πράξεις
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--lost"
+                          onClick={() => navigate(ROUTES.vet.lostPetForm, { state: { microchip: petData.microchip } })}
+                        >
+                          <CircleAlert size={16} />
+                          Δήλωση Απώλειας
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--transfer"
+                          onClick={() => navigate(ROUTES.vet.transfer, { state: { microchip: petData.microchip } })}
+                        >
+                          <ArrowLeftRight size={16} />
+                          Μεταβίβαση
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--adoption"
+                          onClick={() => navigate(ROUTES.vet.adoption, { state: { microchip: petData.microchip } })}
+                        >
+                          <Heart size={16} />
+                          Υιοθεσία
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--foster"
+                          onClick={() => navigate(ROUTES.vet.foster, { state: { microchip: petData.microchip } })}
+                        >
+                          <HandHeart size={16} />
+                          Αναδοχή
+                        </button>
+                      </div>
+                    </div>
+
                     {petData.medicalHistory.length > 0 && (
                       <>
                         <h2 className="health-book__section-title">Ιατρικό Ιστορικό</h2>
@@ -366,6 +411,7 @@ const HealthBook = () => {
                   </div>
                 </div>
               </div>
+              </>
             ) : (
               <div className="health-book__not-found">
                 <AlertCircle size={48} className="health-book__not-found-icon" />

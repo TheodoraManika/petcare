@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PawPrint, UserRound, Heart, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
@@ -17,6 +17,7 @@ import './Adoption.css';
 
 const Adoption = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -30,7 +31,7 @@ const Adoption = () => {
 
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
 
 
     // Step 2: Owner Data
@@ -404,6 +405,7 @@ const Adoption = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
 
 

@@ -52,6 +52,8 @@ const VetSearchMap = () => {
     availability: '',
     time: '',
     rating: '',
+    service: '',
+    maxPrice: '',
   });
 
   const [locationData, setLocationData] = useState(null);
@@ -219,6 +221,20 @@ const VetSearchMap = () => {
     }
   }, [location]);
 
+  // Handle redirect from login (auto-open booking form)
+  useEffect(() => {
+    if (location.state?.bookingVetId && allVets.length > 0) {
+      const vetToBook = allVets.find(v => String(v.id) === String(location.state.bookingVetId));
+      if (vetToBook && currentUser?.userType === 'owner') {
+        setBookingVet(vetToBook);
+        setShowBookingForm(true);
+        
+        // Clear navigation state to avoid re-opening on manual refresh
+        window.history.replaceState({}, document.title);
+      }
+    }
+  }, [location, allVets, currentUser]);
+
   // Helper function to normalize text for fuzzy matching (remove accents, normalize spacing)
   const normalizeText = (text) => {
     if (!text) return '';
@@ -297,6 +313,8 @@ const VetSearchMap = () => {
       availability: '',
       time: '',
       rating: '',
+      service: '',
+      maxPrice: '',
     });
     setLocationData(null);
     setCurrentPage(1);
@@ -435,9 +453,55 @@ const VetSearchMap = () => {
         }
       }
 
+      // Filter by service
+      if (filters.service) {
+        const hasService = vet.services?.some(s => s.id === filters.service);
+        if (!hasService) return false;
+      }
+
+      // Filter by max price
+      if (filters.maxPrice) {
+        const maxPrice = parseFloat(filters.maxPrice);
+        if (filters.service) {
+          // If a specific service is selected, check its price
+          const service = vet.services?.find(s => s.id === filters.service);
+          if (!service || service.price > maxPrice) return false;
+        } else {
+          // If no service selected, check if any service is below maxPrice
+          const hasAffordableService = vet.services?.some(s => s.price <= maxPrice);
+          if (!hasAffordableService) return false;
+        }
+      }
+
       return true;
     });
   }, [allVets, filters]);
+
+  // Augment vets with display info (price, etc.) based on filters
+  const augmentedVets = useMemo(() => {
+    return filteredVets.map(vet => {
+      let displayPrice = null;
+      let displayService = null;
+
+      if (filters.service) {
+        const service = vet.services?.find(s => s.id === filters.service);
+        if (service) {
+          displayPrice = service.price;
+          displayService = service.name;
+        }
+      } else if (vet.services && vet.services.length > 0) {
+        // If no service selected, show starting price
+        displayPrice = Math.min(...vet.services.map(s => s.price));
+        displayService = 'από';
+      }
+
+      return {
+        ...vet,
+        displayPrice,
+        displayService
+      };
+    });
+  }, [filteredVets, filters.service]);
 
   const handleMarkerClick = (vet) => {
     setSelectedVet(selectedVet?.id === vet.id ? null : vet);
@@ -454,7 +518,12 @@ const VetSearchMap = () => {
       setBookingVet(vet);
       setShowBookingForm(true);
     } else {
-      navigate(ROUTES.login, { state: { from: location.pathname } });
+      navigate(ROUTES.login, { 
+        state: { 
+          from: location.pathname,
+          bookingVetId: vet.id 
+        } 
+      });
     }
   };
 
@@ -535,13 +604,30 @@ const VetSearchMap = () => {
     { value: '5', label: '5 ⭐' }
   ];
 
+  const serviceOptions = [
+    { value: '', label: 'Επιλέξτε υπηρεσία...' },
+    { value: 'checkup', label: 'Γενικός Έλεγχος' },
+    { value: 'vaccination', label: 'Εμβολιασμός' },
+    { value: 'dental', label: 'Καθαρισμός Δοντιών' },
+    { value: 'surgery', label: 'Χειρουργική Επέμβαση' },
+    { value: 'blood_test', label: 'Αιματολογικές Εξετάσεις' },
+    { value: 'ultrasound', label: 'Υπέρηχος' },
+    { value: 'cardiology', label: 'Καρδιολογικός Έλεγχος' },
+    { value: 'dermatology', label: 'Δερματολογική Εξέταση' },
+    { value: 'ophthalmology', label: 'Οφθαλμολογικός Έλεγχος' }
+  ];
+
+  const priceOptions = [
+    { value: '', label: 'Οποιαδήποτε τιμή' },
+    { value: '30', label: 'Έως 30€' },
+    { value: '50', label: 'Έως 50€' },
+    { value: '80', label: 'Έως 80€' },
+    { value: '100', label: 'Έως 100€' },
+    { value: '150', label: 'Έως 150€' }
+  ];
+
   return (
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
-      {(!currentUser || currentUser.userType !== 'owner') && (
-        <div className="appointment-alert">
-          Για να κλείσετε ραντεβού, μπορείτε να κάνετε <Link to={ROUTES.login} state={{ from: location.pathname }}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
-        </div>
-      )}
       <div className="vet-search-map-page">
         {/* Sidebar Filters */}
         <SearchSidebar
@@ -623,6 +709,30 @@ const VetSearchMap = () => {
               variant="citizen"
             />
           </div>
+
+          {/* Service Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Υπηρεσία</label>
+            <CustomSelect
+              name="service"
+              value={filters.service}
+              onChange={(val) => handleSelectChange('service', val)}
+              options={serviceOptions}
+              variant="citizen"
+            />
+          </div>
+
+          {/* Price Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Μέγιστη Τιμή</label>
+            <CustomSelect
+              name="maxPrice"
+              value={filters.maxPrice}
+              onChange={(val) => handleSelectChange('maxPrice', val)}
+              options={priceOptions}
+              variant="citizen"
+            />
+          </div>
         </SearchSidebar>
 
         {/* Main Map Area */}
@@ -677,7 +787,7 @@ const VetSearchMap = () => {
                 <MapWithMarkers
                   center={mapCenter}
                   zoom={mapZoom}
-                  markers={filteredVets}
+                  markers={augmentedVets}
                   selectedId={selectedVet?.id}
                   onMarkerClick={handleMarkerClick}
                   height="600px"
@@ -688,7 +798,7 @@ const VetSearchMap = () => {
                 />
               ) : (
                 <SearchResultsList
-                  items={currentVets}
+                  items={augmentedVets.slice(startIndex, endIndex)}
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}

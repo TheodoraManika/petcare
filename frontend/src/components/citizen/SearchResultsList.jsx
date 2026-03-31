@@ -77,6 +77,12 @@ const SearchResultsList = ({
             </div>
           )}
           {item.address && <p className="result-address">{item.address}</p>}
+          {(item.displayPrice !== undefined && item.displayPrice !== null) && (
+            <div className="result-price-box">
+              <span className="price-label">{item.displayService === 'από' ? 'Από' : item.displayService}</span>
+              <span className="price-value">{item.displayPrice}€</span>
+            </div>
+          )}
         </div>
         <div className="result-actions">
           {actionButtonText && (

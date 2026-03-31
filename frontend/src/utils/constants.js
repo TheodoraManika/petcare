@@ -48,6 +48,7 @@ export const ROUTES = {
     foundPetForm: '/vet/found-pet',
     healthBook: '/vet/health-book',
     information: '/vet/information',
+    services: '/vet/services',
   },
 };
 

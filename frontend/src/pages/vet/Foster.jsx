@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PawPrint, UserRound, HandHeart, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
@@ -17,6 +17,7 @@ import './Foster.css';
 
 const Foster = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -30,7 +31,7 @@ const Foster = () => {
 
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
 
 
     // Step 2: Foster Parent Data
@@ -409,6 +410,7 @@ const Foster = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
 
 

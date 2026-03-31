@@ -1,0 +1,230 @@
+.vet-services {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.vet-services__header {
+  margin-bottom: 32px;
+}
+
+.vet-services__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.vet-services__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.vet-services__container {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.vet-services__list-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 150px;
+  gap: 20px;
+  padding: 16px 24px;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.vet-services__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.vet-services__item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 150px;
+  gap: 20px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.vet-services__item:last-child {
+  border-bottom: none;
+}
+
+.vet-services__item:hover {
+  background-color: #f9fafb;
+}
+
+.vet-services__item--active {
+  background-color: rgba(252, 164, 124, 0.1);
+}
+
+.vet-services__service-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vet-services__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(252, 164, 124, 0.2);
+  border-radius: 8px;
+  color: #FCA47C;
+}
+
+.vet-services__name {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.vet-services__toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  color: #6b7280;
+  width: 140px;
+}
+
+.vet-services__toggle-btn:hover {
+  background-color: #f3f4f6;
+  color: #1a1a1a;
+}
+
+.vet-services__toggle-btn--active {
+  background-color: #FCA47C;
+  border-color: #FCA47C;
+  color: #101828;
+}
+
+.vet-services__toggle-btn--active:hover {
+  background-color: #fb8a5c;
+  color: #101828;
+}
+
+.vet-services__price-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.vet-services__item--active .vet-services__price-wrapper {
+  border-color: #FCA47C;
+}
+
+.vet-services__price-input {
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: right;
+  outline: none;
+}
+
+.vet-services__price-input:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.vet-services__currency {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.vet-services__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 24px;
+  background-color: #f9fafb;
+}
+
+.vet-services__save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background-color: #FCA47C;
+  color: #101828;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(252, 164, 124, 0.3);
+}
+
+.vet-services__save-btn:hover:not(:disabled) {
+  background-color: #fb8a5c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(252, 164, 124, 0.4);
+}
+
+.vet-services__save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.vet-services__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 16px 20px;
+  background-color: rgba(252, 164, 124, 0.1);
+  border: 1px solid rgba(252, 164, 124, 0.25);
+  border-radius: 8px;
+  color: #c2410c;
+  font-size: 14px;
+}
+
+.vet-services__info svg {
+  color: #FCA47C;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vet-services__list-header {
+    display: none;
+  }
+
+  .vet-services__item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vet-services__col-price {
+    width: 150px;
+  }
+}

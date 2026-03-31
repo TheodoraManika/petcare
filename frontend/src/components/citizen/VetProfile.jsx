@@ -164,6 +164,23 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
             <p className="biography-content">{vetBiography}</p>
           </div>
 
+          {/* Services Section */}
+          <div className="services-section">
+            <h2 className="section-title">Υπηρεσίες & Τιμοκατάλογος</h2>
+            <div className="services-grid">
+              {vet.services && vet.services.length > 0 ? (
+                vet.services.map((service, index) => (
+                  <div key={index} className="service-item">
+                    <span className="service-name">{service.name}</span>
+                    <span className="service-price-tag">{service.price}€</span>
+                  </div>
+                ))
+              ) : (
+                <p className="no-services">Δεν υπάρχουν διαθέσιμες πληροφορίες για υπηρεσίες.</p>
+              )}
+            </div>
+          </div>
+
           {/* Reviews Section */}
           <div className="reviews-section">
             <h2 className="section-title">Κριτικές Πελατών</h2>

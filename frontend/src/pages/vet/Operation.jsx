@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, FileText, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -18,13 +18,14 @@ import './Operation.css';
 
 const Operation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [notification, setNotification] = useState(null);
   const [foundPetDetails, setFoundPetDetails] = useState(null);
   const [formData, setFormData] = useState({
-    petSearch: '',
+    petSearch: location.state?.microchip || '',
     operationType: '',
     operationDate: '',
     description: ''
@@ -270,6 +271,7 @@ const Operation = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
               </>
             )}

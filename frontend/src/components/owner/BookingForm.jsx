@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import CustomSelect from '../common/forms/CustomSelect';
 import ConfirmModal from '../common/modals/ConfirmModal';
+import Avatar from '../common/Avatar';
 import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
 import './BookingForm.css';
 
@@ -75,10 +76,15 @@ const BookingForm = ({
   // Active booking index for calendar selection
   const [activeBookingIndex, setActiveBookingIndex] = useState(0);
 
-  const serviceOptions = Object.entries(SERVICE_LABELS).map(([value, label]) => ({
-    value,
-    label
-  }));
+  const serviceOptions = selectedVet?.services && selectedVet.services.length > 0
+    ? selectedVet.services.map(s => ({
+        value: s.id,
+        label: `${s.name} (${s.price}€)`
+      }))
+    : Object.entries(SERVICE_LABELS).map(([value, label]) => ({
+        value,
+        label
+      }));
 
   // Fetch all vets for search
   useEffect(() => {
@@ -583,8 +589,13 @@ const BookingForm = ({
           {selectedVet ? (
             <div className="booking-form__selected-vet">
               <div className="booking-form__vet-card">
-                <div className="booking-form__vet-avatar">
-                  {getInitials(selectedVet.name, selectedVet.lastName)}
+                <div className="booking-form__vet-avatar-container">
+                  <Avatar 
+                    src={selectedVet.avatar} 
+                    name={selectedVet.name} 
+                    lastName={selectedVet.lastName}
+                    size="lg"
+                  />
                 </div>
                 <div className="booking-form__vet-info">
                   <h4 className="booking-form__vet-name">
@@ -639,8 +650,13 @@ const BookingForm = ({
                         className="booking-form__search-result"
                         onClick={() => handleSelectVet(vet)}
                       >
-                        <div className="booking-form__result-avatar">
-                          {getInitials(vet.name, vet.lastName)}
+                        <div className="booking-form__result-avatar-container">
+                          <Avatar 
+                            src={vet.avatar} 
+                            name={vet.name} 
+                            lastName={vet.lastName}
+                            size="md"
+                          />
                         </div>
                         <div className="booking-form__result-info">
                           <span className="booking-form__result-name">
@@ -831,6 +847,24 @@ const BookingForm = ({
                       </div>
                     </div>
 
+                    {/* Availability Legend */}
+                    {booking.serviceType && (
+                      <div className="booking-form__availability-legend">
+                        <div className="booking-form__legend-item">
+                          <span className="booking-form__legend-color booking-form__legend-color--many"></span>
+                          <span className="booking-form__legend-text">Πολλά διαθέσιμα</span>
+                        </div>
+                        <div className="booking-form__legend-item">
+                          <span className="booking-form__legend-color booking-form__legend-color--few"></span>
+                          <span className="booking-form__legend-text">Λίγα διαθέσιμα</span>
+                        </div>
+                        <div className="booking-form__legend-item">
+                          <span className="booking-form__legend-color booking-form__legend-color--none"></span>
+                          <span className="booking-form__legend-text">Κανένα διαθέσιμο</span>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Week View */}
                     {viewMode === 'week' && (
                       <div className="booking-form__week-calendar">
@@ -844,8 +878,19 @@ const BookingForm = ({
                           const isToday = currentDay.getTime() === today.getTime();
                           const isPast = currentDay < today;
 
+                          let availabilityClass = '';
+                          if (!isPast && booking.serviceType) {
+                            if (slots.length === 0) {
+                              availabilityClass = 'booking-form__day-column--none';
+                            } else if (slots.length <= 3) {
+                              availabilityClass = 'booking-form__day-column--few';
+                            } else {
+                              availabilityClass = 'booking-form__day-column--many';
+                            }
+                          }
+
                           return (
-                            <div key={dayIdx} className="booking-form__day-column">
+                            <div key={dayIdx} className={`booking-form__day-column ${isToday ? 'booking-form__day-column--today' : ''} ${availabilityClass}`}>
                               <div className={`booking-form__day-header ${isToday ? 'booking-form__day-header--today' : ''} ${isPast ? 'booking-form__day-header--past' : ''}`}>
                                 <div className="booking-form__day-name">{getDayName(day)}</div>
                                 <div className="booking-form__day-number">{day.getDate()}</div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, AlertCircle } from 'lucide-react';
 import './MicrochipSearch.css';
 
@@ -14,6 +14,13 @@ const MicrochipSearch = ({ onSearchComplete, variant = 'citizen', initialValue =
             if (error) setError('');
         }
     };
+
+    // Auto-search if initial value is provided and valid length
+    useEffect(() => {
+        if (initialValue && initialValue.length === 15) {
+            handleSearch();
+        }
+    }, [initialValue]); // Only run when initialValue changes/mounts
 
     const handleSearch = async () => {
         if (!microchipInput.trim()) return;

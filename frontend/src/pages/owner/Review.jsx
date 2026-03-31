@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
+import Avatar from '../../components/common/Avatar';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
@@ -32,11 +33,15 @@ const Review = () => {
         
         // Fetch vet details
         let vetName = 'Άγνωστος';
+        let vetAvatar = null;
+        let vetLastName = '';
         try {
           const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
           if (vetResponse.ok) {
             const vet = await vetResponse.json();
             vetName = `${vet.name} ${vet.lastName}`;
+            vetAvatar = vet.avatar || null;
+            vetLastName = vet.lastName || '';
           }
         } catch (err) {
           console.error('Error fetching vet details:', err);
@@ -60,6 +65,8 @@ const Review = () => {
           id: apt.id,
           vet: vetName,
           vetId: apt.vetId,
+          vetAvatar: vetAvatar,
+          vetLastName: vetLastName,
           pet: petName,
           date: apt.date || new Date().toLocaleDateString('el-GR'),
           service: apt.serviceType || 'Υπηρεσία',
@@ -202,11 +209,17 @@ const Review = () => {
             <div className="owner-review__appointment-header">
               <span className="owner-review__label">Στοιχεία Ραντεβού</span>
             </div>
+            <div className="owner-review__vet-profile">
+              <Avatar 
+                src={appointment.vetAvatar} 
+                name={appointment.vet?.split(' ')[0] || 'Δρ'} 
+                lastName={appointment.vetLastName}
+                size="xl" 
+                shape="square"
+              />
+              <span className="owner-review__vet-name">Δρ. {appointment.vet}</span>
+            </div>
             <div className="owner-review__appointment-details">
-              <div className="owner-review__appointment-row">
-                <span className="owner-review__appointment-label">Κτηνίατρος</span>
-                <span className="owner-review__appointment-value">Δρ. {appointment.vet}</span>
-              </div>
               <div className="owner-review__appointment-row">
                 <span className="owner-review__appointment-label">Κατοικίδιο</span>
                 <span className="owner-review__appointment-value">{appointment.pet}</span>

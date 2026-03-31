@@ -75,7 +75,7 @@ const LoginPage = () => {
 
         // Redirect based on provided 'from' state or user type
         if (location.state?.from) {
-          navigate(location.state.from);
+          navigate(location.state.from, { state: location.state });
         } else if (user.userType === 'vet') {
           navigate(ROUTES.vet.dashboard);
         } else {

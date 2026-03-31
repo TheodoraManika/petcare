@@ -39,6 +39,7 @@ import HistoryDetail from './pages/vet/HistoryDetail';
 import LostPet from './pages/vet/LostPet';
 import Appointments from './pages/vet/Appointments';
 import HealthBook from './pages/vet/HealthBook';
+import VetServices from './pages/vet/Services';
 
 // Common Pages
 import LoginPage from './pages/common/login/LoginPage';
@@ -101,6 +102,7 @@ function App() {
           <Route path={ROUTES.vet.lostPetForm} element={<LostPet />} />
           <Route path={ROUTES.vet.information} element={<VetInformation />} />
           <Route path={ROUTES.vet.healthBook} element={<HealthBook />} />
+          <Route path={ROUTES.vet.services} element={<VetServices />} />
 
           {/* Common Pages */}
           <Route path={ROUTES.login} element={<LoginPage />} />

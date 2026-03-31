@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Send, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -15,8 +15,9 @@ import './LostPet.css';
 
 const LostPet = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
     petName: '',
     petColor: '',
     lostDate: '',
@@ -499,6 +500,7 @@ const LostPet = () => {
               <MicrochipSearch
                 onSearchComplete={handleSearchComplete}
                 variant="vet"
+                initialValue={location.state?.microchip || ''}
               />
             )}
             {/* Ημερομηνία Εξαφάνισης */}
