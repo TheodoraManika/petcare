@@ -606,15 +606,16 @@ const VetSearchMap = () => {
 
   const serviceOptions = [
     { value: '', label: 'Επιλέξτε υπηρεσία...' },
-    { value: 'checkup', label: 'Γενικός Έλεγχος' },
     { value: 'vaccination', label: 'Εμβολιασμός' },
-    { value: 'dental', label: 'Καθαρισμός Δοντιών' },
-    { value: 'surgery', label: 'Χειρουργική Επέμβαση' },
-    { value: 'blood_test', label: 'Αιματολογικές Εξετάσεις' },
-    { value: 'ultrasound', label: 'Υπέρηχος' },
-    { value: 'cardiology', label: 'Καρδιολογικός Έλεγχος' },
-    { value: 'dermatology', label: 'Δερματολογική Εξέταση' },
-    { value: 'ophthalmology', label: 'Οφθαλμολογικός Έλεγχος' }
+    { value: 'checkup', label: 'Γενική Εξέταση' },
+    { value: 'microchip', label: 'Τοποθέτηση microchip' },
+    { value: 'surgery', label: 'Χειρουργείο' },
+    { value: 'treatment', label: 'Θεραπεία' },
+    { value: 'dental', label: 'Οδοντιατρική' },
+    { value: 'ophthalmology', label: 'Οφθαλμολογική' },
+    { value: 'cardiology', label: 'Καρδιολογική' },
+    { value: 'dermatology', label: 'Δερματολογική' },
+    { value: 'other', label: 'Όλες οι υπηρεσίες' }
   ];
 
   const priceOptions = [

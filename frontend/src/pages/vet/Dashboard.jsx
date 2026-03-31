@@ -74,7 +74,7 @@ const Dashboard = () => {
     },
     {
       id: 'vet-services',
-      title: 'Υπηρεσίες & Τιμοκατάλογος',
+      title: 'Τιμοκατάλογος Υπηρεσιών',
       description: 'Επιλογή παρεχόμενων υπηρεσιών και τιμών',
       icon: <Stethoscope />,
       onClick: () => navigate(ROUTES.vet.services),

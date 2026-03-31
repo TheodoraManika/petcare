@@ -98,7 +98,7 @@ const VetServices = () => {
 
   if (loading) {
     return (
-      <PageLayout title="Υπηρεσίες & Τιμοκατάλογος">
+      <PageLayout title="Τιμοκατάλογος Υπηρεσιών">
         <div className="vet-services">
           <p>Φόρτωση...</p>
         </div>
@@ -107,7 +107,7 @@ const VetServices = () => {
   }
 
   return (
-    <PageLayout title="Υπηρεσίες & Τιμοκατάλογος">
+    <PageLayout title="Τιμοκατάλογος Υπηρεσιών">
       <div className="vet-services">
         <Notification
           isVisible={notification !== null}
@@ -116,7 +116,7 @@ const VetServices = () => {
         />
 
         <div className="vet-services__header">
-          <h1 className="vet-services__title">Διαχείριση Υπηρεσιών</h1>
+          <h1 className="vet-services__title">Τιμοκατάλογος Υπηρεσιών</h1>
           <p className="vet-services__subtitle">
             Επιλέξτε τις υπηρεσίες που παρέχετε και ορίστε το κόστος τους
           </p>

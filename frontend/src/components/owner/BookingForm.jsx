@@ -847,23 +847,7 @@ const BookingForm = ({
                       </div>
                     </div>
 
-                    {/* Availability Legend */}
-                    {booking.serviceType && (
-                      <div className="booking-form__availability-legend">
-                        <div className="booking-form__legend-item">
-                          <span className="booking-form__legend-color booking-form__legend-color--many"></span>
-                          <span className="booking-form__legend-text">Πολλά διαθέσιμα</span>
-                        </div>
-                        <div className="booking-form__legend-item">
-                          <span className="booking-form__legend-color booking-form__legend-color--few"></span>
-                          <span className="booking-form__legend-text">Λίγα διαθέσιμα</span>
-                        </div>
-                        <div className="booking-form__legend-item">
-                          <span className="booking-form__legend-color booking-form__legend-color--none"></span>
-                          <span className="booking-form__legend-text">Κανένα διαθέσιμο</span>
-                        </div>
-                      </div>
-                    )}
+                    {/* Availability Legend removed */}
 
                     {/* Week View */}
                     {viewMode === 'week' && (
@@ -878,19 +862,8 @@ const BookingForm = ({
                           const isToday = currentDay.getTime() === today.getTime();
                           const isPast = currentDay < today;
 
-                          let availabilityClass = '';
-                          if (!isPast && booking.serviceType) {
-                            if (slots.length === 0) {
-                              availabilityClass = 'booking-form__day-column--none';
-                            } else if (slots.length <= 3) {
-                              availabilityClass = 'booking-form__day-column--few';
-                            } else {
-                              availabilityClass = 'booking-form__day-column--many';
-                            }
-                          }
-
                           return (
-                            <div key={dayIdx} className={`booking-form__day-column ${isToday ? 'booking-form__day-column--today' : ''} ${availabilityClass}`}>
+                            <div key={dayIdx} className={`booking-form__day-column ${isToday ? 'booking-form__day-column--today' : ''}`}>
                               <div className={`booking-form__day-header ${isToday ? 'booking-form__day-header--today' : ''} ${isPast ? 'booking-form__day-header--past' : ''}`}>
                                 <div className="booking-form__day-name">{getDayName(day)}</div>
                                 <div className="booking-form__day-number">{day.getDate()}</div>

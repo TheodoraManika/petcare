@@ -34,7 +34,7 @@ const Sidebar = ({ variant = 'vet' }) => {
   const vetPersonalItems = [
     { icon: <Calendar size={20} />, label: 'Διαχείριση Ραντεβού', route: ROUTES.vet.appointments },
     { icon: <Clock size={20} />, label: 'Διαθεσιμότητα', route: ROUTES.vet.availability },
-    { icon: <Stethoscope size={20} />, label: 'Υπηρεσίες & Τιμοκατάλογος', route: ROUTES.vet.services },
+    { icon: <Stethoscope size={20} />, label: 'Τιμοκατάλογος Υπηρεσιών', route: ROUTES.vet.services },
     { icon: <History size={20} />, label: 'Ιστορικό', route: ROUTES.vet.history },
     { icon: <Star size={20} />, label: 'Αξιολογήσεις', route: ROUTES.vet.reviews },
   ];
