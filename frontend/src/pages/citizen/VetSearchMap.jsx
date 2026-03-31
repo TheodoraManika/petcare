@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, CircleAlert } from 'lucide-react';
+import { Search, MapPin, CircleAlert, List } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import CustomSelect from '../../components/common/forms/CustomSelect';
@@ -57,7 +57,7 @@ const VetSearchMap = () => {
   });
 
   const [locationData, setLocationData] = useState(null);
-  const [showMap, setShowMap] = useState(true);
+  const [showMap, setShowMap] = useState(() => location.state?.view !== 'list');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedVet, setSelectedVet] = useState(null);
   const [allVets, setAllVets] = useState([]);
@@ -95,6 +95,15 @@ const VetSearchMap = () => {
       window.history.replaceState({}, document.title);
     }
   }, [location]);
+
+  useEffect(() => {
+    if (location.state?.view === 'list') {
+      setShowMap(false);
+    }
+    if (location.state?.view === 'map') {
+      setShowMap(true);
+    }
+  }, [location.state?.view]);
 
   // Fetch vets from backend
   useEffect(() => {
@@ -755,17 +764,18 @@ const VetSearchMap = () => {
                 <h2 className="map-title">Αποτελέσματα ({filteredVets.length})</h2>
                 <div className="view-toggles">
                   <button
+                    className={`toggle-btn ${!showMap ? 'active' : ''}`}
+                    onClick={() => setShowMap(false)}
+                  >
+                    <List size={18} />
+                    Λίστα
+                  </button>
+                  <button
                     className={`toggle-btn ${showMap ? 'active' : ''}`}
                     onClick={() => setShowMap(true)}
                   >
                     <MapPin size={18} />
                     Χάρτης
-                  </button>
-                  <button
-                    className={`toggle-btn ${!showMap ? 'active' : ''}`}
-                    onClick={() => setShowMap(false)}
-                  >
-                    Λίστα
                   </button>
                 </div>
               </div>

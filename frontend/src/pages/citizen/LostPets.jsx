@@ -601,7 +601,7 @@ const LostPets = () => {
                     Δεν βρέθηκε δήλωση απώλειας
                   </h3>
                   <p className="empty-state-desc">
-                    Δεν υπάρχει καταχωρημένο κατοικίδιο με αυτό το microchip.
+                    Δεν υπάρχει καταχωρημένο κατοικίδιο με αυτά τα χαρακτηριστικά.
                   </p>
                   <button
                     className="empty-state-btn"

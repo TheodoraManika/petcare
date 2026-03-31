@@ -156,18 +156,18 @@ const Navbar = ({ variant = 'citizen' }) => {
     ? [
       { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
       { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-      { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων' },
+      { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων', state: { view: 'list' } },
     ]
     : isOwner
       ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων' },
+        { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων', state: { view: 'list' } },
       ]
       : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων' },
+        { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων', state: { view: 'list' } },
       ];
 
 
@@ -221,7 +221,7 @@ const Navbar = ({ variant = 'citizen' }) => {
           {/* Navigation Links */}
           <div className="navbar__nav-links">
             {navLinks.map((link, index) => (
-              <Link key={index} to={link.to} className="navbar__nav-link">
+              <Link key={index} to={link.to} state={link.state} className="navbar__nav-link">
                 {link.icon}
                 <span>{link.label}</span>
               </Link>
