@@ -3,11 +3,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-full);
   overflow: hidden;
   background: linear-gradient(135deg, #23CED9 0%, #FCA47C 50%, #F9D779 100%);
   color: white;
   font-weight: var(--font-weight-medium);
+}
+
+.avatar--circle {
+  border-radius: var(--radius-full);
+}
+
+.avatar--square {
+  border-radius: 12px;
 }
 
 .avatar--sm {

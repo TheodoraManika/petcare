@@ -60,7 +60,8 @@ const SearchResultsList = ({
             src={item.avatar}
             name={item.name}
             lastName={item.lastName || item.surname}
-            size="md"
+            size="xl"
+            shape="square"
           />
         </div>
         <div className="result-details">

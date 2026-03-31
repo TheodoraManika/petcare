@@ -299,6 +299,7 @@ const Navbar = ({ variant = 'citizen' }) => {
                   name={user.name}
                   lastName={user.lastName}
                   size="sm"
+                  shape={user.userType === 'vet' ? 'square' : 'circle'}
                 />
                 {unreadNotificationsCount > 0 && (
                   <span className="navbar__avatar-badge">

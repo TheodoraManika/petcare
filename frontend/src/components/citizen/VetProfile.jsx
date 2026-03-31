@@ -66,6 +66,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                 src={vet.avatar}
                 name={displayName}
                 size="xl"
+                shape="square"
               />
             </div>
             <div className="profile-identity">

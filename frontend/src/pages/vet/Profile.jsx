@@ -517,6 +517,7 @@ const Profile = () => {
               name={formData.firstName}
               lastName={formData.lastName}
               size="xl"
+              shape="square"
             />
             {isEditing && (
               <div className="profile__avatar-overlay">

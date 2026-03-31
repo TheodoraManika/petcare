@@ -64,7 +64,8 @@ const MapWithMarkers = ({
             src={marker.avatar}
             name={marker.name}
             lastName={marker.lastName || marker.surname}
-            size="sm"
+            size="xl"
+            shape="square"
           />
         </div>
         <div className="popup-info">

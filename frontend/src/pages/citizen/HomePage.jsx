@@ -645,7 +645,8 @@ const HomePage = () => {
                             <Avatar
                               src={vet.avatar}
                               name={vet.name}
-                              size="lg"
+                              size="xl"
+                              shape="square"
                             />
                           </div>
                           <h3 className="card-title">{vet.name}</h3>
