@@ -208,11 +208,11 @@ const HealthBook = () => {
   const getPetIcon = (iconType) => {
     switch (iconType) {
       case 'dog':
-        return <Dog size={40} />;
+        return <Dog size={80} />;
       case 'cat':
-        return <Cat size={40} />;
+        return <Cat size={80} />;
       default:
-        return <Dog size={40} />;
+        return <Dog size={80} />;
     }
   };
 
