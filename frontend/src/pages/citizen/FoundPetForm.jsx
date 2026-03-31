@@ -630,7 +630,8 @@ const FoundPetForm = ({ inline = false, onClose = null, prefill = null }) => {
         gender: pet.gender,
         color: pet.color,
         weight: pet.weight,
-        birthDate: pet.birthDate
+        birthDate: pet.birthDate,
+        imageUrl: pet.imageUrl || pet.image || ''
       });
     } else {
       // Pet not found - just store microchip

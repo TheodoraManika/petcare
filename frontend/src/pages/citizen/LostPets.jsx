@@ -310,7 +310,8 @@ const LostPets = () => {
         gender: pet.gender,
         color: pet.color,
         weight: pet.weight,
-        birthDate: pet.birthDate
+        birthDate: pet.birthDate,
+        imageUrl: pet.imageUrl || pet.image || ''
       }
     });
     setShowFoundForm(true);
