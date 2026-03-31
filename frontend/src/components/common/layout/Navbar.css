@@ -90,10 +90,12 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  min-width: 160px;
 }
 
 .navbar__dropdown-chevron {
   transition: transform var(--transition-fast);
+  margin-left: auto;
 }
 
 .navbar__dropdown-chevron--open {
