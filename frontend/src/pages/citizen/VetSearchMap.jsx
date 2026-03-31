@@ -638,6 +638,11 @@ const VetSearchMap = () => {
 
   return (
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
+      {(!currentUser || currentUser.userType !== 'owner') && (
+        <div className="appointment-alert">
+          Για να κλείσετε ραντεβού, πρέπει να κάνετε <Link to={ROUTES.login} state={{ from: location.pathname }}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
+        </div>
+      )}
       <div className="vet-search-map-page">
         {/* Sidebar Filters */}
         <SearchSidebar
