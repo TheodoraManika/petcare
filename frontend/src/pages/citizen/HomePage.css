@@ -1288,6 +1288,7 @@ select.search-input option {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
 }
 
 .card-title {
@@ -1296,9 +1297,10 @@ select.search-input option {
   font-size: 20px;
   font-weight: 700;
   margin: 0;
-  line-height: normal;
+  line-height: 1;
   display: flex;
   align-items: center;
+  transform: translateY(6px);
 }
 
 .card-toggle-icon {

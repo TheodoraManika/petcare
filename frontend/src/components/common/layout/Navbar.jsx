@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell } from 'lucide-react';
+import { ChevronDown, UserRound, LogOut, Home, Search, CheckCircle2, Star, Menu, CirclePlus, FileText, Calendar, Clock, AlertCircle, History, PawPrint, Users, Stethoscope, Bell, Info } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import Avatar from '../Avatar';
 import NotificationPage from '../NotificationPage';
@@ -156,18 +156,18 @@ const Navbar = ({ variant = 'citizen' }) => {
     ? [
       { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
       { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-      { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+      { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων' },
     ]
     : isOwner
       ? [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.citizen.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων' },
       ]
       : [
         { to: ROUTES.home, icon: <Home size={18} />, label: 'Αρχική' },
         { to: ROUTES.citizen.lostPets, icon: <Search size={18} />, label: 'Χαμένα Κατοικίδια' },
-        { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Κτηνίατροι' },
+        { to: ROUTES.vet.searchMap, icon: <Search size={18} />, label: 'Αναζήτηση Κτηνιάτρων' },
       ];
 
 
@@ -226,6 +226,46 @@ const Navbar = ({ variant = 'citizen' }) => {
                 <span>{link.label}</span>
               </Link>
             ))}
+
+            <div className="navbar__nav-dropdown">
+              <button type="button" className="navbar__nav-link navbar__nav-link--dropdown">
+                <Info size={18} />
+                <span>Πληροφορίες</span>
+                <ChevronDown size={16} className="navbar__dropdown-chevron" />
+              </button>
+              <div className="navbar__nav-dropdown-menu">
+                <button
+                  type="button"
+                  className="navbar__nav-dropdown-item"
+                  onClick={() => navigate(ROUTES.owner.information)}
+                >
+                  <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--paw">
+                    <PawPrint size={16} />
+                  </span>
+                  Ιδιοκτήτης
+                </button>
+                <button
+                  type="button"
+                  className="navbar__nav-dropdown-item"
+                  onClick={() => navigate(ROUTES.vet.information)}
+                >
+                  <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--stetho">
+                    <Stethoscope size={16} />
+                  </span>
+                  Κτηνίατρος
+                </button>
+                <button
+                  type="button"
+                  className="navbar__nav-dropdown-item"
+                  onClick={() => navigate(ROUTES.citizen.information)}
+                >
+                  <span className="navbar__nav-dropdown-icon navbar__nav-dropdown-icon--users">
+                    <Users size={16} />
+                  </span>
+                  Πολίτης
+                </button>
+              </div>
+            </div>
 
 
           </div>

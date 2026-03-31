@@ -283,6 +283,7 @@ const HomePage = () => {
           breed: pet.breed,
           foundLocation: pet.area,
           dateReported: pet.dateLost,
+          imageUrl: pet.imageUrl || pet.image || '',
           description: `Βρέθηκε στην περιοχή ${pet.area}`, // Optional description
         }
       }
