@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { ROUTES } from '../../../utils/constants';
 import PageLayout from '../../../components/common/layout/PageLayout';
@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,21 +42,41 @@ const LoginPage = () => {
       const user = users.find(u => u.email === email && u.password === password);
 
       if (user) {
-        // Successful login
+        // Successful login - store all user data
         localStorage.setItem('currentUser', JSON.stringify({
           id: user.id,
           email: user.email,
           name: user.name,
+          lastName: user.lastName,
           username: user.name,
           userType: user.userType,
           avatar: user.avatar,
+          phone: user.phone,
+          afm: user.afm,
+          address: user.address,
+          addressNumber: user.addressNumber,
+          city: user.city,
+          postalCode: user.postalCode,
+          // Vet-specific fields
+          specialization: user.specialization,
+          clinicName: user.clinicName,
+          licenseNumber: user.licenseNumber,
+          licenseType: user.licenseType,
+          clinicAddress: user.clinicAddress,
+          clinicCity: user.clinicCity,
+          clinicPostalCode: user.clinicPostalCode,
+          experience: user.experience,
+          education: user.education,
+          biography: user.biography,
         }));
 
         // Dispatch custom event to notify auth change
         window.dispatchEvent(new Event('loginStatusChanged'));
 
-        // Redirect based on user type
-        if (user.userType === 'vet') {
+        // Redirect based on provided 'from' state or user type
+        if (location.state?.from) {
+          navigate(location.state.from, { state: location.state });
+        } else if (user.userType === 'vet') {
           navigate(ROUTES.vet.dashboard);
         } else {
           navigate(ROUTES.owner.dashboard);
@@ -76,7 +97,7 @@ const LoginPage = () => {
           <ArrowLeft size={20} />
           <span>Πίσω</span>
         </Link>
-        
+
         <div className="login-container">
           {/* Logo and Title Section */}
           <div className="login-header">

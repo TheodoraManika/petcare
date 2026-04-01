@@ -1,0 +1,352 @@
+/* Vet Information Page Styles */
+.vet-information-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.vet-information-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.vet-information-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 16px;
+}
+
+.vet-information-header p {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* Cards Grid */
+.vet-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+.vet-info-card {
+  border: 2px solid #FCA47C;
+  border-radius: 12px;
+  padding: 32px 24px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.vet-info-card:hover {
+  box-shadow: 0 8px 24px rgba(252, 164, 124, 0.15);
+  transform: translateY(-2px);
+}
+
+.vet-info-card-icon {
+  width: 56px;
+  height: 56px;
+  background: #FFE8DC;
+  border: 2px solid #FCA47C;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FCA47C;
+  margin-bottom: 20px;
+}
+
+.vet-info-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 12px;
+}
+
+.vet-info-card-description {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.vet-card-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vet-card-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.vet-card-feature .checkmark-icon {
+  color: #FCA47C;
+  flex-shrink: 0;
+}
+
+/* Contents Box */
+.vet-contents-box {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 40px;
+  background: white;
+}
+
+.vet-contents-box h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.vet-contents-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vet-contents-links li {
+  margin: 0;
+}
+
+.vet-contents-links a {
+  color: #FCA47C;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.vet-contents-links a:hover {
+  color: #E88A5A;
+  text-decoration: underline;
+}
+
+/* Button Container */
+.vet-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.vet-back-home-button {
+  padding: 12px 32px;
+  background: #FCA47C;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vet-back-home-button:hover {
+  background: #E88A5A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(252, 164, 124, 0.4);
+}
+
+.vet-scroll-to-top-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  border: 2px solid #FCA47C;
+  color: #FCA47C;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.vet-scroll-to-top-button:hover {
+  background: #FCA47C;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* FAQ Container */
+.vet-faq-container {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 40px;
+  background: white;
+}
+
+.vet-faq-section {
+  margin-bottom: 40px;
+}
+
+.vet-faq-section:last-child {
+  margin-bottom: 0;
+}
+
+.vet-faq-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.vet-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vet-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.vet-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  background: #FCA47C;
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.vet-step-content h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0 0 6px 0;
+}
+
+.vet-step-content p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.vet-info-note {
+  background: #FFE8DC;
+  border-left: 4px solid #FCA47C;
+  padding: 16px;
+  margin-top: 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* Related Information Section */
+.vet-related-info {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 40px;
+  background: #FFE8DC;
+}
+
+.vet-related-info h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #101828;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.vet-related-info p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.vet-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vet-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+}
+
+.vet-checklist-icon {
+  color: #FCA47C;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.vet-checklist li span {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Subsection Titles */
+.vet-subsection-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #101828;
+  margin-top: 28px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #FCA47C;
+}
+
+/* Bullet Lists */
+.vet-bullet-list {
+  list-style: disc;
+  margin-left: 20px;
+  margin-top: 12px;
+}
+
+.vet-bullet-list li {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vet-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .vet-information-header h1 {
+    font-size: 24px;
+  }
+
+  .vet-button-container {
+    flex-direction: column;
+  }
+}

@@ -90,10 +90,12 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  min-width: 160px;
 }
 
 .navbar__dropdown-chevron {
   transition: transform var(--transition-fast);
+  margin-left: auto;
 }
 
 .navbar__dropdown-chevron--open {
@@ -153,7 +155,6 @@
 }
 
 .navbar__nav-dropdown-item:hover .navbar__nav-dropdown-icon {
-  color: #FCA47C;
   transform: scale(1.1);
 }
 
@@ -161,7 +162,19 @@
   display: flex;
   align-items: center;
   color: inherit;
-  transition: color var(--transition-fast);
+  transition: transform var(--transition-fast);
+}
+
+.navbar__nav-dropdown-icon--paw {
+  color: #23CED9;
+}
+
+.navbar__nav-dropdown-icon--stetho {
+  color: #FCA47C;
+}
+
+.navbar__nav-dropdown-icon--users {
+  color: #F9D779;
 }
 
 /* Right Section */
@@ -347,17 +360,6 @@
 }
 
 /* Owner Variant - Blue color for icons */
-.navbar--owner .navbar__nav-dropdown-icon {
-  justify-content: center;
-  color: var(--color-text-secondary);
-}
-
-.navbar--owner .navbar__nav-dropdown-item:hover .navbar__nav-dropdown-icon {
-  color: #23CED9;
-  transform: scale(1.1);
-}
-
-
 .navbar--owner .navbar__profile-menu-icon {
   justify-content: center;
   color: var(--color-text-secondary);

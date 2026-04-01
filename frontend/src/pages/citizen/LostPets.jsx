@@ -8,13 +8,24 @@ import LocationPicker from '../../components/common/forms/LocationPicker';
 import MapWithMarkers from '../../components/citizen/MapWithMarkers';
 import SearchSidebar from '../../components/citizen/SearchSidebar';
 import Pagination from '../../components/common/layout/Pagination';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate } from '../../utils/constants';
 import './LostPets.css';
 import FoundPetForm from './FoundPetForm';
 
 const LostPets = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Function to translate pet type to Greek
+  const translatePetType = (type) => {
+    if (!type) return '';
+    const typeLower = type.toLowerCase();
+    if (typeLower.includes('dog') || typeLower.includes('σκύλος')) return 'Σκύλος';
+    if (typeLower.includes('cat') || typeLower.includes('γάτα')) return 'Γάτα';
+    if (typeLower.includes('bird') || typeLower.includes('πτηνό')) return 'Πτηνό';
+    if (typeLower.includes('reptile') || typeLower.includes('ερπετό')) return 'Ερπετό';
+    return type;
+  };
 
   const [filters, setFilters] = useState({
     animal: '',
@@ -42,17 +53,20 @@ const LostPets = () => {
   useEffect(() => {
     const fetchLostPets = async () => {
       try {
-        const [lostPetsResponse, usersResponse] = await Promise.all([
-          fetch('http://localhost:5000/lostPets'),
+        const [petAlertsResponse, usersResponse] = await Promise.all([
+          fetch('http://localhost:5000/pets'),
           fetch('http://localhost:5000/users')
         ]);
 
-        if (!lostPetsResponse.ok || !usersResponse.ok) {
+        if (!petAlertsResponse.ok || !usersResponse.ok) {
           throw new Error('Failed to fetch data');
         }
 
-        const lostPetsData = await lostPetsResponse.json();
+        const petAlertsData = await petAlertsResponse.json();
         const usersData = await usersResponse.json();
+
+        // Filter only lost pets (petStatus === 1 AND status is 'active', not 'draft')
+        const lostPetsData = petAlertsData.filter(pet => pet.petStatus === 1 && pet.status === 'active');
 
         // Transform data for display (add owner info and default coordinates if missing)
         const transformedPets = lostPetsData.map((pet, index) => {
@@ -60,14 +74,16 @@ const LostPets = () => {
 
           return {
             ...pet,
-            name: pet.petName || 'Άγνωστο',
-            type: pet.species || 'Άγνωστο',
+            id: pet.id,
+            name: pet.petName || pet.name || 'Άγνωστο',
+            type: pet.type || 'Άγνωστο',
             breed: pet.breed || 'Άγνωστο',
             area: pet.lostLocation || 'Άγνωστη τοποθεσία',
             dateLost: pet.lostDate || new Date().toLocaleDateString('el-GR'),
-            color: pet.description?.split(',')[0] || 'Άγνωστο χρώμα',
+            color: pet.color || 'Άγνωστο χρώμα',
             ownerName: owner ? `${owner.name} ${owner.lastName}` : 'Άγνωστο',
             contactEmail: owner?.email || '',
+            contactPhone: owner?.phone || '',
             // Default coordinates for Athens if not specified
             lat: pet.locationLat || 37.9838,
             lon: pet.locationLon || 23.7275,
@@ -85,6 +101,16 @@ const LostPets = () => {
 
     fetchLostPets();
   }, []);
+
+  // Handle deep linking to specific pet from notifications
+  useEffect(() => {
+    if (location.state?.petId && !loading && lostPets.length > 0) {
+      const pet = lostPets.find(p => String(p.id) === String(location.state.petId));
+      if (pet) {
+        handleViewDetails(pet);
+      }
+    }
+  }, [location.state, loading, lostPets]);
 
   const handleSelectChange = (name, value) => {
     // Validate microchip input - only numbers, max 15 digits
@@ -106,6 +132,11 @@ const LostPets = () => {
 
   const handleLocationSelect = (location) => {
     setLocationData(location);
+    // Also update the area filter with the selected location label
+    setFilters(prev => ({
+      ...prev,
+      area: location.label || ''
+    }));
   };
 
   const handleClear = () => {
@@ -120,17 +151,141 @@ const LostPets = () => {
     setLocationData(null);
   };
 
-  // Filter pets based on microchip
-  const filteredPets = useMemo(() => {
-    const needle = (filters.microchip || '').toString().toLowerCase();
-    if (!needle) return lostPets;
-    return lostPets.filter(pet => {
-      const chip = (pet.microchip || '').toString().toLowerCase();
-      return chip.includes(needle);
-    });
-  }, [filters.microchip, lostPets]);
+  // Helper function to normalize date for comparison (DD/MM/YYYY or YYYY-MM-DD to YYYY-MM-DD)
+  const normalizeDateForComparison = (dateStr) => {
+    if (!dateStr) return '';
+    // If format is DD/MM/YYYY, convert to YYYY-MM-DD
+    if (dateStr.includes('/')) {
+      const [day, month, year] = dateStr.split('/');
+      return `${year}-${month}-${day}`;
+    }
+    // If already in YYYY-MM-DD format, return as is
+    return dateStr;
+  };
 
-  const hasSearched = filters.microchip.length > 0;
+  // Helper function to normalize text for fuzzy matching (remove accents, normalize spacing)
+  const normalizeText = (text) => {
+    if (!text) return '';
+    // Remove diacritics/accents
+    const normalized = text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+      .toLowerCase()
+      .trim();
+    return normalized;
+  };
+
+  // Synonym mappings for colors and breeds
+  const colorSynonyms = {
+    'μαυρο': ['black', 'σκουρο', 'dark'],
+    'λευκο': ['white', 'ασπρο'],
+    'καφε': ['brown', 'σκουρο'],
+    'κοκκινο': ['red', 'ρουφ'],
+    'γκρι': ['grey', 'gray', 'σταχτι'],
+    'κιτρινο': ['yellow', 'χρυσαφι'],
+    'μαυρο λευκο': ['black white', 'μαυρο λευκο'],
+    'λευκο γκρι': ['white grey', 'λευκο γκρι'],
+  };
+
+  const breedSynonyms = {
+    'λαμπραντορ': ['labrador', 'lab'],
+    'γερμανικος ποιμενας': ['german shepherd', 'shepherd'],
+    'περσικη': ['persian', 'persia'],
+    'σιαμεζα': ['siamese', 'siam'],
+  };
+
+  // Smart matching function for color and breed
+  const smartMatch = (petValue, filterValue, synonymMap) => {
+    if (!filterValue || !petValue) return false;
+
+    const petNorm = normalizeText(petValue);
+    const filterNorm = normalizeText(filterValue);
+
+    // Exact match after normalization
+    if (petNorm === filterNorm) return true;
+
+    // Partial match (one contains the other)
+    if (petNorm.includes(filterNorm) || filterNorm.includes(petNorm)) return true;
+
+    // Check for synonyms
+    const petSynonyms = Object.entries(synonymMap)
+      .filter(([_, syns]) => syns.some(syn => syn === petNorm || petNorm.includes(syn)))
+      .map(([key, _]) => key);
+
+    const filterSynonyms = Object.entries(synonymMap)
+      .filter(([_, syns]) => syns.some(syn => syn === filterNorm || filterNorm.includes(syn)))
+      .map(([key, _]) => key);
+
+    // If either value matches any synonym of the other
+    if (petSynonyms.some(syn => filterNorm === syn || filterNorm.includes(syn))) return true;
+    if (filterSynonyms.some(syn => petNorm === syn || petNorm.includes(syn))) return true;
+
+    return false;
+  };
+
+  // Filter pets based on all active filters
+  const filteredPets = useMemo(() => {
+    return lostPets.filter(pet => {
+      // Microchip filter
+      if (filters.microchip) {
+        const chip = (pet.microchipId || pet.microchip || '').toString().toLowerCase();
+        const needle = filters.microchip.toString().toLowerCase();
+        if (!chip.includes(needle)) return false;
+      }
+
+      // Animal type filter (match against the dropdown values: dog, cat, bird, reptile, other)
+      if (filters.animal && filters.animal !== 'all') {
+        const petType = (pet.type || '').toLowerCase();
+        // Map Greek names to English values
+        const typeMatches =
+          (filters.animal === 'dog' && (petType.includes('dog') || petType.includes('σκύλος'))) ||
+          (filters.animal === 'cat' && (petType.includes('cat') || petType.includes('γάτα'))) ||
+          (filters.animal === 'bird' && (petType.includes('bird') || petType.includes('πτηνό'))) ||
+          (filters.animal === 'reptile' && petType.includes('reptile')) ||
+          (filters.animal === 'other' && !['dog', 'cat', 'bird', 'reptile'].some(t => petType.includes(t)));
+
+        if (!typeMatches) return false;
+      }
+
+      // Color filter - using smart matching
+      if (filters.color) {
+        if (!smartMatch(pet.color, filters.color, colorSynonyms)) return false;
+      }
+
+      // Breed filter - using smart matching
+      if (filters.breed) {
+        if (!smartMatch(pet.breed, filters.breed, breedSynonyms)) return false;
+      }
+
+      // Lost date filter - normalize both dates for comparison
+      if (filters.lostDate) {
+        const normalizedPetDate = normalizeDateForComparison(pet.dateLost);
+        const normalizedFilterDate = normalizeDateForComparison(filters.lostDate);
+        if (normalizedPetDate !== normalizedFilterDate) return false;
+      }
+
+      // Area/Location filter - using smart matching and normalized text
+      if (filters.area) {
+        const petArea = normalizeText(pet.area || '');
+        const filterArea = normalizeText(filters.area);
+
+        // Check if pet area contains any part of the filter area
+        // This handles cases like "Αθήνα, Ελλάδα" matching "Μαρούσι, Αθήνα"
+        const filterParts = filterArea.split(',').map(p => p.trim());
+        const petParts = petArea.split(',').map(p => p.trim());
+
+        const hasMatch = filterParts.some(filterPart =>
+          petParts.some(petPart => petPart.includes(filterPart) || filterPart.includes(petPart))
+        );
+
+        if (!hasMatch) return false;
+      }
+
+      return true;
+    });
+  }, [filters, lostPets]);
+
+  const hasSearched = Object.values(filters).some(filter => filter.length > 0);
   const hasNoResults = hasSearched && filteredPets.length === 0;
 
   const handleMarkerClick = (pet) => {
@@ -151,7 +306,12 @@ const LostPets = () => {
         foundLocation: pet.area,
         description: pet.description,
         dateReported: pet.dateLost,
-        microchip: pet.microchip
+        microchip: pet.microchipId || pet.microchip,
+        gender: pet.gender,
+        color: pet.color,
+        weight: pet.weight,
+        birthDate: pet.birthDate,
+        imageUrl: pet.imageUrl || pet.image || ''
       }
     });
     setShowFoundForm(true);
@@ -224,6 +384,7 @@ const LostPets = () => {
 
   // Options for CustomSelect components with icons
   const animalOptions = [
+    { value: 'all', label: 'Επιλέξτε είδος' },
     { value: 'dog', label: 'Σκύλος', icon: <Dog size={16} /> },
     { value: 'cat', label: 'Γάτα', icon: <Cat size={16} /> },
     { value: 'bird', label: 'Πτηνό' },
@@ -261,7 +422,7 @@ const LostPets = () => {
         {/* Sidebar with filters */}
         <SearchSidebar
           title="Φίλτρα Αναζήτησης"
-          onSearch={() => { }}
+          onSearch={() => setCurrentPage(1)}
           onClear={handleClear}
           resultsCount={filteredPets.length}
         >
@@ -293,7 +454,7 @@ const LostPets = () => {
               Τοποθεσία
             </label>
             <LocationPicker
-              onLocationSelect={handleLocationSelect}
+              onSelect={handleLocationSelect}
               placeholder="Αναζήτηση περιοχής..."
               variant="citizen"
             />
@@ -417,7 +578,7 @@ const LostPets = () => {
                     <MapPin size={12} style={{ display: 'inline', marginRight: '4px' }} />
                     {pet.area}
                   </p>
-                  <p className="popup-date">Χάθηκε: {pet.dateLost}</p>
+                  <p className="popup-date">Χάθηκε: {formatDate(pet.dateLost)}</p>
                   <div className="popup-actions">
                     <button className="popup-details-btn" onClick={() => handleViewDetails(pet)}>
                       Προβολή
@@ -440,7 +601,7 @@ const LostPets = () => {
                     Δεν βρέθηκε δήλωση απώλειας
                   </h3>
                   <p className="empty-state-desc">
-                    Δεν υπάρχει καταχωρημένο κατοικίδιο με αυτό το microchip.
+                    Δεν υπάρχει καταχωρημένο κατοικίδιο με αυτά τα χαρακτηριστικά.
                   </p>
                   <button
                     className="empty-state-btn"
@@ -460,7 +621,15 @@ const LostPets = () => {
                           onClick={() => handleViewDetails(pet)}
                           title="Προβολή λεπτομερειών"
                         >
-                          {getPetIcon(pet.type)}
+                          {pet.image ? (
+                            <img 
+                              src={pet.image} 
+                              alt={pet.name}
+                              className="pet-card-img"
+                            />
+                          ) : (
+                            getPetIcon(pet.type)
+                          )}
                         </div>
                         <div className="pet-card-content">
                           <h3
@@ -470,12 +639,12 @@ const LostPets = () => {
                           >
                             {pet.name}
                           </h3>
-                          <p className="pet-card-breed">{pet.type} - {pet.breed}</p>
+                          <p className="pet-card-breed">{translatePetType(pet.type)} - {pet.breed}</p>
                           <div className="pet-card-info">
                             <MapPin size={14} />
                             <span>{pet.area}</span>
                           </div>
-                          <p className="pet-card-date">Χάθηκε: {pet.dateLost}</p>
+                          <p className="pet-card-date">Χάθηκε: {formatDate(pet.dateLost)}</p>
                         </div>
                         <div className="pet-card-actions">
                           <button
@@ -519,14 +688,22 @@ const LostPets = () => {
 
               <div className="modal-header">
                 <div className="modal-pet-image">
-                  {getPetIcon(detailPet.type, 50)}
+                  {detailPet.image ? (
+                    <img 
+                      src={detailPet.image} 
+                      alt={detailPet.name}
+                      className="modal-pet-img"
+                    />
+                  ) : (
+                    getPetIcon(detailPet.type, 50)
+                  )}
                 </div>
                 <div className="modal-pet-identity">
                   <h2 className="modal-pet-name">{detailPet.name}</h2>
                   <p className="modal-pet-breed">{detailPet.type} - {detailPet.breed}</p>
                   <div className="modal-pet-status">
                     <AlertCircle size={16} />
-                    <span>Χάθηκε: {detailPet.dateLost}</span>
+                    <span>Χάθηκε: {formatDate(detailPet.dateLost)}</span>
                   </div>
                 </div>
               </div>
@@ -546,7 +723,7 @@ const LostPets = () => {
                       <SearchIcon size={18} className="modal-detail-icon" />
                       <h4>Microchip</h4>
                     </div>
-                    <p className="modal-detail-content">{detailPet.microchip}</p>
+                    <p className="modal-detail-content">{detailPet.microchipId || '-'}</p>
                   </div>
 
                   <div className="modal-detail-item">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PawPrint, UserRound, HandHeart, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
@@ -17,6 +17,7 @@ import './Foster.css';
 
 const Foster = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -30,7 +31,7 @@ const Foster = () => {
 
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
 
 
     // Step 2: Foster Parent Data
@@ -81,7 +82,7 @@ const Foster = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        microchipNumber: pet.microchip,
+        microchipNumber: pet.microchipId || pet.microchip,
         petName: pet.name,
         species: pet.type,
         age: pet.age || '',
@@ -163,29 +164,28 @@ const Foster = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15 &&
-          formData.microchipNumber.length === 15
+          (formData.microchipNumber || '').trim() !== '' &&
+          (formData.microchipNumber || '').length === 15
         );
       case 2:
         return (
-          formData.fosterParentAfm.trim() !== '' &&
-          formData.fosterParentAfm.length === 9 &&
-          formData.fosterParentName.trim() !== '' &&
-          formData.fosterParentSurname.trim() !== '' &&
-          formData.fosterParentPhone.trim() !== '' &&
-          formData.fosterParentEmail.trim() !== '' &&
-          formData.fosterParentAddress.trim() !== '' &&
-          formData.fosterParentCity.trim() !== '' &&
-          formData.fosterParentPostalCode.trim() !== ''
+          (formData.fosterParentAfm || '').trim() !== '' &&
+          (formData.fosterParentAfm || '').length === 9 &&
+          (formData.fosterParentName || '').trim() !== '' &&
+          (formData.fosterParentSurname || '').trim() !== '' &&
+          (formData.fosterParentPhone || '').trim() !== '' &&
+          (formData.fosterParentEmail || '').trim() !== '' &&
+          (formData.fosterParentAddress || '').trim() !== '' &&
+          (formData.fosterParentCity || '').trim() !== '' &&
+          (formData.fosterParentPostalCode || '').trim() !== ''
         );
       case 3:
         return (
-          formData.fosterDate.trim() !== '' &&
-          formData.fosterReason.trim() !== '' &&
-          formData.shelterOwner.trim() !== '' &&
-          formData.liveWithOtherPets.trim() !== '' &&
-          formData.existingPets.trim() !== ''
+          (formData.fosterDate || '').trim() !== '' &&
+          (formData.fosterReason || '').trim() !== '' &&
+          (formData.shelterOwner || '').trim() !== '' &&
+          (formData.liveWithOtherPets || '').trim() !== '' &&
+          (formData.existingPets || '').trim() !== ''
         );
       default:
         return false;
@@ -201,10 +201,84 @@ const Foster = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current vet from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // Find the pet by microchip
+      const petsResponse = await fetch(`http://localhost:5000/pets?microchipId=${formData.microchipNumber}`);
+      if (!petsResponse.ok) throw new Error('Failed to fetch pets');
+      const pets = await petsResponse.json();
+      const pet = pets[0];
+
+      if (!pet) {
+        setNotification({
+          type: 'error',
+          title: 'Κατοικίδιο Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε κατοικίδιο με μικροτσίπ ${formData.microchipNumber}`
+        });
+        return;
+      }
+
+      // Prepare foster data
+      const fosterData = {
+        id: Date.now().toString(),
+        petId: pet.id,
+        petName: pet.name,
+        microchip: pet.microchipId,
+        vetId: currentUser.id,
+        vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
+        fosterParentName: formData.fosterParentName,
+        fosterParentSurname: formData.fosterParentSurname,
+        fosterParentAfm: formData.fosterParentAfm,
+        fosterParentPhone: formData.fosterParentPhone,
+        fosterParentEmail: formData.fosterParentEmail,
+        fosterParentAddress: formData.fosterParentAddress,
+        fosterParentCity: formData.fosterParentCity,
+        fosterParentPostalCode: formData.fosterParentPostalCode,
+        fosterDate: formData.fosterDate,
+        fosterReason: formData.fosterReason,
+        shelterOwner: formData.shelterOwner,
+        liveWithOtherPets: formData.liveWithOtherPets,
+        existingPets: formData.existingPets,
+        notes: formData.notes,
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/fosters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fosterData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Foster recorded successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error('Error recording foster:', err);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα',
+        message: 'Παρουσιάστηκε σφάλμα κατά την καταγραφή της αναδοχής.'
+      });
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -336,6 +410,7 @@ const Foster = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
 
 

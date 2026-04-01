@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Send, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -15,8 +15,9 @@ import './LostPet.css';
 
 const LostPet = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
     petName: '',
     petColor: '',
     lostDate: '',
@@ -40,6 +41,19 @@ const LostPet = () => {
 
   const [foundPet, setFoundPet] = useState(null);
   const [afmError, setAfmError] = useState('');
+  const [microchipError, setMicrochipError] = useState('');
+  const [showAlreadyRegisteredNotification, setShowAlreadyRegisteredNotification] = useState(false);
+
+  // Auto-hide already registered notification after 4.5 seconds
+  useEffect(() => {
+    if (foundPet && foundPet.isFromLostPets) {
+      setShowAlreadyRegisteredNotification(true);
+      const timer = setTimeout(() => {
+        setShowAlreadyRegisteredNotification(false);
+      }, 4500);
+      return () => clearTimeout(timer);
+    }
+  }, [foundPet?.isFromLostPets]);
 
 
 
@@ -53,14 +67,29 @@ const LostPet = () => {
 
     if (found && pet) {
       // Pet found - prefill with data
-      setFormData(prev => ({
-        ...prev,
-        microchipNumber: pet.microchip,
-        petName: pet.name,
-        petColor: pet.color,
-        description: pet.description,
-      }));
-      setFoundPet(pet);
+      // Normalize pet data (could have different field names)
+      const petName = pet.petName || pet.name || '';
+      const petColor = pet.petColor || pet.color || '';
+      const petSpecies = pet.species || pet.type || '';
+      
+      if (!pet.isFromLostPets) {
+        // Only fill form data if NOT from lostPets
+        setFormData(prev => ({
+          ...prev,
+          microchipNumber: pet.microchip || microchip,
+          petName: petName,
+          petColor: petColor,
+          description: pet.description || '',
+        }));
+      }
+      
+      // Set foundPet with normalized data so PetDetailsCard can display it
+      setFoundPet({
+        ...pet,
+        petName: petName,
+        species: petSpecies,
+        isFromLostPets: pet.isFromLostPets || false
+      });
     } else {
       // Pet not found - just set microchip
       setFormData(prev => ({
@@ -204,16 +233,16 @@ const LostPet = () => {
 
   const isFormValid = () => {
     return (
-      formData.microchipNumber.trim() !== '' &&
-      formData.microchipNumber.length === 15 &&
-      formData.lostDate.trim() !== '' &&
-      formData.contactPhone.trim() !== '' &&
-      formData.location.trim() !== '' &&
-      formData.ownerName.trim() !== '' &&
-      formData.ownerSurname.trim() !== '' &&
-      formData.ownerAfm.trim() !== '' &&
-      formData.ownerAfm.length === 9 &&
-      formData.ownerEmail.trim() !== ''
+      (formData.microchipNumber || '').trim() !== '' &&
+      (formData.microchipNumber || '').length === 15 &&
+      (formData.lostDate || '').trim() !== '' &&
+      (formData.contactPhone || '').trim() !== '' &&
+      (formData.location || '').trim() !== '' &&
+      (formData.ownerName || '').trim() !== '' &&
+      (formData.ownerSurname || '').trim() !== '' &&
+      (formData.ownerAfm || '').trim() !== '' &&
+      (formData.ownerAfm || '').length === 9 &&
+      (formData.ownerEmail || '').trim() !== ''
     );
   };
 
@@ -235,10 +264,123 @@ const LostPet = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      // First, find the pet by microchip to get its ID and owner
+      const petsResponse = await fetch('http://localhost:5000/pets');
+      if (!petsResponse.ok) {
+        throw new Error('Failed to fetch pets');
+      }
+      
+      const allPets = await petsResponse.json();
+      const existingPet = allPets.find(p => p.microchipId === formData.microchipNumber);
+      
+      if (!existingPet) {
+        setNotification({
+          type: 'error',
+          message: 'Δεν βρέθηκε κατοικίδιο με αυτόν τον αριθμό μικροτσίπ'
+        });
+        setShowConfirmModal(false);
+        return;
+      }
+      
+      // Create lost pet declaration in lostPets collection
+      const lostPetData = {
+        reportedByVetId: currentUser.id,
+        microchipNumber: formData.microchipNumber,
+        petName: formData.petName || foundPet?.petName || foundPet?.name || 'Άγνωστο',
+        type: foundPet?.species || foundPet?.type || '-',
+        breed: foundPet?.breed || '-',
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        contactPhone: formData.contactPhone,
+        contactEmail: formData.ownerEmail,
+        ownerName: `${formData.ownerName} ${formData.ownerSurname}`.trim(),
+        color: formData.petColor || foundPet?.color || '-',
+        description: formData.description,
+        status: 'active',
+        imageUrl: formData.photo || null
+      };
+
+      const lostPetResponse = await fetch('http://localhost:5000/lostPets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(lostPetData)
+      });
+
+      if (!lostPetResponse.ok) {
+        throw new Error('Failed to create lost pet declaration');
+      }
+
+      // Update the pet status to lost
+      const petUpdateData = {
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        petStatus: 1,
+        status: 'active',
+        reportedByVetId: currentUser.id,
+        description: formData.description
+      };
+
+      const petUpdateResponse = await fetch(`http://localhost:5000/pets/${existingPet.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(petUpdateData)
+      });
+
+      if (!petUpdateResponse.ok) {
+        throw new Error('Failed to update pet status');
+      }
+
+      // Send notification to pet owner
+      if (existingPet.ownerId) {
+        const notificationData = {
+          userId: existingPet.ownerId,
+          userType: 'owner',
+          type: 'lost_pet',
+          title: 'Δήλωση Απώλειας Κατοικιδίου',
+          data: {
+            vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
+            petName: existingPet.name || formData.petName,
+            location: formData.location,
+            date: formData.lostDate
+          },
+          icon: 'alert',
+          date: new Date().toISOString(),
+          read: false
+        };
+
+        await fetch('http://localhost:5000/notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(notificationData)
+        });
+      }
+
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error('Error submitting lost pet declaration:', err);
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
+      });
+      setShowConfirmModal(false);
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -331,7 +473,15 @@ const LostPet = () => {
 
           <form className="lost-pet__form">
 
-            {foundPet ? (
+            {foundPet && foundPet.isFromLostPets && (
+              <Notification
+                isVisible={showAlreadyRegisteredNotification}
+                message={`Το κατοικίδιο με microchip ${foundPet.microchip} είναι ήδη καταχωρημένο στο σύστημα ως χαμένο. Δεν μπορείτε να εισάγετε νέα δήλωση για το ίδιο κατοικίδιο.`}
+                type="error"
+              />
+            )}
+
+            {foundPet && !foundPet.isFromLostPets ? (
               <PetDetailsCard
                 petData={foundPet}
                 onClear={() => {
@@ -350,6 +500,7 @@ const LostPet = () => {
               <MicrochipSearch
                 onSearchComplete={handleSearchComplete}
                 variant="vet"
+                initialValue={location.state?.microchip || ''}
               />
             )}
             {/* Ημερομηνία Εξαφάνισης */}

@@ -101,7 +101,7 @@
 
 .profile-avatar-wrapper {
   flex-shrink: 0;
-  border-radius: 50%;
+  border-radius: 12px;
   border: 4px solid #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background: #ffffff;
@@ -253,6 +253,35 @@
   margin: 0;
 }
 
+.service-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.service-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.service-row:last-child {
+  border-bottom: none;
+}
+
+.service-name {
+  font-size: 1rem;
+  color: #5a6c7d;
+}
+
+.service-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
 /* Reviews Section */
 .reviews-section {
   padding: 2rem;
@@ -284,10 +313,22 @@
   font-size: 0.9rem;
 }
 
+.review-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .review-author {
   font-weight: 600;
   color: #2c3e50;
   font-size: 0.95rem;
+}
+
+.review-date {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .review-comment {

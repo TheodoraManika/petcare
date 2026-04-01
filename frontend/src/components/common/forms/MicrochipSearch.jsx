@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, AlertCircle } from 'lucide-react';
-import { lostPetsDatabase } from '../../../utils/mockData';
 import './MicrochipSearch.css';
 
 const MicrochipSearch = ({ onSearchComplete, variant = 'citizen', initialValue = '' }) => {
     const [microchipInput, setMicrochipInput] = useState(initialValue);
     const [error, setError] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
 
     const handleInputChange = (e) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
@@ -15,7 +15,14 @@ const MicrochipSearch = ({ onSearchComplete, variant = 'citizen', initialValue =
         }
     };
 
-    const handleSearch = () => {
+    // Auto-search if initial value is provided and valid length
+    useEffect(() => {
+        if (initialValue && initialValue.length === 15) {
+            handleSearch();
+        }
+    }, [initialValue]); // Only run when initialValue changes/mounts
+
+    const handleSearch = async () => {
         if (!microchipInput.trim()) return;
 
         if (microchipInput.length !== 15) {
@@ -24,16 +31,29 @@ const MicrochipSearch = ({ onSearchComplete, variant = 'citizen', initialValue =
             return;
         }
 
-        const foundPet = lostPetsDatabase.find(
-            pet => pet.microchip.toLowerCase() === microchipInput.toLowerCase()
-        );
+        setIsSearching(true);
+        try {
+            // Search in unified pets table by microchipId
+            const response = await fetch(`http://localhost:5000/pets`);
+            if (!response.ok) throw new Error('Failed to search');
+            
+            const allPets = await response.json();
+            
+            // Look for a pet matching microchipId
+            let foundPet = allPets.find(pet => pet.microchipId === microchipInput);
 
-        if (foundPet) {
-            setError('');
-            onSearchComplete({ found: true, pet: foundPet, microchip: foundPet.microchip });
-        } else {
-            setError(''); // Clear error if valid length but not found (just fill field)
+            if (foundPet) {
+                setError('');
+                onSearchComplete({ found: true, pet: foundPet, microchip: foundPet.microchipId || microchipInput });
+            } else {
+                setError(''); // Clear error if valid length but not found (just fill field)
+                onSearchComplete({ found: false, pet: null, microchip: microchipInput });
+            }
+        } catch (err) {
+            setError('Σφάλμα κατά την αναζήτηση. Προσπαθήστε ξανά.');
             onSearchComplete({ found: false, pet: null, microchip: microchipInput });
+        } finally {
+            setIsSearching(false);
         }
     };
 
@@ -65,15 +85,16 @@ const MicrochipSearch = ({ onSearchComplete, variant = 'citizen', initialValue =
                     placeholder="π.χ. 123456789012345 (15 χαρακτήρες)"
                     className="microchip-search__input"
                     maxLength={15}
+                    disabled={isSearching}
                 />
                 <button
                     type="button"
                     onClick={handleSearch}
                     className="microchip-search__btn"
-                    disabled={!microchipInput.trim()}
+                    disabled={!microchipInput.trim() || isSearching}
                 >
                     <Search size={18} />
-                    Αναζήτηση
+                    {isSearching ? 'Αναζήτηση...' : 'Αναζήτηση'}
                 </button>
             </div>
 

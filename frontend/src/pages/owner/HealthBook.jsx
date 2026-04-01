@@ -29,6 +29,17 @@ const HealthBook = () => {
 
         const currentUser = JSON.parse(storedUser);
 
+        // Function to translate pet type to Greek
+        const translatePetType = (type) => {
+          const typeMap = {
+            'dog': 'Σκύλος',
+            'cat': 'Γάτα',
+            'Σκύλος': 'Σκύλος',
+            'Γάτα': 'Γάτα'
+          };
+          return typeMap[type] || type;
+        };
+
         // Fetch all pets from backend
         const response = await fetch('http://localhost:5000/pets');
         if (!response.ok) {
@@ -37,23 +48,24 @@ const HealthBook = () => {
 
         const allPets = await response.json();
 
-        // Filter pets that belong to this owner
-        const ownerPets = allPets.filter(pet => Number(pet.ownerId) === Number(currentUser.id));
+        // Filter pets that belong to this owner (use String comparison since IDs are strings)
+        const ownerPets = allPets.filter(pet => String(pet.ownerId) === String(currentUser.id));
 
         // Transform pets for display
         const transformedPets = ownerPets.map(pet => ({
           id: pet.id,
           name: pet.name || 'Άγνωστο',
-          type: pet.species || 'Άγνωστο',
+          type: translatePetType(pet.type) || 'Άγνωστο',
           breed: pet.breed || 'Άγνωστη φυλή',
           gender: pet.gender || '-',
           birthDate: pet.birthDate || '-',
           microchipId: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
-          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
-          // MOCK: Set pet with ID 1 as 'lost' for demonstration
-          status: pet.id === 1 ? 'lost' : 'safe'
+          icon: pet.type === 'Σκύλος' ? 'dog' : pet.type === 'Γάτα' ? 'cat' : 'pet',
+          image: pet.image || null, // Include pet image
+          // Pet is considered 'lost' when status is 'lost' AND petStatus is 1
+          status: (pet.status === 'active' && pet.petStatus === 1) ? 'lost' : 'safe'
         }));
 
         setUserPets(transformedPets);

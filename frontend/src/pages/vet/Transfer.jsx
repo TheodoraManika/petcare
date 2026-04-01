@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PawPrint, UserRound, UserRoundPlus, ArrowLeftRight, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
@@ -13,11 +13,9 @@ import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Transfer.css';
 
-// Mock lost pets database
-
-
 const Transfer = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -32,7 +30,7 @@ const Transfer = () => {
 
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
 
     // Step 2: Current Owner Data
     currentOwnerAfm: '',
@@ -85,7 +83,7 @@ const Transfer = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        microchipNumber: pet.microchip,
+        microchipNumber: pet.microchipId || pet.microchip,
       }));
       setFoundPet(pet);
     } else {
@@ -186,34 +184,34 @@ const Transfer = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15
+          (formData.microchipNumber || '').trim() !== '' &&
+          (formData.microchipNumber || '').length === 15
         );
       case 2:
         return (
-          formData.currentOwnerAfm.trim() !== '' &&
-          formData.currentOwnerAfm.length === 9 &&
-          formData.currentOwnerName.trim() !== '' &&
-          formData.currentOwnerSurname.trim() !== '' &&
-          formData.currentOwnerPhone.trim() !== '' &&
-          formData.currentOwnerEmail.trim() !== ''
+          (formData.currentOwnerAfm || '').trim() !== '' &&
+          (formData.currentOwnerAfm || '').length === 9 &&
+          (formData.currentOwnerName || '').trim() !== '' &&
+          (formData.currentOwnerSurname || '').trim() !== '' &&
+          (formData.currentOwnerPhone || '').trim() !== '' &&
+          (formData.currentOwnerEmail || '').trim() !== ''
         );
       case 3:
         return (
-          formData.newOwnerAfm.trim() !== '' &&
-          formData.newOwnerAfm.length === 9 &&
-          formData.newOwnerName.trim() !== '' &&
-          formData.newOwnerSurname.trim() !== '' &&
-          formData.newOwnerPhone.trim() !== '' &&
-          formData.newOwnerEmail.trim() !== '' &&
-          formData.newOwnerAddress.trim() !== '' &&
-          formData.newOwnerCity.trim() !== '' &&
-          formData.newOwnerPostalCode.trim() !== ''
+          (formData.newOwnerAfm || '').trim() !== '' &&
+          (formData.newOwnerAfm || '').length === 9 &&
+          (formData.newOwnerName || '').trim() !== '' &&
+          (formData.newOwnerSurname || '').trim() !== '' &&
+          (formData.newOwnerPhone || '').trim() !== '' &&
+          (formData.newOwnerEmail || '').trim() !== '' &&
+          (formData.newOwnerAddress || '').trim() !== '' &&
+          (formData.newOwnerCity || '').trim() !== '' &&
+          (formData.newOwnerPostalCode || '').trim() !== ''
         );
       case 4:
         return (
-          formData.transferDate.trim() !== '' &&
-          formData.transferReason.trim() !== ''
+          (formData.transferDate || '').trim() !== '' &&
+          (formData.transferReason || '').trim() !== ''
         );
       default:
         return false;
@@ -229,10 +227,87 @@ const Transfer = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current vet from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // Find the pet by microchip
+      const petsResponse = await fetch(`http://localhost:5000/pets?microchipId=${formData.microchipNumber}`);
+      if (!petsResponse.ok) throw new Error('Failed to fetch pets');
+      const pets = await petsResponse.json();
+      const pet = pets[0];
+
+      if (!pet) {
+        setNotification({
+          type: 'error',
+          title: 'Κατοικίδιο Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε κατοικίδιο με μικροτσίπ ${formData.microchipNumber}`
+        });
+        return;
+      }
+
+      // Prepare transfer data
+      const transferData = {
+        id: Date.now().toString(),
+        petId: pet.id,
+        petName: pet.name,
+        microchip: pet.microchipId,
+        vetId: currentUser.id,
+        vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
+        currentOwnerId: pet.ownerId,
+        currentOwnerName: formData.currentOwnerName,
+        currentOwnerSurname: formData.currentOwnerSurname,
+        currentOwnerAfm: formData.currentOwnerAfm,
+        currentOwnerPhone: formData.currentOwnerPhone,
+        currentOwnerEmail: formData.currentOwnerEmail,
+        newOwnerName: formData.newOwnerName,
+        newOwnerSurname: formData.newOwnerSurname,
+        newOwnerAfm: formData.newOwnerAfm,
+        newOwnerPhone: formData.newOwnerPhone,
+        newOwnerEmail: formData.newOwnerEmail,
+        newOwnerAddress: formData.newOwnerAddress,
+        newOwnerCity: formData.newOwnerCity,
+        newOwnerPostalCode: formData.newOwnerPostalCode,
+        transferDate: formData.transferDate,
+        transferReason: formData.transferReason,
+        notes: formData.notes,
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/transfers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transferData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Transfer recorded successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error('Error recording transfer:', err);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα',
+        message: 'Παρουσιάστηκε σφάλμα κατά την καταγραφή της μεταβίβασης.'
+      });
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -341,6 +416,7 @@ const Transfer = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
               </>
             )}

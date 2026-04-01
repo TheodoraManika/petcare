@@ -32,8 +32,8 @@
 }
 
 .lost-pets-hero__container {
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
+  display: flex;
+  justify-content: flex-start;
   gap: 40px;
   border-radius: 16px;
   padding: 40px;
@@ -83,7 +83,6 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
-  margin-left: 60px;
   font-size: 16px;
   font-weight: 600;
   color: #101727;
@@ -105,7 +104,7 @@
   flex: 1;
   overflow: hidden;
   position: relative;
-  height: 200px;
+  height: 240px;
   border-radius: 12px;
 }
 
@@ -125,33 +124,49 @@
 
 .carousel-card {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 20px;
-  padding: 24px;
+  padding: 32px 40px;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 2px solid #E5E7EB;
   height: 100%;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.carousel-card__main {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .carousel-card:hover {
   border-color: #23CED9;
-  box-shadow: 0 8px 24px rgba(35, 206, 217, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(35, 206, 217, 0.12);
+  transform: translateY(-4px);
 }
 
 .carousel-card__image {
-  width: 110px;
-  height: 110px;
+  width: 140px;
+  height: 140px;
   background: linear-gradient(135deg, #E0F7F9 0%, #F0FDFE 100%);
-  border: 3px solid #23CED9;
-  border-radius: 16px;
+  border: 4px solid #23CED9;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.carousel-card__photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
 }
 
 .carousel-card__info {
@@ -163,9 +178,9 @@
 }
 
 .carousel-card__name {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: 26px;
+  font-weight: 800;
+  color: #111827;
   margin: 0;
 }
 
@@ -190,17 +205,23 @@
   margin-top: 4px;
 }
 
-.carousel-card__cta {
-  font-size: 12px;
-  color: #23CED9;
-  font-weight: 600;
-  margin-top: 8px;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
+.carousel-card__action-btn {
+  padding: 12px 28px;
+  background: #23CED9;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.carousel-card:hover .carousel-card__cta {
-  opacity: 1;
+.carousel-card__action-btn:hover {
+  background: #1ebbc5;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(35, 206, 217, 0.3);
 }
 
 /* Carousel Navigation */
@@ -267,15 +288,36 @@
    ========================================== */
 .vet-section {
   width: 100%;
-  max-width: 1235px;
-  margin: 0 auto;
-  padding: 40px;
+  max-width: 1203px;
+  margin: 0 auto 40px auto;
+  padding: 24px;
   background: linear-gradient(90deg, rgba(252, 164, 124, 0.85) 0%, rgba(252, 164, 124, 0.20) 100%), url('/dog_vet_visit.jpg');
+  position: relative;
   background-size: cover;
   background-position: center;
   border: 2px solid #E5E7EB;
   border-radius: 16px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.vet-section-main-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #101727;
+  letter-spacing: 0.5px;
+}
+
+.vet-section-main-title h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #101727;
+  margin: 0;
+  line-height: normal;
+  letter-spacing: 0.5px;
 }
 
 .vet-section__container {
@@ -570,16 +612,21 @@
   transform: translateY(-2px);
 }
 
-.vet-card__avatar {
-  width: 90px;
-  height: 90px;
-  background: linear-gradient(135deg, #FFF5EE 0%, #FFE8D9 100%);
-  border: 3px solid #FCA47C;
-  border-radius: 50%;
+.vet-card__avatar-wrapper {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+}
+
+.vet-card__avatar {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 3px solid #FCA47C;
+  border-radius: 12px;
 }
 
 .vet-card__info {
@@ -1111,8 +1158,8 @@ select.search-input option {
 .user-types-section {
   width: 100%;
   max-width: 1235px;
-  margin: 0 auto 32px auto;
-  padding: 16px 16px;
+  margin: 0 auto 0 auto;
+  padding: 16px 16px 0 16px;
 }
 
 .user-types-container {
@@ -1128,7 +1175,7 @@ select.search-input option {
   max-width: 580px;
   display: flex;
   flex-direction: column;
-  padding: 28px;
+  padding: 24px;
   border-radius: 16px;
   border-width: 2px;
   border-style: solid;
@@ -1141,7 +1188,6 @@ select.search-input option {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Info button in top right corner of card */
 .card-info-btn {
   position: absolute;
   top: 16px;
@@ -1157,6 +1203,34 @@ select.search-input option {
   cursor: pointer;
   transition: all 0.3s ease;
   color: #9CA3AF;
+  z-index: 10;
+}
+
+.title-with-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.info-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.info-icon-btn:hover {
+  background: #E5E7EB;
+  color: #6B7280;
+  transform: scale(1.1);
 }
 
 .card-info-btn:hover {
@@ -1176,17 +1250,26 @@ select.search-input option {
   border-color: rgba(249, 215, 121, 1);
 }
 
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
 .card-icon {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 12px;
   border-width: 2px;
   border-style: solid;
-  margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
 .cyan-icon {
@@ -1201,30 +1284,74 @@ select.search-input option {
   color: #FCA47C;
 }
 
-.yellow-icon {
-  background-color: rgba(249, 215, 121, 0.2);
-  border-color: rgba(249, 215, 121, 1);
-  color: #F9D779;
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
 }
 
 .card-title {
   color: #1d2838;
   font-family: inherit;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0 0 16px 0;
-  line-height: 1.3;
+  margin: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  transform: translateY(6px);
+}
+
+.card-toggle-icon {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  height: 24px;
+  width: 24px;
+}
+
+.card-toggle-icon.active {
+  transform: rotate(180deg);
+  color: inherit;
+}
+
+
+/* User type specific active toggle colors */
+.cyan-card .card-toggle-icon.active {
+  color: #23CED9;
+}
+
+.orange-card .card-toggle-icon.active {
+  color: #FCA47C;
+}
+
+.card-features-dropdown {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+  overflow: hidden;
+}
+
+.card-features-dropdown.expanded {
+  grid-template-rows: 1fr;
+  margin-top: 20px;
 }
 
 .card-features {
+  min-height: 0;
   list-style: none;
-  margin: 0 0 24px 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 1;
 }
+
 
 .card-features li {
   display: flex;
@@ -1258,7 +1385,7 @@ select.search-input option {
 
 /* Card Auth Buttons */
 .card-auth-buttons {
-  padding-top: 40px;
+  padding-top: 24px;
   display: flex;
   gap: 12px;
   margin-top: auto;
@@ -1738,7 +1865,6 @@ select.search-input option {
   gap: 10px;
   margin-top: 40px;
   margin-bottom: 20px;
-  margin-left: 60px;
   font-size: 14px;
   font-weight: 600;
   color: #101727;
@@ -1790,7 +1916,7 @@ select.search-input option {
   max-width: 390px;
   display: flex;
   flex-direction: column;
-  padding: 28px;
+  padding: 24px;
   border-radius: 16px;
   border-width: 2px;
   border-style: solid;
@@ -1877,19 +2003,70 @@ select.search-input option {
 .found-actions-section {
   width: 100%;
   max-width: 1235px;
-  margin: 64px auto;
+  margin: 0 auto 40px auto;
   padding: 0 16px;
   box-sizing: border-box;
 }
 
-.found-actions-container {
+/* Found Actions container - explicitly column to stack header above content */
+.home-page .found-actions-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  flex-direction: column;
+  gap: 24px;
   background-color: #ffffff;
   border-radius: 16px;
-  padding: 18px;
+  padding: 32px;
+  /* Increased padding for better look */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid #E5E7EB;
+  margin-bottom: 0;
+  position: relative;
+  width: 100%;
+}
+
+.found-actions-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.found-actions-text {
+  flex: 1;
+  text-align: left;
+}
+
+.found-actions-content {
+  width: 100%;
+}
+
+.lost-pets-carousel-section {
+  border-top: 1px solid #F3F4F6;
+  padding-top: 16px;
+}
+
+.carousel-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #101727;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.found-actions-carousel .lost-pets-hero__carousel {
+  min-width: 0;
+  /* Reset min-width for grid cell */
+}
+
+.found-actions-carousel .carousel-track {
+  height: 180px;
+}
+
+.found-actions-carousel .carousel-header {
+  margin-left: 0;
+  margin-bottom: 12px;
 }
 
 .found-actions-text {
@@ -1928,6 +2105,8 @@ select.search-input option {
   color: #101727;
   font-weight: 600;
   font-size: 14px;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 .found-action-btn:hover {
@@ -2079,4 +2258,12 @@ select.search-input option {
   .feature-description {
     font-size: 12px;
   }
+}
+
+.hero-search-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #101727;
+  margin: 0;
+  line-height: normal;
 }

@@ -35,18 +35,13 @@
 }
 
 .result-avatar {
-  width: 64px;
-  height: 64px;
+  width: 120px;
+  height: 120px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #23CED9 0%, #FCA47C 50%, #F9D779 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-weight: 600;
-  color: #ffffff;
-  font-size: 16px;
-  box-shadow: 0 2px 8px rgba(252, 164, 124, 0.3);
 }
 
 .avatar-initials {
@@ -177,4 +172,28 @@
   .result-action-btn {
     flex: 1 1 auto;
   }
+}
+
+.result-price-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 4px 10px;
+  background-color: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.price-label {
+  font-size: 13px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FCA47C;
 }

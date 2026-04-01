@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Download, Dog, Cat } from 'lucide-react';
+import { Download, Dog, Cat, Camera, X } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import MedicalEventCard from '../../components/owner/healthcard/MedicalEventCard';
 import StatCard from '../../components/owner/healthcard/StatCard';
@@ -10,10 +10,13 @@ import './PetDetail.css';
 const PetDetail = () => {
   const navigate = useNavigate();
   const { petId } = useParams();
+  const fileInputRef = useRef(null);
   const [petData, setPetData] = useState(null);
+  const [petImage, setPetImage] = useState(null);
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     const fetchPetDetails = async () => {
@@ -32,14 +35,41 @@ const PetDetail = () => {
         console.log('Pet data from API:', pet);
         console.log('ownerAFM value:', pet.ownerAFM);
         
+        // Set pet image if available
+        if (pet.image) {
+          setPetImage(pet.image);
+        }
+        
         // Fetch owner data to get AFM
         const ownerResponse = await fetch(`http://localhost:5000/users/${pet.ownerId}`);
         const owner = await ownerResponse.json();
         
+        // Function to translate gender to Greek
+        const translateGender = (gender) => {
+          const genderMap = {
+            'male': 'Αρσενικό',
+            'female': 'Θηλυκό',
+            'Αρσενικό': 'Αρσενικό',
+            'Θηλυκό': 'Θηλυκό'
+          };
+          return genderMap[gender] || gender;
+        };
+        
+        // Function to translate pet type to Greek
+        const translatePetType = (type) => {
+          const typeMap = {
+            'dog': 'Σκύλος',
+            'cat': 'Γάτα',
+            'Σκύλος': 'Σκύλος',
+            'Γάτα': 'Γάτα'
+          };
+          return typeMap[type] || type;
+        };
+        
         // Fetch medical procedures for this pet
         const medicalResponse = await fetch('http://localhost:5000/medicalProcedures');
         const allProcedures = await medicalResponse.json();
-        const petProcedures = allProcedures.filter(proc => Number(proc.petId) === Number(petId));
+        const petProcedures = allProcedures.filter(proc => String(proc.petId) === String(petId));
         
         // Fetch vets for medical history
         const vetsResponse = await fetch('http://localhost:5000/users');
@@ -47,22 +77,35 @@ const PetDetail = () => {
         
         // Transform medical procedures for display
         const transformedHistory = petProcedures.map(proc => {
-          const vet = allVets.find(v => Number(v.id) === Number(proc.vetId));
+          const vet = allVets.find(v => String(v.id) === String(proc.vetId));
+          
+          // Map Greek procedure types to internal type keys for icons and statistics
           const typeMap = {
-            'vaccination': 'Εμβολιασμός',
-            'checkup': 'Εξέταση',
-            'surgery': 'Χειρουργείο',
-            'treatment': 'Θεραπεία',
-            'dental': 'Οδοντιατρική',
-            'emergency': 'Έκτακτη περίπτωση',
-            'consultation': 'Συμβουλή',
-            'grooming': 'Περιποίηση'
+            'Εμβολιασμός': 'vaccination',
+            'vaccination': 'vaccination',
+            'Τακτική Εξέταση': 'examination',
+            'Γενική Εξέταση': 'examination',
+            'checkup': 'examination',
+            'Χειρουργείο': 'surgery',
+            'surgery': 'surgery',
+            'Θεραπεία': 'examination',
+            'treatment': 'examination',
+            'Οδοντιατρική Εξέταση': 'examination',
+            'Οδοντιατρική': 'examination',
+            'dental': 'examination',
+            'Έκτακτη Περίπτωση': 'emergency',
+            'Επείγον Περιστατικό': 'emergency',
+            'emergency': 'emergency',
+            'Συμβουλή': 'consultation',
+            'Περιποίηση': 'grooming',
+            'Άλλο': 'examination',
+            'other': 'examination'
           };
           
           return {
             id: proc.id,
-            type: proc.type,
-            title: typeMap[proc.type] || proc.type,
+            type: typeMap[proc.type] || 'other',
+            title: proc.type,
             description: proc.description || '-',
             date: proc.date,
             vet: vet ? `Δρ. ${vet.name} ${vet.lastName}` : 'Άγνωστος κτηνίατρος',
@@ -74,21 +117,21 @@ const PetDetail = () => {
         const stats = {
           vaccinations: transformedHistory.filter(h => h.type === 'vaccination').length,
           surgeries: transformedHistory.filter(h => h.type === 'surgery').length,
-          examinations: transformedHistory.filter(h => h.type === 'checkup').length,
+          examinations: transformedHistory.filter(h => h.type !== 'vaccination' && h.type !== 'surgery').length,
         };
         
         // Format pet data
         const formattedPet = {
           name: pet.name || 'Άγνωστο',
-          type: pet.species || 'Άγνωστο',
+          type: translatePetType(pet.type) || 'Άγνωστο',
           breed: pet.breed || '-',
-          gender: pet.gender || '-',
+          gender: translateGender(pet.gender) || '-',
           birthDate: pet.birthDate || '-',
           microchip: pet.microchipId || '-',
           color: pet.color || '-',
           weight: pet.weight || '-',
-          afm: pet.ownerAFM || owner?.afm || '-',
-          icon: pet.species === 'dog' ? 'dog' : pet.species === 'cat' ? 'cat' : 'pet',
+          afm: owner?.afm || '-',
+          icon: pet.type === 'Σκύλος' ? 'dog' : pet.type === 'Γάτα' ? 'cat' : 'pet',
           stats: stats
         };
         
@@ -115,14 +158,102 @@ const PetDetail = () => {
     window.print();
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleDeleteImage = async (e) => {
+    e.stopPropagation(); // Prevent triggering upload when clicking delete
+    
+    if (!confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε τη φωτογραφία;')) {
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+
+      // Remove image from database
+      const response = await fetch(`http://localhost:5000/pets/${petId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: null })
+      });
+
+      if (!response.ok) {
+        throw new Error('Αποτυχία διαγραφής εικόνας');
+      }
+
+      // Update local state
+      setPetImage(null);
+      setUploadingImage(false);
+    } catch (err) {
+      console.error('Error deleting image:', err);
+      alert('Σφάλμα κατά τη διαγραφή της εικόνας');
+      setUploadingImage(false);
+    }
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Παρακαλώ επιλέξτε μια εικόνα');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Η εικόνα πρέπει να είναι μικρότερη από 5MB');
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Image = reader.result;
+        
+        // Update pet image in the database
+        const response = await fetch(`http://localhost:5000/pets/${petId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Image })
+        });
+
+        if (!response.ok) {
+          throw new Error('Αποτυχία αποθήκευσης εικόνας');
+        }
+
+        // Update local state
+        setPetImage(base64Image);
+        setUploadingImage(false);
+      };
+
+      reader.onerror = () => {
+        alert('Σφάλμα κατά την ανάγνωση της εικόνας');
+        setUploadingImage(false);
+      };
+
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Error uploading image:', err);
+      alert('Σφάλμα κατά την αποθήκευση της εικόνας');
+      setUploadingImage(false);
+    }
+  };
+
   const getPetIcon = (iconType) => {
     switch (iconType) {
       case 'dog':
-        return <Dog size={40} />;
+        return <Dog size={80} />;
       case 'cat':
-        return <Cat size={40} />;
+        return <Cat size={80} />;
       default:
-        return <Dog size={40} />;
+        return <Dog size={80} />;
     }
   };
 
@@ -163,7 +294,45 @@ return (
             <div className="owner-pet-detail__content">
                 <div className="owner-pet-detail__sidebar">
                     <div className="owner-pet-detail__pet-card">
-                        <div className="owner-pet-detail__pet-icon">{getPetIcon(pet.icon)}</div>
+                        <input 
+                          type="file" 
+                          ref={fileInputRef} 
+                          onChange={handleImageUpload}
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                        />
+                        <button 
+                          className="owner-pet-detail__pet-icon-button"
+                          onClick={handleImageClick}
+                          disabled={uploadingImage}
+                          title="Κάντε κλικ για να ανεβάσετε φωτογραφία"
+                        >
+                          {petImage ? (
+                            <>
+                              <img 
+                                src={petImage} 
+                                alt={pet.name}
+                                className="owner-pet-detail__pet-image"
+                              />
+                              <button
+                                className="owner-pet-detail__delete-btn"
+                                onClick={handleDeleteImage}
+                                disabled={uploadingImage}
+                                title="Διαγραφή φωτογραφίας"
+                              >
+                                <X size={16} />
+                              </button>
+                            </>
+                          ) : (
+                            <div className="owner-pet-detail__pet-icon">
+                              {getPetIcon(pet.icon)}
+                            </div>
+                          )}
+                          <div className="owner-pet-detail__pet-icon-overlay">
+                            <Camera size={24} />
+                            <span>{petImage ? 'Αλλαγή φωτογραφίας' : 'Προσθήκη φωτογραφίας'}</span>
+                          </div>
+                        </button>
                         <h2 className="owner-pet-detail__pet-name">{pet.name}</h2>
                         
                         <div className="owner-pet-detail__pet-info">
@@ -197,7 +366,7 @@ return (
                             </div>
                             <div className="owner-pet-detail__info-row">
                                 <span className="owner-pet-detail__info-label">ΑΦΜ Ιδιοκτήτη</span>
-                                <span className="owner-pet-detail__info-value">{pet.ownerAFM}</span>
+                                <span className="owner-pet-detail__info-value">{pet.afm}</span>
                             </div>
                         </div>
 

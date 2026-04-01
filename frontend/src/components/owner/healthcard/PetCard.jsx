@@ -14,9 +14,60 @@ const PetCard = ({ pet, onClick, onFound }) => {
     }
   };
 
-  const handleFoundClick = (e) => {
+  const handleFoundClick = async (e) => {
     e.stopPropagation();
-    onFound && onFound();
+    
+    try {
+      // First, fetch the complete pet data from backend
+      const petResponse = await fetch(`http://localhost:5000/pets/${pet.id}`);
+      if (!petResponse.ok) {
+        throw new Error('Failed to fetch pet data');
+      }
+      const completePetData = await petResponse.json();
+
+      // Save the complete pet data to lost_history
+      const lostHistoryEntry = {
+        ...completePetData,
+        id: `history_${completePetData.id}_${Date.now()}`,
+        petStatus: 2,
+        foundDate: new Date().toISOString(),
+        markedFoundAt: new Date().toISOString()
+      };
+      
+      const historyResponse = await fetch(`http://localhost:5000/lost_history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(lostHistoryEntry),
+      });
+
+      if (!historyResponse.ok) {
+        throw new Error('Failed to save to lost_history');
+      }
+
+      // Then update pet status to found (petStatus: 0 means found/safe, status: 'found')
+      const patchResponse = await fetch(`http://localhost:5000/pets/${pet.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          petStatus: 0,
+          status: 'found'
+        }),
+      });
+
+      if (!patchResponse.ok) {
+        throw new Error('Failed to update pet status');
+      }
+
+      // Call the parent callback
+      onFound && onFound();
+    } catch (error) {
+      console.error('Error marking pet as found:', error);
+      alert('Σφάλμα κατά την ενημέρωση της κατάστασης. Παρακαλώ προσπαθήστε ξανά.');
+    }
   };
 
   return (
@@ -26,10 +77,18 @@ const PetCard = ({ pet, onClick, onFound }) => {
     >
       <div className="owner-pet-card__header">
         <div className="owner-pet-card__icon">
-          {getPetIcon(pet.icon)}
+          {pet.image ? (
+            <img 
+              src={pet.image} 
+              alt={pet.name}
+              className="owner-pet-card__image"
+            />
+          ) : (
+            getPetIcon(pet.icon)
+          )}
         </div>
         {pet.status === 'lost' && (
-          <span className="owner-pet-card__status-badge">Απώλεια</span>
+          <span className="owner-pet-card__status-badge">ΧΑΜΕΝΟ</span>
         )}
       </div>
 

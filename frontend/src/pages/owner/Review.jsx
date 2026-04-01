@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
+import Avatar from '../../components/common/Avatar';
 import PageLayout from '../../components/common/layout/PageLayout';
-import { ROUTES } from '../../utils/constants';
+import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Notification from '../../components/common/modals/Notification';
+import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
 import './Review.css';
 
 const Review = () => {
@@ -11,38 +14,203 @@ const Review = () => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [appointment, setAppointment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [notification, setNotification] = useState(null);
 
-  // Mock appointment data - in real app, this would come from API
-  const appointment = {
-    id: appointmentId,
-    vet: 'Ελένη Γεωργίου',
-    pet: 'Μπάμπης',
-    date: '05/11/2025',
-    service: 'Εμβολιασμός',
+  const formatReviewDate = (dateString) => {
+    if (!dateString) return '';
+
+    const match = String(dateString).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (match) {
+      const day = String(parseInt(match[1], 10));
+      const month = String(parseInt(match[2], 10));
+      return `${day}-${month}-${match[3]}`;
+    }
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+
+    const day = String(date.getDate());
+    const month = String(date.getMonth() + 1);
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
 
-  const handleSubmit = (e) => {
+  // Fetch appointment and vet data
+  useEffect(() => {
+    const fetchAppointmentData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch appointment details
+        const aptResponse = await fetch(`http://localhost:5000/appointments/${appointmentId}`);
+        if (!aptResponse.ok) throw new Error('Failed to fetch appointment');
+        const apt = await aptResponse.json();
+        
+        // Fetch vet details
+        let vetName = 'Άγνωστος';
+        let vetAvatar = null;
+        let vetLastName = '';
+        try {
+          const vetResponse = await fetch(`http://localhost:5000/users/${apt.vetId}`);
+          if (vetResponse.ok) {
+            const vet = await vetResponse.json();
+            vetName = `${vet.name} ${vet.lastName}`;
+            vetAvatar = vet.avatar || null;
+            vetLastName = vet.lastName || '';
+          }
+        } catch (err) {
+          console.error('Error fetching vet details:', err);
+        }
+        
+        // Fetch pet details if needed
+        let petName = apt.petName || 'Άγνωστο';
+        try {
+          if (apt.petId) {
+            const petResponse = await fetch(`http://localhost:5000/pets/${apt.petId}`);
+            if (petResponse.ok) {
+              const pet = await petResponse.json();
+              petName = pet.name || petName;
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching pet details:', err);
+        }
+        
+        setAppointment({
+          id: apt.id,
+          vet: vetName,
+          vetId: apt.vetId,
+          vetAvatar: vetAvatar,
+          vetLastName: vetLastName,
+          pet: petName,
+          date: formatReviewDate(apt.date || new Date().toLocaleDateString('el-GR')),
+          service: SERVICE_LABELS[apt.serviceType] || apt.serviceType || 'Υπηρεσία',
+          ownerId: apt.ownerId
+        });
+        
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching appointment data:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (appointmentId) {
+      fetchAppointmentData();
+    }
+  }, [appointmentId]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (rating === 0) {
-      alert('Παρακαλώ επιλέξτε βαθμολογία');
-      return;
+      return; // Button should be disabled, but double check
     }
 
-    // In real app, this would send data to API
-    console.log({
-      appointmentId,
-      rating,
-      comment,
+    try {
+      // Prepare review data
+      const reviewData = {
+        appointmentId,
+        vetId: appointment.vetId,
+        ownerId: appointment.ownerId,
+        rating,
+        comment,
+        reviewedAt: new Date().toISOString()
+      };
+
+      // Submit review to backend
+      const response = await fetch('http://localhost:5000/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reviewData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+
+      // Show success notification
+      setNotification({
+        type: 'success',
+        message: 'Η αξιολόγηση υποβλήθηκε με επιτυχία!'
+      });
+
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate(ROUTES.owner.appointments);
+      }, 2000);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την υποβολή της αξιολόγησης. Παρακαλώ προσπαθήστε ξανά.'
+      });
+      
+      // Clear error notification after 3 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    }
+  };
+
+  const handleCancelClick = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelModal(false);
+    setNotification({
+      type: 'error',
+      message: 'Η αξιολόγηση ακυρώθηκε'
     });
 
-    // Redirect back to appointments
-    navigate(ROUTES.owner.appointments);
+    // Redirect after showing notification
+    setTimeout(() => {
+      navigate(ROUTES.owner.appointments);
+    }, 1500);
   };
 
-  const handleCancel = () => {
-    navigate(ROUTES.owner.appointments);
+  const handleCancelModalClose = () => {
+    setShowCancelModal(false);
   };
+
+  if (loading) {
+    return (
+      <PageLayout variant="owner" title="Αξιολόγηση" breadcrumbs={[]}>
+        <div className="owner-review">
+          <div className="owner-review__content">
+            <p>Φόρτωση δεδομένων αξιολόγησης...</p>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error || !appointment) {
+    return (
+      <PageLayout variant="owner" title="Σφάλμα" breadcrumbs={[]}>
+        <div className="owner-review">
+          <div className="owner-review__content">
+            <p style={{ color: '#d32f2f' }}>Σφάλμα: {error || 'Δεν ήταν δυνατή η φόρτωση των δεδομένων αξιολόγησης'}</p>
+            <button 
+              onClick={() => navigate(ROUTES.owner.appointments)}
+              style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}
+            >
+              Επιστροφή
+            </button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   const breadcrumbItems = [
     { label: 'Ραντεβού', path: ROUTES.owner.appointments },
@@ -60,11 +228,17 @@ const Review = () => {
             <div className="owner-review__appointment-header">
               <span className="owner-review__label">Στοιχεία Ραντεβού</span>
             </div>
+            <div className="owner-review__vet-profile">
+              <Avatar 
+                src={appointment.vetAvatar} 
+                name={appointment.vet?.split(' ')[0] || 'Δρ'} 
+                lastName={appointment.vetLastName}
+                size="xl" 
+                shape="square"
+              />
+              <span className="owner-review__vet-name">Δρ. {appointment.vet}</span>
+            </div>
             <div className="owner-review__appointment-details">
-              <div className="owner-review__appointment-row">
-                <span className="owner-review__appointment-label">Κτηνίατρος</span>
-                <span className="owner-review__appointment-value">Δρ. {appointment.vet}</span>
-              </div>
               <div className="owner-review__appointment-row">
                 <span className="owner-review__appointment-label">Κατοικίδιο</span>
                 <span className="owner-review__appointment-value">{appointment.pet}</span>
@@ -118,7 +292,7 @@ const Review = () => {
                 rows={6}
               />
               <p className="owner-review__field-hint">
-                Το σχόλιο σας θα βοηθήσει άλλους ιδιοκτήτες κατοικιδίων
+                Το σχόλιο σας θα βοηθήσει άλλους ιδιοκτήτες κατοικιδίων να επιλέξουν τον κατάλληλο κτηνίατρο
               </p>
             </div>
 
@@ -126,19 +300,45 @@ const Review = () => {
               <button
                 type="button"
                 className="owner-review__btn owner-review__btn--cancel"
-                onClick={handleCancel}
+                onClick={handleCancelClick}
               >
                 Ακύρωση
               </button>
               <button
                 type="submit"
                 className="owner-review__btn owner-review__btn--submit"
+                disabled={rating === 0}
+                style={{
+                  opacity: rating === 0 ? 0.5 : 1,
+                  cursor: rating === 0 ? 'not-allowed' : 'pointer'
+                }}
               >
-                ✓ Υποβολή Αξιολόγησης
+                Υποβολή Αξιολόγησης
               </button>
             </div>
           </form>
         </div>
+
+        {/* Cancel Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showCancelModal}
+          title="Είστε σίγουροι ότι θέλετε να ακυρώσετε;"
+          description="Η αξιολόγηση δεν θα αποθηκευτεί."
+          cancelText="Όχι, επιστροφή"
+          confirmText="Ναι, ακύρωση"
+          onCancel={handleCancelModalClose}
+          onConfirm={handleConfirmCancel}
+          isDanger={true}
+        />
+
+        {/* Notification */}
+        {notification && (
+          <Notification
+            isVisible={true}
+            message={notification.message}
+            type={notification.type}
+          />
+        )}
       </div>
     </PageLayout>
   );

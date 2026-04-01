@@ -3,13 +3,20 @@
 /* CSS Variables */
 :root {
   /* Colors */
-  --color-primary: #4F46E5;
+  --color-primary: #4e46e5;
   --color-primary-dark: #4338CA;
-  --color-primary-light: rgba(79, 70, 229, 0.1);
+  --color-primary-light: #4f46e51a;
   --color-secondary: #10B981;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
   --color-info: #3B82F6;
+  --color-orange: #FCA47C;
+  --color-blue: #23CED9;
+  --color-yellow: #F9D779;
+  --color-red: #FF5252;
+  --color-green: #A1CCA6;
+  --gradient: linear-gradient(135deg, #23CED9 0%, #FCA47C 50%, #F9D779 100%);
+  --soft-gradient: linear-gradient(180deg, #23cdd9a8 0%, #fca47ca5 50%, #f9d779ac 100%);
   
   /* Background Colors */
   --color-bg-white: #FFFFFF;
@@ -21,6 +28,7 @@
   --color-text-secondary: #4B5563;
   --color-text-muted: #9CA3AF;
   --color-text-light: #6B7280;
+  --color-black-buttons: #101828;
   
   /* Border Colors */
   --color-border: #D1D5DB;
@@ -89,7 +97,7 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Arimo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: var(--font-size-md);
   color: var(--color-text-primary);
   background-color: var(--color-bg-gray);

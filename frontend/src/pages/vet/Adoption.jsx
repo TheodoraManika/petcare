@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PawPrint, UserRound, Heart, AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ProgressBar from '../../components/common/forms/ProgressBar';
@@ -15,11 +15,9 @@ import PetDetailsCard from '../../components/common/cards/PetDetailsCard';
 import { ROUTES } from '../../utils/constants';
 import './Adoption.css';
 
-// Mock lost pets database
-
-
 const Adoption = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -33,7 +31,7 @@ const Adoption = () => {
 
   const [formData, setFormData] = useState({
     // Step 1: Pet Data
-    microchipNumber: '',
+    microchipNumber: location.state?.microchip || '',
 
 
     // Step 2: Owner Data
@@ -82,7 +80,7 @@ const Adoption = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        microchipNumber: pet.microchip,
+        microchipNumber: pet.microchipId || pet.microchip,
         petName: pet.name,
         species: pet.type,
       }));
@@ -163,28 +161,28 @@ const Adoption = () => {
     switch (currentStep) {
       case 1:
         return (
-          formData.microchipNumber.trim() !== '' &&
-          formData.microchipNumber.length === 15
+          (formData.microchipNumber || '').trim() !== '' &&
+          (formData.microchipNumber || '').length === 15
         );
       case 2:
         return (
-          formData.ownerAfm.trim() !== '' &&
-          formData.ownerAfm.length === 9 &&
-          formData.ownerName.trim() !== '' &&
-          formData.ownerSurname.trim() !== '' &&
-          formData.ownerPhone.trim() !== '' &&
-          formData.ownerEmail.trim() !== '' &&
-          formData.ownerAddress.trim() !== '' &&
-          formData.ownerCity.trim() !== '' &&
-          formData.ownerPostalCode.trim() !== ''
+          (formData.ownerAfm || '').trim() !== '' &&
+          (formData.ownerAfm || '').length === 9 &&
+          (formData.ownerName || '').trim() !== '' &&
+          (formData.ownerSurname || '').trim() !== '' &&
+          (formData.ownerPhone || '').trim() !== '' &&
+          (formData.ownerEmail || '').trim() !== '' &&
+          (formData.ownerAddress || '').trim() !== '' &&
+          (formData.ownerCity || '').trim() !== '' &&
+          (formData.ownerPostalCode || '').trim() !== ''
         );
       case 3:
         return (
-          formData.adoptionDate.trim() !== '' &&
-          formData.adoptionReason.trim() !== '' &&
-          formData.shelterOwner.trim() !== '' &&
-          formData.liveWithOtherPets.trim() !== '' &&
-          formData.existingPets.trim() !== ''
+          (formData.adoptionDate || '').trim() !== '' &&
+          (formData.adoptionReason || '').trim() !== '' &&
+          (formData.shelterOwner || '').trim() !== '' &&
+          (formData.liveWithOtherPets || '').trim() !== '' &&
+          (formData.existingPets || '').trim() !== ''
         );
       default:
         return false;
@@ -200,10 +198,84 @@ const Adoption = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current vet from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // Find the pet by microchip
+      const petsResponse = await fetch(`http://localhost:5000/pets?microchipId=${formData.microchipNumber}`);
+      if (!petsResponse.ok) throw new Error('Failed to fetch pets');
+      const pets = await petsResponse.json();
+      const pet = pets[0];
+
+      if (!pet) {
+        setNotification({
+          type: 'error',
+          title: 'Κατοικίδιο Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε κατοικίδιο με μικροτσίπ ${formData.microchipNumber}`
+        });
+        return;
+      }
+
+      // Prepare adoption data
+      const adoptionData = {
+        id: Date.now().toString(),
+        petId: pet.id,
+        petName: pet.name,
+        microchip: pet.microchipId,
+        vetId: currentUser.id,
+        vetName: `${currentUser.name} ${currentUser.lastName || ''}`.trim(),
+        adoptingOwnerName: formData.ownerName,
+        adoptingOwnerSurname: formData.ownerSurname,
+        adoptingOwnerAfm: formData.ownerAfm,
+        adoptingOwnerPhone: formData.ownerPhone,
+        adoptingOwnerEmail: formData.ownerEmail,
+        adoptingOwnerAddress: formData.ownerAddress,
+        adoptingOwnerCity: formData.ownerCity,
+        adoptingOwnerPostalCode: formData.ownerPostalCode,
+        adoptionDate: formData.adoptionDate,
+        adoptionReason: formData.adoptionReason,
+        shelterOwner: formData.shelterOwner,
+        liveWithOtherPets: formData.liveWithOtherPets,
+        existingPets: formData.existingPets,
+        notes: formData.notes,
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/adoptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(adoptionData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Adoption recorded successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+    } catch (err) {
+      console.error('Error recording adoption:', err);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα',
+        message: 'Παρουσιάστηκε σφάλμα κατά την καταγραφή της υιοθεσίας.'
+      });
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -333,6 +405,7 @@ const Adoption = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
 
 

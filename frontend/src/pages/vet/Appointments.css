@@ -405,9 +405,33 @@
 
 .appointments__filters {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+}
+
+.appointments__filters-left {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.appointments__filters-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.appointments__sort-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.appointments__sort-control {
+  min-width: 180px;
 }
 
 .appointments__filter {

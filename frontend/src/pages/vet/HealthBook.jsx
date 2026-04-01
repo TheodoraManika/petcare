@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Download, Dog, Cat, AlertCircle } from 'lucide-react';
+import { Search, Download, Dog, Cat, AlertCircle, FileText, CircleAlert, PawPrint, ArrowLeftRight, Heart, HandHeart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
 import MedicalEventCard from '../../components/owner/healthcard/MedicalEventCard';
 import StatCard from '../../components/owner/healthcard/StatCard';
@@ -7,118 +8,199 @@ import { ROUTES } from '../../utils/constants';
 import './HealthBook.css';
 
 const HealthBook = () => {
+  const navigate = useNavigate();
   const [microchipNumber, setMicrochipNumber] = useState('');
   const [petData, setPetData] = useState(null);
   const [searchAttempted, setSearchAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Mock data - in real app, this would come from API/database
-  const mockPetsDatabase = {
-    '123456789012345': {
-      name: 'Μπάμπης',
-      type: 'Σκύλος',
-      breed: 'Golden Retriever',
-      gender: 'Αρσενικό',
-      birthDate: '15/4/2020',
-      microchip: '123456789012345',
-      afm: '123456789',
-      ownerName: 'Γιώργος Παπαδόπουλος',
-      ownerPhone: '6912345678',
-      icon: 'dog',
-      medicalHistory: [
-        {
-          id: 1,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Πενταπλός εμβολιασμός',
-          date: '10/11/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 2,
-          type: 'surgery',
-          title: 'Χειρουργείο',
-          description: 'Στείρωση',
-          date: '5/6/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 3,
-          type: 'examination',
-          title: 'Εξέταση',
-          description: 'Γενική εξέταση',
-          date: '20/7/2024',
-          vet: 'Δρ. Μαρία Γεωργίου',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 4,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Εμβόλιο λύσσας',
-          date: '12/5/2024',
-          vet: 'Δρ. Ελένη Νικολάου',
-          status: 'Ολοκληρώθηκε',
-        },
-      ],
-      stats: {
-        vaccinations: 2,
-        surgeries: 1,
-        examinations: 1,
-      },
-    },
-    '987654321098765': {
-      name: 'Μίνι',
-      type: 'Γάτα',
-      breed: 'Περσική',
-      gender: 'Θηλυκό',
-      birthDate: '22/6/2021',
-      microchip: '987654321098765',
-      afm: '123456788',
-      ownerName: 'Άννα Παπαδάκη',
-      ownerPhone: '6987654321',
-      icon: 'cat',
-      medicalHistory: [
-        {
-          id: 1,
-          type: 'vaccination',
-          title: 'Εμβολιασμός',
-          description: 'Τριπλός εμβολιασμός',
-          date: '10/10/2024',
-          vet: 'Δρ. Άννα Παπαδάκη',
-          status: 'Ολοκληρώθηκε',
-        },
-        {
-          id: 2,
-          type: 'examination',
-          title: 'Εξέταση',
-          description: 'Οδοντιατρικός έλεγχος',
-          date: '3/9/2024',
-          vet: 'Δρ. Νίκος Ιωάννου',
-          status: 'Ολοκληρώθηκε',
-        },
-      ],
-      stats: {
-        vaccinations: 1,
-        surgeries: 0,
-        examinations: 1,
-      },
-    },
+  // Helper function to get operation type in Greek
+  const getOperationTypeLabel = (operationType) => {
+    const typeMap = {
+      'vaccination': 'Εμβολιασμός',
+      'surgery': 'Χειρουργείο',
+      'examination': 'Εξέταση',
+      'checkup': 'Τακτική Εξέταση',
+      'dental': 'Οδοντιατρική Εξέταση',
+      'grooming': 'Περιποίηση',
+      'emergency': 'Έκτακτη Περίπτωση'
+    };
+    return typeMap[operationType] || operationType;
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
+    
+    // Validate microchip length
+    if (!microchipNumber.trim()) {
+      setError('Παρακαλώ εισάγετε έναν αριθμό μικροτσίπ');
+      return;
+    }
+    
+    if (microchipNumber.length !== 15) {
+      setError('Ο αριθμός μικροτσίπ πρέπει να έχει ακριβώς 15 ψηφία');
+      return;
+    }
+    
     setIsLoading(true);
-    setSearchAttempted(true);
+    setSearchAttempted(false); // Reset to hide old results
+    setError('');
+    setPetData(null); // Clear previous pet data
 
-    // Simulate API call
-    setTimeout(() => {
-      const foundPet = mockPetsDatabase[microchipNumber];
-      setPetData(foundPet || null);
+    try {
+      // First, try to fetch pet data by microchipId from pets table
+      let petResponse = await fetch(`http://localhost:5000/pets?microchipId=${microchipNumber}`);
+      if (!petResponse.ok) throw new Error('Failed to fetch pet');
+      
+      let pets = await petResponse.json();
+      let pet = pets[0];
+      
+      // If not found, search again by microchipId (in case it's a lost pet)
+      if (!pet) {
+        const petAlertsResponse = await fetch(`http://localhost:5000/pets?microchipId=${microchipNumber}`);
+        if (petAlertsResponse.ok) {
+          const petAlerts = await petAlertsResponse.json();
+          if (petAlerts.length > 0) {
+            pet = petAlerts[0];
+          }
+        }
+      }
+      
+      setIsLoading(false); // Stop loading first
+      
+      if (!pet) {
+        setSearchAttempted(true); // Now show "not found"
+        return;
+      }
+
+      // Fetch owner data
+      let owner = null;
+      if (pet.ownerId) {
+        const ownerResponse = await fetch(`http://localhost:5000/users/${pet.ownerId}`);
+        if (ownerResponse.ok) {
+          owner = await ownerResponse.json();
+        }
+      }
+
+      // Fetch all users to get vet names
+      let allUsers = [];
+      const usersResponse = await fetch(`http://localhost:5000/users`);
+      if (usersResponse.ok) {
+        allUsers = await usersResponse.json();
+      }
+
+      // Fetch medical procedures for this pet
+      const proceduresResponse = await fetch(`http://localhost:5000/medicalProcedures?petId=${pet.id}`);
+      let procedures = [];
+      if (proceduresResponse.ok) {
+        procedures = await proceduresResponse.json();
+      }
+
+      // Transform procedures to medical history format and map types
+      const typeMap = {
+        'Εμβολιασμός': 'vaccination',
+        'vaccination': 'vaccination',
+        'Χειρουργείο': 'surgery',
+        'surgery': 'surgery',
+        'Τακτική Εξέταση': 'examination',
+        'Γενική Εξέταση': 'examination',
+        'checkup': 'examination',
+        'examination': 'examination',
+        'Οδοντιατρική Εξέταση': 'examination',
+        'Οδοντιατρική': 'examination',
+        'dental': 'examination',
+        'Θεραπεία': 'examination',
+        'treatment': 'examination',
+        'Επείγον Περιστατικό': 'examination',
+        'emergency': 'examination',
+        'Άλλο': 'examination',
+        'other': 'examination'
+      };
+
+      const medicalHistory = procedures.map((proc) => {
+        const vet = allUsers.find(u => u.id === proc.vetId || u.id == proc.vetId);
+        const vetName = vet ? `${vet.name} ${vet.lastName || ''}`.trim() : 'Άγνωστος';
+        const mappedType = typeMap[proc.type] || 'other';
+        return {
+          id: proc.id,
+          type: proc.type || 'examination',
+          mappedType: mappedType,
+          title: getOperationTypeLabel(proc.type),
+          description: proc.description || '-',
+          date: formatDateForDisplay(proc.date),
+          vet: vetName,
+          status: 'Ολοκληρώθηκε'
+        };
+      });
+
+      // Calculate statistics using mapped types
+      const stats = {
+        vaccinations: medicalHistory.filter(p => p.mappedType === 'vaccination').length,
+        surgeries: medicalHistory.filter(p => p.mappedType === 'surgery').length,
+        examinations: medicalHistory.filter(p => p.mappedType !== 'vaccination' && p.mappedType !== 'surgery').length
+      };
+
+      // Normalize species for icon and label
+      const normalizeSpecies = (species) => {
+        const value = String(species || '').toLowerCase();
+        if (value.includes('cat') || value.includes('γάτα')) return 'cat';
+        if (value.includes('dog') || value.includes('σκύλος')) return 'dog';
+        if (value.includes('bird') || value.includes('πτηνό')) return 'bird';
+        if (value.includes('reptile') || value.includes('ερπετό')) return 'reptile';
+        return 'dog';
+      };
+
+      const petSpecies = pet.type || '';
+      const speciesKey = normalizeSpecies(petSpecies);
+      const icon = speciesKey === 'cat' ? 'cat' : 'dog';
+
+      // Build pet data object
+      const transformedPetData = {
+        name: pet.name,
+        type: speciesKey === 'cat' ? 'Γάτα' : 'Σκύλος',
+        breed: pet.breed,
+        gender: pet.gender === 'male' ? 'Αρσενικό' : 'Θηλυκό',
+        birthDate: formatDateForDisplay(pet.birthDate),
+        microchip: pet.microchipId,
+        afm: owner?.afm || pet.ownerAFM || '-',
+        ownerName: owner ? `${owner.name} ${owner.lastName || ''}`.trim() : 'Άγνωστος',
+        ownerPhone: owner?.phone || '-',
+        icon: icon,
+        image: pet.imageUrl || pet.image || null, // Include pet image
+        medicalHistory: medicalHistory,
+        stats: stats
+      };
+
+      setPetData(transformedPetData);
+      setSearchAttempted(true);
+
+      // Scroll to results
+      setTimeout(() => {
+        const resultsSection = document.querySelector('.health-book__results');
+        if (resultsSection) {
+          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } catch (err) {
+      console.error('Error searching for pet:', err);
+      setError('Σφάλμα κατά την αναζήτηση. Παρακαλώ δοκιμάστε ξανά.');
+      setPetData(null);
       setIsLoading(false);
-    }, 500);
+      setSearchAttempted(true);
+    }
+  };
+
+  // Helper function to format dates
+  const formatDateForDisplay = (dateStr) => {
+    if (!dateStr) return '-';
+    // Handle YYYY-MM-DD format
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+    // Already in DD/MM/YYYY format
+    return dateStr;
   };
 
   const handlePrint = () => {
@@ -128,11 +210,11 @@ const HealthBook = () => {
   const getPetIcon = (iconType) => {
     switch (iconType) {
       case 'dog':
-        return <Dog size={40} />;
+        return <Dog size={80} />;
       case 'cat':
-        return <Cat size={40} />;
+        return <Cat size={80} />;
       default:
-        return <Dog size={40} />;
+        return <Dog size={80} />;
     }
   };
 
@@ -156,7 +238,12 @@ const HealthBook = () => {
                 className="health-book__search-input"
                 placeholder="π.χ. 123456789012345"
                 value={microchipNumber}
-                onChange={(e) => setMicrochipNumber(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+                  if (value.length <= 15) {
+                    setMicrochipNumber(value);
+                  }
+                }}
                 maxLength={15}
                 required
               />
@@ -164,22 +251,52 @@ const HealthBook = () => {
             <button 
               type="submit" 
               className="health-book__search-btn"
-              disabled={isLoading || !microchipNumber.trim()}
+              disabled={isLoading || !microchipNumber.trim() || microchipNumber.length !== 15}
             >
               {isLoading ? 'Αναζήτηση...' : 'Αναζήτηση'}
             </button>
           </form>
+
+          {error && (
+            <div className="health-book__error" style={{ 
+              marginTop: '12px', 
+              padding: '12px', 
+              backgroundColor: '#fee', 
+              color: '#c00', 
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}>
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Results Section */}
-        {searchAttempted && !isLoading && (
+        {isLoading && (
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: '#666' }}>
+            <p>Αναζήτηση κατοικιδίου...</p>
+          </div>
+        )}
+
+        {!isLoading && searchAttempted && (
           <>
             {petData ? (
-              <div className="health-book__results">
-                <div className="health-book__content">
+              <>
+                <div className="health-book__results">
+                  <div className="health-book__content">
                   <div className="health-book__sidebar">
                     <div className="health-book__pet-card">
-                      <div className="health-book__pet-icon">{getPetIcon(petData.icon)}</div>
+                      <div className="health-book__pet-icon">
+                        {petData.image ? (
+                          <img 
+                            src={petData.image} 
+                            alt={petData.name}
+                            className="health-book__pet-image"
+                          />
+                        ) : (
+                          getPetIcon(petData.icon)
+                        )}
+                      </div>
                       <h2 className="health-book__pet-name">{petData.name}</h2>
                       
                       <div className="health-book__pet-info">
@@ -221,17 +338,69 @@ const HealthBook = () => {
                         <Download size={18} />
                         Εκτύπωση Βιβλιαρίου
                       </button>
+
                     </div>
                   </div>
 
                   <div className="health-book__main">
-                    <h2 className="health-book__section-title">Ιατρικό Ιστορικό</h2>
-
-                    <div className="health-book__events">
-                      {petData.medicalHistory.map((event) => (
-                        <MedicalEventCard key={event.id} event={event} />
-                      ))}
+                    <div className="health-book__quick-actions-box">
+                      <p className="health-book__quick-actions-title">Γρήγορες Ενέργειες:</p>
+                      <div className="health-book__quick-actions-grid">
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--operation"
+                          onClick={() => navigate(ROUTES.vet.operation, { state: { microchip: petData.microchip } })}
+                        >
+                          <FileText size={16} />
+                          Ιατρικές Πράξεις
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--lost"
+                          onClick={() => navigate(ROUTES.vet.lostPetForm, { state: { microchip: petData.microchip } })}
+                        >
+                          <CircleAlert size={16} />
+                          Δήλωση Απώλειας
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--transfer"
+                          onClick={() => navigate(ROUTES.vet.transfer, { state: { microchip: petData.microchip } })}
+                        >
+                          <ArrowLeftRight size={16} />
+                          Μεταβίβαση
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--adoption"
+                          onClick={() => navigate(ROUTES.vet.adoption, { state: { microchip: petData.microchip } })}
+                        >
+                          <Heart size={16} />
+                          Υιοθεσία
+                        </button>
+                        <button 
+                          className="health-book__action-btn health-book__action-btn--foster"
+                          onClick={() => navigate(ROUTES.vet.foster, { state: { microchip: petData.microchip } })}
+                        >
+                          <HandHeart size={16} />
+                          Αναδοχή
+                        </button>
+                      </div>
                     </div>
+
+                    {petData.medicalHistory.length > 0 && (
+                      <>
+                        <h2 className="health-book__section-title">Ιατρικό Ιστορικό</h2>
+
+                        <div className="health-book__events">
+                          {petData.medicalHistory.map((event) => (
+                            <MedicalEventCard key={event.id} event={event} />
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {petData.medicalHistory.length === 0 && (
+                      <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                        <p>Δεν υπάρχει ιατρικό ιστορικό για αυτό το κατοικίδιο.</p>
+                      </div>
+                    )}
 
                     <h2 className="health-book__section-title">Στατιστικά</h2>
                     <div className="health-book__stats">
@@ -242,6 +411,7 @@ const HealthBook = () => {
                   </div>
                 </div>
               </div>
+              </>
             ) : (
               <div className="health-book__not-found">
                 <AlertCircle size={48} className="health-book__not-found-icon" />

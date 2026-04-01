@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Calendar, List, ChevronLeft, ChevronRight, X, Check, Clock, ArrowLeft, UserRound, PawPrint, Stethoscope } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
-import { ROUTES } from '../../utils/constants';
+import CustomSelect from '../../components/common/forms/CustomSelect';
+import { ROUTES, SERVICE_LABELS, formatDate } from '../../utils/constants';
 import './Appointments.css';
 
 const Appointments = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' or 'list'
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'calendar'); // 'calendar' or 'list'
   const [viewMode, setViewMode] = useState('week'); // 'day' or 'week'
   const [selectedDate, setSelectedDate] = useState(new Date()); // Current date
   const [filterStatus, setFilterStatus] = useState('all');
@@ -19,199 +21,163 @@ const Appointments = () => {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [appointmentToReject, setAppointmentToReject] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const itemsPerPage = 6;
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      petName: 'Μπάμπης',
-      ownerName: 'Έλενα Γεωργίου',
-      phone: '6912345678',
-      species: 'Σκύλος',
-      breed: 'Golden Retriever',
-      date: '05/01/2026',
-      time: '10:00 - 11:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'pending',
-      notes: 'Πρώτος εμβολιασμός'
-    },
-    {
-      id: 2,
-      petName: 'Λούνα',
-      ownerName: 'Μαρία Παπαδοπούλου',
-      phone: '6983696023',
-      species: 'Γάτα',
-      breed: 'Bombay',
-      date: '06/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Εξέταση',
-      status: 'confirmed',
-      notes: '-'
-    },
-    {
-      id: 3,
-      petName: 'Ρόκκι',
-      ownerName: 'Μαρία Αντωνίου',
-      phone: '6910559295',
-      species: 'Σκύλος',
-      breed: 'Golden Retriever',
-      date: '06/01/2026',
-      time: '14:00 - 15:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 4,
-      petName: 'Ρεξ',
-      ownerName: 'Γιώργος Νικολόπουλος',
-      phone: '6927406934',
-      species: 'Σκύλος',
-      breed: 'Τσοπανόσκυλο',
-      date: '07/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Στείρωση',
-      status: 'cancelled',
-      notes: '-'
-    },
-    {
-      id: 5,
-      petName: 'Cookie',
-      ownerName: 'Νικόλας Ανδρέου',
-      phone: '6928503684',
-      species: 'Γάτα',
-      breed: 'Ασίας',
-      date: '07/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Στείρωση',
-      status: 'pending',
-      notes: '-'
-    },
-    {
-      id: 6,
-      petName: 'Μάντοξ',
-      ownerName: 'Παντελής Ιωάννου',
-      phone: '6947505623',
-      species: 'Σκύλος',
-      breed: 'Μπουλντόγκ',
-      date: '08/01/2026',
-      time: '11:00 - 12:00',
-      serviceType: 'Χειρουργείο',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 7,
-      petName: 'Λούις',
-      ownerName: 'Άγγελος Κωνσταντίνου',
-      phone: '6910396110',
-      species: 'Σκύλος',
-      breed: 'Μεγάλος Δανός',
-      date: '09/01/2026',
-      time: '09:30 - 10:30',
-      serviceType: 'Γενική Εξέταση',
-      status: 'confirmed',
-      notes: ''
-    },
-    {
-      id: 8,
-      petName: 'Μαξίν',
-      ownerName: 'Νικόλας Ανδρέου',
-      phone: '6928503684',
-      species: 'Γάτα',
-      breed: 'Σιαμέζα',
-      date: '10/01/2026',
-      time: '10:30 - 11:30',
-      serviceType: 'Θεραπεία',
-      status: 'confirmed',
-      notes: '3ο μέρος της θεραπείας'
-    },
-    {
-      id: 9,
-      petName: 'Μίνι',
-      ownerName: 'Βασιλική Παναγιωτοπούλου',
-      phone: '6950774027',
-      species: 'Σκύλος',
-      breed: 'Τσιουάουα',
-      date: '11/01/2026',
-      time: '13:00 - 14:00',
-      serviceType: 'Οδοντιατρική',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 10,
-      petName: 'Φίφη',
-      ownerName: 'Κατερίνα Εμμανουήλ',
-      phone: '6947505623',
-      species: 'Σκύλος',
-      breed: 'Λαμπραντόρ',
-      date: '10/01/2026',
-      time: '15:00 - 16:00',
-      serviceType: 'Γενική Εξέταση',
-      status: 'pending',
-      notes: ''
-    },
-    {
-      id: 11,
-      petName: 'Τσάρλυ',
-      ownerName: 'Παναγίωτης Κωνσταντίνου',
-      phone: '6947503957',
-      species: 'Σκύλος',
-      breed: 'Ροτβάιλερ',
-      date: '05/01/2026',
-      time: '16:00 - 17:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'confirmed',
-      notes: 'Εμβόλιο κατά της λύσσας'
-    },
-    {
-      id: 12,
-      petName: 'Μάγια',
-      ownerName: 'Κάτια Σωτηρίου',
-      phone: '6947229947',
-      species: 'Σκύλος',
-      breed: 'Poodle',
-      date: '05/01/2026',
-      time: '12:00 - 13:00',
-      serviceType: 'Εμβολιασμός',
-      status: 'confirmed',
-      notes: 'Εμβόλιο κατά της λύσσας'
+
+  // Fetch appointments from database
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        setLoading(true);
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const response = await fetch(`http://localhost:5000/appointments?vetId=${currentUser.id}`);
+        if (!response.ok) throw new Error('Failed to fetch appointments');
+        const appointmentsData = await response.json();
+
+        // Enrich appointments with pet and owner details
+        const enrichedAppointments = await Promise.all(
+          appointmentsData.map(async (apt) => {
+            try {
+              let petName = apt.petName;
+              let species = apt.petSpecies;
+              let breed = apt.petBreed;
+
+              // Fetch pet details from pets collection using petId
+              if (apt.petId) {
+                try {
+                  const petRes = await fetch(`http://localhost:5000/pets/${apt.petId}`);
+                  if (petRes.ok) {
+                    const petData = await petRes.json();
+                    petName = petData.name || petName || '-';
+                    species = petData.type || species || '-';
+                    breed = petData.breed || breed || '-';
+                  }
+                } catch (err) {
+                  console.error('Error fetching pet details:', err);
+                }
+              }
+
+              // Fetch owner details if not already in appointment
+              let ownerName = apt.ownerName;
+              let ownerLastName = apt.ownerLastName;
+              let phone = apt.ownerPhone || apt.phone;
+
+              if (!ownerName || !phone) {
+                try {
+                  const ownerRes = await fetch(`http://localhost:5000/users/${apt.ownerId}`);
+                  if (ownerRes.ok) {
+                    const ownerData = await ownerRes.json();
+                    ownerName = ownerName || ownerData.name || ownerData.username || '-';
+                    ownerLastName = ownerData.lastName || '-';
+                    phone = phone || ownerData.phone || '-';
+                  }
+                } catch (err) {
+                  console.error('Error fetching owner details:', err);
+                }
+              }
+
+              return {
+                ...apt,
+                petName: petName || '-',
+                species: species || '-',
+                breed: breed || '-',
+                ownerName: ownerName || '-',
+                ownerLastName: ownerLastName || '-',
+                phone: phone || '-',
+                notes: apt.notes || ''
+              };
+            } catch (err) {
+              console.error('Error enriching appointment data:', err);
+              return {
+                ...apt,
+                petName: apt.petName || '-',
+                species: apt.petSpecies || '-',
+                breed: apt.petBreed || '-',
+                notes: apt.notes || ''
+              };
+            }
+          })
+        );
+
+        setAppointments(enrichedAppointments);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  // Handle deep linking to specific appointment from notifications
+  useEffect(() => {
+    if (location.state?.appointmentId && !loading && appointments.length > 0) {
+      const apt = appointments.find(a => String(a.id) === String(location.state.appointmentId));
+      if (apt) {
+        setSelectedAppointment(apt);
+        // Clear the navigation state to prevent reopening
+        window.history.replaceState({}, document.title);
+      }
     }
-  ]);
+  }, [location.state, loading, appointments]);
 
   // Auto-update confirmed appointments to completed if their time has passed
   useEffect(() => {
-    const updatePastAppointments = () => {
+    const updatePastAppointments = async () => {
       const now = new Date();
-      const currentDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
-      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-      setAppointments(prevAppointments =>
-        prevAppointments.map(apt => {
-          // Only update confirmed appointments
-          if (apt.status !== 'confirmed') return apt;
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt => {
+          // Only update confirmed or pending appointments that aren't already completed/cancelled
+          if (apt.status === 'completed' || apt.status === 'cancelled') return apt;
 
-          const aptDate = apt.date;
-          const aptEndTime = apt.time.split(' - ')[1]; // Get end time (e.g., "11:00")
-
-          // Parse date components
-          const [aptDay, aptMonth, aptYear] = aptDate.split('/').map(Number);
-          const aptDateObj = new Date(aptYear, aptMonth - 1, aptDay);
-          const nowDateObj = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-          // If appointment date is in the past, mark as completed
-          if (aptDateObj < nowDateObj) {
-            return { ...apt, status: 'completed' };
+          // Parse appointment date - handle both formats: DD/MM/YYYY and YYYY-MM-DD
+          let aptDate;
+          if (apt.date.includes('/')) {
+            // DD/MM/YYYY format
+            const [day, month, year] = apt.date.split('/').map(Number);
+            aptDate = new Date(year, month - 1, day);
+          } else {
+            // YYYY-MM-DD format
+            aptDate = new Date(apt.date);
           }
 
-          // If appointment date is today, check if end time has passed
-          if (aptDate === currentDate && aptEndTime < currentTime) {
+          // Parse appointment end time
+          let aptEndTime = null;
+          if (apt.time && apt.time.includes('-')) {
+            const endTimeStr = apt.time.split('-')[1].trim(); // Get "10:00" from "09:00 - 10:00"
+            const [hours, minutes] = endTimeStr.split(':').map(Number);
+            aptDate.setHours(hours, minutes, 0, 0);
+            aptEndTime = aptDate;
+          } else {
+            // If no end time, assume appointment lasts 1 hour
+            aptDate.setHours(23, 59, 59, 999); // End of day
+            aptEndTime = aptDate;
+          }
+
+          // If appointment has passed (date + end time is in the past), mark as completed
+          if (aptEndTime && aptEndTime < now) {
+            // Persist the status change to the backend
+            fetch(`http://localhost:5000/appointments/${apt.id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: 'completed' })
+            }).catch(err => console.error('Error updating appointment status:', err));
+
             return { ...apt, status: 'completed' };
           }
 
           return apt;
-        })
-      );
+        });
+
+        return updated;
+      });
     };
 
     // Run on component mount
@@ -238,27 +204,29 @@ const Appointments = () => {
   };
 
   const filterAppointments = () => {
-    let filtered = filterStatus === 'all' ? appointments : appointments.filter(apt => apt.status === filterStatus);
-    
-    // Sort by date and time (earliest first)
-    return filtered.sort((a, b) => {
-      // Parse dates (format: DD/MM/YYYY)
-      const [dayA, monthA, yearA] = a.date.split('/').map(Number);
-      const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-      
-      const dateA = new Date(yearA, monthA - 1, dayA);
-      const dateB = new Date(yearB, monthB - 1, dayB);
-      
-      // Compare dates
-      if (dateA.getTime() !== dateB.getTime()) {
-        return dateA - dateB;
+    const filtered = filterStatus === 'all'
+      ? [...appointments]
+      : appointments.filter(apt => apt.status === filterStatus);
+
+    const getAppointmentStart = (apt) => {
+      let dateObj;
+      if (apt.date && apt.date.includes('/')) {
+        const [day, month, year] = apt.date.split('/').map(Number);
+        dateObj = new Date(year, month - 1, day);
+      } else {
+        dateObj = new Date(apt.date);
       }
-      
-      // If dates are the same, compare by start time
-      const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
-      const timeB = b.time.split(' - ')[0];
-      
-      return timeA.localeCompare(timeB);
+
+      const timeStr = apt.time?.split(' - ')[0] || '00:00';
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      dateObj.setHours(hours || 0, minutes || 0, 0, 0);
+      return dateObj;
+    };
+
+    return filtered.sort((a, b) => {
+      const dateA = getAppointmentStart(a).getTime();
+      const dateB = getAppointmentStart(b).getTime();
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
   };
 
@@ -286,14 +254,15 @@ const Appointments = () => {
   };
 
   const getAppointmentsForDate = (date) => {
-    const dateStr = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    // Convert date to YYYY-MM-DD format to match database storage
+    const dateStr = date.toISOString().split('T')[0];
     const filteredAppointments = appointments.filter(apt => apt.date === dateStr);
-    
+
     // Sort by time (earliest first)
     return filteredAppointments.sort((a, b) => {
-      const timeA = a.time.split(' - ')[0]; // Get start time (e.g., "10:00")
-      const timeB = b.time.split(' - ')[0];
-      return timeA.localeCompare(timeB);
+      const timeA = a.time.split(':')[0]; // Get hour
+      const timeB = b.time.split(':')[0];
+      return parseInt(timeA) - parseInt(timeB);
     });
   };
 
@@ -311,18 +280,73 @@ const Appointments = () => {
     setSelectedDate(newDate);
   };
 
-  const handleConfirm = (appointmentId) => {
-    setAppointments(prevAppointments =>
-      prevAppointments.map(apt =>
-        apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
-      )
-    );
-    
-    // Show confirmation notification
-    setNotification('confirmed');
-    setTimeout(() => {
+  const handleConfirm = async (appointmentId) => {
+    try {
+      // Get appointment data
+      const appointment = appointments.find(apt => apt.id === appointmentId);
+      if (!appointment) return;
+
+      // Update in database
+      const response = await fetch(`http://localhost:5000/appointments/${appointmentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'confirmed' })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update appointment');
+      }
+
+      // Create notification for owner
+      const notificationData = {
+        userId: appointment.ownerId,
+        userType: 'owner',
+        type: 'appointment_approved',
+        title: 'Το ραντεβού σας εγκρίθηκε',
+        data: {
+          vetName: `${appointment.vetName || 'Ο κτηνίατρος'}`,
+          appointmentDate: appointment.date,
+          appointmentTime: appointment.time,
+          petName: appointment.petName,
+          appointmentId: appointmentId
+        },
+        date: new Date().toISOString(),
+        read: false,
+        createdAt: new Date().toISOString()
+      };
+
+      await fetch('http://localhost:5000/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(notificationData)
+      }).catch(err => console.error('Error creating notification:', err));
+
+      // Trigger immediate notification badge update
+      window.dispatchEvent(new Event('notificationCreated'));
+
+      // Update local state
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt =>
+          apt.id === appointmentId ? { ...apt, status: 'confirmed' } : apt
+        );
+        
+        // Update selectedAppointment if it's the one being confirmed
+        if (selectedAppointment && selectedAppointment.id === appointmentId) {
+          setSelectedAppointment({ ...selectedAppointment, status: 'confirmed' });
+        }
+        
+        return updated;
+      });
+
+      // Show confirmation notification
+      setNotification('confirmed');
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } catch (error) {
+      console.error('Error confirming appointment:', error);
       setNotification(null);
-    }, 5000); // Hide after 5 seconds
+    }
   };
 
   const handleReject = (appointmentId) => {
@@ -331,23 +355,78 @@ const Appointments = () => {
     setShowRejectModal(true);
   };
 
-  const handleConfirmReject = () => {
-    setAppointments(prevAppointments =>
-      prevAppointments.map(apt =>
-        apt.id === appointmentToReject ? { ...apt, status: 'cancelled' } : apt
-      )
-    );
-    
-    // Show cancellation notification
-    setNotification('cancelled');
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000); // Hide after 5 seconds
+  const handleConfirmReject = async () => {
+    try {
+      // Get appointment data
+      const appointment = appointments.find(apt => apt.id === appointmentToReject);
+      if (!appointment) return;
 
-    // Close modals and reset
-    setShowRejectModal(false);
-    setAppointmentToReject(null);
-    setSelectedAppointment(null); // Also close the detail modal
+      // Update in database
+      const response = await fetch(`http://localhost:5000/appointments/${appointmentToReject}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'cancelled' })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update appointment');
+      }
+
+      // Create notification for owner
+      const notificationData = {
+        userId: appointment.ownerId,
+        userType: 'owner',
+        type: 'appointment_cancelled',
+        title: 'Το ραντεβού σας ακυρώθηκε',
+        data: {
+          vetName: `${appointment.vetName || 'Ο κτηνίατρος'}`,
+          appointmentDate: appointment.date,
+          appointmentTime: appointment.time,
+          petName: appointment.petName,
+          appointmentId: appointmentToReject
+        },
+        date: new Date().toISOString(),
+        read: false,
+        createdAt: new Date().toISOString()
+      };
+
+      await fetch('http://localhost:5000/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(notificationData)
+      }).catch(err => console.error('Error creating notification:', err));
+
+      // Trigger immediate notification badge update
+      window.dispatchEvent(new Event('notificationCreated'));
+
+      // Update local state
+      setAppointments(prevAppointments => {
+        const updated = prevAppointments.map(apt =>
+          apt.id === appointmentToReject ? { ...apt, status: 'cancelled' } : apt
+        );
+        
+        // Update selectedAppointment if it's the one being cancelled
+        if (selectedAppointment && selectedAppointment.id === appointmentToReject) {
+          setSelectedAppointment({ ...selectedAppointment, status: 'cancelled' });
+        }
+        
+        return updated;
+      });
+
+      // Show cancellation notification
+      setNotification('cancelled');
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+
+      // Close modals and reset
+      setShowRejectModal(false);
+      setAppointmentToReject(null);
+      setSelectedAppointment(null);
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      setNotification(null);
+    }
   };
 
   const handleCancelReject = () => {
@@ -361,7 +440,7 @@ const Appointments = () => {
       // Show only the selected date in day view
       return `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
     }
-    
+
     // Show week range in week view
     const weekDays = getWeekDays();
     const firstDay = weekDays[0];
@@ -375,12 +454,32 @@ const Appointments = () => {
   };
 
   const getMonthName = (date) => {
-    const months = ['Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος', 
-                    'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος'];
+    const months = ['Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
+      'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος'];
     return months[date.getMonth()];
   };
 
   const breadcrumbItems = [];
+
+  if (loading) {
+    return (
+      <PageLayout title="Διαχείριση Ραντεβού" breadcrumbs={breadcrumbItems}>
+        <div className="appointments">
+          <p>Φόρτωση ραντεβού...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageLayout title="Διαχείριση Ραντεβού" breadcrumbs={breadcrumbItems}>
+        <div className="appointments">
+          <p>Σφάλμα κατά τη φόρτωση: {error}</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="Διαχείριση Ραντεβού" breadcrumbs={breadcrumbItems}>
@@ -388,7 +487,7 @@ const Appointments = () => {
         {/* Notification Banner */}
         <Notification
           isVisible={notification !== null}
-          message={notification === 'confirmed' 
+          message={notification === 'confirmed'
             ? 'Το ραντεβού επιβεβαιώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
             : 'Το ραντεβού ακυρώθηκε με επιτυχία! Ο ιδιοκτήτης έχει ενημερωθεί.'
           }
@@ -458,10 +557,10 @@ const Appointments = () => {
                   today.setHours(0, 0, 0, 0);
                   const currentDay = new Date(day);
                   currentDay.setHours(0, 0, 0, 0);
-                  
+
                   const isToday = currentDay.getTime() === today.getTime();
                   const isPast = currentDay < today;
-                  
+
                   return (
                     <div key={index} className="appointments__day-column">
                       <div className={`appointments__day-header ${isToday ? 'appointments__day-header--today' : ''} ${isPast ? 'appointments__day-header--past' : ''}`}>
@@ -485,7 +584,7 @@ const Appointments = () => {
                                 <Clock size={12} /> {apt.time}
                               </div>
                               <div className="appointments__card-pet">{apt.petName}</div>
-                              <div className="appointments__card-service">{apt.serviceType}</div>
+                              <div className="appointments__card-service">{SERVICE_LABELS[apt.serviceType] || apt.serviceType}</div>
                               <div className={getStatusClass(apt.status)}>
                                 {getStatusLabel(apt.status)}
                               </div>
@@ -513,7 +612,7 @@ const Appointments = () => {
                     >
                       <div className="appointments__day-card-header">
                         <div className="appointments__day-card-owner">
-                          <h4 className="appointments__day-card-name">{apt.ownerName}</h4>
+                          <h4 className="appointments__day-card-name">{apt.ownerName} {apt.ownerLastName}</h4>
                           <p className="appointments__day-card-phone">Τηλέφωνο: {apt.phone}</p>
                         </div>
                         <div className="appointments__day-card-badge">
@@ -568,7 +667,7 @@ const Appointments = () => {
                           </div>
                           <div className="appointments__day-card-meta-item">
                             <span className="appointments__day-card-meta-label">Υπηρεσία</span>
-                            <span>{apt.serviceType}</span>
+                            <span>{SERVICE_LABELS[apt.serviceType] || apt.serviceType}</span>
                           </div>
                           <div className="appointments__day-card-meta-item">
                             <span className="appointments__day-card-meta-label">Σημειώσεις</span>
@@ -594,36 +693,53 @@ const Appointments = () => {
           <div className="appointments__list-view">
             {/* Filters */}
             <div className="appointments__filters">
-              <button
-                className={`appointments__filter ${filterStatus === 'all' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('all'); setCurrentPage(1); }}
-              >
-                Όλα
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'confirmed' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('confirmed'); setCurrentPage(1); }}
-              >
-                Επιβεβαιωμένα
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'pending' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('pending'); setCurrentPage(1); }}
-              >
-                Εκκρεμή
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'completed' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('completed'); setCurrentPage(1); }}
-              >
-                Ολοκληρωμένα
-              </button>
-              <button
-                className={`appointments__filter ${filterStatus === 'cancelled' ? 'appointments__filter--active' : ''}`}
-                onClick={() => { setFilterStatus('cancelled'); setCurrentPage(1); }}
-              >
-                Ακυρωμένα
-              </button>
+              <div className="appointments__filters-left">
+                <button
+                  className={`appointments__filter ${filterStatus === 'all' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('all'); setCurrentPage(1); }}
+                >
+                  Όλα
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'confirmed' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('confirmed'); setCurrentPage(1); }}
+                >
+                  Επιβεβαιωμένα
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'pending' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('pending'); setCurrentPage(1); }}
+                >
+                  Εκκρεμή
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'completed' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('completed'); setCurrentPage(1); }}
+                >
+                  Ολοκληρωμένα
+                </button>
+                <button
+                  className={`appointments__filter ${filterStatus === 'cancelled' ? 'appointments__filter--active' : ''}`}
+                  onClick={() => { setFilterStatus('cancelled'); setCurrentPage(1); }}
+                >
+                  Ακυρωμένα
+                </button>
+              </div>
+              <div className="appointments__filters-right">
+                <span className="appointments__sort-label">Ταξινόμηση:</span>
+                <div className="appointments__sort-control">
+                  <CustomSelect
+                    name="appointments-sort"
+                    value={sortOrder}
+                    onChange={(value) => { setSortOrder(value); setCurrentPage(1); }}
+                    options={[
+                      { value: 'desc', label: 'Πιο πρόσφατα' },
+                      { value: 'asc', label: 'Παλαιότερα' }
+                    ]}
+                    variant="vet"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Appointment Cards */}
@@ -632,7 +748,7 @@ const Appointments = () => {
                 <div key={apt.id} className="appointments__list-card appointments__list-card--with-actions">
                   <div className="appointments__list-card-header">
                     <div>
-                      <h4 className="appointments__list-pet-name">{apt.ownerName}</h4>
+                      <h4 className="appointments__list-pet-name">{apt.ownerName} {apt.ownerLastName}</h4>
                       <p className="appointments__list-phone">Τηλέφωνο: {apt.phone}</p>
                     </div>
                     <div className="appointments__list-card-actions">
@@ -686,7 +802,7 @@ const Appointments = () => {
                   <div className="appointments__list-card-footer">
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Ημερομηνία:</span>
-                      <span>{apt.date}</span>
+                      <span>{formatDate(apt.date)}</span>
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Ώρα:</span>
@@ -694,7 +810,7 @@ const Appointments = () => {
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Υπηρεσία:</span>
-                      <span>{apt.serviceType}</span>
+                      <span>{SERVICE_LABELS[apt.serviceType] || apt.serviceType}</span>
                     </div>
                     <div className="appointments__list-info">
                       <span className="appointments__list-label">Σημειώσεις:</span>
@@ -735,7 +851,7 @@ const Appointments = () => {
                     <Calendar size={16} color="#101828" />
                     <div>
                       <div>Ημερομηνία</div>
-                      <div>{selectedAppointment.date}</div>
+                      <div>{formatDate(selectedAppointment.date)}</div>
                     </div>
                   </div>
                   <div className="appointments__modal-time">
@@ -753,6 +869,10 @@ const Appointments = () => {
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Όνομα:</span>
                     <span>{selectedAppointment.ownerName}</span>
+                  </div>
+                  <div className="appointments__modal-info">
+                    <span className="appointments__modal-label">Επίθετο:</span>
+                    <span>{selectedAppointment.ownerLastName}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Τηλέφωνο:</span>
@@ -782,7 +902,7 @@ const Appointments = () => {
                   <h4 className="appointments__modal-section-title"><Stethoscope size={16} color="#F9D779" /> Υπηρεσία</h4>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Τύπος:</span>
-                    <span>{selectedAppointment.serviceType}</span>
+                    <span>{SERVICE_LABELS[selectedAppointment.serviceType] || selectedAppointment.serviceType}</span>
                   </div>
                   <div className="appointments__modal-info">
                     <span className="appointments__modal-label">Σημειώσεις:</span>

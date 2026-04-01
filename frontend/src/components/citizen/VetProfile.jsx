@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, MapPin, Phone, IdCard, Briefcase, GraduationCap, X, Hospital } from 'lucide-react';
 import Avatar from '../common/Avatar';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, formatDate, SERVICE_LABELS } from '../../utils/constants';
 import './VetProfile.css';
 
 const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
@@ -32,6 +32,43 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
 
   const displayName = vet.lastName ? `${vet.name} ${vet.lastName}` : vet.name;
 
+  // Calculate average rating from reviews if not provided
+  let averageRating = vet.rating || 0;
+  if (!vet.rating && reviewsList.length > 0) {
+    averageRating = reviewsList.reduce((sum, review) => sum + (Number(review.rating) || 0), 0) / reviewsList.length;
+  }
+
+  // Map database fields to component expectations
+  const vetSpec = vet.specialty || vet.specialization || 'Γενικός Κτηνίατρος';
+  const vetClinicName = vet.clinicName || 'Δεν διατίθεται';
+  const vetClinicAddress = vet.clinicAddress || 'Δεν διατίθεται';
+  const vetClinicCity = vet.clinicCity || '';
+  const vetClinicPostalCode = vet.clinicPostalCode || '';
+  const vetPhone = vet.phone || 'Δεν διατίθεται';
+  const vetEmail = vet.email || 'Δεν διατίθεται';
+  const vetEducation = vet.education || 'Δεν διατίθεται';
+  const vetExperience = vet.experience || 'Δεν διατίθεται';
+  const vetLicenseNumber = vet.licenseNumber || 'Δεν διατίθεται';
+  const vetBiography = vet.biography || 'Κανένα βιογραφικό διαθέσιμο';
+  const vetServices = Array.isArray(vet.services) ? vet.services : [];
+
+  const getServiceName = (service) => {
+    if (!service) return 'Υπηρεσία';
+    return (
+      service.name ||
+      SERVICE_LABELS[service.id] ||
+      SERVICE_LABELS[service.serviceType] ||
+      'Υπηρεσία'
+    );
+  };
+
+  const getServicePrice = (service) => {
+    if (!service || service.price === undefined || service.price === null || service.price === '') {
+      return '-';
+    }
+    return `${service.price}€`;
+  };
+
   return (
     <div className="vet-profile-overlay" onClick={onClose}>
       <div className="vet-profile-modal" onClick={(e) => e.stopPropagation()}>
@@ -47,33 +84,36 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                 src={vet.avatar}
                 name={displayName}
                 size="xl"
+                shape="square"
               />
             </div>
             <div className="profile-identity">
               <h1 className="vet-name">{displayName}</h1>
-              <p className="vet-specialty">{vet.specialty}</p> {/* change to specialties */}
+              <p className="vet-specialty">{vetSpec}</p> {/* change to specialties */}
               <div className="rating-section">
                 <Star className="star-icon" />
                 <span className="rating-text">
-                  {vet.rating ? vet.rating.toFixed(1) : 'N/A'} ({vet.reviewCount || reviewsList.length || 0} αξιολογήσεις)
+                  {averageRating ? averageRating.toFixed(1) : 'N/A'} ({vet.reviewCount || reviewsList.length || 0} αξιολογήσεις)
                 </span>
               </div>
             </div>
-            {isOwner && (
-              <button
-                className="book-appointment-btn"
-                onClick={() => {
+            <button
+              className="book-appointment-btn"
+              onClick={() => {
+                if (isOwner) {
                   onClose();
                   if (onBook) {
                     onBook(vet);
                   } else {
                     navigate(ROUTES.owner.appointments, { state: { vet } });
                   }
-                }}
-              >
-                Κλείστε Ραντεβού
-              </button>
-            )}
+                } else {
+                  navigate(ROUTES.login, { state: { from: window.location.pathname } });
+                }
+              }}
+            >
+              Κλείστε Ραντεβού
+            </button>
           </div>
         </div>
 
@@ -87,7 +127,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <Hospital className="detail-icon" size={20} />
                   <h3>Όνομα Κλινικής/Ιατρείου</h3>
                 </div>
-                <p className="detail-content">{vet.clinicName}</p>
+                <p className="detail-content">{vetClinicName}</p>
               </div>
 
               <div className="detail-item">
@@ -95,9 +135,9 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <MapPin className="detail-icon" size={20} />
                   <h3>Διεύθυνση Ιατρείου</h3>
                 </div>
-                <p className="detail-content">{vet.clinicAddress}</p>
-                <p className="detail-content">{vet.clinicCity}</p>
-                <p className="detail-content">{vet.clinicPostalCode}</p>
+                <p className="detail-content">{vetClinicAddress}</p>
+                {vetClinicCity && <p className="detail-content">{vetClinicCity}</p>}
+                {vetClinicPostalCode && <p className="detail-content">{vetClinicPostalCode}</p>}
               </div>
 
               <div className="detail-item">
@@ -105,8 +145,8 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <Phone className="detail-icon" size={20} />
                   <h3>Στοιχεία Επικοινωνίας</h3>
                 </div>
-                <p className="detail-content">{vet.phone}</p>
-                <p className="detail-content">{vet.email}</p>
+                <p className="detail-content">{vetPhone}</p>
+                <p className="detail-content">{vetEmail}</p>
               </div>
 
               <div className="detail-item">
@@ -114,7 +154,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <GraduationCap className="detail-icon" size={20} />
                   <h3>Εκπαίδευση</h3>
                 </div>
-                <p className="detail-content">{vet.education || 'Δεν διατίθεται'}</p>
+                <p className="detail-content">{vetEducation}</p>
               </div>
 
               <div className="detail-item">
@@ -122,7 +162,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <Briefcase className="detail-icon" size={20} />
                   <h3>Έτη Εμπειρίας</h3>
                 </div>
-                <p className="detail-content">{vet.experience || 'Δεν διατίθεται'}</p>
+                <p className="detail-content">{vetExperience}</p>
               </div>
 
               <div className="detail-item">
@@ -130,7 +170,7 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                   <IdCard className="detail-icon" size={30} />
                   <h3>Αριθμός Άδειας Άσκησης Επαγγέλματος</h3>
                 </div>
-                <p className="detail-content">{vet.licenseNumber}</p>
+                <p className="detail-content">{vetLicenseNumber}</p>
               </div>
 
             </div>
@@ -139,7 +179,23 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
           {/* Biography Section */}
           <div className="biography-section">
             <h2 className="section-title">Βιογραφικό</h2>
-            <p className="biography-content">{vet.biography}</p>
+            <p className="biography-content">{vetBiography}</p>
+          </div>
+
+          <div className="biography-section">
+            <h2 className="section-title">Τιμοκατάλογος υπηρεσιών</h2>
+            {vetServices.length > 0 ? (
+              <div className="service-list">
+                {vetServices.map((service, index) => (
+                  <div key={service.id || `${service.name}-${index}`} className="service-row">
+                    <span className="service-name">{getServiceName(service)}</span>
+                    <span className="service-price">{getServicePrice(service)}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="biography-content">Δεν υπάρχει διαθέσιμος τιμοκατάλογος υπηρεσιών.</p>
+            )}
           </div>
 
           {/* Reviews Section */}
@@ -152,7 +208,14 @@ const VetProfileModal = ({ vet, isOpen, onClose, onBook }) => {
                     <div className="review-stars">
                       {renderStars(review.rating || 0)}
                     </div>
-                    <span className="review-author">{review.author}</span>
+                    <div className="review-meta">
+                      <span className="review-author">{review.ownerName || review.author || 'Anonymous'}</span>
+                      {review.reviewedAt && (
+                        <span className="review-date">
+                          {formatDate(review.reviewedAt)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="review-comment">{review.comment}</p>
                 </div>

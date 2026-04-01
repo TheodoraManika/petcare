@@ -83,18 +83,23 @@
 
 .found-actions-container {
   display: flex;
+  flex-direction: row;
+  /* Force row */
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   background-color: #ffffff;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
   border-radius: 16px;
-  padding: 18px;
+  padding: 24px;
+  /* Consistent padding */
 }
 
 .found-actions-text {
   display: flex;
   flex-direction: column;
+  text-align: left;
+  /* Force left alignment */
 }
 
 .found-actions-buttons {
@@ -108,6 +113,8 @@
   justify-content: center;
   padding: 0 22px;
   height: 48px;
+  width: fit-content;
+  /* Ensure it doesn't stretch */
   min-width: 180px;
   border-radius: 10px;
   font-weight: 700;
@@ -323,6 +330,10 @@
   transition: all 0.2s ease;
 }
 
+.filter-input:hover {
+  border-color: #23CED9;
+}
+
 .filter-input:focus {
   outline: none;
   border-color: #23CED9;
@@ -404,6 +415,13 @@
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.pet-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .pet-card-image.clickable {
@@ -595,6 +613,13 @@
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.modal-pet-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .modal-pet-identity {
@@ -854,7 +879,7 @@
   align-items: center;
   gap: 10px;
   padding: 14px 28px;
-  background: linear-gradient(135deg, #23CED9 0%, #1BA5B8 100%);
+  background: #23CED9;
   color: #000000;
   font-size: 16px;
   font-weight: 600;

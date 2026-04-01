@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, FileText, AlertCircle, Search } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
@@ -18,19 +18,18 @@ import './Operation.css';
 
 const Operation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [notification, setNotification] = useState(null);
   const [foundPetDetails, setFoundPetDetails] = useState(null);
   const [formData, setFormData] = useState({
-    petSearch: '',
+    petSearch: location.state?.microchip || '',
     operationType: '',
     operationDate: '',
     description: ''
   });
-
-
 
   const handleSearchComplete = (result) => {
     const { found, pet, microchip } = result;
@@ -39,7 +38,7 @@ const Operation = () => {
       // Pet found - prefill with data
       setFormData(prev => ({
         ...prev,
-        petSearch: pet.microchip,
+        petSearch: pet.microchipId,
       }));
       setFoundPetDetails(pet);
     } else {
@@ -48,8 +47,7 @@ const Operation = () => {
         ...prev,
         petSearch: microchip
       }));
-      setFoundPetDetails({ microchip });
-      setFoundPetDetails({ microchip });
+      setFoundPetDetails({ microchipId: microchip });
       // Removed error handling
     }
   };
@@ -128,10 +126,74 @@ const Operation = () => {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current user (vet) from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // First, find the pet by microchip
+      const petsResponse = await fetch('http://localhost:5000/pets');
+      if (!petsResponse.ok) {
+        throw new Error('Failed to fetch pets');
+      }
+      const pets = await petsResponse.json();
+      const pet = pets.find(p => p.microchipId === formData.petSearch);
+
+      if (!pet) {
+        setNotification({
+          type: 'error',
+          title: 'Κατοικίδιο Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε κατοικίδιο με microchip ${formData.petSearch}.`
+        });
+        setShowConfirmModal(false);
+        return;
+      }
+
+      // Prepare medical operation data
+      const operationData = {
+        petId: pet.id,
+        vetId: currentUser.id,
+        type: formData.operationType,
+        date: formData.operationDate,
+        description: formData.description,
+        createdAt: new Date().toLocaleDateString('el-GR')
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/medicalProcedures', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(operationData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Medical operation recorded successfully');
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+
+    } catch (error) {
+      console.error('Error recording medical operation:', error);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα Καταγραφής',
+        message: 'Δεν ήταν δυνατή η καταγραφή της ιατρικής πράξης. Παρακαλώ προσπαθήστε ξανά.'
+      });
+      setShowConfirmModal(false);
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -141,25 +203,20 @@ const Operation = () => {
   // Check if form is valid (all required fields filled and microchip is 15 digits)
   const isFormValid = () => {
     return (
-      formData.petSearch.trim() !== '' &&
+      formData.petSearch &&
+      formData.petSearch.toString().trim() !== '' &&
       formData.petSearch.length === 15 &&
-      formData.operationType.trim() !== '' &&
-      formData.operationDate.trim() !== ''
+      formData.operationType &&
+      formData.operationType.toString().trim() !== '' &&
+      formData.operationDate &&
+      formData.operationDate.toString().trim() !== ''
     );
   };
 
   // Helper function to get label for operation type
   const getOperationTypeLabel = (value) => {
-    const options = {
-      'vaccination': 'Εμβολιασμός',
-      'checkup': 'Γενική Εξέταση',
-      'surgery': 'Χειρουργείο',
-      'treatment': 'Θεραπεία',
-      'dental': 'Οδοντιατρική',
-      'emergency': 'Επείγον Περιστατικό',
-      'other': 'Άλλο'
-    };
-    return options[value] || value;
+    // Since we now store Greek labels directly, just return the value
+    return value || '';
   };
 
   // Prepare fields for confirmation modal
@@ -214,6 +271,7 @@ const Operation = () => {
                 <MicrochipSearch
                   onSearchComplete={handleSearchComplete}
                   variant="vet"
+                  initialValue={location.state?.microchip || ''}
                 />
               </>
             )}
@@ -227,13 +285,14 @@ const Operation = () => {
                 value={formData.operationType}
                 onChange={(value) => handleSelectChange('operationType', value)}
                 options={[
-                  { value: 'vaccination', label: 'Εμβολιασμός' },
-                  { value: 'checkup', label: 'Γενική Εξέταση' },
-                  { value: 'surgery', label: 'Χειρουργείο' },
-                  { value: 'treatment', label: 'Θεραπεία' },
-                  { value: 'dental', label: 'Οδοντιατρική' },
-                  { value: 'emergency', label: 'Επείγον Περιστατικό' },
-                  { value: 'other', label: 'Άλλο' }
+                  { value: 'Εμβολιασμός', label: 'Εμβολιασμός' },
+                  { value: 'Γενική Εξέταση', label: 'Γενική Εξέταση' },
+                  { value: 'Τοποθέτηση microchip', label: 'Τοποθέτηση microchip' },
+                  { value: 'Χειρουργείο', label: 'Χειρουργείο' },
+                  { value: 'Θεραπεία', label: 'Θεραπεία' },
+                  { value: 'Οδοντιατρική', label: 'Οδοντιατρική' },
+                  { value: 'Επείγον Περιστατικό', label: 'Επείγον Περιστατικό' },
+                  { value: 'Άλλο', label: 'Άλλο' }
                 ]}
                 placeholder="Επιλέξτε τύπο πράξης"
                 required

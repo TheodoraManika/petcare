@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Send } from 'lucide-react';
+import { AlertCircle, Send, Camera, X } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import DatePicker from '../../components/common/forms/DatePicker';
 import CustomSelect from '../../components/common/forms/CustomSelect';
@@ -37,6 +37,7 @@ const Register = () => {
     ownerAddressLat: '',
     ownerAddressLon: '',
     afm: '',
+    petImage: null,
   });
 
   // Helper function to filter only Greek and English letters and spaces
@@ -151,6 +152,36 @@ const Register = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα Αρχείου',
+          message: 'Η εικόνα πρέπει να είναι μικρότερη από 5MB.'
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          petImage: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      petImage: null
+    }));
+  };
+
   const handleSelectChange = (name, value) => {
     setFormData(prev => ({
       ...prev,
@@ -180,6 +211,7 @@ const Register = () => {
       ownerAddressLat: '',
       ownerAddressLon: '',
       afm: '',
+      petImage: null,
     });
     setMicrochipError('');
     setAfmError('');
@@ -217,11 +249,102 @@ const Register = () => {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmSubmit = () => {
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    setShowConfirmModal(false);
-    setShowSuccess(true);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Get current user (vet) from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      if (!currentUser || currentUser.id === undefined) {
+        setNotification({
+          type: 'error',
+          title: 'Σφάλμα',
+          message: 'Δεν ήταν δυνατή η αναγνώριση του κτηνιάτρου. Παρακαλώ συνδεθείτε ξανά.'
+        });
+        return;
+      }
+
+      // First, find the owner by ΑΦΜ
+      const usersResponse = await fetch('http://localhost:5000/users');
+      if (!usersResponse.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const users = await usersResponse.json();
+      const owner = users.find(user => user.afm === formData.afm);
+
+      if (!owner) {
+        setNotification({
+          type: 'error',
+          title: 'Ιδιοκτήτης Δεν Βρέθηκε',
+          message: `Δεν βρέθηκε ιδιοκτήτης με ΑΦΜ ${formData.afm}. Παρακαλώ ελέγξτε το ΑΦΜ.`
+        });
+        setShowConfirmModal(false);
+        return;
+      }
+
+      // Prepare pet data for submission with unified schema (only required fields)
+      const petData = {
+        // Basic pet info
+        name: formData.ownerName,
+        type: getSpeciesLabel(formData.species),
+        breed: formData.breed,
+        gender: formData.gender,
+        birthDate: formData.birthDate,
+        color: formData.color,
+        weight: formData.weight || null,
+        
+        // Microchip info
+        microchipId: formData.microchipNumber,
+        
+        // Owner info
+        ownerId: owner.id,
+        
+        // Vet info
+        registeredByVetId: currentUser.id,
+        reportedByVetId: null,
+        
+        // Lost pet fields (empty for regular registration)
+        lostDate: null,
+        lostLocation: null,
+        area: null,
+        locationLat: null,
+        locationLon: null,
+        
+        // Status fields
+        petStatus: 0,
+        status: 'active',
+        image: formData.petImage || null,
+        imageUrl: null,
+        createdAt: new Date().toISOString()
+      };
+
+      // Submit to backend
+      const response = await fetch('http://localhost:5000/pets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(petData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Pet registered successfully:', result);
+      
+      setShowConfirmModal(false);
+      setShowSuccess(true);
+      
+    } catch (error) {
+      console.error('Error registering pet:', error);
+      setNotification({
+        type: 'error',
+        title: 'Σφάλμα Εγγραφής',
+        message: 'Δεν ήταν δυνατή η εγγραφή του κατοικιδίου. Παρακαλώ προσπαθήστε ξανά.'
+      });
+      setShowConfirmModal(false);
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -283,6 +406,7 @@ const Register = () => {
     { label: 'Email', value: formData.ownerEmail },
     { label: 'Διεύθυνση', value: formData.ownerAddress },
     { label: 'ΑΦΜ', value: formData.afm },
+    { label: 'Φωτογραφία', value: formData.petImage ? 'Έχει επιλεγεί' : 'Δεν έχει επιλεγεί' },
   ];
 
   const breadcrumbItems = [];
@@ -454,6 +578,40 @@ const Register = () => {
                 </div>
               </div>
 
+              {/* Pet Photo Section */}
+              <div className="register__field">
+                <label className="register__label">Φωτογραφία Κατοικιδίου</label>
+                <div className="register__photo-upload">
+                  {formData.petImage ? (
+                    <div className="register__photo-preview">
+                      <img src={formData.petImage} alt="Preview" className="register__preview-image" />
+                      <button 
+                        type="button" 
+                        className="register__remove-photo"
+                        onClick={handleRemoveImage}
+                        aria-label="Αφαίρεση φωτογραφίας"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="register__upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="register__file-input"
+                      />
+                      <div className="register__upload-placeholder">
+                        <Camera size={32} />
+                        <span>Προσθήκη Φωτογραφίας</span>
+                        <span className="register__upload-note">Μέγιστο μέγεθος 5MB</span>
+                      </div>
+                    </label>
+                  )}
+                </div>
+              </div>
+
               <div className="register__field register__field--small">
                 <label className="register__label">
                   Βάρος (kg) <span className="register__required">*</span>
@@ -612,11 +770,20 @@ const Register = () => {
         />
 
         {/* Notification */}
-        <Notification
-          isVisible={notification !== null}
-          message="Η καταγραφή του κατοικιδίου ακυρώθηκε με επιτυχία!"
-          type="error"
-        />
+        {notification && typeof notification === 'object' ? (
+          <Notification
+            isVisible={true}
+            message={notification.message}
+            title={notification.title}
+            type={notification.type}
+          />
+        ) : (
+          <Notification
+            isVisible={notification !== null}
+            message={notification === 'cancelled' ? 'Η καταγραφή του κατοικιδίου ακυρώθηκε με επιτυχία!' : 'Σφάλμα'}
+            type={notification === 'cancelled' ? 'info' : 'error'}
+          />
+        )}
       </div>
     </PageLayout>
   );

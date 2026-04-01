@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, CircleAlert } from 'lucide-react';
+import { Search, MapPin, CircleAlert, List } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
 import Pagination from '../../components/common/layout/Pagination';
 import CustomSelect from '../../components/common/forms/CustomSelect';
@@ -10,6 +10,7 @@ import SearchSidebar from '../../components/citizen/SearchSidebar';
 import SearchResultsList from '../../components/citizen/SearchResultsList';
 import BookingForm from '../../components/owner/BookingForm';
 import VetProfileModal from '../../components/citizen/VetProfile';
+import Notification from '../../components/common/modals/Notification';
 import { ROUTES } from '../../utils/constants';
 import './VetSearchMap.css';
 
@@ -51,10 +52,12 @@ const VetSearchMap = () => {
     availability: '',
     time: '',
     rating: '',
+    service: '',
+    maxPrice: '',
   });
 
   const [locationData, setLocationData] = useState(null);
-  const [showMap, setShowMap] = useState(true);
+  const [showMap, setShowMap] = useState(() => location.state?.view !== 'list');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedVet, setSelectedVet] = useState(null);
   const [allVets, setAllVets] = useState([]);
@@ -65,7 +68,7 @@ const VetSearchMap = () => {
   // Booking form state
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingVet, setBookingVet] = useState(null);
-  const [bookingSuccess, setBookingSuccess] = useState('');
+  const [notification, setNotification] = useState(null);
 
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -75,7 +78,7 @@ const VetSearchMap = () => {
   useEffect(() => {
     if (location.state?.filters) {
       const { searchName, selectedArea, locationData: locData, selectedAvailability, selectedSpecialty } = location.state.filters;
-      
+
       setFilters(prev => ({
         ...prev,
         searchName: searchName || '',
@@ -83,15 +86,24 @@ const VetSearchMap = () => {
         specialty: selectedSpecialty || '',
         availability: selectedAvailability || '',
       }));
-      
+
       if (locData) {
         setLocationData(locData);
       }
-      
+
       // Clear the navigation state after loading
       window.history.replaceState({}, document.title);
     }
   }, [location]);
+
+  useEffect(() => {
+    if (location.state?.view === 'list') {
+      setShowMap(false);
+    }
+    if (location.state?.view === 'map') {
+      setShowMap(true);
+    }
+  }, [location.state?.view]);
 
   // Fetch vets from backend
   useEffect(() => {
@@ -115,6 +127,32 @@ const VetSearchMap = () => {
         const availabilityRecords = await availabilityResponse.json();
         console.log('Fetched availability records:', availabilityRecords);
 
+        // Fetch reviews data
+        const reviewsResponse = await fetch('http://localhost:5000/reviews');
+        const allReviews = await reviewsResponse.json();
+        console.log('Fetched reviews:', allReviews);
+
+        // Fetch owner details for all reviews
+        const reviewsWithOwners = await Promise.all(allReviews.map(async (review) => {
+          try {
+            const ownerResponse = await fetch(`http://localhost:5000/users/${review.ownerId}`);
+            const owner = await ownerResponse.json();
+            return {
+              ...review,
+              ownerName: `${owner.name || ''} ${owner.lastName || ''}`.trim() || 'Anonymous'
+            };
+          } catch (err) {
+            console.error(`Error fetching owner ${review.ownerId}:`, err);
+            return {
+              ...review,
+              ownerName: 'Anonymous'
+            };
+          }
+        }));
+
+        // Sort reviews by date (newest first)
+        reviewsWithOwners.sort((a, b) => new Date(b.reviewedAt) - new Date(a.reviewedAt));
+
         // Filter only vet users and add default coordinates and availability
         const vetUsers = users
           .filter(user => user.userType === 'vet')
@@ -123,16 +161,45 @@ const VetSearchMap = () => {
             const vetAvailability = availabilityRecords.filter(a => Number(a.vetId) === Number(vet.id));
             const availableDays = [...new Set(vetAvailability.map(a => a.day))];
 
-            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays);
+            // Get reviews for this vet
+            const vetReviews = reviewsWithOwners.filter(review => Number(review.vetId) === Number(vet.id));
+
+            // Calculate average rating from reviews
+            let rating = 0;
+            if (vetReviews.length > 0) {
+              const totalRating = vetReviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0);
+              rating = totalRating / vetReviews.length;
+            } else {
+              rating = 4.5 + (Math.random() * 0.4); // Random rating between 4.5-4.9 as fallback
+            }
+
+            console.log(`Vet ${vet.name} (ID: ${vet.id}): availableDays = `, availableDays, 'reviews:', vetReviews.length, 'rating:', rating);
+
+            // Deterministic coordinates if not in DB
+            const getDeterministicCoords = (id, baseLat = 37.9838, baseLon = 23.7275) => {
+              let hash = 0;
+              const strId = String(id);
+              for (let i = 0; i < strId.length; i++) {
+                hash = ((hash << 5) - hash) + strId.charCodeAt(i);
+                hash |= 0;
+              }
+              const latOffset = ((Math.abs(hash) % 1000) / 1000 * 0.3) - 0.15;
+              const lonOffset = ((Math.abs(hash * 13) % 1000) / 1000 * 0.3) - 0.15;
+              return { lat: baseLat + latOffset, lon: baseLon + lonOffset };
+            };
+
+            const fallbackCoords = getDeterministicCoords(vet.id);
 
             return {
               ...vet,
               name: vet.name || 'Άγνωστος',
               specialty: vet.specialization || 'Γενικός Κτηνίατρος',
               area: `${vet.clinicCity || 'Αθήνα'}, ${vet.clinicAddress || 'Άγνωστη διεύθυνση'}`,
-              rating: 4.5 + (Math.random() * 0.4), // Random rating between 4.5-4.9
-              lat: 37.9838 + (Math.random() * 0.3 - 0.15), // Random latitude around Athens
-              lon: 23.7275 + (Math.random() * 0.3 - 0.15), // Random longitude around Athens
+              rating: rating,
+              reviewCount: vetReviews.length,
+              reviews: vetReviews,
+              lat: vet.locationLat ? parseFloat(vet.locationLat) : fallbackCoords.lat,
+              lon: vet.locationLon ? parseFloat(vet.locationLon) : fallbackCoords.lon,
               position: { top: `${30 + (index * 10)}%`, left: `${40 + (index * 8)}%` },
               availableDays: availableDays,
               availabilitySlots: vetAvailability
@@ -163,6 +230,71 @@ const VetSearchMap = () => {
     }
   }, [location]);
 
+  // Handle redirect from login (auto-open booking form)
+  useEffect(() => {
+    if (location.state?.bookingVetId && allVets.length > 0) {
+      const vetToBook = allVets.find(v => String(v.id) === String(location.state.bookingVetId));
+      if (vetToBook && currentUser?.userType === 'owner') {
+        setBookingVet(vetToBook);
+        setShowBookingForm(true);
+        
+        // Clear navigation state to avoid re-opening on manual refresh
+        window.history.replaceState({}, document.title);
+      }
+    }
+  }, [location, allVets, currentUser]);
+
+  // Helper function to normalize text for fuzzy matching (remove accents, normalize spacing)
+  const normalizeText = (text) => {
+    if (!text) return '';
+    try {
+      const str = String(text);
+      const normalized = str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+        .toLowerCase()
+        .trim();
+      return normalized;
+    } catch (e) {
+      console.error('Error normalizing text:', e, 'text:', text);
+      return String(text).toLowerCase().trim();
+    }
+  };
+
+  // Smart matching function for vet names
+  const nameMatch = (vetName, filterValue) => {
+    if (!filterValue || !vetName) return false;
+
+    const vetNorm = normalizeText(String(vetName || ''));
+    const filterNorm = normalizeText(String(filterValue || ''));
+
+    // Exact match after normalization
+    if (vetNorm === filterNorm) return true;
+
+    // Partial match (one contains the other)
+    if (vetNorm.includes(filterNorm) || filterNorm.includes(vetNorm)) return true;
+
+    return false;
+  };
+
+  // Smart matching for area filter
+  const areaMatch = (vetArea, filterArea) => {
+    if (!filterArea || !vetArea) return false;
+
+    const vetNorm = normalizeText(String(vetArea || ''));
+    const filterNorm = normalizeText(String(filterArea || ''));
+
+    // Check if vet area contains any part of the filter area
+    const filterParts = filterNorm.split(',').map(p => p.trim());
+    const vetParts = vetNorm.split(',').map(p => p.trim());
+
+    const hasMatch = filterParts.some(filterPart =>
+      vetParts.some(vetPart => vetPart.includes(filterPart) || filterPart.includes(vetPart))
+    );
+
+    return hasMatch;
+  };
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({
@@ -190,6 +322,8 @@ const VetSearchMap = () => {
       availability: '',
       time: '',
       rating: '',
+      service: '',
+      maxPrice: '',
     });
     setLocationData(null);
     setCurrentPage(1);
@@ -198,11 +332,15 @@ const VetSearchMap = () => {
   // Filter vets based on selected filters
   const filteredVets = useMemo(() => {
     return allVets.filter(vet => {
-      // Filter by name (search in both name and lastName)
+      // Filter by name (search in both name and lastName) - using smart matching
       if (filters.searchName) {
-        const searchTerm = filters.searchName.toLowerCase();
-        const fullName = `${vet.name || ''} ${vet.lastName || ''}`.toLowerCase();
-        if (!fullName.includes(searchTerm)) {
+        try {
+          const fullName = `${vet.name || ''} ${vet.lastName || ''}`;
+          if (!nameMatch(fullName, filters.searchName)) {
+            return false;
+          }
+        } catch (e) {
+          console.error('Error in name filter:', e);
           return false;
         }
       }
@@ -212,18 +350,22 @@ const VetSearchMap = () => {
         const specialtyMap = {
           'general': 'Γενική Κτηνιατρική',
           'surgery': 'Χειρουργική',
+          'dermatology': 'Δερματολογία',
+          'cardiology': 'Καρδιολογία',
           'dentistry': 'Οδοντιατρική',
-          'orthopedics': 'Ορθοπεδική'
+          'ophthalmology': 'Οφθαλμολογία'
         };
         const targetSpecialty = specialtyMap[filters.specialty];
-        if (targetSpecialty && vet.specialty !== targetSpecialty) {
+        if (targetSpecialty && (!vet.specialty || !vet.specialty.includes(targetSpecialty))) {
           return false;
         }
       }
 
-      // Filter by area/location
-      if (filters.area && !vet.area.toLowerCase().includes(filters.area.toLowerCase())) {
-        return false;
+      // Filter by area/location - using smart matching
+      if (filters.area) {
+        if (!areaMatch(vet.area, filters.area)) {
+          return false;
+        }
       }
 
       // Filter by rating
@@ -236,32 +378,36 @@ const VetSearchMap = () => {
 
       // Filter by availability (day) - only if explicitly selected
       if (filters.availability) {
-        const availabilityMap = {
-          'today': getTodayDay(),
-          'tomorrow': getTomorrowDay(),
-          'week': null // null means show all with any availability this week
-        };
-
-        const targetDay = availabilityMap[filters.availability];
-
         // Skip filter if no availableDays data exists
-        if (!vet.availableDays) {
+        if (!vet.availableDays || vet.availableDays.length === 0) {
           return false;
         }
 
+        // Handle 'all' option - show vets with any availability
+        if (filters.availability === 'all') {
+          return true;
+        }
+
+        // Handle 'week' option - show vets with any availability
         if (filters.availability === 'week') {
-          // Check if vet has any availability this week
-          if (vet.availableDays.length === 0) {
-            return false;
-          }
-        } else if (targetDay) {
-          // Check if vet has availability on specific day - case insensitive comparison
-          const hasDay = vet.availableDays.some(day =>
-            day.toLowerCase() === targetDay.toLowerCase()
-          );
-          if (!hasDay) {
-            return false;
-          }
+          return true;
+        }
+
+        // Handle 'today' and 'tomorrow' options
+        const availabilityMap = {
+          'today': getTodayDay(),
+          'tomorrow': getTomorrowDay()
+        };
+
+        const targetDay = availabilityMap[filters.availability] || filters.availability;
+
+        // Check if vet has availability on specific day - case insensitive comparison
+        const hasDay = vet.availableDays.some(day =>
+          day.toLowerCase() === targetDay.toLowerCase()
+        );
+
+        if (!hasDay) {
+          return false;
         }
       }
 
@@ -275,19 +421,26 @@ const VetSearchMap = () => {
 
         const targetRange = timeRanges[filters.time];
         if (targetRange) {
-          // If a specific day is selected, only check slots for that day
+          // Determine which slots to check based on day filter
           let slotsToCheck = vet.availabilitySlots;
 
-          if (filters.availability && filters.availability !== 'week') {
+          if (filters.availability && filters.availability !== 'week' && filters.availability !== 'all') {
+            // Map special day values to actual day names
             const availabilityMap = {
               'today': getTodayDay(),
               'tomorrow': getTomorrowDay()
             };
-            const targetDay = availabilityMap[filters.availability];
-            slotsToCheck = vet.availabilitySlots.filter(slot => slot.day === targetDay);
-          } else if (filters.availability === 'week') {
-            // For week filter, include all slots (which should already be limited to this week in backend)
-            slotsToCheck = vet.availabilitySlots;
+            const targetDay = availabilityMap[filters.availability] || filters.availability;
+
+            // Filter slots by the selected day (case insensitive)
+            slotsToCheck = vet.availabilitySlots.filter(slot =>
+              slot.day.toLowerCase() === targetDay.toLowerCase()
+            );
+          }
+
+          // If no slots match the day filter, vet doesn't match
+          if (slotsToCheck.length === 0) {
+            return false;
           }
 
           // Check if vet has any slots that overlap with the requested time range
@@ -309,9 +462,55 @@ const VetSearchMap = () => {
         }
       }
 
+      // Filter by service
+      if (filters.service) {
+        const hasService = vet.services?.some(s => s.id === filters.service);
+        if (!hasService) return false;
+      }
+
+      // Filter by max price
+      if (filters.maxPrice) {
+        const maxPrice = parseFloat(filters.maxPrice);
+        if (filters.service) {
+          // If a specific service is selected, check its price
+          const service = vet.services?.find(s => s.id === filters.service);
+          if (!service || service.price > maxPrice) return false;
+        } else {
+          // If no service selected, check if any service is below maxPrice
+          const hasAffordableService = vet.services?.some(s => s.price <= maxPrice);
+          if (!hasAffordableService) return false;
+        }
+      }
+
       return true;
     });
   }, [allVets, filters]);
+
+  // Augment vets with display info (price, etc.) based on filters
+  const augmentedVets = useMemo(() => {
+    return filteredVets.map(vet => {
+      let displayPrice = null;
+      let displayService = null;
+
+      if (filters.service) {
+        const service = vet.services?.find(s => s.id === filters.service);
+        if (service) {
+          displayPrice = service.price;
+          displayService = service.name;
+        }
+      } else if (vet.services && vet.services.length > 0) {
+        // If no service selected, show starting price
+        displayPrice = Math.min(...vet.services.map(s => s.price));
+        displayService = 'από';
+      }
+
+      return {
+        ...vet,
+        displayPrice,
+        displayService
+      };
+    });
+  }, [filteredVets, filters.service]);
 
   const handleMarkerClick = (vet) => {
     setSelectedVet(selectedVet?.id === vet.id ? null : vet);
@@ -323,9 +522,18 @@ const VetSearchMap = () => {
   };
 
   const handleCloseAppointment = (vet) => {
-    // Show booking form inline instead of navigating away
-    setBookingVet(vet);
-    setShowBookingForm(true);
+    if (currentUser?.userType === 'owner') {
+      // Show booking form inline instead of navigating away
+      setBookingVet(vet);
+      setShowBookingForm(true);
+    } else {
+      navigate(ROUTES.login, { 
+        state: { 
+          from: location.pathname,
+          bookingVetId: vet.id 
+        } 
+      });
+    }
   };
 
   const handleBookingClose = () => {
@@ -336,9 +544,15 @@ const VetSearchMap = () => {
   const handleBookingSuccess = (message) => {
     setShowBookingForm(false);
     setBookingVet(null);
-    setBookingSuccess(message);
-    // Clear success message after 5 seconds
-    setTimeout(() => setBookingSuccess(''), 5000);
+    setNotification({ type: 'success', message: message || 'Τα ραντεβού σας καταχωρήθηκαν με επιτυχία!' });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
+  const handleBookingCancel = () => {
+    setShowBookingForm(false);
+    setBookingVet(null);
+    setNotification({ type: 'error', message: 'Η διαδικασία ακυρώθηκε.' });
+    setTimeout(() => setNotification(null), 5000);
   };
 
   // Calculate map center
@@ -399,11 +613,34 @@ const VetSearchMap = () => {
     { value: '5', label: '5 ⭐' }
   ];
 
+  const serviceOptions = [
+    { value: '', label: 'Επιλέξτε υπηρεσία...' },
+    { value: 'vaccination', label: 'Εμβολιασμός' },
+    { value: 'checkup', label: 'Γενική Εξέταση' },
+    { value: 'microchip', label: 'Τοποθέτηση microchip' },
+    { value: 'surgery', label: 'Χειρουργείο' },
+    { value: 'treatment', label: 'Θεραπεία' },
+    { value: 'dental', label: 'Οδοντιατρική' },
+    { value: 'ophthalmology', label: 'Οφθαλμολογική' },
+    { value: 'cardiology', label: 'Καρδιολογική' },
+    { value: 'dermatology', label: 'Δερματολογική' },
+    { value: 'other', label: 'Όλες οι υπηρεσίες' }
+  ];
+
+  const priceOptions = [
+    { value: '', label: 'Οποιαδήποτε τιμή' },
+    { value: '30', label: 'Έως 30€' },
+    { value: '50', label: 'Έως 50€' },
+    { value: '80', label: 'Έως 80€' },
+    { value: '100', label: 'Έως 100€' },
+    { value: '150', label: 'Έως 150€' }
+  ];
+
   return (
     <PageLayout title="Αναζήτηση Κτηνιάτρων">
       {(!currentUser || currentUser.userType !== 'owner') && (
         <div className="appointment-alert">
-          Για να κλείσετε ραντεβού, μπορείτε να κάνετε <Link to={ROUTES.login}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
+          Για να κλείσετε ραντεβού, πρέπει να κάνετε <Link to={ROUTES.login} state={{ from: location.pathname }}>Σύνδεση</Link> ή <Link to={ROUTES.owner.register}>Εγγραφή</Link> ως ιδιοκτήτης.
         </div>
       )}
       <div className="vet-search-map-page">
@@ -411,7 +648,7 @@ const VetSearchMap = () => {
         <SearchSidebar
           title="Φίλτρα Αναζήτησης"
           filters={filters}
-          onSearch={() => { }}
+          onSearch={() => setCurrentPage(1)}
           onClear={handleClear}
           resultsCount={filteredVets.length}
         >
@@ -487,21 +724,41 @@ const VetSearchMap = () => {
               variant="citizen"
             />
           </div>
+
+          {/* Service Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Υπηρεσία</label>
+            <CustomSelect
+              name="service"
+              value={filters.service}
+              onChange={(val) => handleSelectChange('service', val)}
+              options={serviceOptions}
+              variant="citizen"
+            />
+          </div>
+
+          {/* Price Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Μέγιστη Τιμή</label>
+            <CustomSelect
+              name="maxPrice"
+              value={filters.maxPrice}
+              onChange={(val) => handleSelectChange('maxPrice', val)}
+              options={priceOptions}
+              variant="citizen"
+            />
+          </div>
         </SearchSidebar>
 
         {/* Main Map Area */}
         <main className={`map-container ${showBookingForm ? 'has-booking-form' : ''}`}>
           {showBookingForm ? (
             <>
-              {bookingSuccess && (
-                <div className="booking-success-message">
-                  {bookingSuccess}
-                </div>
-              )}
               <BookingForm
                 vet={bookingVet}
                 onClose={handleBookingClose}
                 onSuccess={handleBookingSuccess}
+                onCancel={handleBookingCancel}
                 inline={true}
                 showVetSearch={false}
               />
@@ -512,26 +769,21 @@ const VetSearchMap = () => {
                 <h2 className="map-title">Αποτελέσματα ({filteredVets.length})</h2>
                 <div className="view-toggles">
                   <button
+                    className={`toggle-btn ${!showMap ? 'active' : ''}`}
+                    onClick={() => setShowMap(false)}
+                  >
+                    <List size={18} />
+                    Λίστα
+                  </button>
+                  <button
                     className={`toggle-btn ${showMap ? 'active' : ''}`}
                     onClick={() => setShowMap(true)}
                   >
                     <MapPin size={18} />
                     Χάρτης
                   </button>
-                  <button
-                    className={`toggle-btn ${!showMap ? 'active' : ''}`}
-                    onClick={() => setShowMap(false)}
-                  >
-                    Λίστα
-                  </button>
                 </div>
               </div>
-
-              {bookingSuccess && (
-                <div className="booking-success-message">
-                  {bookingSuccess}
-                </div>
-              )}
 
               {error ? (
                 <div className="error-message">
@@ -551,7 +803,7 @@ const VetSearchMap = () => {
                 <MapWithMarkers
                   center={mapCenter}
                   zoom={mapZoom}
-                  markers={filteredVets}
+                  markers={augmentedVets}
                   selectedId={selectedVet?.id}
                   onMarkerClick={handleMarkerClick}
                   height="600px"
@@ -562,7 +814,7 @@ const VetSearchMap = () => {
                 />
               ) : (
                 <SearchResultsList
-                  items={currentVets}
+                  items={augmentedVets.slice(startIndex, endIndex)}
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
@@ -577,6 +829,12 @@ const VetSearchMap = () => {
             </>
           )}
         </main>
+
+        <Notification
+          isVisible={!!notification}
+          message={notification?.message}
+          type={notification?.type}
+        />
 
         <VetProfileModal
           isOpen={showProfileModal}

@@ -45,20 +45,20 @@
 }
 
 .found-pet-form--vet .microchip-search-section {
-  background: linear-gradient(135deg, rgba(252, 164, 124, 0.05) 0%, rgba(252, 164, 124, 0.02) 100%);
-  border-color: rgba(252, 164, 124, 0.3);
+  background: linear-gradient(135deg, rgba(35, 206, 217, 0.05) 0%, rgba(35, 206, 217, 0.02) 100%);
+  border-color: rgba(35, 206, 217, 0.3);
 }
 
-.microchip-search-input-wrapper {
+.microchip-search__input-wrapper {
   display: flex;
   gap: 12px;
 }
 
-.microchip-search-input {
+.microchip-search__input {
   flex: 1;
 }
 
-.microchip-search-btn {
+.microchip-search__btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -74,26 +74,31 @@
   white-space: nowrap;
 }
 
-.microchip-search-btn:hover:not(:disabled) {
+.microchip-search__btn:hover:not(:disabled) {
   background-color: #1ab8c2;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
 }
 
-.microchip-search-btn:disabled {
+.microchip-search__btn:disabled {
   background-color: #e5e7eb;
   color: #9ca3af;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.found-pet-form--vet .microchip-search-btn {
-  background-color: #FCA47C;
+.found-pet-form--vet .microchip-search__btn {
+  background-color: #23CED9;
 }
 
-.found-pet-form--vet .microchip-search-btn:hover:not(:disabled) {
-  background-color: #f89a5c;
-  box-shadow: 0 4px 8px rgba(252, 164, 124, 0.3);
+.found-pet-form--vet .microchip-search__btn:hover:not(:disabled) {
+  background-color: #1ab8c2;
+  box-shadow: 0 4px 8px rgba(35, 206, 217, 0.3);
+}
+
+.found-pet-form--vet .microchip-search__input:focus {
+  border-color: #23CED9;
+  box-shadow: 0 0 0 3px rgba(35, 206, 217, 0.1);
 }
 
 .microchip-search-hint {
@@ -641,6 +646,7 @@
     opacity: 0;
     transform: translateY(5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

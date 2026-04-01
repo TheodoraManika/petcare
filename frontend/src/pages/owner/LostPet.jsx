@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import PageLayout from '../../components/common/layout/PageLayout';
@@ -14,28 +14,56 @@ import './OwnerLostPet.css';
 
 const OwnerLostPet = () => {
   const navigate = useNavigate();
+  const [userPets, setUserPets] = useState([]);
+  const [petsLoading, setPetsLoading] = useState(true);
+  const [selectedPetDetails, setSelectedPetDetails] = useState(null);
 
-  // Mock pet data - in real app, this would come from API/database
-  const userPets = [
-    { value: 'pet1', label: 'Μαξ - GR123456789012345', microchip: 'GR123456789012345', name: 'Μαξ', type: 'Σκύλος', breed: 'Golden Retriever', image: '🐕' },
-    { value: 'pet2', label: 'Λούνα - GR987654321098765', microchip: 'GR987654321098765', name: 'Λούνα', type: 'Γάτα', breed: 'Persian', image: '🐱' },
-    { value: 'pet3', label: 'Τσάρλι - GR456789123456789', microchip: 'GR456789123456789', name: 'Τσάρλι', type: 'Σκύλος', breed: 'Labrador Retriever', image: '🐶' },
-  ];
+  // Fetch owner's pets from database
+  useEffect(() => {
+    const fetchUserPets = async () => {
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const response = await fetch('http://localhost:5000/pets');
+        const allPets = await response.json();
 
-  // Location options (now will be used by LocationPicker)
-  const locationOptions = [
-    { value: 'syntagma', label: 'Κέντρο Αθήνας, Πλατεία Συντάγματος' },
-    { value: 'monastiraki', label: 'Μοναστηράκι' },
-    { value: 'kolonaki', label: 'Κολωνάκι' },
-    { value: 'glyfada', label: 'Γλυφάδα' },
-    { value: 'piraeus', label: 'Πειραιάς' },
-    { value: 'other', label: 'Άλλη περιοχή' },
-  ];
+        // Filter pets by current user's ID - handle both string and number IDs
+        const ownerPets = allPets.filter(pet =>
+          String(pet.ownerId) === String(currentUser.id)
+        );
+
+        // Transform to dropdown format
+        const formattedPets = ownerPets.map(pet => ({
+          value: pet.id,
+          label: `${pet.name}${pet.microchipId ? ' - ' + pet.microchipId : ''}`,
+          microchipId: pet.microchipId || pet.microchip || '',
+          name: pet.name,
+          type: pet.type || 'Σκύλος',
+          breed: pet.breed || '',
+          color: pet.color || pet.petColor || '',
+          weight: pet.weight || '',
+          gender: pet.gender || '',
+          birthDate: pet.birthDate || '',
+          image: pet.imageUrl || pet.image || ''
+        }));
+
+        setUserPets(formattedPets);
+      } catch (error) {
+        console.error('Error fetching user pets:', error);
+        setUserPets([]);
+      } finally {
+        setPetsLoading(false);
+      }
+    };
+
+    fetchUserPets();
+  }, []);
 
   const [formData, setFormData] = useState({
     selectedPet: '',
     microchipNumber: '',
     petName: '',
+    petType: '',
+    breed: '',
     lostDate: '',
     contactPhone: '',
     location: '',
@@ -50,6 +78,7 @@ const OwnerLostPet = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [draftId, setDraftId] = useState(null);
 
   // Helper function to filter phone characters
   const allowedPhoneChars = (value) => value.replace(/[^0-9\s+]/g, ''); // Επιτρέπει μόνο αριθμούς, κενά και το σύμβολο +
@@ -78,11 +107,14 @@ const OwnerLostPet = () => {
     // Auto-populate pet info when a pet is selected
     const selectedPetData = userPets.find(pet => pet.value === value);
     if (selectedPetData) {
+      setSelectedPetDetails(selectedPetData);
       setFormData(prev => ({
         ...prev,
         selectedPet: value,
-        microchipNumber: selectedPetData.microchip,
-        petName: selectedPetData.name
+        microchipNumber: selectedPetData.microchipId,
+        petName: selectedPetData.name,
+        petType: selectedPetData.type,
+        breed: selectedPetData.breed
       }));
     }
   };
@@ -136,10 +168,65 @@ const OwnerLostPet = () => {
     }
   };
 
-  const handleConfirmSubmit = () => {
-    console.log('Form submitted:', formData);
-    setShowSubmitModal(false);
-    navigate(ROUTES.owner.dashboard);
+  const handleConfirmSubmit = async () => {
+    try {
+      // Update pet with lost information
+      const selectedPetData = userPets.find(p => p.value === formData.selectedPet);
+      const submitData = {
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        petStatus: 1,
+        status: 'active',
+        description: formData.description
+      };
+
+      const response = await fetch(`http://localhost:5000/pets/${formData.selectedPet}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(submitData)
+      });
+
+      if (response.ok) {
+        setShowSubmitModal(false);
+        setNotification({
+          type: 'success',
+          message: 'Η δήλωση απώλειας κατοικιδίου καταχωρήθηκε με επιτυχία!'
+        });
+        // clear form after submission
+        setFormData({
+          selectedPet: '',
+          microchipNumber: '',
+          petName: '',
+          petType: '',
+          breed: '',
+          lostDate: '',
+          contactPhone: '',
+          location: '',
+          locationLat: '',
+          locationLon: '',
+          description: '',
+          photo: ''
+        });
+        setPhotoPreview(null);
+        setPhoneError('');
+      } else {
+        setNotification({
+          type: 'error',
+          message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
+        });
+      }
+    } catch (err) {
+      console.error('Error submitting lost pet declaration:', err);
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την καταχώρηση της δήλωσης'
+      });
+    }
   };
 
   const handleCancelSubmit = () => {
@@ -156,6 +243,8 @@ const OwnerLostPet = () => {
       selectedPet: '',
       microchipNumber: '',
       petName: '',
+      petType: '',
+      breed: '',
       lostDate: '',
       contactPhone: '',
       location: '',
@@ -169,7 +258,10 @@ const OwnerLostPet = () => {
     setShowCancelModal(false);
 
     // Show notification
-    setNotification('cancelled');
+    setNotification({
+      type: 'error',
+      message: 'Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!'
+    });
 
     // Auto-hide notification after 5 seconds
     setTimeout(() => {
@@ -181,35 +273,63 @@ const OwnerLostPet = () => {
     setShowCancelModal(false);
   };
 
-  const handleDraft = () => {
-    // TODO: Save form data to backend with status 'draft'
-    // API call example: await saveLostPetDraft(formData);
+  const handleDraft = async () => {
+    try {
+      const selectedPetData = userPets.find(p => p.value === formData.selectedPet);
+      const updateData = {
+        lostDate: formData.lostDate,
+        lostLocation: formData.location,
+        area: formData.location,
+        locationLat: formData.locationLat,
+        locationLon: formData.locationLon,
+        petStatus: 1,
+        status: 'draft'
+      };
 
-    console.log('Draft saved:', formData);
+      const response = await fetch(`http://localhost:5000/pets/${formData.selectedPet}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData)
+      });
 
-    // Reset all form fields
-    setFormData({
-      selectedPet: '',
-      microchipNumber: '',
-      petName: '',
-      lostDate: '',
-      contactPhone: '',
-      location: '',
-      locationLat: '',
-      locationLon: '',
-      description: '',
-      photo: ''
-    });
-    setPhotoPreview(null);
-    setPhoneError('');
+      if (response.ok) {
+        setNotification({
+          type: 'success',
+          message: 'Η δήλωση απώλειας αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων'
+        });
 
-    // Show success notification
-    setNotification('draft');
-
-    // Auto-hide notification after 8 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 8000);
+        setTimeout(() => {
+          setFormData({
+            selectedPet: '',
+            microchipNumber: '',
+            petName: '',
+            petType: '',
+            breed: '',
+            lostDate: '',
+            contactPhone: '',
+            location: '',
+            locationLat: '',
+            locationLon: '',
+            description: '',
+            photo: ''
+          });
+          setPhotoPreview(null);
+          setPhoneError('');
+          navigate(ROUTES.owner.lostHistory);
+        }, 2000);
+      } else {
+        setNotification({
+          type: 'error',
+          message: 'Σφάλμα κατά την αποθήκευση του προχείρου'
+        });
+      }
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      setNotification({
+        type: 'error',
+        message: 'Σφάλμα κατά την αποθήκευση του προχείρου'
+      });
+    }
   };
 
   // Prepare fields for ConfirmDetailModal
@@ -257,20 +377,18 @@ const OwnerLostPet = () => {
             </div>
 
             {/* Pet Info Card - Shows when a pet is selected */}
-            {formData.selectedPet && (
+            {formData.selectedPet && selectedPetDetails && (
               <PetDetailsCard
-                petData={{
-                  petName: userPets.find(p => p.value === formData.selectedPet)?.name,
-                  species: userPets.find(p => p.value === formData.selectedPet)?.type,
-                  breed: userPets.find(p => p.value === formData.selectedPet)?.breed,
-                  microchip: formData.microchipNumber
-                }}
+                petData={selectedPetDetails}
                 onClear={() => {
+                  setSelectedPetDetails(null);
                   setFormData(prev => ({
                     ...prev,
                     selectedPet: '',
                     microchipNumber: '',
-                    petName: ''
+                    petName: '',
+                    petType: '',
+                    breed: ''
                   }));
                 }}
                 variant="owner"
@@ -437,12 +555,8 @@ const OwnerLostPet = () => {
       {/* Notification */}
       <Notification
         isVisible={notification !== null}
-        message={
-          notification === 'draft'
-            ? "Η δήλωση απώλειας αποθηκεύτηκε ως πρόχειρη με επιτυχία! Μπορείτε να την επεξεργαστείτε από το Ιστορικό Δηλώσεων"
-            : "Η δήλωση απώλειας κατοικιδίου ακυρώθηκε με επιτυχία!"
-        }
-        type={notification === 'draft' ? 'success' : 'error'}
+        message={notification?.message || ''}
+        type={notification?.type || 'success'}
       />
     </PageLayout>
   );

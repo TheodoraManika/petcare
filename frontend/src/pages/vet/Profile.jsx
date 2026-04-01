@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2, AlertCircle } from 'lucide-react';
+import { SquarePen, X, Save, UserRoundCheck, UserRound, Loader2, AlertCircle, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/common/layout/PageLayout';
 import MultiSelect from '../../components/common/forms/MultiSelect';
 import SuccessPage from '../../components/common/modals/SuccessPage';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
+import Avatar from '../../components/common/Avatar';
 import { ROUTES } from '../../utils/constants';
 import './Profile.css';
 
@@ -14,6 +15,8 @@ const Profile = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showSaveSuccessModal, setShowSaveSuccessModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -27,26 +30,77 @@ const Profile = () => {
     city: '',
   });
   const navigate = useNavigate();
-  
+
   // Original data that won't change unless saved
   const [originalData, setOriginalData] = useState({
-    firstName: 'Γιάννης',
-    lastName: 'Πετρίδης',
-    email: 'john@example.com',
-    phone: '6912345678',
-    afm: '123456789',
-    vetLicense: 'VET12345',
-    specialties: ['Γενική Κτηνιατρική', 'Οδοντιατρική'],
-    yearsOfExperience: '5',
-    clinicName: 'Κτηνιατρικό Κέντρο Γέρακα',
-    address: 'Ερμού 8, 15344',
-    city: 'Γέρακας',
-    university: 'Γεωπονικό Πανεπιστήμιο Αθηνών',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    afm: '',
+    vetLicense: '',
+    specialties: [],
+    yearsOfExperience: '',
+    clinicName: '',
+    address: '',
+    city: '',
+    university: '',
     bio: '',
+    avatar: null,
   });
-  
+
   // Working copy for editing
-  const [formData, setFormData] = useState({...originalData});
+  const [formData, setFormData] = useState({ ...originalData });
+
+  // Load user data from localStorage on component mount
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (currentUser) {
+      const normalizeSpecialties = (value) => {
+        if (!value) return [];
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') {
+          return value
+            .split(',')
+            .map(item => item.trim())
+            .filter(Boolean);
+        }
+        return [];
+      };
+
+      const dedupeSpecialties = (items) => {
+        const seen = new Set();
+        return items.filter((item) => {
+          if (seen.has(item)) return false;
+          seen.add(item);
+          return true;
+        });
+      };
+
+      const userData = {
+        firstName: currentUser.name || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        afm: currentUser.afm || '',
+        vetLicense: currentUser.licenseNumber || '',
+        specialties: dedupeSpecialties(normalizeSpecialties(currentUser.specialization || currentUser.specialties)),
+        yearsOfExperience: currentUser.experience || '',
+        clinicName: currentUser.clinicName || '',
+        address: currentUser.clinicAddress || '',
+        city: currentUser.clinicCity || '',
+        university: currentUser.education || '',
+        bio: currentUser.biography || '',
+        avatar: currentUser.avatar || null,
+      };
+
+      setOriginalData(userData);
+      setFormData({ ...userData });
+    }
+
+    setIsLoading(false);
+  }, []);
 
   // Helper function to filter only Greek and English letters and spaces
   const filterLettersOnly = (value) => {
@@ -88,7 +142,7 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     let filteredValue = value;
 
     // Apply character filters based on field type
@@ -126,14 +180,41 @@ const Profile = () => {
     }
   };
 
-  const handleSpecialtiesChange = (selectedSpecialties) => {
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Η εικόνα πρέπει να είναι μικρότερη από 5MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          avatar: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveAvatar = () => {
     setFormData(prev => ({
       ...prev,
-      specialties: selectedSpecialties
+      avatar: null
     }));
-    
+  };
+
+  const handleSpecialtiesChange = (selectedSpecialties) => {
+    const uniqueSpecialties = Array.from(new Set(selectedSpecialties));
+    setFormData(prev => ({
+      ...prev,
+      specialties: uniqueSpecialties
+    }));
+
     // Clear error when specialties are selected
-    if (errors.specialties && selectedSpecialties.length > 0) {
+    if (errors.specialties && uniqueSpecialties.length > 0) {
       setErrors(prev => ({
         ...prev,
         specialties: ''
@@ -153,7 +234,7 @@ const Profile = () => {
     setIsEditing(false);
     setShowCancelModal(false);
     // Reset form data to original values
-    setFormData({...originalData});
+    setFormData({ ...originalData });
     // Clear all errors
     setErrors({
       firstName: '',
@@ -177,16 +258,34 @@ const Profile = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    // Handle account deletion logic here
-    console.log('Account deleted');
-    setShowDeleteModal(false);
-    setShowSuccessModal(true);
-    
-    // Redirect to home after 5 seconds
-    setTimeout(() => {
-      navigate(ROUTES.home);
-    }, 5000);
+  const handleConfirmDelete = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || !currentUser.id) {
+        throw new Error('User not logged in');
+      }
+
+      const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
+
+      console.log('Account deleted');
+      localStorage.removeItem('currentUser'); // Clear local storage
+      setShowDeleteModal(false);
+      setShowSuccessModal(true);
+
+      // Redirect to home after 5 seconds
+      setTimeout(() => {
+        navigate(ROUTES.home);
+      }, 5000);
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setShowDeleteModal(false);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -195,7 +294,7 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate all fields
     const newErrors = {};
 
@@ -245,12 +344,86 @@ const Profile = () => {
       return;
     }
 
-    // If validation passes, save the changes
-    console.log('Form submitted:', formData);
-    // Save the changes to originalData
-    setOriginalData({...formData});
-    setIsEditing(false);
-    setShowSaveSuccessModal(true);
+    // If validation passes, save the changes to database
+    saveProfileChanges();
+  };
+
+  const saveProfileChanges = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser || !currentUser.id) {
+        throw new Error('User not logged in');
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        afm: formData.afm,
+        licenseNumber: formData.vetLicense,
+        licenseType: formData.licenseType,
+        specialization: Array.isArray(formData.specialties)
+          ? Array.from(new Set(formData.specialties)).join(', ')
+          : formData.specialties,
+        experience: formData.yearsOfExperience,
+        education: formData.university,
+        biography: formData.bio,
+        clinicName: formData.clinicName,
+        clinicAddress: formData.address,
+        clinicCity: formData.city,
+        avatar: formData.avatar,
+      };
+
+      console.log('Saving vet profile:', updatedUser);
+
+      // Save to database
+      const response = await fetch(`http://localhost:5000/users/${currentUser.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const savedUser = await response.json();
+      console.log('Profile updated successfully:', savedUser);
+
+      // Update localStorage with new data
+      localStorage.setItem('currentUser', JSON.stringify({
+        ...currentUser,
+        name: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        afm: formData.afm,
+        licenseNumber: formData.vetLicense,
+        licenseType: formData.licenseType,
+        specialization: Array.isArray(formData.specialties)
+          ? Array.from(new Set(formData.specialties))
+          : formData.specialties,
+        experience: formData.yearsOfExperience,
+        education: formData.university,
+        biography: formData.bio,
+        clinicName: formData.clinicName,
+        clinicAddress: formData.address,
+        clinicCity: formData.city,
+        avatar: formData.avatar,
+      }));
+
+      // Update original data to reflect saved changes
+      setOriginalData({ ...formData });
+      setIsEditing(false);
+      setShowSaveSuccessModal(true);
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      setError('Σφάλμα κατά την αποθήκευση. Παρακαλώ δοκιμάστε ξανά.');
+    }
   };
 
   const handleBackToProfile = () => {
@@ -277,6 +450,19 @@ const Profile = () => {
     );
   }
 
+  // If loading, show loading state
+  if (isLoading) {
+    return (
+      <PageLayout title="Προφίλ" breadcrumbs={breadcrumbItems}>
+        <div className="profile">
+          <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <Loader2 size={40} className="loader-spin" />
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout title="Προφίλ" breadcrumbs={breadcrumbItems}>
       <div className="profile">
@@ -285,14 +471,14 @@ const Profile = () => {
           <div className="profile__actions">
             {isEditing ? (
               <>
-                <button 
+                <button
                   className="profile__btn profile__btn--cancel"
                   onClick={handleCancel}
                   type="button"
                 >
                   Ακύρωση
                 </button>
-                <button 
+                <button
                   className="profile__btn profile__btn--save"
                   onClick={handleSubmit}
                   type="button"
@@ -303,7 +489,7 @@ const Profile = () => {
               </>
             ) : (
               <>
-                <button 
+                <button
                   className="profile__btn profile__btn--delete"
                   onClick={handleDelete}
                   type="button"
@@ -311,18 +497,65 @@ const Profile = () => {
                   <X size={18} />
                   Διαγραφή Λογαριασμού
                 </button>
-                <button 
+                <button
                   className="profile__btn profile__btn--edit"
                   onClick={handleEditToggle}
                   type="button"
                 >
-                  <SquarePen size={18} /> 
+                  <SquarePen size={18} />
                   Επεξεργασία
                 </button>
               </>
             )}
           </div>
         </div>
+
+        <div className="profile__avatar-section">
+          <div className="profile__avatar-container">
+            <Avatar
+              src={formData.avatar}
+              name={formData.firstName}
+              lastName={formData.lastName}
+              size="xl"
+              shape="square"
+            />
+            {isEditing && (
+              <div className="profile__avatar-overlay">
+                <label className="profile__avatar-label">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="profile__avatar-input"
+                  />
+                  <Camera size={24} />
+                  <span>Αλλαγή</span>
+                </label>
+                {formData.avatar && (
+                  <button 
+                    type="button" 
+                    className="profile__avatar-remove"
+                    onClick={handleRemoveAvatar}
+                    title="Αφαίρεση φωτογραφίας"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="profile__avatar-info">
+            <h2 className="profile__avatar-name">{formData.firstName} {formData.lastName}</h2>
+            <p className="profile__avatar-type">Κτηνίατρος</p>
+          </div>
+        </div>
+
+        {error && (
+          <div className="profile__error-banner">
+            <AlertCircle size={20} />
+            <span>{error}</span>
+          </div>
+        )}
 
         <form className="profile__form" onSubmit={handleSubmit}>
           <div className="profile__grid">
