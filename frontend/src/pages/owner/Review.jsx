@@ -5,7 +5,7 @@ import Avatar from '../../components/common/Avatar';
 import PageLayout from '../../components/common/layout/PageLayout';
 import ConfirmModal from '../../components/common/modals/ConfirmModal';
 import Notification from '../../components/common/modals/Notification';
-import { ROUTES } from '../../utils/constants';
+import { ROUTES, SERVICE_LABELS } from '../../utils/constants';
 import './Review.css';
 
 const Review = () => {
@@ -19,6 +19,25 @@ const Review = () => {
   const [error, setError] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [notification, setNotification] = useState(null);
+
+  const formatReviewDate = (dateString) => {
+    if (!dateString) return '';
+
+    const match = String(dateString).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (match) {
+      const day = String(parseInt(match[1], 10));
+      const month = String(parseInt(match[2], 10));
+      return `${day}-${month}-${match[3]}`;
+    }
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+
+    const day = String(date.getDate());
+    const month = String(date.getMonth() + 1);
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   // Fetch appointment and vet data
   useEffect(() => {
@@ -68,8 +87,8 @@ const Review = () => {
           vetAvatar: vetAvatar,
           vetLastName: vetLastName,
           pet: petName,
-          date: apt.date || new Date().toLocaleDateString('el-GR'),
-          service: apt.serviceType || 'Υπηρεσία',
+          date: formatReviewDate(apt.date || new Date().toLocaleDateString('el-GR')),
+          service: SERVICE_LABELS[apt.serviceType] || apt.serviceType || 'Υπηρεσία',
           ownerId: apt.ownerId
         });
         
