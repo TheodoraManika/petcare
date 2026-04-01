@@ -110,7 +110,7 @@ const LostPetHistoryDetail = () => {
                     petBreed: lostPet.breed || petDetails.breed || '-',
                     petColor: lostPet.color || petDetails.color || '-',
                     petGender: lostPet.gender || petDetails.gender || '-',
-                    petImage: petDetails.imageUrl || lostPet.imageUrl || lostPet.image || '',
+                    petImage: petDetails.imageUrl || petDetails.image || lostPet.imageUrl || lostPet.image || '',
                     microchip: lostPet.microchipId || petDetails.microchipId || '-',
                     date: parseDate(lostPet.foundDate || lostPet.foundAt || lostPet.lostDate || lostPet.dateFound || lostPet.dateLost),
                     location: lostPet.area || lostPet.lostLocation || lostPet.location || lostPet.foundLocation || '-',
