@@ -5,7 +5,7 @@
 - Kampioti Despoina 
 - Katrakis Konstantinos 
 
-[Github link to project](https://github.com/TheodoraManika/petcare)
+Project Showcase: https://www.youtube.com/watch?v=HYaGm0sbqD8
 
 PetCare was developed for the Human-Computer Interaction course in the Department of Informatics and Telecommunications at NKUA. It redesigns and implements the user interface for the pet.gov.gr portal, aiming to deliver a modern “pet health registration and monitoring” hub that serves pet owners, veterinarians, and citizens with personalized information and streamlined workflows across key services.
 
